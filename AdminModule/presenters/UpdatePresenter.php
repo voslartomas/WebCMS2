@@ -31,7 +31,7 @@ class UpdatePresenter extends \AdminModule\BasePresenter{
 		$this->flashMessage($res);
 		if(file_exists('../log/install-error.log')){
 			$resError = file_get_contents('../log/install-error.log');
-			$this->flashMessage($resError);
+			if(!empty($resError)) $this->flashMessage($resError);
 			unlink('../log/install-error.log');
 		}
 		
