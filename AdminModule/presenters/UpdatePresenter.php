@@ -25,15 +25,19 @@ class UpdatePresenter extends \AdminModule\BasePresenter{
 		
 		putenv("COMPOSER_HOME=/usr/bin/.composer");
 		
-		system("../install/install.sh 4 > ../log/install.log");
-		system("../install/install.sh 4 2> ../log/install-error.log");
-
-		$this->flashMessage('System aktualizován na nejnovější verzi.');
-		
+		system("../install/install.sh 4 > ../log/install.log 2> ../log/install-error.log");
 		$res = file_get_contents('../log/install.log');
-		$resError = file_get_contents('../log/install-error.log');
+		
 		$this->flashMessage($res);
-		$this->flashMessage($resError);
+		if(file_exists('../log/install-error.log')){
+			$resError = file_get_contents('../log/install-error.log');
+			$this->flashMessage($resError);
+			unlink('../log/install-error.log');
+		}
+		
+		
+		unlink('../log/install.log');
+		
 		$this->redirect('Update:');
 	}
 }
