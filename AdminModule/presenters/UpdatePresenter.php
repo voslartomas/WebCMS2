@@ -35,7 +35,9 @@ class UpdatePresenter extends \AdminModule\BasePresenter{
 			unlink('../log/install-error.log');
 		}
 		
-		$version = system('cd ../libs/webcms2/webcms2;git log --pretty=format:%h -1;echo ";";git log --format="%at" -1');
+		$version = system('cd ../libs/webcms2/webcms2;git log --pretty=format:%h -1;');
+		$version .= ";";
+		$version .= system('git log --format="%at" -1');
 		
 		file_put_contents('../libs/webcms2/webcms2/AdminModule/version', $version);
 		
