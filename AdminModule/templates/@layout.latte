@@ -1,0 +1,73 @@
+{**
+ * My Application layout template.
+ *
+ * @copyright  Copyright (c) 2013 John Doe
+ * @package    WebCMS2
+ *
+ * @param string   $basePath web base path
+ * @param string   $robots   tell robots how to index the content of a page (optional)
+ * @param array    $flashes  flash messages
+ *}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+	<meta name="description" content="Nette Framework web application skeleton">
+	<meta name="robots" content="{$robots}" n:ifset="$robots">
+
+	<title>WebCMS 2 - administrace</title>
+
+	<link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/css/screen.css" type="text/css">
+	<link rel="stylesheet" media="print" href="{$basePath}/css/print.css" type="text/css">
+	<link rel="shortcut icon" href="{$basePath}/favicon.ico" type="image/x-icon">
+
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+	<script type="text/javascript" src="{$basePath}/js/netteForms.js"></script>
+	{block head}{/block}
+</head>
+
+<body>
+	<script> document.body.className+=' js' </script>
+	
+	<a n:href="Login:out" class="logout btn btn-danger">Odhlásit se</a>
+	
+	{snippet mainMenu}
+		<section>
+			<ul>
+				<li>
+					<a n:href=":Admin:Pages:">Správa stránek</a>
+				</li>
+				<li>
+					<a n:href=":Admin:Modules:">Moduly</a>
+				</li>
+				<li>
+					<a n:href=":Admin:Users:">Uživatelé</a>
+				</li>
+				<li>
+					<a n:href=":Admin:Languages:">Jazyky</a>
+				</li>
+				<li>
+					<a n:href=":Admin:Settings:">Nastavení</a>
+				</li>
+				<li>
+					<a n:href=":Admin:Filesystem:">Správce souborů</a>
+				</li>
+				<li>
+					<a n:href=":Admin:Update:">Aktualizace</a>
+				</li>
+			</ul>
+		</section>
+	{/snippet}
+	
+	{snippet flashMessages}
+		<div n:foreach="$flashes as $flash" class="flash {$flash->type}">{$flash->message}</div>
+	{/snippet}
+		
+	{snippet content}
+		{include #content}
+	{/snippet}
+		
+</body>
+</html>
