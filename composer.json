@@ -3,7 +3,7 @@
     "type": "library",
     "description": "WebCMS2 system",
     "keywords": ["log","logging"],
-    "homepage": "http://www.webcook.cz/opt/git-projects/WebCMS2",
+    "homepage": "http://www.webcook.cz/WebCMS2",
     "license": "MIT",
     "authors": [
         {
