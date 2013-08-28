@@ -23,7 +23,7 @@ class UpdatePresenter extends \AdminModule\BasePresenter{
 	
 	public function actionUpdateSystem(){
 		
-		system("../install/install.sh 4 > ../log/install.log");
+		system("../install/install.sh 4 2> ../log/install.log");
 
 		$this->flashMessage('System aktualizován na nejnovější verzi.');
 
