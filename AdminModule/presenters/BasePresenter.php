@@ -23,7 +23,13 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		
 		$this->setLayout("layout");
 		
-		$this->template->version = SystemHelper::getFileContent('../libs/webcms2/webcms2/AdminModule/version');
+		$versionContent = SystemHelper::getFileContent('../libs/webcms2/webcms2/AdminModule/version');
+		$version = explode(";", $versionContent);
+		
+		$this->template->version = array(
+			'revision' => $version[0],
+			'date' => $version[1]
+		);
 	}
 	
 	/* Startup method. */
