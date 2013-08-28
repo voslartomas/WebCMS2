@@ -26,7 +26,9 @@ class UpdatePresenter extends \AdminModule\BasePresenter{
 		system("../install/install.sh 4 2> ../log/install.log");
 
 		$this->flashMessage('System aktualizován na nejnovější verzi.');
-
+		
+		$res = file_get_contents('../log/install.log');
+		$this->flashMessage($res);
 		$this->redirect('Update:');
 	}
 }
