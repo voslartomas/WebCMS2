@@ -35,6 +35,8 @@ class UpdatePresenter extends \AdminModule\BasePresenter{
 			unlink('../log/install-error.log');
 		}
 		
+		echo system('cd ../libs/webcms2/webcms2;git log --pretty=format:%h -1');
+		die();
 		
 		unlink('../log/install.log');
 		
