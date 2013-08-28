@@ -2,7 +2,7 @@
     "name": "webcms2/webcms2",
     "type": "library",
     "description": "WebCMS2 system",
-    "keywords": ["log","logging"],
+    "keywords": ["cms","nette-based", "doctrine2"],
     "homepage": "http://www.webcook.cz/WebCMS2",
     "license": "MIT",
     "authors": [
@@ -19,7 +19,7 @@
     },
     "autoload": {
         "psr-0": {
-            "WebCMS2": "./"
+            "WebCMS2": ""
         }
     }
 }
