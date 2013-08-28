@@ -1,6 +1,6 @@
 <?php
 
-namespace AdminModule\Doctrine;
+namespace WebCMS\AdminModule\Doctrine;
 
 use Doctrine\ORM\Mapping as orm;
 

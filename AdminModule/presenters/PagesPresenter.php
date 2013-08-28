@@ -1,13 +1,13 @@
 <?php
 
-namespace AdminModule;
+namespace WebCMS\AdminModule;
 
 /**
  * Admin presenter.
  * @author Tomáš Voslař <tomas.voslar at webcook.cz>
  * @package WebCMS2
  */
-class PagesPresenter extends \AdminModule\BasePresenter{
+class PagesPresenter extends \WebCMS\AdminModule\BasePresenter{
 
 	protected function beforeRender(){
 		parent::beforeRender();
