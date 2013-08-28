@@ -14,12 +14,11 @@
         }
     ],
     "require": {
-        "php": ">=5.3.2",
-		"nette/nette": "2.0.*"
+        "php": ">=5.3.2"
     },
     "autoload": {
         "psr-0": {
-				"WebCMS\\AdminModule": "" 
+				"WebCMS\\AdminModule": "AdminModule" 
         }
     }
 }
