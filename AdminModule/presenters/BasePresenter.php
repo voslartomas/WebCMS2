@@ -22,6 +22,8 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		}
 		
 		$this->setLayout("layout");
+		
+		$this->template->version = file_get_contents('../libs/webcms2/webcms2/AdminModule/version');
 	}
 	
 	/* Startup method. */
