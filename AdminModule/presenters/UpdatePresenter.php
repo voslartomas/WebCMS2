@@ -20,6 +20,12 @@ class UpdatePresenter extends \AdminModule\BasePresenter{
 	public function actionClearTemp(){
 		
 	}
+	
+	public function actionUpdateSystem(){
+		
+		$this->flashMessage('System aktualizován na nejnovější verzi.');
+		$this->redirect('Update:');
+	}
 }
 
 ?>
