@@ -1,6 +1,6 @@
 <?php 
 
-namespace WebCMS\AdminModule;
+namespace AdminModule;
 
 use Nette\Application\UI,
 	Nette\Security as NS;

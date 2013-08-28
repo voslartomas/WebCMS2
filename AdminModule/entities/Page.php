@@ -1,6 +1,6 @@
 <?php
 
-namespace WebCMS\AdminModule\Doctrine;
+namespace AdminModule\Doctrine;
 
 use Doctrine\ORM\Mapping as orm;
 
@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as orm;
  * @orm\Entity
  * @author Tomáš Voslař <t.voslar at gmail.com>
  */
-class Page extends \WebCMS\Doctrine\Entity{
+class Page extends \AdminModule\Doctrine\Entity{
 	/**
 	 * @orm\Column(type="integer")
 	 * @var Int 

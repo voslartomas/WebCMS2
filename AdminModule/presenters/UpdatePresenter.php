@@ -1,13 +1,13 @@
 <?php
 
-namespace WebCMS\AdminModule;
+namespace AdminModule;
 
 /**
  * Description of UpdatePresenter
  *
  * @author Tomáš Voslař <tomas.voslar at webcook.cz>
  */
-class UpdatePresenter extends WebCMS\AdminModule\BasePresenter{
+class UpdatePresenter extends \AdminModule\BasePresenter{
 	protected function beforeRender(){
 		parent::beforeRender();
 		
