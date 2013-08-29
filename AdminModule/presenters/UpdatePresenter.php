@@ -35,6 +35,7 @@ class UpdatePresenter extends \AdminModule\BasePresenter{
 			unlink('../log/install-error.log');
 		}
 		
+		// TODO prepsat do bashe, popremyslet i o prepsani logovani do bashe
 		$version = system('cd ../libs/webcms2/webcms2;git log --pretty=format:%h -1;');
 		$version .= ";";
 		$version .= system('cd ../libs/webcms2/webcms2;git log --format="%at" -1');
@@ -45,6 +46,12 @@ class UpdatePresenter extends \AdminModule\BasePresenter{
 		
 		$this->redirect('Update:');
 	}
+	
+	public function actionClearCache(){
+		
+		$this->context->cacheStorage->clean(array(\Nette\Caching\Cache::ALL => TRUE));
+		
+		$this->flashMessage('Not implemented use console app.');
+		$this->redirect("Update:");
+	}
 }
-
-?>
