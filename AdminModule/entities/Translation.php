@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as orm;
  * @orm\Entity
  * @author Tomáš Voslař <t.voslar at google.com>
  */
-class Translation {
+class Translation extends \AdminModule\Doctrine\Entity {
 	/**
 	 * @orm\Column
 	 * @var String 
