@@ -11,13 +11,19 @@ class SystemHelper {
 	 * @return Array[revision, date]
 	 */
 	public static function getVersion(){
-		$versionContent = $this->getFileContent(self::VERSION_FILE);
+		$versionContent = self::getFileContent(self::VERSION_FILE);
 		$version = explode(";", $versionContent);
 		
-		return array(
+		if(count($version) == 2) 
+			return array(
 			'revision' => $version[0],
 			'date' => $version[1]
 		);
+		else
+			return array(
+				'revision' => '0',
+				'date' => '0'
+			);
 	}
 	
 	/**
@@ -25,7 +31,7 @@ class SystemHelper {
 	 * @param String $filename
 	 * @return String
 	 */
-	private function getFileContent($filename){
+	private static function getFileContent($filename){
 		if (!file_exists($filename)) {
 			file_put_contents($filename, '');
 		}
