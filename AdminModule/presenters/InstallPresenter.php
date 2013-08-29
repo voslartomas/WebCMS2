@@ -26,5 +26,3 @@ class InstallPresenter extends UI\Presenter{
 	}
 	
 }
-
-?>

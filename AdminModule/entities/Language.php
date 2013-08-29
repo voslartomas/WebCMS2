@@ -20,6 +20,19 @@ class Language extends \AdminModule\Doctrine\Entity{
 	 * @var String 
 	 */
 	private $abbr;
+	/**
+	 * @orm\Column(type="boolean")
+	 * @var Booleand 
+	 */
+	private $default;
+	
+	public function getDefault() {
+		return $this->default;
+	}
+
+	public function setDefault(Booleand $default) {
+		$this->default = $default;
+	}
 	
 	public function getName() {
 		return $this->name;
