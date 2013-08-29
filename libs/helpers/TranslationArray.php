@@ -2,7 +2,7 @@
 
 namespace WebCMS;
 
-class TranslationArray extends ArrayObject{
+class TranslationArray extends \ArrayObject{
 	
 	protected $data = array(); 
 	
