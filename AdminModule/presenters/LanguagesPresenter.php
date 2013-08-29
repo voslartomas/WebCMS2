@@ -18,4 +18,18 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 		parent::startup();
 	}
 	
+	public function renderDefault(){
+		
+	}
+	
+	protected function createComponentGrid($name){
+		
+		$qb = $this->em->createQueryBuilder();
+		
+		$grid = new \Grido\Grid($this, $name);
+		$grid->setModel($qb->select('l')->from('AdminModule\Language', 'l'));
+		$grid->addColumn('name', 'Název');
+		
+		return $grid;
+	}
 }
