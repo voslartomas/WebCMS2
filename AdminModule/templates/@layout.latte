@@ -74,7 +74,7 @@
 						  <a class="ajax" n:href=":Admin:Filesystem:">Správce souborů</a>
 					  </li>
 					  <li {if $activePresenter == "Admin:Update"}class="active"{/if}>
-						  <a class="ajax" n:href=":Admin:Update:">Aktualizace</a>
+						  <a class="ajax" n:href=":Admin:Update:">Aktualizace <span class="badge">0</span></a>
 					  </li>
 				  </ul>
 			{/snippet}
@@ -100,7 +100,7 @@
 		
 	</div>
 		
-	<footer class="version">
+	<footer class="version navbar-fixed-bottom">
 		<p>WebCMS2 - revize č.{$version['revision']} ({$version['date']|date:'d.m.Y H:i:s'}), &copy; Webcook</p>
 	</footer>
 </body>

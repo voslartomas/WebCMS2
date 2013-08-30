@@ -20,13 +20,14 @@ class LoginPresenter extends UI\Presenter{
 	 */
 	protected function createComponentSignInForm(){
 		$form = new UI\Form;
+		
 		$form->addText('username', 'Username:')
 			->setRequired('Please provide a username.');
 
 		$form->addPassword('password', 'Password:')
 			->setRequired('Please provide a password.');
 
-		$form->addCheckbox('remember', 'Remember me on this computer');
+		$form->addCheckbox('remember', 'Trvalé přihlášení?');
 
 		$form->addSubmit('send', 'Přihlásit se');
 
