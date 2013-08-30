@@ -35,9 +35,11 @@ class UpdatePresenter extends \AdminModule\BasePresenter{
 		}
 		
 		// TODO prepsat do bashe, popremyslet i o prepsani logovani do bashe
-		$version = system('cd ../libs/webcms2/webcms2;git log --pretty=format:%h -1;');
+		
+		$version = exec('cd ../libs/webcms2/webcms2;git rev-parse --abbrev-ref HEAD;');
+		$version .= ' (rev. ' .  exec('cd ../libs/webcms2/webcms2;git log --pretty=format:%h -1;') . ')';
 		$version .= ";";
-		$version .= system('cd ../libs/webcms2/webcms2;git log --format="%at" -1');
+		$version .= exec('cd ../libs/webcms2/webcms2;git log --format="%at" -1');
 		
 		file_put_contents('../libs/webcms2/webcms2/AdminModule/version', $version);
 		
@@ -45,6 +47,10 @@ class UpdatePresenter extends \AdminModule\BasePresenter{
 		
 		if(!$this->isAjax())
 			$this->redirect('Update:');
+		else{
+			$this->invalidateControl('footer');
+			$this->sendPayload();
+		}
 	}
 	
 	public function actionClearCache(){

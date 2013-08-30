@@ -21,14 +21,11 @@ Webcms.prototype = {
 				$('a.ajax:not(.no-ajax)').live('click', ajaxHandler);
 			});
 			
-			$.nette.ext("loader", {
-				before : function(){
-					$("#loader").addClass("active");
-				},
-				
-				complete : function(){
-					$("#loader").removeClass("active");
-				}
+			//ajax loader animation
+			$(document).ajaxStart( function() {
+				   $('#loader').addClass("active"); 
+			} ).ajaxStop ( function(){
+					$('#loader').removeClass("active"); 
 			});
 			
 			self.__registerListeners();

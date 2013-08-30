@@ -16,6 +16,8 @@ class FilesystemPresenter extends \AdminModule\BasePresenter{
 	
 	protected function startup(){		
 		parent::startup();
+		
+		$this->flashMessage('test');
 	}
 	
 }
