@@ -17,7 +17,7 @@ class UpdatePresenter extends \AdminModule\BasePresenter{
 		parent::startup();
 	}
 	
-	public function actionUpdateSystem(){
+	public function handleUpdateSystem(){
 		
 		putenv("COMPOSER_HOME=/usr/bin/.composer");
 		
