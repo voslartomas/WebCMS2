@@ -33,6 +33,7 @@
 		<script type="text/javascript" src="{$basePath}/kendoui/kendo.web.js"></script>
 		<script type="text/javascript" src="{$basePath}/bootstrap/js/bootstrap.js"></script>
 		<script type="text/javascript" src="{$basePath}/plugins/bootbox.min.js"></script>
+		<script type="text/javascript" src="{$basePath}/plugins/nette.ajax.js"></script>
 		<script type="text/javascript" src="{$basePath}/admin-js/Webcms/Webcms.js"></script>
 	{/block}
 </head>
@@ -55,25 +56,25 @@
 			{snippet mainMenu}
 				<ul class="nav navbar-nav">
 					  <li {if $activePresenter == "Admin:Pages"}class="active"{/if}>
-						  <a n:href=":Admin:Pages:">Správa stránek</a>
+						  <a class="ajax" n:href=":Admin:Pages:">Správa stránek</a>
 					  </li>
 					  <li {if $activePresenter == "Admin:Modules"}class="active"{/if}>
-						  <a n:href=":Admin:Modules:">Moduly</a>
+						  <a class="ajax" n:href=":Admin:Modules:">Moduly</a>
 					  </li>
 					  <li {if $activePresenter == "Admin:Users"}class="active"{/if}>
-						  <a n:href=":Admin:Users:">Uživatelé</a>
+						  <a class="ajax" n:href=":Admin:Users:">Uživatelé</a>
 					  </li>
 					  <li {if $activePresenter == "Admin:Languages"}class="active"{/if}>
-						  <a n:href=":Admin:Languages:">Jazyky</a>
+						  <a class="ajax" n:href=":Admin:Languages:">Jazyky</a>
 					  </li>
 					  <li {if $activePresenter == "Admin:Settings"}class="active"{/if}>
-						  <a n:href=":Admin:Settings:">Nastavení</a>
+						  <a class="ajax" n:href=":Admin:Settings:">Nastavení</a>
 					  </li>
 					  <li {if $activePresenter == "Admin:Filesystem"}class="active"{/if}>
-						  <a n:href=":Admin:Filesystem:">Správce souborů</a>
+						  <a class="ajax" n:href=":Admin:Filesystem:">Správce souborů</a>
 					  </li>
 					  <li {if $activePresenter == "Admin:Update"}class="active"{/if}>
-						  <a n:href=":Admin:Update:">Aktualizace</a>
+						  <a class="ajax" n:href=":Admin:Update:">Aktualizace</a>
 					  </li>
 				  </ul>
 			{/snippet}
@@ -84,6 +85,8 @@
 	</div>
 	</div>
 	
+	<div id="loader">Loading data...</div>
+			
 	<div class="container flash-messages">
 	  {snippet flashMessages}
 		  <div n:foreach="$flashes as $flash" class="flash {$flash->type}">{$flash->message}</div>
@@ -94,10 +97,11 @@
 		{snippet content}
 			{include #content}
 		{/snippet}
-
-		<footer class="version">
-			<p>WebCMS2 - revize č.{$version['revision']} ({$version['date']|date:'d.m.Y H:i:s'}), &copy; Webcook</p>
-		</footer>
+		
 	</div>
+		
+	<footer class="version">
+		<p>WebCMS2 - revize č.{$version['revision']} ({$version['date']|date:'d.m.Y H:i:s'}), &copy; Webcook</p>
+	</footer>
 </body>
 </html>

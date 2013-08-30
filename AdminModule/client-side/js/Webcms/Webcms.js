@@ -17,13 +17,27 @@ Webcms.prototype = {
 		self = this;
 		
 		$(function(){
+			$.nette.init(function (ajaxHandler) {
+				$('a.ajax:not(.no-ajax)').live('click', ajaxHandler);
+			});
+			
+			$.nette.ext("loader", {
+				before : function(){
+					$("#loader").addClass("active");
+				},
+				
+				complete : function(){
+					$("#loader").removeClass("active");
+				}
+			});
+			
 			self.__registerListeners();
 		});
 	},
 	/* Global systems listeners registering. */
 	__registerListeners : function(){
 		// register bootbox confirm window for all danger buttons
-		$(".btn-danger").click(function(e){
+		$(".btn-danger").live("click", function(e){
 			e.preventDefault();
 			var anchor = this;
 			var title = $(this).data("confirm");
@@ -37,6 +51,10 @@ Webcms.prototype = {
 			});
 		});
 		
+		$("#snippet--mainMenu a").click(function(){
+			$("#snippet--mainMenu a").parent().removeClass('active');
+			$(this).parent().addClass('active');
+		});
 	}
 };
 

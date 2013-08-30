@@ -20,6 +20,11 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 			$this->redirect('Login:');
 		}
 		
+		if($this->isAjax()){
+			$this->invalidateControl('content');
+			$this->invalidateControl('flashMessages');
+		}
+		
 		$this->setLayout("layout");
 		
 		$this->template->version = \WebCMS\SystemHelper::getVersion();

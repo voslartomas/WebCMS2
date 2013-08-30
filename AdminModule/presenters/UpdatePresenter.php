@@ -17,10 +17,6 @@ class UpdatePresenter extends \AdminModule\BasePresenter{
 		parent::startup();
 	}
 	
-	public function actionClearTemp(){
-		
-	}
-	
 	public function actionUpdateSystem(){
 		
 		putenv("COMPOSER_HOME=/usr/bin/.composer");
@@ -31,7 +27,10 @@ class UpdatePresenter extends \AdminModule\BasePresenter{
 		$this->flashMessage($res);
 		if(file_exists('../log/install-error.log')){
 			$resError = file_get_contents('../log/install-error.log');
-			if(!empty($resError)) $this->flashMessage($resError);
+			
+			if(!empty($resError)) 
+				$this->flashMessage($resError);
+			
 			unlink('../log/install-error.log');
 		}
 		
@@ -44,7 +43,8 @@ class UpdatePresenter extends \AdminModule\BasePresenter{
 		
 		unlink('../log/install.log');
 		
-		$this->redirect('Update:');
+		if(!$this->isAjax())
+			$this->redirect('Update:');
 	}
 	
 	public function actionClearCache(){
