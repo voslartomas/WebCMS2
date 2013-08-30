@@ -1,0 +1,56 @@
+body {
+	font: 16px/1.5 "Trebuchet MS", "Geneva CE", lucida, sans-serif;
+	color: #333;
+	background-color: #fff;
+}
+
+h1 {
+	font-size: 150%;
+	color: #3484D2;
+}
+
+#ajax-spinner {
+	margin: 15px 0 0 15px;
+	padding: 13px;
+	background: white url('../images/spinner.gif') no-repeat 50% 50%;
+	font-size: 0;
+	z-index: 123456;
+	display: none;
+}
+
+div.flash {
+	color: black;
+	background: #FFF9D7;
+	border: 1px solid #E2C822;
+	padding: 1em;
+	margin: 1em 0;
+}
+
+a[href^="error:"] {
+	background: red;
+	color: white;
+}
+
+.flash-messages {
+	margin-top: 60px;
+}
+
+#loader {
+	display: none;
+	font-size: 2em;
+	border-radius: 4px;
+	border: 1px solid black;
+	position: absolute;
+	padding: 5px;
+	left: 45%;
+	top: 45%;
+}
+
+#loader.active{
+	display: block;
+}
+
+footer {
+	margin-top: 10px;
+	widht: 100%;
+}
