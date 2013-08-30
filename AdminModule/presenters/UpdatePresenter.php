@@ -49,7 +49,6 @@ class UpdatePresenter extends \AdminModule\BasePresenter{
 			$this->redirect('Update:');
 		else{
 			$this->invalidateControl('footer');
-			$this->sendPayload();
 		}
 	}
 	
