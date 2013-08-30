@@ -51,7 +51,7 @@ class UpdatePresenter extends \AdminModule\BasePresenter{
 		
 		$this->context->cacheStorage->clean(array(\Nette\Caching\Cache::ALL => TRUE));
 		
-		$this->flashMessage('Not implemented use console app.');
+		$this->flashMessage('Mezipaměť byla smazána.');
 		$this->redirect("Update:");
 	}
 }

@@ -1,7 +1,7 @@
 {**
  * My Application layout template.
  *
- * @copyright  Copyright (c) 2013 John Doe
+ * @copyright  Copyright (c) 2013 Tomáš Voslař
  * @package    WebCMS2
  *
  * @param string   $basePath web base path
@@ -18,59 +18,86 @@
 	<meta name="robots" content="{$robots}" n:ifset="$robots">
 
 	<title>WebCMS 2 - administrace</title>
+	{block head}
+		<link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/css/screen.css" type="text/css">
+		<link rel="stylesheet" media="print" href="{$basePath}/css/print.css" type="text/css">
+		<link rel="stylesheet" media="screen" href="{$basePath}/grido/grido.css" type="text/css">
+		<link rel="stylesheet" media="screen" href="{$basePath}/kendoui/kendo.common.css" type="text/css">
+		<link rel="stylesheet" media="screen" href="{$basePath}/kendoui/kendo.default.css" type="text/css">
+		<link rel="stylesheet" media="screen" href="{$basePath}/bootstrap/css/bootstrap.css" type="text/css">
+		<link rel="shortcut icon" href="{$basePath}/favicon.ico" type="image/x-icon">
 
-	<link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/css/screen.css" type="text/css">
-	<link rel="stylesheet" media="print" href="{$basePath}/css/print.css" type="text/css">
-	<link rel="stylesheet" media="screen" href="{$basePath}/grido/grido.css" type="text/css">
-	<link rel="shortcut icon" href="{$basePath}/favicon.ico" type="image/x-icon">
-
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
-	<script type="text/javascript" src="{$basePath}/js/netteForms.js"></script>
-	<script type="text/javascript" src="{$basePath}/grido/grido.js"></script>
-	{block head}{/block}
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+		<script type="text/javascript" src="{$basePath}/js/netteForms.js"></script>
+		<script type="text/javascript" src="{$basePath}/grido/grido.js"></script>
+		<script type="text/javascript" src="{$basePath}/kendoui/kendo.web.js"></script>
+		<script type="text/javascript" src="{$basePath}/bootstrap/js/bootstrap.js"></script>
+		<script type="text/javascript" src="{$basePath}/plugins/bootbox.min.js"></script>
+		<script type="text/javascript" src="{$basePath}/admin-js/Webcms/Webcms.js"></script>
+	{/block}
 </head>
 
 <body>
 	<script> document.body.className+=' js' </script>
 	
-	<a n:href="Login:out" class="logout btn btn-danger">Odhlásit se</a>
+	<div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+		<div class="navbar-header">
+		  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+		  <a class="navbar-brand" n:href=":Admin:Homepage:">WebCMS 2</a>
+		</div>
+
+		<div class="navbar-collapse collapse">
+			{snippet mainMenu}
+				<ul class="nav navbar-nav">
+					  <li {if $activePresenter == "Admin:Pages"}class="active"{/if}>
+						  <a n:href=":Admin:Pages:">Správa stránek</a>
+					  </li>
+					  <li {if $activePresenter == "Admin:Modules"}class="active"{/if}>
+						  <a n:href=":Admin:Modules:">Moduly</a>
+					  </li>
+					  <li {if $activePresenter == "Admin:Users"}class="active"{/if}>
+						  <a n:href=":Admin:Users:">Uživatelé</a>
+					  </li>
+					  <li {if $activePresenter == "Admin:Languages"}class="active"{/if}>
+						  <a n:href=":Admin:Languages:">Jazyky</a>
+					  </li>
+					  <li {if $activePresenter == "Admin:Settings"}class="active"{/if}>
+						  <a n:href=":Admin:Settings:">Nastavení</a>
+					  </li>
+					  <li {if $activePresenter == "Admin:Filesystem"}class="active"{/if}>
+						  <a n:href=":Admin:Filesystem:">Správce souborů</a>
+					  </li>
+					  <li {if $activePresenter == "Admin:Update"}class="active"{/if}>
+						  <a n:href=":Admin:Update:">Aktualizace</a>
+					  </li>
+				  </ul>
+			{/snippet}
+			<div class="navbar-form navbar-right">        
+				<a n:href="Login:out" class="logout btn btn-danger" data-confirm="Opravdu odhlásit ze systému?">Odhlásit se</a>  
+			</div>
+		</div>
+	</div>
+	</div>
 	
-	{snippet mainMenu}
-		<section>
-			<ul>
-				<li>
-					<a n:href=":Admin:Pages:">Správa stránek</a>
-				</li>
-				<li>
-					<a n:href=":Admin:Modules:">Moduly</a>
-				</li>
-				<li>
-					<a n:href=":Admin:Users:">Uživatelé</a>
-				</li>
-				<li>
-					<a n:href=":Admin:Languages:">Jazyky</a>
-				</li>
-				<li>
-					<a n:href=":Admin:Settings:">Nastavení</a>
-				</li>
-				<li>
-					<a n:href=":Admin:Filesystem:">Správce souborů</a>
-				</li>
-				<li>
-					<a n:href=":Admin:Update:">Aktualizace</a>
-				</li>
-			</ul>
-		</section>
-	{/snippet}
-	
-	{snippet flashMessages}
-		<div n:foreach="$flashes as $flash" class="flash {$flash->type}">{$flash->message}</div>
-	{/snippet}
-		
-	{snippet content}
-		{include #content}
-	{/snippet}
-		
-	<div class="version">WebCMS2 - revize č.{$version['revision']} ({$version['date']|date:'d.m.Y H:i:s'}), &copy; Webcook</div>
+	<div class="container flash-messages">
+	  {snippet flashMessages}
+		  <div n:foreach="$flashes as $flash" class="flash {$flash->type}">{$flash->message}</div>
+	  {/snippet}
+	</div>
+	 
+	<div class="container">
+		{snippet content}
+			{include #content}
+		{/snippet}
+
+		<footer class="version">
+			<p>WebCMS2 - revize č.{$version['revision']} ({$version['date']|date:'d.m.Y H:i:s'}), &copy; Webcook</p>
+		</footer>
+	</div>
 </body>
 </html>
