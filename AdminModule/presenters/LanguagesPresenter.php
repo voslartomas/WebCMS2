@@ -29,12 +29,12 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 	}
 	
 	protected function createComponentLanguageForm(){
-		
+
 		$form = $this->createForm();
-		$form->addText('name', 'Název');
-		$form->addText('abbr', 'Zkratka');
-		$form->addCheckbox('defaultFrontend', 'Výchozí fe');
-		$form->addCheckbox('defaultBackend', 'Výchozí be');
+		$form->addText('name', 'Název')->setAttribute('class', 'form-control');
+		$form->addText('abbr', 'Zkratka')->setAttribute('class', 'form-control');
+		$form->addCheckbox('defaultFrontend', 'Výchozí fe')->setAttribute('class', 'form-control');
+		$form->addCheckbox('defaultBackend', 'Výchozí be')->setAttribute('class', 'form-control');
 		$form->addSubmit('save', 'Uložit')->setAttribute('class', 'btn btn-success');
 		
 		$form->onSuccess[] = callback($this, 'languageFormSubmitted');

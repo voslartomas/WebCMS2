@@ -3,6 +3,8 @@
 namespace AdminModule;
 
 use Nette;
+use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
+
 
 /**
  * Base class for all application presenters.
@@ -13,6 +15,9 @@ use Nette;
 abstract class BasePresenter extends Nette\Application\UI\Presenter{
 	/** @var Doctrine\ORM\EntityManager */
 	protected $em;
+	
+	/* @var \WebCMS\Translation */
+	private $translation;
 	
 	/* Method is executed before render. */
 	protected function beforeRender(){
@@ -25,7 +30,11 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		if($this->isAjax()){
 			$this->invalidateControl('flashMessages');
 		}
-
+		
+		$language = $this->em->find('AdminModule\Language', 6);
+		$this->translation = new \WebCMS\Translation($this->em, $language, 1);
+		
+		$this->template->translation = $this->translation->getTranslations();
 		$this->template->version = \WebCMS\SystemHelper::getVersion();
 		$this->template->activePresenter = $this->getPresenter()->getName();
 	}
@@ -74,11 +83,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 	public function createForm(){
 		$form = new Nette\Application\UI\Form();
 		
-		$renderer = $form->getRenderer();
-		$renderer->wrappers['controls']['container'] = '';
-		$renderer->wrappers['pair']['container'] = 'div class="form-group"';
-		$renderer->wrappers['label']['container'] = '';
-		$renderer->wrappers['control']['container'] = 'div';
+		$form->setRenderer(new BootstrapRenderer);
 		
 		return $form;
 	}

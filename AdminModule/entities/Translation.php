@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as orm;
  */
 class Translation extends \AdminModule\Doctrine\Entity {
 	/**
-	 * @orm\Column
+	 * @orm\Column(name="`key`", type="text")
 	 * @var String 
 	 */
 	private $key;
@@ -21,7 +21,7 @@ class Translation extends \AdminModule\Doctrine\Entity {
 	 */
 	private $translation;
 	/**
-	 * @orm\OneToOne(targetEntity="Language")
+	 * @orm\ManyToOne(targetEntity="Language")
 	 * @var Int 
 	 */
 	private $language;
@@ -47,19 +47,19 @@ class Translation extends \AdminModule\Doctrine\Entity {
 		return $this->backend;
 	}
 
-	public function setKey(String $key) {
+	public function setKey($key) {
 		$this->key = $key;
 	}
 
-	public function setTranslation(String $translation) {
+	public function setTranslation($translation) {
 		$this->translation = $translation;
 	}
 
-	public function setLanguage(Int $language) {
+	public function setLanguage($language) {
 		$this->language = $language;
 	}
 
-	public function setBackend(Boolean $backend) {
+	public function setBackend($backend) {
 		$this->backend = $backend;
 	}
 }

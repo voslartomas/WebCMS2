@@ -3,8 +3,12 @@
 namespace WebCMS;
 
 class TranslationArray extends \ArrayObject{
-	
+	private $translation;
 	protected $data = array(); 
+	
+	public function __construct($translation){
+		$this->translation = $translation;
+	}
 	
 	public function getData(){
 		return $this->data;
@@ -13,7 +17,7 @@ class TranslationArray extends \ArrayObject{
     public function offsetGet($name) { 
         
     	if(empty($this->data[$name])){
-    		Translation::addTranslation($name, $name);
+    		$this->translation->addTranslation($name, $name);
     	}
     	
     	return $this->data[$name]; 
