@@ -157,7 +157,7 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 	public function actionUpdateTranslation($idTranslation, $value){
 		
 		$translation = $this->em->find('AdminModule\Translation', trim($idTranslation));
-		$translation->setTranslation($value);
+		$translation->setTranslation(trim($value));
 		
 		$this->em->persist($translation);
 		$this->em->flush();
