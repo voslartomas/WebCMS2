@@ -12,6 +12,7 @@ class FilesystemPresenter extends \AdminModule\BasePresenter{
 	protected function beforeRender(){
 		parent::beforeRender();
 		
+		$this->reloadContent();
 	}
 	
 	protected function startup(){		

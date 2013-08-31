@@ -22,23 +22,36 @@ class Language extends \AdminModule\Doctrine\Entity{
 	private $abbr;
 	/**
 	 * @orm\Column(type="boolean")
-	 * @var Booleand 
+	 * @var Boolean 
 	 */
-	private $default;
+	private $defaultFrontend;
+	/**
+	 * @orm\Column(type="boolean")
+	 * @var Boolean 
+	 */
+	private $defaultBackend;
 	
-	public function getDefault() {
-		return $this->default;
+	public function getDefaultBackend() {
+		return $this->defaultBackend;
 	}
 
-	public function setDefault(Booleand $default) {
-		$this->default = $default;
+	public function setDefaultBackend($defaultBackend) {
+		$this->defaultBackend = $defaultBackend;
+	}
+	
+	public function getDefaultFrontend() {
+		return $this->defaultFrontend;
+	}
+
+	public function setDefaultFrontend($defaultFrontend) {
+		$this->defaultFrontend = $defaultFrontend;
 	}
 	
 	public function getName() {
 		return $this->name;
 	}
 
-	public function setName(String $name) {
+	public function setName($name) {
 		$this->name = $name;
 		return $this;
 	}
@@ -47,7 +60,7 @@ class Language extends \AdminModule\Doctrine\Entity{
 		return $this->abbr;
 	}
 
-	public function setAbbr(String $abbr) {
+	public function setAbbr($abbr) {
 		$this->abbr = $abbr;
 		return $this;
 	}

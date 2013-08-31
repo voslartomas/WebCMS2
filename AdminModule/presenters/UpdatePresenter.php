@@ -11,6 +11,7 @@ class UpdatePresenter extends \AdminModule\BasePresenter{
 	protected function beforeRender(){
 		parent::beforeRender();
 		
+		$this->reloadContent();
 	}
 	
 	protected function startup(){		
@@ -24,12 +25,12 @@ class UpdatePresenter extends \AdminModule\BasePresenter{
 		system("../install/install.sh 4 > ../log/install.log 2> ../log/install-error.log");
 		$res = file_get_contents('../log/install.log');
 		
-		$this->flashMessage($res);
+		$this->flashMessage($res, 'success');
 		if(file_exists('../log/install-error.log')){
 			$resError = file_get_contents('../log/install-error.log');
 			
 			if(!empty($resError)) 
-				$this->flashMessage($resError);
+				$this->flashMessage($resError, 'danger');
 			
 			unlink('../log/install-error.log');
 		}
@@ -56,7 +57,7 @@ class UpdatePresenter extends \AdminModule\BasePresenter{
 		
 		$this->context->cacheStorage->clean(array(\Nette\Caching\Cache::ALL => TRUE));
 		
-		$this->flashMessage('Mezipaměť byla smazána.');
+		$this->flashMessage('Mezipaměť byla smazána.', 'success');
 		$this->redirect("Update:");
 	}
 }

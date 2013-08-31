@@ -20,13 +20,12 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 			$this->redirect('Login:');
 		}
 		
-		if($this->isAjax()){
-			$this->invalidateControl('content');
-			$this->invalidateControl('flashMessages');
-		}
-		
 		$this->setLayout("layout");
 		
+		if($this->isAjax()){
+			$this->invalidateControl('flashMessages');
+		}
+
 		$this->template->version = \WebCMS\SystemHelper::getVersion();
 		$this->template->activePresenter = $this->getPresenter()->getName();
 	}
@@ -34,6 +33,54 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 	/* Startup method. */
 	protected function startup(){
 		parent::startup();
+	}
+	
+	/* Invalidate ajax content. */
+	protected function reloadContent(){
+		if($this->isAjax()){
+			$this->invalidateControl('content');
+		}
+	}
+	
+	/* Invalidate ajax modal content. */
+	protected function reloadModalContent(){
+		if($this->isAjax()){
+			$this->invalidateControl('modalContent');
+		}
+	}
+	
+	/**
+	 * Creates default basic grid.
+	 * @param Nette\Application\UI\Presenter $presenter
+	 * @param String $name
+	 * @param String $entity
+	 * @return \Grido\Grid
+	 */
+	public function createGrid(Nette\Application\UI\Presenter $presenter, $name, $entity){
+		$grid = new \Grido\Grid($presenter, $name);
+		
+		$qb = $this->em->createQueryBuilder();
+		
+		$grid->setModel($qb->select('l')->from("AdminModule\\$entity", 'l'));
+		$grid->setRememberState();
+		
+		return $grid;
+	}
+	
+	/**
+	 * Creates form and rewrite renderer for bootstrap.
+	 * @return type
+	 */
+	public function createForm(){
+		$form = new Nette\Application\UI\Form();
+		
+		$renderer = $form->getRenderer();
+		$renderer->wrappers['controls']['container'] = '';
+		$renderer->wrappers['pair']['container'] = 'div class="form-group"';
+		$renderer->wrappers['label']['container'] = '';
+		$renderer->wrappers['control']['container'] = 'div';
+		
+		return $form;
 	}
 	
 	/**

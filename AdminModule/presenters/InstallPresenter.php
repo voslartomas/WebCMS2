@@ -15,6 +15,10 @@ class InstallPresenter extends UI\Presenter{
 		parent::beforeRender();
 		
 		$this->setLayout('install');
+		
+		if($this->isAjax()){
+			$this->invalidateControl('content');
+		}
 	}
 	
 	public function actionCompleteInstall(){
