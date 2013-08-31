@@ -16,7 +16,7 @@
 	<meta name="description" content="WebCMS2 Administration">
 	<meta name="robots" content="{$robots}" n:ifset="$robots">
 
-	<title>WebCMS 2 - administrace</title>
+	<title>WebCMS 2 - {$translation['adminModule_title']}</title>
 	{block head}
 		{* TODO vytvorit hlavni soubory pro js a css, include pouze techto dvou *}
 		<link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/css/screen.css" type="text/css">
@@ -56,30 +56,30 @@
 			{snippet mainMenu}
 				<ul class="nav navbar-nav">
 					  <li {if $activePresenter == "Admin:Pages"}class="active"{/if}>
-						  <a class="ajax" n:href=":Admin:Pages:">Správa stránek</a>
+						  <a class="ajax" n:href=":Admin:Pages:">{$translation['adminModule_menu_pages']}</a>
 					  </li>
 					  <li {if $activePresenter == "Admin:Modules"}class="active"{/if}>
-						  <a class="ajax" n:href=":Admin:Modules:">Moduly</a>
+						  <a class="ajax" n:href=":Admin:Modules:">{$translation['adminModule_menu_modules']}</a>
 					  </li>
 					  <li {if $activePresenter == "Admin:Users"}class="active"{/if}>
-						  <a class="ajax" n:href=":Admin:Users:">Uživatelé</a>
+						  <a class="ajax" n:href=":Admin:Users:">{$translation['adminModule_menu_users']}</a>
 					  </li>
 					  <li {if $activePresenter == "Admin:Languages"}class="active"{/if}>
-						  <a class="ajax" n:href=":Admin:Languages:">Jazyky</a>
+						  <a class="ajax" n:href=":Admin:Languages:">{$translation['adminModule_menu_languages']}</a>
 					  </li>
 					  <li {if $activePresenter == "Admin:Settings"}class="active"{/if}>
-						  <a class="ajax" n:href=":Admin:Settings:">Nastavení</a>
+						  <a class="ajax" n:href=":Admin:Settings:">{$translation['adminModule_menu_settings']}</a>
 					  </li>
 					  <li {if $activePresenter == "Admin:Filesystem"}class="active"{/if}>
-						  <a class="ajax" n:href=":Admin:Filesystem:">Správce souborů</a>
+						  <a class="ajax" n:href=":Admin:Filesystem:">{$translation['adminModule_menu_filesystem']}</a>
 					  </li>
 					  <li {if $activePresenter == "Admin:Update"}class="active"{/if}>
-						  <a class="ajax" n:href=":Admin:Update:">Aktualizace <span class="badge">0</span></a>
+						  <a class="ajax" n:href=":Admin:Update:">{$translation['adminModule_menu_update']} <span class="badge">0</span></a>
 					  </li>
 				  </ul>
 			{/snippet}
 			<div class="navbar-form navbar-right">        
-				<a n:href="Login:out" class="logout btn btn-danger" data-confirm="Opravdu odhlásit ze systému?">Odhlásit se</a>  
+				<a n:href="Login:out" class="logout btn btn-danger" data-confirm="Opravdu odhlásit ze systému?">{$translation['adminModule_signout']}</a>  
 			</div>
 		</div>
 	</div>
@@ -88,7 +88,7 @@
 	<div id="loader">
 		 <div class="progress progress-striped active" style="width: 300px;">
 			<div class="progress-bar"  role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-			  <span class="sr-only">Loading data... Please be patient.</span>
+			  <span class="sr-only">{$translation['adminModule_loading_title']}Loading data... Please be patient.</span>
 			</div>
 		  </div>
 	</div>
@@ -109,7 +109,7 @@
 		
 	{snippet footer}
 	<footer class="navbar navbar-fixed-bottom">
-		<p>WebCMS2 ve verzi {$version['revision']} ze dne {$version['date']|date:'d.m.Y H:i:s'}. &copy; Webcook 2009-2013</p>
+		<p>WebCMS2 {$translation['adminModule_footer_version']} {$version['revision']} {$translation['adminModule_footer_version_from']} {$version['date']|date:'d.m.Y H:i:s'}. &copy; Webcook 2009-2013</p>
 	</footer>
 	{/snippet}
 	
@@ -122,7 +122,7 @@
 	  </div>
 	  <div class="modal-body">
 		  {define modalContent}
-		  test
+		  
 		  {/define}
 		{snippet modalContent}
 				{include #modalContent}

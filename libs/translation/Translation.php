@@ -51,6 +51,7 @@ class Translation  extends \ArrayObject {
 
 		// save translation if not exists
 		$this->addTranslation($key, $key);
+		return $key;
 	}
 
 	public function addTranslation($key, $value = ""){
