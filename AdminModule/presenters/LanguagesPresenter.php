@@ -166,7 +166,7 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 		return $grid;
 	}
 	
-	public function actionUpdateTranslation($idTranslation, $value){
+	public function handleUpdateTranslation($idTranslation, $value){
 		
 		$translation = $this->em->find('AdminModule\Translation', trim($idTranslation));
 		$translation->setTranslation(trim($value));
@@ -176,7 +176,9 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 		
 		$this->flashMessage($this->translation['adminModule_translation_updated'], 'success');
 		$this->flashMessage('sdfs', 'success');
-		$this->reloadContent();
+		
+		$this->invalidateControl('flashMessages');
+		
 		if(!$this->isAjax())
 			$this->redirect('Languages:Translates');
 	}
