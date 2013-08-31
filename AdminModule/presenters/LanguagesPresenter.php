@@ -141,13 +141,28 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 		
 		$grid = $this->createGrid($this, $name, "Translation");
 		
+		$languages = $this->em->getRepository('AdminModule\Language')->findAll();
+		
+		$langs = array();
+		foreach($languages as $l){
+			$langs[$l->getId()] = $l->getName();
+		}
+		
+		$grid->addFilterSelect('language', 'Jazyk', $langs)->setColumn('language');
+		
 		$grid->addColumn('id', $this->translation['adminModule_translation_form_id'])->setSortable();
 		$grid->addColumn('key', $this->translation['adminModule_translation_form_key'])->setSortable();
 		$grid->addColumnText('translation', $this->translation['adminModule_translation_form_value'])->setSortable()->getCellPrototype()->addAttributes(array('class' => 'translation', 'contentEditable' => 'true'));
 		$grid->addColumnText('language', $this->translation['adminModule_translation_form_language'])->setCustomRender(function($item){
 			return $item->getLanguage()->getName();
-		})->setSortable();
-
+		})->setSortable()->setColumn('language');
+		
+		$grid->setOperations(array('delete' => 'Delete'), function($operation, $id) { 
+		
+			
+		} );
+		$grid->setExporting('test');
+		
 		return $grid;
 	}
 	
