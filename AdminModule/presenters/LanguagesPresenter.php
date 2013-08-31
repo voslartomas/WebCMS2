@@ -147,9 +147,6 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 		$grid->addColumnText('language', $this->translation['adminModule_translation_form_language'])->setCustomRender(function($item){
 			return $item->getLanguage()->getName();
 		})->setSortable();
-		
-		$grid->addAction("updateTranslation", $this->translation['adminModule_button_edit'])->getElementPrototype()->addAttributes(array('class' => 'btn btn-primary ajax', 'data-toggle' => 'modal', 'data-target' => '#myModal', 'data-remote' => 'false'));
-		$grid->addAction("deleteTranslation", $this->translation['adminModule_button_delete'])->getElementPrototype()->addAttributes(array('class' => 'btn btn-danger', 'data-confirm' => $this->translation['adminModule_button_delete_confirm']));
 
 		return $grid;
 	}
