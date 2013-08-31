@@ -4,6 +4,12 @@
 
 {include 'tabs.latte' active => 'translates'}
 
+<a id="updateTranslationLink" n:href="Languages:updateTranslation"></a>
 
+<div class="tab-content">
+	<div class="tab-pane active">
+		{control translationGrid}
+	</div>
+</div>
 
 {/block}

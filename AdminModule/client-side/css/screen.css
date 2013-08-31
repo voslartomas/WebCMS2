@@ -21,7 +21,7 @@ a[href^="error:"] {
 #loader {
 	display: none;
 	font-size: 2em;
-	position: absolute;
+	position: fixed;
 	padding: 5px;
 	left: 40%;
 	top: 40%;

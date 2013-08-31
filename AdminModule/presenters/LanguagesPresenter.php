@@ -14,6 +14,8 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 	/* @var Language */
 	private $language;
 	
+	/* LANGUAGES */
+	
 	protected function beforeRender(){
 		parent::beforeRender();
 		
@@ -76,7 +78,7 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 		$this->em->remove($this->language);
 		$this->em->flush();
 		
-		$this->flashMessage('Jazyk odstraněn.', 'success');
+		$this->flashMessage($this->translation['adminModule_language_removed'], 'success');
 		
 		if(!$this->isAjax())
 			$this->redirect('Languages:default');
@@ -123,13 +125,47 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 			$this->em->flush();
 		}
 
-		$this->flashMessage('Jazyk byl upraven.', 'success');
+		$this->flashMessage($this->translation['adminModule_language_added_edited'], 'success');
 		
 		if(!$this->isAjax())
 			$this->redirect('Languages:default');
 	} 
 	
+	/* TRANSLATIONS */
+	
 	public function renderTranslates(){
 		$this->reloadContent();
+	}
+	
+	protected function createComponentTranslationGrid($name){
+		
+		$grid = $this->createGrid($this, $name, "Translation");
+		
+		$grid->addColumn('id', $this->translation['adminModule_translation_form_id'])->setSortable();
+		$grid->addColumn('key', $this->translation['adminModule_translation_form_key'])->setSortable();
+		$grid->addColumnText('translation', $this->translation['adminModule_translation_form_value'])->setSortable()->getCellPrototype()->addAttributes(array('class' => 'translation', 'contentEditable' => 'true'));
+		$grid->addColumnText('language', $this->translation['adminModule_translation_form_language'])->setCustomRender(function($item){
+			return $item->getLanguage()->getName();
+		})->setSortable();
+		
+		$grid->addAction("updateTranslation", $this->translation['adminModule_button_edit'])->getElementPrototype()->addAttributes(array('class' => 'btn btn-primary ajax', 'data-toggle' => 'modal', 'data-target' => '#myModal', 'data-remote' => 'false'));
+		$grid->addAction("deleteTranslation", $this->translation['adminModule_button_delete'])->getElementPrototype()->addAttributes(array('class' => 'btn btn-danger', 'data-confirm' => $this->translation['adminModule_button_delete_confirm']));
+
+		return $grid;
+	}
+	
+	public function actionUpdateTranslation($idTranslation, $value){
+		
+		$translation = $this->em->find('AdminModule\Translation', trim($idTranslation));
+		$translation->setTranslation($value);
+		
+		$this->em->persist($translation);
+		$this->em->flush();
+		
+		$this->flashMessage($this->translation['adminModule_translation_updated'], 'success');
+		$this->flashMessage('sdfs', 'success');
+		$this->reloadContent();
+		if(!$this->isAjax())
+			$this->redirect('Languages:Translates');
 	}
 }
