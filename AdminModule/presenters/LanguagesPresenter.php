@@ -31,11 +31,11 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 	protected function createComponentLanguageForm(){
 
 		$form = $this->createForm();
-		$form->addText('name', 'Název')->setAttribute('class', 'form-control');
-		$form->addText('abbr', 'Zkratka')->setAttribute('class', 'form-control');
-		$form->addCheckbox('defaultFrontend', 'Výchozí fe')->setAttribute('class', 'form-control');
-		$form->addCheckbox('defaultBackend', 'Výchozí be')->setAttribute('class', 'form-control');
-		$form->addSubmit('save', 'Uložit')->setAttribute('class', 'btn btn-success');
+		$form->addText('name', $this->translation['adminModule_languages_form_name'])->setAttribute('class', 'form-control');
+		$form->addText('abbr', $this->translation['adminModule_languages_form_abbr'])->setAttribute('class', 'form-control');
+		$form->addCheckbox('defaultFrontend', $this->translation['adminModule_languages_form_default_fe'])->setAttribute('class', 'form-control');
+		$form->addCheckbox('defaultBackend', $this->translation['adminModule_languages_form_default_be'])->setAttribute('class', 'form-control');
+		$form->addSubmit('save', $this->translation['adminModule_languages_form_save'])->setAttribute('class', 'btn btn-success');
 		
 		$form->onSuccess[] = callback($this, 'languageFormSubmitted');
 		
@@ -49,19 +49,19 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 		
 		$grid = $this->createGrid($this, $name, "Language");
 		
-		$grid->addColumn('name', 'Název')->setSortable();
-		$grid->addColumnText('abbr', "Zkratka")->setSortable();
-		$grid->addColumn('defaultFrontend', "Výchozí fe")->setReplacement(array(
-			'1' => 'Ano',
-			NULL => 'Ne'
+		$grid->addColumn('name', $this->translation['adminModule_languages_form_name'])->setSortable();
+		$grid->addColumnText('abbr', $this->translation['adminModule_languages_form_abbr'])->setSortable();
+		$grid->addColumn('defaultFrontend', $this->translation['adminModule_languages_form_backend_fe'])->setReplacement(array(
+			'1' => $this->translation['adminModule_yes'],
+			NULL => $this->translation['adminModule_no']
 		));
-		$grid->addColumn('defaultBackend', "Výchozí be")->setReplacement(array(
-			'1' => 'Ano',
-			NULL => 'Ne'
+		$grid->addColumn('defaultBackend', $this->translation['adminModule_languages_form_backend_be'])->setReplacement(array(
+			'1' => $this->translation['adminModule_yes'],
+			NULL => $this->translation['adminModule_no']
 		));
 		
-		$grid->addAction("updateLanguage", "Upravit")->getElementPrototype()->addAttributes(array('class' => 'btn btn-primary ajax', 'data-toggle' => 'modal', 'data-target' => '#myModal', 'data-remote' => 'false'));
-		$grid->addAction("deleteLanguage", "Smazat")->getElementPrototype()->addAttributes(array('class' => 'btn btn-danger', 'data-confirm' => 'Opravdu smazat položku?'));
+		$grid->addAction("updateLanguage", $this->translation['adminModule_button_edit'])->getElementPrototype()->addAttributes(array('class' => 'btn btn-primary ajax', 'data-toggle' => 'modal', 'data-target' => '#myModal', 'data-remote' => 'false'));
+		$grid->addAction("deleteLanguage", $this->translation['adminModule_button_delete'])->getElementPrototype()->addAttributes(array('class' => 'btn btn-danger', 'data-confirm' => $this->translation['adminModule_button_delete_confirm']));
 
 		return $grid;
 	}

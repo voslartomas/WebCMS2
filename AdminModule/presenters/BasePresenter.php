@@ -17,7 +17,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 	protected $em;
 	
 	/* @var \WebCMS\Translation */
-	private $translation;
+	public $translation;
 	
 	/* Method is executed before render. */
 	protected function beforeRender(){
@@ -31,10 +31,14 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 			$this->invalidateControl('flashMessages');
 		}
 		
-		$language = $this->em->find('AdminModule\Language', 6);
-		$this->translation = new \WebCMS\Translation($this->em, $language, 1);
+		$language = $this->em->getRepository('AdminModule\Language')->findOneBy(array(
+			'defaultBackend' => 1
+			));
 		
-		$this->template->translation = $this->translation->getTranslations();
+		$translation = new \WebCMS\Translation($this->em, $language, 1);
+		
+		$this->translation = $translation->getTranslations();
+		$this->template->translation = $this->translation;
 		$this->template->version = \WebCMS\SystemHelper::getVersion();
 		$this->template->activePresenter = $this->getPresenter()->getName();
 	}

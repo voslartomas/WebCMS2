@@ -1,12 +1,12 @@
 {block content}
 
-<h1>Správa jazyků a překladů</h1>
+<h1>{$translation['adminModule_languages_title']}</h1>
 
 {include 'tabs.latte' active => 'languages'}
 
 <br />
 
-<a class="btn btn-primary ajax" n:href="Languages:updateLanguage" data-remote="false" data-target="#myModal" data-toggle="modal" >Přidat jazyk</a>
+<a class="btn btn-primary ajax" n:href="Languages:updateLanguage" data-remote="false" data-target="#myModal" data-toggle="modal" >{$translation['adminModule_languages_button_add']}</a>
 
 <br /><br />
 
