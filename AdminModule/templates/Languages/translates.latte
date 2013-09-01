@@ -21,4 +21,30 @@
 	</div>
 </div>
 
+	<script>
+		$(function(){
+			$(".translation").kendoEditor({
+				tools: [
+					"bold",
+					"italic",
+					"underline",
+					"strikethrough",
+					"createLink",
+					"unlink",
+					"insertImage",
+					"foreColor",
+					"backColor"
+				]
+			});
+			
+			$(".translation").blur(function(){
+				var id = $(this).parent().parent().find('.grid-cell-id').html();
+				var val = $(this).html();
+			
+				$.post($("#updateTranslationLink").attr("href"), { 'idTranslation' : id, 'value' : val });
+			
+			});
+		});
+	</script>
+		
 {/block}

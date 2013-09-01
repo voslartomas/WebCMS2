@@ -71,12 +71,11 @@
 			
 			<div class="navbar-form navbar-right">
 				<form method="get" class="pull-left">
-					<select name='language_id_change'>
+					<select id="languageChanger" name='language_id_change' class="form-control">
 						{foreach $languages as $l}
 							<option value="{$l->getId()}" {if $l->getId() == $language->getId()}selected{/if}>{$l->getName()}</option>
 						{/foreach}
 					</select>
-					<input type="submit" class="btn btn-mini" value="{_'ok'}" />
 				</form>
 
 				<a n:href="Login:out" class="logout btn btn-danger pull-right" data-confirm="{_'Are you sure?'}">{_'Sign out'}</a>  

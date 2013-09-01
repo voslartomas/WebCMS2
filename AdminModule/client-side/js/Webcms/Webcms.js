@@ -55,23 +55,8 @@ Webcms.prototype = {
 			$(this).parent().addClass('active');
 		});
 		
-		 $(".translation").kendoEditor({
-			tools: [
-				"bold",
-				"italic",
-				"underline",
-				"createLink",
-				"unlink",
-				"insertImage"
-			]
-		});
-		
-		$(".translation").live('blur', function(){
-			var id = $(this).parent().find('.grid-cell-id').html();
-			var val = $(this).html();
-			
-			$.post($("#updateTranslationLink").attr("href"), { 'idTranslation' : id, 'value' : val });
-			
+		$("#languageChanger").live('change', function(){
+			$(this).parent().submit();
 		});
 	}
 };

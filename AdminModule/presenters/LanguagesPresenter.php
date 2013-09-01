@@ -51,7 +51,7 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 		
 		$grid = $this->createGrid($this, $name, "Language");
 		
-		$grid->addColumn('name', 'Name')->setSortable()->setFilter();
+		$grid->addColumn('name', 'Name')->setSortable();
 		$grid->addColumnText('abbr', 'Abbreviation')->setSortable();
 		$grid->addColumn('defaultFrontend', 'Default fe')->setReplacement(array(
 			'1' => 'Yes',
@@ -153,11 +153,13 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 		
 		$grid->addColumn('id', 'ID')->setSortable()->setFilter();
 		$grid->addColumn('key', 'Key')->setSortable()->setFilter();
-		$grid->addColumnText('translation', 'Value')->setSortable()->getCellPrototype()->addAttributes(array('class' => 'translation', 'contentEditable' => 'true'));
+		$grid->addColumnText('translation', 'Value')->setSortable()->setCustomRender(function($item){
+			return '<div class="translation" contentEditable>' . $item->getTranslation() . '</div>';
+		});
 		$grid->addColumnText('language', 'Language')->setCustomRender(function($item){
 			return $item->getLanguage()->getName();
 		})->setSortable()->setFilterSelect($langs);
-		
+		$grid->setFilterRenderType(\Grido\Components\Filters\Filter::RENDER_OUTER);
 		return $grid;
 	}
 	
@@ -175,5 +177,9 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 		
 		if(!$this->isAjax())
 			$this->redirect('Languages:Translates');
+	}
+	
+	public function exportTranslations(){
+		
 	}
 }
