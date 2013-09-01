@@ -33,11 +33,11 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 	protected function createComponentLanguageForm(){
 
 		$form = $this->createForm();
-		$form->addText('name', $this->translation['adminModule_languages_form_name'])->setAttribute('class', 'form-control');
-		$form->addText('abbr', $this->translation['adminModule_languages_form_abbr'])->setAttribute('class', 'form-control');
-		$form->addCheckbox('defaultFrontend', $this->translation['adminModule_languages_form_default_fe'])->setAttribute('class', 'form-control');
-		$form->addCheckbox('defaultBackend', $this->translation['adminModule_languages_form_default_be'])->setAttribute('class', 'form-control');
-		$form->addSubmit('save', $this->translation['adminModule_languages_form_save'])->setAttribute('class', 'btn btn-success')->setAttribute('data-dismiss', 'modal');
+		$form->addText('name', 'Name')->setAttribute('class', 'form-control');
+		$form->addText('abbr', 'Abbreviation')->setAttribute('class', 'form-control');
+		$form->addCheckbox('defaultFrontend', 'Default fe')->setAttribute('class', 'form-control');
+		$form->addCheckbox('defaultBackend', 'Default be')->setAttribute('class', 'form-control');
+		$form->addSubmit('save', 'Save')->setAttribute('class', 'btn btn-success')->setAttribute('data-dismiss', 'modal');
 		
 		$form->onSuccess[] = callback($this, 'languageFormSubmitted');
 		
@@ -51,19 +51,19 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 		
 		$grid = $this->createGrid($this, $name, "Language");
 		
-		$grid->addColumn('name', $this->translation['adminModule_languages_form_name'])->setSortable()->setFilter();
-		$grid->addColumnText('abbr', $this->translation['adminModule_languages_form_abbr'])->setSortable();
-		$grid->addColumn('defaultFrontend', $this->translation['adminModule_languages_form_backend_fe'])->setReplacement(array(
-			'1' => $this->translation['adminModule_yes'],
-			NULL => $this->translation['adminModule_no']
+		$grid->addColumn('name', 'Name')->setSortable()->setFilter();
+		$grid->addColumnText('abbr', 'Abbreviation')->setSortable();
+		$grid->addColumn('defaultFrontend', 'Default fe')->setReplacement(array(
+			'1' => 'Yes',
+			NULL => 'No'
 		));
-		$grid->addColumn('defaultBackend', $this->translation['adminModule_languages_form_backend_be'])->setReplacement(array(
-			'1' => $this->translation['adminModule_yes'],
-			NULL => $this->translation['adminModule_no']
+		$grid->addColumn('defaultBackend', 'Default be')->setReplacement(array(
+			'1' => 'Yes',
+			NULL => 'No'
 		));
 		
-		$grid->addAction("updateLanguage", $this->translation['adminModule_button_edit'])->getElementPrototype()->addAttributes(array('class' => 'btn btn-primary ajax', 'data-toggle' => 'modal', 'data-target' => '#myModal', 'data-remote' => 'false'));
-		$grid->addAction("deleteLanguage", $this->translation['adminModule_button_delete'])->getElementPrototype()->addAttributes(array('class' => 'btn btn-danger', 'data-confirm' => $this->translation['adminModule_button_delete_confirm']));
+		$grid->addAction("updateLanguage", 'Edit')->getElementPrototype()->addAttributes(array('class' => 'btn btn-primary ajax', 'data-toggle' => 'modal', 'data-target' => '#myModal', 'data-remote' => 'false'));
+		$grid->addAction("deleteLanguage", 'Delete')->getElementPrototype()->addAttributes(array('class' => 'btn btn-danger', 'data-confirm' => 'Are you sure you want to delete the item?'));
 
 		return $grid;
 	}
@@ -78,7 +78,7 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 		$this->em->remove($this->language);
 		$this->em->flush();
 		
-		$this->flashMessage($this->translation['adminModule_language_removed'], 'success');
+		$this->flashMessage($this->translation['Language has been removed.'], 'success');
 		
 		if(!$this->isAjax())
 			$this->redirect('Languages:default');
@@ -125,10 +125,13 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 			$this->em->flush();
 		}
 
-		$this->flashMessage($this->translation['adminModule_language_added_edited'], 'success');
+		$this->flashMessage($this->translation['Language has been added.'], 'success');
 		
 		if(!$this->isAjax())
 			$this->redirect('Languages:default');
+		else{
+			$this->invalidateControl('header');
+		}
 	} 
 	
 	/* TRANSLATIONS */
@@ -143,15 +146,15 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 		
 		$languages = $this->em->getRepository('AdminModule\Language')->findAll();
 		
-		$langs = array('' => $this->translation['adminModule_translation_grid_pick_lang']);
+		$langs = array('' => $this->translation['Pick a language']);
 		foreach($languages as $l){
 			$langs[$l->getId()] = $l->getName();
 		}
 		
-		$grid->addColumn('id', $this->translation['adminModule_translation_form_id'])->setSortable()->setFilter();
-		$grid->addColumn('key', $this->translation['adminModule_translation_form_key'])->setSortable()->setFilter();
-		$grid->addColumnText('translation', $this->translation['adminModule_translation_form_value'])->setSortable()->getCellPrototype()->addAttributes(array('class' => 'translation', 'contentEditable' => 'true'));
-		$grid->addColumnText('language', $this->translation['adminModule_translation_form_language'])->setCustomRender(function($item){
+		$grid->addColumn('id', 'ID')->setSortable()->setFilter();
+		$grid->addColumn('key', 'Key')->setSortable()->setFilter();
+		$grid->addColumnText('translation', 'Value')->setSortable()->getCellPrototype()->addAttributes(array('class' => 'translation', 'contentEditable' => 'true'));
+		$grid->addColumnText('language', 'Language')->setCustomRender(function($item){
 			return $item->getLanguage()->getName();
 		})->setSortable()->setFilterSelect($langs);
 		
@@ -166,7 +169,7 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 		$this->em->persist($translation);
 		$this->em->flush();
 		
-		$this->flashMessage($this->translation['adminModule_translation_updated'], 'success');
+		$this->flashMessage($this->translation['Translation has been added.'], 'success');
 		
 		$this->invalidateControl('flashMessages');
 		

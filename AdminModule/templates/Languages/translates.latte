@@ -1,6 +1,6 @@
 {block content}
 
-<h1>{$translation['adminModule_languages_title']}</h1>
+<h1>{_'Translations'}</h1>
 
 {include 'tabs.latte' active => 'translates'}
 
@@ -9,8 +9,8 @@
 <br />
 
 <div class="nav">
-	<a class="btn btn-primary ajax" n:href="translatesExport">{$translation['adminModule_translation_export']}</a>
-	<a class="btn btn-primary ajax" n:href="translatesImport">{$translation['adminModule_translation_import']}</a>
+	<a class="btn btn-primary ajax" n:href="translatesExport">{_'Export translations'}</a>
+	<a class="btn btn-primary ajax" n:href="translatesImport">{_'Import translations'}</a>
 </div>
 
 <br />

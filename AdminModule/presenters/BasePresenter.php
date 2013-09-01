@@ -37,8 +37,8 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 			$this->invalidateControl('flashMessages');
 		}
 		
+		$this->template->setTranslator($this->translator);
 		$this->template->language = $this->state->language;
-		$this->template->translation = $this->translation;
 		$this->template->version = \WebCMS\SystemHelper::getVersion();
 		$this->template->activePresenter = $this->getPresenter()->getName();
 		$this->template->languages = $this->em->getRepository('AdminModule\Language')->findAll();
@@ -52,17 +52,19 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 
 		// changing language
 		if($this->getParameter('language_id_change')){
-			//$this->state->language = $this->em->find('AdminModule\Language', $this->getParameter('language_id_change'));
+			$this->state->language = $this->em->find('AdminModule\Language', $this->getParameter('language_id_change'));
 			$this->redirect('Homepage:default');
 		}
 		
 		if(!isset($this->state->language)){
-			/*$this->state->language = $this->em->getRepository('AdminModule\Language')->findOneBy(array(
+			$this->state->language = $this->em->getRepository('AdminModule\Language')->findOneBy(array(
 				'defaultBackend' => 1
-			));*/
+			));
 		}
 		
-		$translation = new \WebCMS\Translation($this->em, $this->state->language, 1);
+		$language =  $this->em->find('AdminModule\Language', $this->state->language->getId());
+		
+		$translation = new \WebCMS\Translation($this->em, $language , 1);
 		$this->translation = $translation->getTranslations();
 		$this->translator = new \WebCMS\Translator($this->translation);
 	}
@@ -94,7 +96,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		$qb = $this->em->createQueryBuilder();
 		
 		$grid->setModel($qb->select('l')->from("AdminModule\\$entity", 'l'));
-		$grid->setRememberState();
+		//$grid->setRememberState();
 		$grid->setTranslator($this->translator);
 		$grid->setFilterRenderType(\Grido\Components\Filters\Filter::RENDER_INNER);
 		
@@ -109,6 +111,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		$form = new Nette\Application\UI\Form();
 		
 		$form->getElementPrototype()->addAttributes(array('class' => 'ajax'));
+		$form->setTranslator($this->translator);
 		$form->setRenderer(new BootstrapRenderer);
 		
 		return $form;

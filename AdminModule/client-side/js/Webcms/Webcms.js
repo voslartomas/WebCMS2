@@ -49,8 +49,9 @@ Webcms.prototype = {
 			});
 		});
 		
-		$("#snippet--mainMenu a").click(function(){
-			$("#snippet--mainMenu a").parent().removeClass('active');
+		$(".jq_head a.ajax").live('click', function(){
+			$(".jq_head a.ajax").parent().removeClass('active');
+			
 			$(this).parent().addClass('active');
 		});
 		
