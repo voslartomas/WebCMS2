@@ -4,7 +4,16 @@
 
 {include 'tabs.latte' active => 'translates'}
 
-<a id="updateTranslationLink" n:href="Languages:updateTranslation"></a>
+<a id="updateTranslationLink" n:href="updateTranslation!"></a>
+
+<br />
+
+<div class="nav">
+	<a class="btn btn-primary ajax" n:href="translatesExport">{$translation['adminModule_translation_export']}</a>
+	<a class="btn btn-primary ajax" n:href="translatesImport">{$translation['adminModule_translation_import']}</a>
+</div>
+
+<br />
 
 <div class="tab-content">
 	<div class="tab-pane active">

@@ -18,9 +18,9 @@ class TranslationArray extends \ArrayObject{
         
     	if(empty($this->data[$name])){
     		$this->translation->addTranslation($name, $name);
-			$this->data[$name] = $name;
+			echo $this->data[$name] = $name;
     	}
-    	
+
     	return $this->data[$name]; 
     } 
     

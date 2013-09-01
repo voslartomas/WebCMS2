@@ -26,8 +26,6 @@
 		<link rel="stylesheet" media="screen" href="{$basePath}/kendoui/kendo.default.css" type="text/css">
 		<link rel="stylesheet" media="screen" href="{$basePath}/bootstrap/css/bootstrap.css" type="text/css">
 		<link rel="shortcut icon" href="{$basePath}/favicon.ico" type="image/x-icon">
-
-		
 	{/block}
 </head>
 
@@ -71,7 +69,15 @@
 					  </li>
 				  </ul>
 			{/snippet}
-			<div class="navbar-form navbar-right">        
+			<div class="navbar-form navbar-right">
+				<form method="get">
+					<select name='language_id_change'>
+						{foreach $languages as $l}
+							<option value="{$l->getId()}" {if $l->getId() == $language->getId()}selected{/if}>{$l->getName()}</option>
+						{/foreach}
+					</select>
+					<input type="submit" class="btn btn-mini" value="{$translation['adminModule_change_language']}" />
+				</form>
 				<a n:href="Login:out" class="logout btn btn-danger" data-confirm="Opravdu odhlásit ze systému?">{$translation['adminModule_signout']}</a>  
 			</div>
 		</div>
@@ -125,12 +131,12 @@
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
-		<script type="text/javascript" src="{$basePath}/js/netteForms.js"></script>
 		<script type="text/javascript" src="{$basePath}/kendoui/kendo.web.js"></script>
 		<script type="text/javascript" src="{$basePath}/bootstrap/js/bootstrap.js"></script>
 		<script type="text/javascript" src="{$basePath}/plugins/bootbox.min.js"></script>
 		<script type="text/javascript" src="{$basePath}/grido/grido.js"></script>
 		<script type="text/javascript" src="{$basePath}/plugins/nette.ajax.js"></script>
+		<script type="text/javascript" src="{$basePath}/js/netteForms.js"></script>
 		<script type="text/javascript" src="{$basePath}/admin-js/Webcms/Webcms.js"></script>
 </body>
 </html>

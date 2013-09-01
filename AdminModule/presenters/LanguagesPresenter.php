@@ -37,7 +37,7 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 		$form->addText('abbr', $this->translation['adminModule_languages_form_abbr'])->setAttribute('class', 'form-control');
 		$form->addCheckbox('defaultFrontend', $this->translation['adminModule_languages_form_default_fe'])->setAttribute('class', 'form-control');
 		$form->addCheckbox('defaultBackend', $this->translation['adminModule_languages_form_default_be'])->setAttribute('class', 'form-control');
-		$form->addSubmit('save', $this->translation['adminModule_languages_form_save'])->setAttribute('class', 'btn btn-success');
+		$form->addSubmit('save', $this->translation['adminModule_languages_form_save'])->setAttribute('class', 'btn btn-success')->setAttribute('data-dismiss', 'modal');
 		
 		$form->onSuccess[] = callback($this, 'languageFormSubmitted');
 		
@@ -51,7 +51,7 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 		
 		$grid = $this->createGrid($this, $name, "Language");
 		
-		$grid->addColumn('name', $this->translation['adminModule_languages_form_name'])->setSortable();
+		$grid->addColumn('name', $this->translation['adminModule_languages_form_name'])->setSortable()->setFilter();
 		$grid->addColumnText('abbr', $this->translation['adminModule_languages_form_abbr'])->setSortable();
 		$grid->addColumn('defaultFrontend', $this->translation['adminModule_languages_form_backend_fe'])->setReplacement(array(
 			'1' => $this->translation['adminModule_yes'],
@@ -143,25 +143,17 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 		
 		$languages = $this->em->getRepository('AdminModule\Language')->findAll();
 		
-		$langs = array();
+		$langs = array('' => $this->translation['adminModule_translation_grid_pick_lang']);
 		foreach($languages as $l){
 			$langs[$l->getId()] = $l->getName();
 		}
 		
-		$grid->addFilterSelect('language', 'Jazyk', $langs)->setColumn('language');
-		
-		$grid->addColumn('id', $this->translation['adminModule_translation_form_id'])->setSortable();
-		$grid->addColumn('key', $this->translation['adminModule_translation_form_key'])->setSortable();
+		$grid->addColumn('id', $this->translation['adminModule_translation_form_id'])->setSortable()->setFilter();
+		$grid->addColumn('key', $this->translation['adminModule_translation_form_key'])->setSortable()->setFilter();
 		$grid->addColumnText('translation', $this->translation['adminModule_translation_form_value'])->setSortable()->getCellPrototype()->addAttributes(array('class' => 'translation', 'contentEditable' => 'true'));
 		$grid->addColumnText('language', $this->translation['adminModule_translation_form_language'])->setCustomRender(function($item){
 			return $item->getLanguage()->getName();
-		})->setSortable()->setColumn('language');
-		
-		$grid->setOperations(array('delete' => 'Delete'), function($operation, $id) { 
-		
-			
-		} );
-		$grid->setExporting('test');
+		})->setSortable()->setFilterSelect($langs);
 		
 		return $grid;
 	}
@@ -175,7 +167,6 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 		$this->em->flush();
 		
 		$this->flashMessage($this->translation['adminModule_translation_updated'], 'success');
-		$this->flashMessage('sdfs', 'success');
 		
 		$this->invalidateControl('flashMessages');
 		

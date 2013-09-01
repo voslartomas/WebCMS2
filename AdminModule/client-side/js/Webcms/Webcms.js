@@ -19,6 +19,7 @@ Webcms.prototype = {
 		$(function(){
 			$.nette.init(function (ajaxHandler) {
 				$('a.ajax:not(.no-ajax)').live('click', ajaxHandler);
+				$('form.ajax :submit').live('click', ajaxHandler);
 			});
 			
 			//ajax loader animation
@@ -68,9 +69,7 @@ Webcms.prototype = {
 			var id = $(this).parent().find('.grid-cell-id').html();
 			var val = $(this).html();
 			
-			$.post($("#updateTranslationLink").attr("href"), { 'idTranslation' : id, 'value' : val }, function(){
-				
-			});
+			$.post($("#updateTranslationLink").attr("href"), { 'idTranslation' : id, 'value' : val });
 			
 		});
 	}

@@ -21,7 +21,7 @@ class Translation extends \AdminModule\Doctrine\Entity {
 	 */
 	private $translation;
 	/**
-	 * @orm\ManyToOne(targetEntity="Language")
+	 * @orm\ManyToOne(targetEntity="Language", onDelete="CASCADE")
 	 * @var Int 
 	 */
 	private $language;
