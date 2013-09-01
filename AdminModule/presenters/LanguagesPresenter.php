@@ -37,7 +37,8 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 		$form->addText('abbr', 'Abbreviation')->setAttribute('class', 'form-control');
 		$form->addCheckbox('defaultFrontend', 'Default fe')->setAttribute('class', 'form-control');
 		$form->addCheckbox('defaultBackend', 'Default be')->setAttribute('class', 'form-control');
-		$form->addSubmit('save', 'Save')->setAttribute('class', 'btn btn-success')->setAttribute('data-dismiss', 'modal');
+		$form->addUpload('import', 'Import lang');
+		$form->addSubmit('save', 'Save')->setAttribute('class', 'btn btn-success');
 		
 		$form->onSuccess[] = callback($this, 'languageFormSubmitted');
 		
@@ -62,10 +63,86 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 			NULL => 'No'
 		));
 		
+		$grid->addAction("exportLanguage", 'Export')->getElementPrototype()->addAttributes(array('class' => 'btn btn-primary'));
 		$grid->addAction("updateLanguage", 'Edit')->getElementPrototype()->addAttributes(array('class' => 'btn btn-primary ajax', 'data-toggle' => 'modal', 'data-target' => '#myModal', 'data-remote' => 'false'));
 		$grid->addAction("deleteLanguage", 'Delete')->getElementPrototype()->addAttributes(array('class' => 'btn btn-danger', 'data-confirm' => 'Are you sure you want to delete the item?'));
 
 		return $grid;
+	}
+	
+	/**
+	 * Export language into JSON file and terminate response for download it.
+	 * @param Int $id 
+	 */
+	public function actionExportLanguage($id){
+		$language = $this->em->find("AdminModule\Language", $id);
+		
+		$export = array(
+			'name' => $language->getName(),
+			'abbr' => $language->getAbbr(),
+			'translations' => array()
+		);
+		
+		foreach($language->getTranslations() as $translation){
+			$export['translations'][] = array(
+				'key' => $translation->getKey(),
+				'translation' => $translation->getTranslation(),
+				'backend' => $translation->getBackend()
+			);
+		}
+		
+		$export = json_encode($export);
+		$filename = $language->getAbbr() . '.json';
+
+		$response = $this->getHttpResponse();
+		$response->setHeader('Content-Description', 'File Transfer');
+		$response->setContentType('text/plain', 'UTF-8');
+		$response->setHeader('Content-Disposition', 'attachment; filename=' . $filename);
+		$response->setHeader('Content-Transfer-Encoding', 'binary');
+		$response->setHeader('Expires', 0);
+		$response->setHeader('Cache-Control', 'must-revalidate, post-check=0, pre-check=0');
+		$response->setHeader('Pragma', 'public');
+		$response->setHeader('Content-Length', strlen($export));
+
+		ob_clean();
+		flush();
+		echo $export;
+
+		$this->terminate();
+	}
+	
+	public function importLanguage($fileData, $language){
+		$data = json_decode($fileData, TRUE);
+		
+		$name = $language->getName();
+		if(empty($name))
+			$language->setName($data['name']);
+		
+		$translations = array();
+		foreach($data['translations'] as $translation){
+			$t = new Translation();
+			$t->setLanguage($language);
+			$t->setKey($translation['key']);
+			$t->setTranslation($translation['translation']);
+			$t->setBackend($translation['backend']);
+			
+			if(!$this->translationExists($t)){
+				$this->em->persist($t);
+				$translations[] = $t;
+			}
+		}
+
+		$this->em->persist($language);	
+		$this->em->flush();
+	}
+	
+	private function translationExists($translation){
+		$exists = $this->em->getRepository('AdminModule\Translation')->findBy(array(
+			'language' => $translation->getLanguage(),
+			'key' => $translation->getKey()
+		));
+		
+		return $exists ? TRUE : FALSE;
 	}
 	
 	public function actionUpdateLanguage($id){
@@ -102,6 +179,19 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 		$this->em->persist($this->language);
 		$this->em->flush();
 		
+		if($values->import->getTemporaryFile()){
+			$qb = $this->em->createQueryBuilder();
+			$qb->delete('AdminModule\Translation', 'l')
+					->where('l.language = ?1')
+					->setParameter(1, $this->language)
+					->getQuery()
+					->execute();
+			$this->em->flush();
+			
+			$content = file_get_contents($values->import->getTemporaryFile());
+			$this->importLanguage($content, $this->language);
+		}
+			
 		// only one item can be default
 		if($values->defaultFrontend){
 			$qb = $this->em->createQueryBuilder();
@@ -177,9 +267,5 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 		
 		if(!$this->isAjax())
 			$this->redirect('Languages:Translates');
-	}
-	
-	public function exportTranslations(){
-		
 	}
 }

@@ -63,6 +63,11 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		}
 		
 		$language =  $this->em->find('AdminModule\Language', $this->state->language->getId());
+		// check whether is language still in db
+		if(!$language){
+			unset($this->state->language);
+			$this->redirect('Homepage:default');
+		}
 		
 		$translation = new \WebCMS\Translation($this->em, $language , 1);
 		$this->translation = $translation->getTranslations();
@@ -110,7 +115,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 	public function createForm(){
 		$form = new Nette\Application\UI\Form();
 		
-		$form->getElementPrototype()->addAttributes(array('class' => 'ajax'));
+		$form->getElementPrototype();//->addAttributes(array('class' => 'ajax'));
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new BootstrapRenderer);
 		

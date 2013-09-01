@@ -2,7 +2,7 @@
  * Administration main layout WebCMS2.
  *
  * @copyright  Copyright (c) 2013 Tomáš Voslař
- * @package    WebCMS2
+ * @package    WebCMS
  *
  * @param string   $basePath web base path
  * @param string   $robots   tell robots how to index the content of a page (optional)
@@ -16,7 +16,7 @@
 	<meta name="description" content="WebCMS2 Administration">
 	<meta name="robots" content="{$robots}" n:ifset="$robots">
 
-	<title>WebCMS 2 - {_'Administration'}</title>
+	<title>WebCMS - {_'Administration'}</title>
 	{block head}
 		{* TODO vytvorit hlavni soubory pro js a css, include pouze techto dvou *}
 		<link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/css/screen.css" type="text/css">
@@ -40,7 +40,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-		  <a class="navbar-brand ajax" n:href=":Admin:Homepage:">WebCMS 2</a>
+		  <a class="navbar-brand ajax" n:href=":Admin:Homepage:">WebCMS</a>
 		</div>
 
 		<div class="navbar-collapse collapse">
@@ -109,7 +109,7 @@
 		
 	{snippet footer}
 	<footer class="navbar">
-		<p>WebCMS2 {_'version'} {$version['revision']} {_'from date'} {$version['date']|date:'d.m.Y H:i:s'}. &copy; Webcook 2009-2013</p>
+		<p>WebCMS {_'version'} {$version['revision']} {_'from date'} {$version['date']|date:'d.m.Y H:i:s'}. &copy; Webcook 2009-2013</p>
 	</footer>
 	{/snippet}
 	

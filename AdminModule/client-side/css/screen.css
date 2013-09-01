@@ -35,3 +35,8 @@ footer {
 	margin-top: 10px;
 	widht: 100%;
 }
+
+.k-state-active{
+	width: 400px;
+	height: 200px;
+}

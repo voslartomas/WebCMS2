@@ -30,6 +30,19 @@ class Language extends \AdminModule\Doctrine\Entity{
 	 * @var Boolean 
 	 */
 	private $defaultBackend;
+	/**
+	 * @orm\OneToMany(targetEntity="Translation", mappedBy="language") 
+	 * @var Array
+	 */
+	private $translations;
+	
+	public function getTranslations() {
+		return $this->translations;
+	}
+
+	public function setTranslations(Array $translations) {
+		$this->translations = $translations;
+	}
 	
 	public function getDefaultBackend() {
 		return $this->defaultBackend;
