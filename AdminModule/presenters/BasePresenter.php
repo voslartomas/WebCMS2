@@ -37,6 +37,8 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 			$this->invalidateControl('flashMessages');
 		}
 		
+		$this->template->registerHelperLoader('\WebCMS\SystemHelper::loader');
+		
 		$this->template->setTranslator($this->translator);
 		$this->template->language = $this->state->language;
 		$this->template->version = \WebCMS\SystemHelper::getVersion();

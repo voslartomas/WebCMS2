@@ -7,6 +7,17 @@ class SystemHelper {
 	const VERSION_FILE = '../libs/webcms2/webcms2/AdminModule/version';
 	
 	/**
+	 * Helper loader.
+	 * @param type $helper
+	 * @return type
+	 */
+	 public static function loader($helper){
+        if (method_exists(__CLASS__, $helper)){
+            return callback(__CLASS__, $helper);
+        }
+	 }
+	
+	/**
 	 * Gets actual version of the system.
 	 * @return Array[revision, date]
 	 */
@@ -37,5 +48,19 @@ class SystemHelper {
 		}
 		
 		return file_get_contents($filename);
+	}
+	
+	/**
+	 * Returns formatted size.
+	 * @param Int $size size in bytes
+	 * @return String - formatted size
+	 */
+	public static function formatSize($size) {
+		$sizes = array(" Bytes", " KB", " MB", " GB", " TB", " PB", " EB", " ZB", " YB");
+		if ($size == 0) {
+			return('n/a');
+		} else {
+			return (round($size/pow(1024, ($i = floor(log($size, 1024)))), 2) . $sizes[$i]);
+		}
 	}
 }

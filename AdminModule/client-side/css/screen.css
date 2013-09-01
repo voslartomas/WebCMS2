@@ -40,3 +40,20 @@ footer {
 	width: 400px;
 	height: 200px;
 }
+
+/* Filesystem */
+.filesystem {
+	display: block;
+}
+
+.filesystem .directory {
+	display: block;
+	width: 100%;
+	height: 30px;
+	line-height: 30px;
+	border-bottom: 1px solid black;
+}
+
+.filesystem .directory:hover {
+
+}

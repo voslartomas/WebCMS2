@@ -2,5 +2,183 @@
 
 <h1>{_'Filesystem'}</h1>
 
+<a class="btn btn-success jq_newDir" n:href="makeDirectory!">{_'Create new directory'}</a>
+
+<a class="btn btn-success jq_newDir" n:href="makeBackup!">{_'Create backup'}</a>
+
+<script>
+	$(function(){
+		$(".jq_newDir").click(function(e){
+			e.preventDefault();
+			
+			bootbox.prompt({_'Enter name of the new directory:'}, function(text){
+				$.nette.ajax({ url : {plink makeDirectory!}, data : { name : text } })
+			});
+		});
+	});
+</script>
+
+<div id="uploader" class="k-content">
+	<input type="file" name="files" id="upload" />
+
+	<script id="fileTemplate" type="text/x-kendo-template">
+		<span class='k-progress'></span>
+		<div class='file-wrapper'>
+			<span class='file-icon #=addExtensionClass(files[0].extension)#'></span>
+			<h4 class='file-heading file-name-heading'>{_'Name'}: #=name#</h4>
+			<h4 class='file-heading file-size-heading'>{_'Size'}: #=size# {_'bytes'}</h4>
+			<button type='button' class='k-upload-action'></button>
+		</div>
+	</script>
+
+	<script>
+		
+		var directory = '';
+		
+		$(document).ready(function () {
+			$("#upload").kendoUpload({
+				multiple: true,
+				async: {
+					saveUrl: {plink uploadFile!},
+					removeUrl: {plink removeFile!},
+					autoUpload: false
+				},
+				template: kendo.template($('#fileTemplate').html()),
+				localization : {
+					'cancel' : {_'Cancel'},
+					'dropFilesHere' : {_'Drop files Here'},
+					'remove' : {_'Remove'},
+					'retry' : {_'Retry'},
+					'select' : {_'Select files...'},
+					'statusFailed' : {_'Upload failed.'},
+					'statusUploaded' : {_'Upload has been successful.'},
+					'statusUploading' : {_'Files are beeing uploaded.'},
+					'uploadSelectedFiles' : {_'Upload files'}
+				}
+			});
+		});
+
+		function addExtensionClass(extension) {
+			switch (extension) {
+				case '.jpg':
+				case '.img':
+				case '.png':
+				case '.gif':
+					return "img-file";
+				case '.odt':
+				case '.doc':
+				case '.docx':
+					return "doc-file";
+				case '.xls':
+				case '.xlsx':
+					return "xls-file";
+				case '.pdf':
+					return "pdf-file";
+				case '.zip':
+				case '.rar':
+					return "zip-file";
+				default:
+					return "default-file";
+			}
+		}
+	</script>
+	
+	<style scoped>
+		.file-icon
+		{
+			display: inline-block;
+			float: left;
+			width: 48px;
+			height: 48px;
+			margin-left: 10px;
+			margin-top: 13.5px;
+		}
+
+		.img-file { background-image: url(../../content/web/upload/jpg.png) }
+		.doc-file { background-image: url(../../content/web/upload/doc.png) }
+		.pdf-file { background-image: url(../../content/web/upload/pdf.png) }
+		.xls-file { background-image: url(../../content/web/upload/xls.png) }
+		.zip-file { background-image: url(../../content/web/upload/zip.png) }
+		.default-file { background-image: url(../../content/web/upload/default.png) }
+
+		#example .file-heading
+		{
+			font-family: Arial;
+			font-size: 1.1em;
+			display: inline-block;
+			float: left;
+			width: 450px;
+			margin: 0 0 0 20px;
+			height: 25px;
+			-ms-text-overflow: ellipsis;
+			-o-text-overflow: ellipsis;
+			text-overflow: ellipsis;
+			overflow:hidden;
+			white-space:nowrap;
+		}
+
+			#example .file-name-heading
+			{
+				font-weight: bold;
+			}
+
+			 #example .file-size-heading
+			{
+				font-weight: normal;
+				font-style: italic;
+			}
+
+		li.k-file .file-wrapper .k-upload-action
+		{
+			position: absolute;
+			top: 0;
+			right: 0;
+		}
+
+		li.k-file div.file-wrapper
+		{
+			position: relative;
+			height: 75px;
+		}
+	</style>
+	
+</div>
+				
+
+	
+<a class="btn btn-primary ajax" n:href="default path => $backLink">{_'Back'}</a>
+
+<div class="filesystem">
+	{foreach $directories as $path => $file}
+		<div class="directory">
+			<span class="time">{$file->getATime()|date:'%d.%m.%Y %H:%M:%S'}</span>
+			<span class="name">
+				<a class="ajax" n:href="default path => $file->getRealpath()">
+					{$file->getBasename()}
+				</a>
+			</span>
+			<span class="size">{$file->getSize()|formatSize}</span>
+			<span class="action pull-right">
+				<a n:href="deleteFile! pathToRemove => $file->getPathname()" class="btn btn-danger ajax">{_'Delete'}</a>
+			</span>
+		</div>
+
+		<br class="clearfix" />
+	{/foreach}
+	{foreach $files as $path => $file}
+		<div class="file">
+			<span class="time">{$file->getATime()|date:'%d.%m.%Y %H:%M:%S'}</span>
+			<span class="name">{$file->getBasename()}</span>
+			<span class="size">{$file->getSize()|formatSize}</span>
+			<span class="action pull-right">
+				<a n:href="downloadFile" class="btn btn-primary">{_'Download'}</a>
+				<a n:href="deleteFile! pathToRemove => $file->getPathname()" class="btn btn-danger ajax">{_'Delete'}</a>
+			</span>
+		</div>
+
+		<br class="clearfix" />
+	{/foreach}
+</div>
+
 
 {/block}
