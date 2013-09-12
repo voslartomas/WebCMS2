@@ -1,5 +1,7 @@
 <?php
 
+namespace AdminModule;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
