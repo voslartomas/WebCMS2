@@ -42,7 +42,11 @@ abstract class Entity extends \Nette\Object{
 			$getter = 'get' . ucfirst($prop->getName());
 			
 			if(method_exists($this, $getter))
-					$array[$prop->getName()] = $this->$getter();
+					if(!is_object($this->$getter())) $array[$prop->getName()] = $this->$getter();
+					elseif(is_object($this->$getter())){
+						if(method_exists($this->$getter(), 'getId'))
+							$array[$prop->getName()] = $this->$getter()->getId();
+					}
 		}
 		
 		return $array;
