@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as orm;
 /**
  * Description of Language entity.
  * @orm\Entity
- * @author Tomáš Voslař <t.voslar at gmail.com>
+ * @author Tomáš Voslař <tomas.voslar at webcook.cz>
  */
 class Language extends \AdminModule\Doctrine\Entity{
 	/**

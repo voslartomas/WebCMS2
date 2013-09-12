@@ -2,8 +2,6 @@
 
 namespace AdminModule;
 
-use Nette\Application\UI;
-
 /**
  * Languages and translations presenter.
  * @author Tomáš Voslař <tomas.voslar at webcook.cz>

@@ -3,4 +3,14 @@
 <h1>{_'Pages'}</h1>
 
 
+<a class="btn btn-primary ajax" n:href="Pages:updatePage" data-remote="false" data-target="#myModal" data-toggle="modal" >{_'Add page'}</a>
+
+<br /><br />
+
+<div class="tab-content">
+	<div class="tab-pane active">
+		{control pagesGrid}
+	</div>
+</div>
+
 {/block}

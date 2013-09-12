@@ -4,7 +4,7 @@ namespace AdminModule;
 
 use Nette;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
-
+use Nette\Application\UI;
 
 /**
  * Base class for all application presenters.
@@ -64,12 +64,15 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 			));
 		}
 		
-		$language =  $this->em->find('AdminModule\Language', $this->state->language->getId());
+		$language = $this->em->find('AdminModule\Language', $this->state->language->getId());
 		// check whether is language still in db
 		if(!$language){
 			unset($this->state->language);
 			$this->redirect('Homepage:default');
 		}
+		
+		// reload entity from db
+		$this->state->language = $this->em->find('AdminModule\Language', $this->state->language->getId());
 		
 		$translation = new \WebCMS\Translation($this->em, $language , 1);
 		$this->translation = $translation->getTranslations();
@@ -97,10 +100,22 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 	 * @param String $entity
 	 * @return \Grido\Grid
 	 */
-	public function createGrid(Nette\Application\UI\Presenter $presenter, $name, $entity){
+	public function createGrid(Nette\Application\UI\Presenter $presenter, $name, $entity, $order = NULL, $where = NULL){
 		$grid = new \Grido\Grid($presenter, $name);
 		
 		$qb = $this->em->createQueryBuilder();
+		
+		if($order){
+			foreach($order as $o){
+				$qb->addOrderBy('l.' . $o['by'], $o['dir']);
+			}
+		}
+		
+		if($where){
+			foreach($where as $w){
+				$qb->andWhere('l.' . $w);
+			}
+		}
 		
 		$grid->setModel($qb->select('l')->from("AdminModule\\$entity", 'l'));
 		//$grid->setRememberState();

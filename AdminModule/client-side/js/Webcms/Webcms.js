@@ -16,21 +16,47 @@ Webcms.prototype = {
 	init : function (){
 		self = this;
 		
-		$(function(){
-			$.nette.init(function (ajaxHandler) {
-				$('a.ajax:not(.no-ajax)').live('click', ajaxHandler);
-				$('form.ajax :submit').live('click', ajaxHandler);
-			});
-			
-			//ajax loader animation
-			$(document).ajaxStart( function() {
-				   $('#loader').addClass("active"); 
-			} ).ajaxStop ( function(){
-					$('#loader').removeClass("active"); 
-			});
-			
-			self.__registerListeners();
+		/**
+		* Nette ajax Grido extension.
+		* @author Petr BugyĂ­k
+		* @param {jQuery} $
+		*/
+		"use strict";
+
+		$.nette.ext('grido',
+		{
+			load: function()
+			{
+				this.selector = $('.grido');
+				this.selector.grido();
+			},
+
+			success: function(payload)
+			{
+				this.selector.trigger('success.ajax.grido', payload);
+
+				//scroll up after ajax update
+				$('html, body').animate({scrollTop: 0}, 400);
+			}
+		}, {
+			selector: null
 		});
+		
+		
+		$.nette.init(function (ajaxHandler) {
+			$('a.ajax:not(.no-ajax)').live('click', ajaxHandler);
+			$('form.ajax :submit').live('click', ajaxHandler);
+		});
+
+		//ajax loader animation
+		$(document).ajaxStart( function() {
+			   $('#loader').addClass("active"); 
+		} ).ajaxStop ( function(){
+				$('#loader').removeClass("active"); 
+		});
+
+		self.__registerListeners();
+		
 	},
 	/* Global systems listeners registering. */
 	__registerListeners : function(){
@@ -61,4 +87,6 @@ Webcms.prototype = {
 	}
 };
 
-webcms = new Webcms();
+$(function(){
+	webcms = new Webcms();
+});
