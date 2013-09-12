@@ -2,6 +2,8 @@
 
 namespace AdminModule;
 
+use Nette\Application\UI;
+
 /**
  * Languages and translations presenter.
  * @author Tomáš Voslař <tomas.voslar at webcook.cz>
@@ -246,7 +248,10 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 		});
 		$grid->addColumnText('language', 'Language')->setCustomRender(function($item){
 			return $item->getLanguage()->getName();
-		})->setSortable()->setFilterSelect($langs);
+		})->setSortable();
+		
+		$grid->addFilterSelect('language', 'Language')->getControl()->setTranslator(NULL)->setItems($langs);
+		
 		$grid->setFilterRenderType(\Grido\Components\Filters\Filter::RENDER_OUTER);
 		return $grid;
 	}

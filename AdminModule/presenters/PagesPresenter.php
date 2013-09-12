@@ -37,7 +37,7 @@ class PagesPresenter extends \AdminModule\BasePresenter{
 		
 		$form = $this->createForm();
 		$form->addText('title', 'Name')->setAttribute('class', 'form-control');
-		$form->addSelect('parent', 'Parent')->setItems($hierarchy)->setAttribute('class', 'form-control');
+		$form->addSelect('parent', 'Parent')->setTranslator(NULL)->setItems($hierarchy)->setAttribute('class', 'form-control');
 		$form->addCheckbox('default', 'Default')->setAttribute('class', 'form-control');
 		$form->addCheckbox('visible', 'Show')->setAttribute('class', 'form-control')->setDefaultValue(1);
 		
@@ -78,7 +78,9 @@ class PagesPresenter extends \AdminModule\BasePresenter{
 		
 		$grid->addColumnText('root', 'Structure')->setCustomRender(function($item){
 			return '-';
-		})->setFilterSelect($prnts);
+		});
+		
+		$grid->addFilterSelect('root', 'Structure')->getControl()->setTranslator(NULL)->setItems($prnts);
 		
 		$grid->addColumn('visible', 'Visible')->setReplacement(array(
 			'1' => 'Yes',
@@ -116,9 +118,9 @@ class PagesPresenter extends \AdminModule\BasePresenter{
 			$repository = $this->em->getRepository('AdminModule\Page');
 			$repository->moveUp($this->page);
 			
-			$this->flashMessage('Page has been moved up.', 'success');
+			$this->flashMessage($this->translation['Page has been moved up.'], 'success');
 		}else{
-			$this->flashMessage('Page has not been moved up, because it is root page.', 'warning');
+			$this->flashMessage($this->translation['Page has not been moved up, because it is root page.'], 'warning');
 		}
 		
 		if(!$this->isAjax())
@@ -132,9 +134,9 @@ class PagesPresenter extends \AdminModule\BasePresenter{
 			$repository = $this->em->getRepository('AdminModule\Page');
 			$repository->moveDown($this->page);
 			
-			$this->flashMessage('Page has been moved down.', 'success');
+			$this->flashMessage($this->translation['Page has been moved down.'], 'success');
 		}else{
-			$this->flashMessage('Page has not been moved up, because it is root page.', 'warning');
+			$this->flashMessage($this->translation['Page has not been moved up, because it is root page.'], 'warning');
 		}
 		
 		if(!$this->isAjax())
