@@ -2,6 +2,17 @@
 
 {block #content}
 
-<h1>Přihlášení uživatele</h1>
+<div class="navbar-form navbar-right">
+	<form method="get" class="pull-left">
+		<select id="languageChanger" name='language_id_change' class="form-control">
+			{foreach $languages as $l}
+				<option value="{$l->getId()}" {if $l->getId() == $language->getId()}selected{/if}>{$l->getName()}</option>
+			{/foreach}
+		</select>
+		<input type="submit" value="{_'Change language'}" />
+	</form>
+</div>
+
+<h1>{_'User login'}</h1>
 
 {control signInForm}

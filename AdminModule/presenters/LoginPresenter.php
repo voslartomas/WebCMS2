@@ -5,7 +5,7 @@ namespace AdminModule;
 use Nette\Application\UI,
 	Nette\Security as NS;
 
-class LoginPresenter extends UI\Presenter{
+class LoginPresenter extends BasePresenter{
 	
 	public function beforeRender() {
 		parent::beforeRender();
@@ -19,17 +19,17 @@ class LoginPresenter extends UI\Presenter{
 	 * @return Nette\Application\UI\Form
 	 */
 	protected function createComponentSignInForm(){
-		$form = new UI\Form;
+		$form = $this->createForm();
 		
-		$form->addText('username', 'Username:')
+		$form->addText('username', 'Username')
 			->setRequired('Please provide a username.');
 
-		$form->addPassword('password', 'Password:')
+		$form->addPassword('password', 'Password')
 			->setRequired('Please provide a password.');
 
-		$form->addCheckbox('remember', 'Trvalé přihlášení?');
+		$form->addCheckbox('remember', 'Permanent login?');
 
-		$form->addSubmit('send', 'Přihlásit se');
+		$form->addSubmit('send', 'Log in');
 
 		$form->onSuccess[] = callback($this, 'signInFormSubmitted');
 		return $form;
@@ -58,7 +58,7 @@ class LoginPresenter extends UI\Presenter{
 
 	public function actionOut(){
 		$this->getUser()->logout();
-		$this->flashMessage('You have been signed out.');
+		$this->flashMessage($this->translation['You have been signed out.']);
 		$this->redirect('Login:');
 	}
 

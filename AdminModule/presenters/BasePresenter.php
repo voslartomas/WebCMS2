@@ -27,7 +27,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 	
 	/* Method is executed before render. */
 	protected function beforeRender(){
-		if (!$this->getUser()->isLoggedIn()) {
+		if (!$this->getUser()->isLoggedIn() && $this->presenter->getName() !== "Admin:Login") {
 			$this->redirect('Login:');
 		}
 		
