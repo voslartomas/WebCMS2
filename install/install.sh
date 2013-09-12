@@ -9,6 +9,7 @@ while [ "$task" != "q" ]; do
 		echo "1) Clear cache"
 		echo "2) Fix permission (temp and upload)"
 		echo "3) Update database schema"
+		echo "4) Update system"
 		echo "q) Quit"
 
 		echo $vypis
@@ -28,21 +29,30 @@ while [ "$task" != "q" ]; do
 	if [ "$task" == "0" ]; then
 		
 		mkdir www/upload
+		mkdir www/thumbnails
 
 		chmod -R 777 www/upload
-
-		# sets right group for all files
-		chgrp -R developers ./*
+		chmod -R 777 www/thumbnails
 
 		# sets rights for temp directory
 		chmod -R 777 temp
 		chmod -R g+rwxs temp
-
+		chmod 777 log proxies
+		
 		# clear vendor library
 		rm -rf ./libs/*
 
-		# install dependencies
-		composer install
+		#composer update
+		composer update
+		
+		# sets right group for all files
+		chgrp -R developers ./*
+		chgrp -R www-data libs/composer/*
+		
+		chmod 777 composer.lock
+		chmod -R 777 ./libs/composer
+		chmod -R 777 ./libs/webcms2
+		chmod 777 ./libs/autoload.php
 
 		# generate DB schema
 		php www/index.php --ansi orm:schema-tool:update --force
@@ -56,6 +66,8 @@ while [ "$task" != "q" ]; do
 
 		# clear temp dir
 		rm -rf ./temp/cache
+		rm -rf ./temp/sessions/*
+		rm -rf ./log/except*
 
 		vypis="Cache has been cleared."
 
@@ -71,13 +83,35 @@ while [ "$task" != "q" ]; do
 
 		# update DB schema
 		php www/index.php --ansi orm:schema-tool:update --force
+		
+		# generate proxies
+		php www/index.php --ansi orm:generate-proxies
+
+		# run initial SQL script
+		php www/index.php --ansi dbal:import install/initial.sql
 
 		vypis="Database schema has been updated."
+	
+	elif [ "$task" == "4" ]; then
+		
+		# composer update
+		composer update webcms2/webcms2
+		
+		# generate DB schema
+		php www/index.php --ansi orm:schema-tool:update --force
+
+		# generate proxies
+		php www/index.php --ansi orm:generate-proxies
+
+		# run initial SQL script
+		php www/index.php --ansi dbal:import install/initial.sql
+
+		vypis="System has been updated."
 
 	elif [ "$task" == "q" ]; then
 
 		echo ""	
-		echo "Quiting application..."
+		echo "Quitting application. Good bye!"
 		sleep 1
 		exit 0
 	else
