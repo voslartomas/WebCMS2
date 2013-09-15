@@ -34,7 +34,8 @@ class User extends Doctrine\Entity{
 	 */
 	private $password;
 	/**
-	 * @orm\ManyToOne(targetEntity="Role")
+	 * @orm\ManyToOne(targetEntity="Role", fetch="EAGER")
+	 *
 	 * @orm\JoinColumn(name="role_id", referencedColumnName="id", onDelete="CASCADE")
 	 */
 	private $role;

@@ -27,9 +27,6 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 	
 	/* Method is executed before render. */
 	protected function beforeRender(){
-		if (!$this->getUser()->isLoggedIn() && $this->presenter->getName() !== "Admin:Login") {
-			$this->redirect('Login:');
-		}
 		
 		$this->setLayout("layout");
 		
@@ -49,6 +46,12 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 	/* Startup method. */
 	protected function startup(){
 		parent::startup();
+		
+		if (!$this->getUser()->isLoggedIn() && $this->presenter->getName() !== "Admin:Login") {
+			$this->redirect('Login:');
+		}
+		
+		$this->checkPermission();
 		
 		$this->state = $this->getSession('admin');
 
@@ -152,5 +155,48 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		
 		$this->em = $em;
 		return $this;
+	}
+	
+	private function checkPermission(){
+		// checking permission of user
+		$acl = new Nette\Security\Permission;
+		
+		// definice roli
+		$roles = $this->em->getRepository("AdminModule\Role")->findAll();
+		
+		$acl->addRole('guest');
+		foreach($roles as $r){
+			$acl->addRole($r->getName());
+		}
+		
+		// resources definition
+		$res = \WebCMS\SystemHelper::getResources();
+		
+		foreach($res as $r){
+			$acl->addResource($r);
+		}
+		
+		// propojeni roli a zdroju
+		//$acl->allow('skladnik', array('store', 'homepage'), Nette\Security\Permission::ALL);
+		
+		// administrátor může prohlížet a editovat cokoliv
+		//$acl->allow('superadmin', Nette\Security\Permission::ALL, Nette\Security\Permission::ALL);
+		
+		$roles = $this->getUser()->getRoles();
+		
+		$hasRigths = false;
+		$check = false;
+		
+		foreach ($roles as $role) {
+			$check = $acl->isAllowed($role, lcfirst($this->name), $this->action);
+
+			if($check)
+				$hasRigths = true;
+		}
+		
+		if(!$hasRigths){
+			$this->presenter->flashMessage("Nemáte oprávnění pro tuto operaci!", 'danger');
+		//	$this->redirect("Homepage:");
+		}
 	}
 }

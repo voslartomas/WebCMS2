@@ -63,4 +63,18 @@ class SystemHelper {
 			return (round($size/pow(1024, ($i = floor(log($size, 1024)))), 2) . $sizes[$i]);
 		}
 	}
+	
+	public static function getResources(){
+		return array(
+			'admin:Login',
+			'admin:Homepage',
+			'admin:Settings',
+			'admin:Users',
+			'admin:Languages',
+			'admin:Modules',
+			'admin:Pages',
+			'admin:Filesystem',
+			'admin:Update'
+		);
+	}
 }

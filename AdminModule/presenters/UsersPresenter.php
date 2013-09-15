@@ -97,7 +97,7 @@ class UsersPresenter extends \AdminModule\BasePresenter{
 		
 		$this->user->setName($values->name);
 		$this->user->setEmail($values->email);
-		$this->user->setPassword($password);
+		if(!empty($values->password)) $this->user->setPassword($password);
 		$this->user->setUsername($values->username);
 		$this->user->setRole($role);
 		
