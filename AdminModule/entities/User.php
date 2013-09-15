@@ -12,20 +12,17 @@ use Doctrine\ORM\Mapping as ORM;
  * @property string $password
  * @property string $role
  */
-class User extends \Nette\Object
-{
-	/**
-	 * @ORM\Id
-	 * @ORM\Column(type="integer")
-	 * @ORM\GeneratedValue
-	 * @var int
-	 */
-	private $id;
+class User extends Doctrine\Entity{
 	/**
 	 * @ORM\Column(unique=true)
 	 * @var string
 	 */
 	private $username;
+	/**
+	 * @ORM\Column
+	 * @var string
+	 */
+	private $name;
 	/**
 	 * @ORM\Column
 	 * @var string
@@ -37,27 +34,10 @@ class User extends \Nette\Object
 	 */
 	private $password;
 	/**
-	 * @ORM\Column
-	 * @var string
+	 * @orm\ManyToOne(targetEntity="Role")
+	 * @orm\JoinColumn(name="role_id", referencedColumnName="id", onDelete="CASCADE")
 	 */
 	private $role;
-	
-	/**
-	 * @param string
-	 * @return User
-	 */
-	public function __construct($username)
-	{
-		$this->username = static::normalizeString($username);
-	}
-	
-	/**
-	 * @return int
-	 */
-	public function getId()
-	{
-		return $this->id;
-	}
 	
 	/**
 	 * @return string
@@ -81,7 +61,7 @@ class User extends \Nette\Object
 	 */
 	public function setPassword($password)
 	{
-		$this->password = static::normalizeString($password);
+		$this->password = $password;
 		return $this;
 	}
 	
@@ -99,7 +79,7 @@ class User extends \Nette\Object
 	 */
 	public function setEmail($email)
 	{
-		$this->email = static::normalizeString($email);
+		$this->email = $email;
 		return $this;
 	}
 	
@@ -117,17 +97,22 @@ class User extends \Nette\Object
 	 */
 	public function setRole($role)
 	{
-		$this->role = static::normalizeString($role);
+		$this->role = $role;
 		return $this;
 	}
 	
-	/**
-	 * @param string
-	 * @return string
-	 */
-	protected static function normalizeString($s)
-	{
-		$s = trim($s);
-		return $s === "" ? NULL : $s;
+	
+	public function getName() {
+		return $this->name;
 	}
+
+	public function setName($name) {
+		$this->name = $name;
+	}
+
+	public function setUsername($username) {
+		$this->username = $username;
+	}
+
+
 }

@@ -2,5 +2,18 @@
 
 <h1>{_'Users'}</h1>
 
+{include 'tabs.latte' active => 'users'}
+
+<br />
+
+<a class="btn btn-primary ajax" n:href="Users:updateUser" data-remote="false" data-target="#myModal" data-toggle="modal" >{_'Add user'}</a>
+
+<br /><br />
+
+<div class="tab-content">
+	<div class="tab-pane active">
+		{control grid}
+	</div>
+</div>
 
 {/block}
