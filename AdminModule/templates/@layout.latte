@@ -46,37 +46,37 @@
 		<div class="navbar-collapse collapse">
 			{snippet header}
 				<ul class="nav navbar-nav">
-					{if $user->getIdentity()->data['permissions']['admin:Pages']}  
+					{if $template->checkPermissions($user, 'admin:Pages')}  
 						<li {if $activePresenter == "Admin:Pages"}class="active"{/if}>
 							<a class="ajax" n:href=":Admin:Pages:">{_'Pages'}</a>
 						</li>
 					{/if}
-					{if $user->getIdentity()->data['permissions']['admin:Modules']}
+					{if $template->checkPermissions($user, 'admin:Modules')}
 					  <li {if $activePresenter == "Admin:Modules"}class="active"{/if}>
 						  <a class="ajax" n:href=":Admin:Modules:">{_'Modules'}</a>
 					  </li>
 					{/if}
-					{if $user->getIdentity()->data['permissions']['admin:Users']}
+					{if $template->checkPermissions($user, 'admin:Users')}
 					  <li {if $activePresenter == "Admin:Users"}class="active"{/if}>
 						  <a class="ajax" n:href=":Admin:Users:">{_'Users'}</a>
 					  </li>
 					{/if}
-					{if $user->getIdentity()->data['permissions']['admin:Languages']}
+					{if $template->checkPermissions($user, 'admin:Languages')}
 					  <li {if $activePresenter == "Admin:Languages"}class="active"{/if}>
 						  <a class="ajax" n:href=":Admin:Languages:">{_'Languages and translations'}</a>
 					  </li>
 					{/if}
-					{if $user->getIdentity()->data['permissions']['admin:Settings']}
+					{if $template->checkPermissions($user, 'admin:Settings')}
 					  <li {if $activePresenter == "Admin:Settings"}class="active"{/if}>
 						  <a class="ajax" n:href=":Admin:Settings:">{_'Settings'}</a>
 					  </li>
 					{/if}
-					{if $user->getIdentity()->data['permissions']['admin:Filesystem']}
+					{if $template->checkPermissions($user, 'admin:Filesystem')}
 					  <li {if $activePresenter == "Admin:Filesystem"}class="active"{/if}>
 						  <a class="ajax" n:href=":Admin:Filesystem:">{_'Filesystem'}</a>
 					  </li>
 					{/if}
-					{if $user->getIdentity()->data['permissions']['admin:Update']}
+					{if $template->checkPermissions($user, 'admin:Update')}
 					  <li {if $activePresenter == "Admin:Update"}class="active"{/if}>
 						  <a class="ajax" n:href=":Admin:Update:">{_'Update'} <span class="badge">0</span></a>
 					  </li>
@@ -135,9 +135,8 @@
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 	  </div>
 	  <div class="modal-body">
-		  {define modalContent}
+		 {define modalContent}{/define}
 		  
-		  {/define}
 		{snippet modalContent}
 				{include #modalContent}
 		{/snippet}

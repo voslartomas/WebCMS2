@@ -172,7 +172,6 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		$roles = $this->em->getRepository("AdminModule\Role")->findAll();
 		
 		$acl->addRole('guest');
-		$acl->addRole('superadmin');
 		foreach($roles as $r){
 			$acl->addRole($r->getName());
 		}

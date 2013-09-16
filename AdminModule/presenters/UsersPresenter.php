@@ -34,7 +34,7 @@ class UsersPresenter extends \AdminModule\BasePresenter{
 		$roles = $this->em->getRepository("AdminModule\Role")->findAll();
 		$tmp = array();
 		foreach($roles as $r){
-			$tmp[$r->getId()] = $r->getName();
+			if($r->getName() !== 'superadmin') $tmp[$r->getId()] = $r->getName();
 		}
 		$roles = $tmp;
 		
@@ -56,7 +56,9 @@ class UsersPresenter extends \AdminModule\BasePresenter{
 	
 	protected function createComponentGrid($name){
 		
-		$grid = $this->createGrid($this, $name, "User");
+		$grid = $this->createGrid($this, $name, "User", NULL, array(
+			'id <> 1'
+		));
 		
 		$grid->addColumn('username', 'Name')->setSortable();
 		
@@ -171,7 +173,9 @@ class UsersPresenter extends \AdminModule\BasePresenter{
 	
 	protected function createComponentRolesGrid($name){
 		
-		$grid = $this->createGrid($this, $name, "Role");
+		$grid = $this->createGrid($this, $name, "Role", NULL, array(
+			'id <> 1'
+		));
 		
 		$grid->addColumn('name', 'Name')->setSortable();
 		

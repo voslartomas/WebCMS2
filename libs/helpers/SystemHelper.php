@@ -49,23 +49,35 @@ class SystemHelper {
 		
 		return file_get_contents($filename);
 	}
-	
-	/**
-	 * Returns formatted size.
-	 * @param Int $size size in bytes
-	 * @return String - formatted size
-	 */
-	public static function formatSize($size) {
-		$sizes = array(" Bytes", " KB", " MB", " GB", " TB", " PB", " EB", " ZB", " YB");
-		if ($size == 0) {
-			return('n/a');
-		} else {
-			return (round($size/pow(1024, ($i = floor(log($size, 1024)))), 2) . $sizes[$i]);
-		}
+		
+	public static function perm(){
+		return 'asdfasdf';
 	}
 	
 	/**
-	 * Returns systems resources.
+	 * 
+	 * @param type $user
+	 * @param type $permission
+	 */
+	public static function checkPermissions($user, $permission){
+		$roles = $user->getRoles();
+		
+		if($roles[0] === 'superadmin')
+			return true;
+		
+		$identity = $user->getIdentity();
+		
+		if(is_object($identity)){
+			if(array_key_exists($permission, $identity->data['permissions'])){
+				return $identity->data['permissions'][$permission];
+			}
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Returns system resources.
 	 * @return Array
 	 */
 	public static function getResources(){
