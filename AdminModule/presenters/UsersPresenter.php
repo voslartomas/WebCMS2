@@ -140,15 +140,31 @@ class UsersPresenter extends \AdminModule\BasePresenter{
 	}
 	
 	protected function createComponentRoleForm(){
-
+		
+		$resources = \WebCMS\SystemHelper::getResources();
+		
 		$form = $this->createForm();
 		$form->addText('name', 'Name')->setAttribute('class', 'form-control');
 		$form->addSubmit('save', 'Save')->setAttribute('class', 'btn btn-success');
 		
+		$c = 0;
+		foreach($resources as $r){
+			
+			$form->addCheckbox('res' . str_replace(':', '', $r), $r);
+			$c++;
+		}
+		
 		$form->onSuccess[] = callback($this, 'roleFormSubmitted');
 		
-		if($this->role) 
-			$form->setDefaults($this->role->toArray());
+		$new = $this->role->getName();
+		if(!empty($new)){
+			$defaultsPermissions = array();
+			foreach($this->role->getPermissions() as $key => $per){
+				$defaultsPermissions['res' . str_replace(':', '', $per->getResource())] = $per->getRead();
+			}
+		
+			$form->setDefaults($this->role->toArray() + $defaultsPermissions);
+		}
 
 		return $form;
 	}
@@ -170,10 +186,34 @@ class UsersPresenter extends \AdminModule\BasePresenter{
 		
 		$this->role->setName($values->name);
 		
-		$this->em->persist($this->role);
-		$this->em->flush();
-		
+		$this->em->persist($this->role); // TODO persist only if its new
+
 		$this->flashMessage($this->translation['Role has been added.'], 'success');
+		
+		// delete permissions
+		$permissions = $this->role->getPermissions();
+		foreach($permissions as $per){
+			$this->em->remove($per);
+		}
+		
+		// save permissions
+		$perArray = array();
+		foreach($values as $key => $val){
+			if(strpos($key, 'res') !== FALSE){
+				$permission = new Permission();
+				
+				$resource = 'admin:' . str_replace('resadmin', '', $key);
+				$permission->setResource($resource);
+				$permission->setRead($val);
+				
+				//$this->em->persist($permission);
+				$perArray[] = $permission;
+			}
+		}
+		
+		$this->role->setPermissions($perArray);
+		
+		$this->em->flush(); // persist all changes
 		
 		if(!$this->isAjax())
 			$this->redirect('Users:roles');

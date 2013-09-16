@@ -46,27 +46,41 @@
 		<div class="navbar-collapse collapse">
 			{snippet header}
 				<ul class="nav navbar-nav">
-					  <li {if $activePresenter == "Admin:Pages"}class="active"{/if}>
-						  <a class="ajax" n:href=":Admin:Pages:">{_'Pages'}</a>
-					  </li>
+					{if $user->getIdentity()->data['permissions']['admin:Pages']}  
+						<li {if $activePresenter == "Admin:Pages"}class="active"{/if}>
+							<a class="ajax" n:href=":Admin:Pages:">{_'Pages'}</a>
+						</li>
+					{/if}
+					{if $user->getIdentity()->data['permissions']['admin:Modules']}
 					  <li {if $activePresenter == "Admin:Modules"}class="active"{/if}>
 						  <a class="ajax" n:href=":Admin:Modules:">{_'Modules'}</a>
 					  </li>
+					{/if}
+					{if $user->getIdentity()->data['permissions']['admin:Users']}
 					  <li {if $activePresenter == "Admin:Users"}class="active"{/if}>
 						  <a class="ajax" n:href=":Admin:Users:">{_'Users'}</a>
 					  </li>
+					{/if}
+					{if $user->getIdentity()->data['permissions']['admin:Languages']}
 					  <li {if $activePresenter == "Admin:Languages"}class="active"{/if}>
 						  <a class="ajax" n:href=":Admin:Languages:">{_'Languages and translations'}</a>
 					  </li>
+					{/if}
+					{if $user->getIdentity()->data['permissions']['admin:Settings']}
 					  <li {if $activePresenter == "Admin:Settings"}class="active"{/if}>
 						  <a class="ajax" n:href=":Admin:Settings:">{_'Settings'}</a>
 					  </li>
+					{/if}
+					{if $user->getIdentity()->data['permissions']['admin:Filesystem']}
 					  <li {if $activePresenter == "Admin:Filesystem"}class="active"{/if}>
 						  <a class="ajax" n:href=":Admin:Filesystem:">{_'Filesystem'}</a>
 					  </li>
+					{/if}
+					{if $user->getIdentity()->data['permissions']['admin:Update']}
 					  <li {if $activePresenter == "Admin:Update"}class="active"{/if}>
 						  <a class="ajax" n:href=":Admin:Update:">{_'Update'} <span class="badge">0</span></a>
 					  </li>
+					{/if}
 				  </ul>
 			
 			<div class="navbar-form navbar-right">

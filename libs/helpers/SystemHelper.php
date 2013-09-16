@@ -64,10 +64,12 @@ class SystemHelper {
 		}
 	}
 	
+	/**
+	 * Returns systems resources.
+	 * @return Array
+	 */
 	public static function getResources(){
 		return array(
-			'admin:Login',
-			'admin:Homepage',
 			'admin:Settings',
 			'admin:Users',
 			'admin:Languages',

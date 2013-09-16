@@ -25,6 +25,9 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 	/* @var Nette\Http\SessionSection */
 	public $state;
 	
+	/* @var User */
+	public $systemUser;
+	
 	/* Method is executed before render. */
 	protected function beforeRender(){
 		
@@ -36,6 +39,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		
 		$this->template->registerHelperLoader('\WebCMS\SystemHelper::loader');
 		
+		$this->template->user = $this->getUser();
 		$this->template->setTranslator($this->translator);
 		$this->template->language = $this->state->language;
 		$this->template->version = \WebCMS\SystemHelper::getVersion();
@@ -157,6 +161,9 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		return $this;
 	}
 	
+	/**
+	 * TODO refactoring
+	 */
 	private function checkPermission(){
 		// checking permission of user
 		$acl = new Nette\Security\Permission;
@@ -165,6 +172,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		$roles = $this->em->getRepository("AdminModule\Role")->findAll();
 		
 		$acl->addRole('guest');
+		$acl->addRole('superadmin');
 		foreach($roles as $r){
 			$acl->addRole($r->getName());
 		}
@@ -172,15 +180,27 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		// resources definition
 		$res = \WebCMS\SystemHelper::getResources();
 		
+		$acl->addResource('admin:Homepage');
+		$acl->addResource('admin:Login');
 		foreach($res as $r){
 			$acl->addResource($r);
 		}
 		
 		// propojeni roli a zdroju
-		//$acl->allow('skladnik', array('store', 'homepage'), Nette\Security\Permission::ALL);
+		$identity = $this->getUser()->getIdentity();
+		if(is_object($identity)) $permissions = $identity->data['permissions'];
+		else $permissions = array();
+
+		foreach($permissions as $key => $p){
+			if($p) $acl->allow($identity->roles[0], $key, Nette\Security\Permission::ALL);
+		}
+		
+		// homepage and login page can access everyone
+		$acl->allow(Nette\Security\Permission::ALL, 'admin:Homepage', Nette\Security\Permission::ALL);
+		$acl->allow(Nette\Security\Permission::ALL, 'admin:Login', Nette\Security\Permission::ALL);
 		
 		// administrátor může prohlížet a editovat cokoliv
-		//$acl->allow('superadmin', Nette\Security\Permission::ALL, Nette\Security\Permission::ALL);
+		$acl->allow('superadmin', Nette\Security\Permission::ALL, Nette\Security\Permission::ALL);
 		
 		$roles = $this->getUser()->getRoles();
 		
@@ -189,14 +209,14 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		
 		foreach ($roles as $role) {
 			$check = $acl->isAllowed($role, lcfirst($this->name), $this->action);
-
+			
 			if($check)
 				$hasRigths = true;
 		}
 		
 		if(!$hasRigths){
 			$this->presenter->flashMessage("Nemáte oprávnění pro tuto operaci!", 'danger');
-		//	$this->redirect("Homepage:");
+			$this->redirect("Homepage:");
 		}
 	}
 }

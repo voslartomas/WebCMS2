@@ -17,19 +17,19 @@ class Permission extends Doctrine\Entity {
 	private $resource;
 	
 	/**
-	 * @ORM\Column(type="boolean")
+	 * @ORM\Column(type="boolean", name="`read`")
 	 * @var type 
 	 */
 	private $read;
 	
 	/**
-	 * @ORM\Column(type="boolean")
+	 * @ORM\Column(type="boolean", name="`write`", nullable=true)
 	 * @var type 
 	 */
 	private $write;
 	
 	/**
-	 * @ORM\Column(type="boolean")
+	 * @ORM\Column(type="boolean", name="`remove`", nullable=true)
 	 * @var type 
 	 */
 	private $remove;
@@ -46,7 +46,7 @@ class Permission extends Doctrine\Entity {
 		return $this->read;
 	}
 
-	public function setRead(type $read) {
+	public function setRead($read) {
 		$this->read = $read;
 	}
 
@@ -54,7 +54,7 @@ class Permission extends Doctrine\Entity {
 		return $this->write;
 	}
 
-	public function setWrite(type $write) {
+	public function setWrite($write) {
 		$this->write = $write;
 	}
 
@@ -62,7 +62,7 @@ class Permission extends Doctrine\Entity {
 		return $this->remove;
 	}
 
-	public function setRemove(type $remove) {
+	public function setRemove($remove) {
 		$this->remove = $remove;
 	}
 }

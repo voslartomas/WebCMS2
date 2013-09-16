@@ -17,10 +17,14 @@ class Role extends Doctrine\Entity{
 	private $name;
 	
 	/**
-	 * @orm\ManyToMany(targetEntity="Permission")
+	 * @orm\ManyToMany(targetEntity="Permission", cascade={"persist"})
 	 * @orm\JoinColumn(name="permission_id", referencedColumnName="id", onDelete="CASCADE")
 	 */
 	private $permissions;
+	
+	public function __construct() {
+		$this->permissions = new \Doctrine\Common\Collections\ArrayCollection();
+	}
 	
 	public function getName() {
 		return $this->name;
