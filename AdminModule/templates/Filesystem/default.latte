@@ -157,7 +157,7 @@
 					{$file->getBasename()}
 				</a>
 			</span>
-			<span class="size">{$file->getSize()|formatSize}</span>
+			<span class="size">{$file->getSize()|bytes}</span>
 			<span class="action pull-right">
 				<a n:href="deleteFile! pathToRemove => $file->getPathname()" class="btn btn-danger ajax">{_'Delete'}</a>
 			</span>
@@ -169,7 +169,7 @@
 		<div class="file">
 			<span class="time">{$file->getATime()|date:'%d.%m.%Y %H:%M:%S'}</span>
 			<span class="name">{$file->getBasename()}</span>
-			<span class="size">{$file->getSize()|formatSize}</span>
+			<span class="size">{$file->getSize()|bytes}</span>
 			<span class="action pull-right">
 				<a n:href="downloadFile" class="btn btn-primary">{_'Download'}</a>
 				<a n:href="deleteFile! pathToRemove => $file->getPathname()" class="btn btn-danger ajax">{_'Delete'}</a>
