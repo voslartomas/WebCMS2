@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as orm;
 /**
  * Entity class Translation.
  * @orm\Entity
- * @author Tomáš Voslař <t.voslar at google.com>
+ * @author Tomáš Voslař <tomas.voslar at webcook.cz>
  */
 class Translation extends \AdminModule\Doctrine\Entity {
 	/**
