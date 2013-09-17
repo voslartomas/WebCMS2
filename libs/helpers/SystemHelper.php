@@ -4,7 +4,7 @@ namespace WebCMS;
 
 class SystemHelper {
 	
-	const VERSION_FILE = '../libs/webcms2/webcms2/AdminModule/version';
+	const VERSION_FILE = '../app/webcms2/AdminModule/version';
 	
 	/**
 	 * Helper loader.
