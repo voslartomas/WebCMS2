@@ -17,6 +17,12 @@ class Setting extends Doctrine\Entity {
 	private $name;
 	
 	/**
+	 * @ORM\Column
+	 * @var String
+	 */
+	private $key;
+	
+	/**
 	 * @ORM\Column(type="text")
 	 * @var String 
 	 */
@@ -33,6 +39,12 @@ class Setting extends Doctrine\Entity {
 	 * @var String 
 	 */
 	private $type;
+	
+	/**
+	 * @ORM\Column(nullable=true)
+	 * @var String 
+	 */
+	private $options;
 	
 	/**
 	 * @orm\ManyToOne(targetEntity="Language")
@@ -71,5 +83,29 @@ class Setting extends Doctrine\Entity {
 
 	public function setType($type) {
 		$this->type = $type;
+	}
+	
+	public function getKey() {
+		return $this->key;
+	}
+
+	public function setKey(String $key) {
+		$this->key = $key;
+	}
+
+	public function getSection() {
+		return $this->section;
+	}
+
+	public function setSection(String $section) {
+		$this->section = $section;
+	}
+	
+	public function getOptions() {
+		return $this->options;
+	}
+
+	public function setOptions(String $options) {
+		$this->options = $options;
 	}
 }

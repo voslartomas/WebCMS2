@@ -20,6 +20,10 @@ class SettingsPresenter extends \AdminModule\BasePresenter{
 	private function createSettingsForm($settings){
 		$form = $this->createForm();
 		
+		if(!$settings){
+			return $form;
+		}
+		
 		foreach($settings as $s){
 			$ident = $s->getId();
 			
@@ -52,13 +56,7 @@ class SettingsPresenter extends \AdminModule\BasePresenter{
 	/* BASIC */
 	
 	public function createComponentBasicSettingsForm(){
-		
-		$settings = $this->em->getRepository('AdminModule\Setting')->findBy(array(
-			'section' => 'basic',
-			'language' => $this->state->language
-		));
-		
-		return $this->createSettingsForm($settings);
+		return $this->createSettingsForm($this->settings->getSection('basic'));
 	}
 	
 	public function renderDefault(){
@@ -68,40 +66,20 @@ class SettingsPresenter extends \AdminModule\BasePresenter{
 	/* PICTURES */
 	
 	public function createComponentPicturesSettingsForm(){
-		
-		$settings = $this->em->getRepository('AdminModule\Setting')->findBy(array(
-			'section' => 'pictures',
-			'language' => $this->state->language
-		));
-		
-		return $this->createSettingsForm($settings);
+		return $this->createSettingsForm($this->settings->getSection('pictures'));
 	}
 	
 	public function renderPictures(){
 		$this->reloadContent();
-		
-		$this->template->settings = $this->em->getRepository('AdminModule\Setting')->findBy(array(
-			'section' => 'pictures',
-			'language' => $this->state->language
-		));
 	}
 	
 	/* EMAILS */
 	
 	public function createComponentEmailsSettingsForm(){
-		
-		$settings = $this->em->getRepository('AdminModule\Setting')->findBy(array(
-			'section' => 'emails'
-		));
-		
-		return $this->createSettingsForm($settings);
+		return $this->createSettingsForm($this->settings->getSection('emails'));
 	}
 	
 	public function renderEmails(){
 		$this->reloadContent();
-		
-		$this->template->settings = $this->em->getRepository('AdminModule\Setting')->findBy(array(
-			'section' => 'emails'
-		));
 	}
 }

@@ -49,10 +49,6 @@ class SystemHelper {
 		
 		return file_get_contents($filename);
 	}
-		
-	public static function perm(){
-		return 'asdfasdf';
-	}
 	
 	/**
 	 * 
