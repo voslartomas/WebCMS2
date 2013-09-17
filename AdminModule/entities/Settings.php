@@ -12,25 +12,25 @@ use Doctrine\ORM\Mapping as orm;
 class Setting extends Doctrine\Entity {
 	/**
 	 * @ORM\Column
-	 * @var type 
+	 * @var String 
 	 */
 	private $name;
 	
 	/**
 	 * @ORM\Column(type="text")
-	 * @var type 
+	 * @var String 
 	 */
 	private $value;
 	
 	/**
 	 * @ORM\Column
-	 * @var type 
+	 * @var String 
 	 */
 	private $section;
 	
 	/**
 	 * @ORM\Column
-	 * @var type 
+	 * @var String 
 	 */
 	private $type;
 	
@@ -45,7 +45,7 @@ class Setting extends Doctrine\Entity {
 		return $this->name;
 	}
 
-	public function setName(type $name) {
+	public function setName($name) {
 		$this->name = $name;
 	}
 
@@ -53,7 +53,7 @@ class Setting extends Doctrine\Entity {
 		return $this->value;
 	}
 
-	public function setValue(type $value) {
+	public function setValue($value) {
 		$this->value = $value;
 	}
 
@@ -61,7 +61,7 @@ class Setting extends Doctrine\Entity {
 		return $this->language;
 	}
 
-	public function setLanguage(Int $language) {
+	public function setLanguage($language) {
 		$this->language = $language;
 	}
 	
@@ -69,7 +69,7 @@ class Setting extends Doctrine\Entity {
 		return $this->type;
 	}
 
-	public function setType(type $type) {
+	public function setType($type) {
 		$this->type = $type;
 	}
 }

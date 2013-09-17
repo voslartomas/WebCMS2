@@ -22,7 +22,6 @@ Webcms.prototype = {
 		* @param {jQuery} $
 		*/
 		"use strict";
-
 		$.nette.ext('grido',
 		{
 			load: function()
@@ -42,7 +41,6 @@ Webcms.prototype = {
 			selector: null
 		});
 		
-		
 		$.nette.init(function (ajaxHandler) {
 			$('a.ajax:not(.no-ajax)').live('click', ajaxHandler);
 			$('form.ajax :submit').live('click', ajaxHandler);
@@ -52,9 +50,11 @@ Webcms.prototype = {
 		$(document).ajaxStart( function() {
 			   $('#loader').addClass("active"); 
 		} ).ajaxStop ( function(){
+				self.initTextEditors();
 				$('#loader').removeClass("active"); 
 		});
 
+		self.initTextEditors();
 		self.__registerListeners();
 		
 	},
@@ -83,6 +83,39 @@ Webcms.prototype = {
 		
 		$("#languageChanger").live('change', function(){
 			$(this).parent().submit();
+		});
+	},
+			
+	initTextEditors : function(){
+		$(".editor").kendoEditor({
+			tools: [
+				"bold",
+                "italic",
+                "underline",
+                "strikethrough",
+                "justifyLeft",
+                "justifyCenter",
+                "justifyRight",
+                "justifyFull",
+                "insertUnorderedList",
+                "insertOrderedList",
+                "indent",
+                "outdent",
+                "createLink",
+                "unlink",
+                "insertImage",
+                "subscript",
+                "superscript",
+                "createTable",
+                "addRowAbove",
+                "addRowBelow",
+                "addColumnLeft",
+                "addColumnRight",
+                "deleteRow",
+                "deleteColumn",
+                "viewHtml"
+			],
+			encoded : false
 		});
 	}
 };

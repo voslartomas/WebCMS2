@@ -1,9 +1,11 @@
 {block content}
 
-<h1>{_'Basic settings'}</h1>
+<h1>{_'Emails settings'}</h1>
 
 {include 'tabs.latte' active => 'emails'}
 
-{include 'list.latte'}
+<div class="well">
+	{control emailsSettingsForm}
+</div>
 
 {/block}
