@@ -34,16 +34,7 @@ class UpdatePresenter extends \AdminModule\BasePresenter{
 			
 			unlink('../log/install-error.log');
 		}
-		
-		// TODO prepsat do bashe, popremyslet i o prepsani logovani do bashe
-		
-		$version = exec('cd ../libs/webcms2/webcms2;git rev-parse --abbrev-ref HEAD;');
-		$version .= ' (rev. ' .  exec('cd ../libs/webcms2/webcms2;git log --pretty=format:%h -1;') . ')';
-		$version .= ";";
-		$version .= exec('cd ../libs/webcms2/webcms2;git log --format="%at" -1');
-		
-		file_put_contents('../libs/webcms2/webcms2/AdminModule/version', $version);
-		
+				
 		unlink('../log/install.log');
 		
 		if(!$this->isAjax())
