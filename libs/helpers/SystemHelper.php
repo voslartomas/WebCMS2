@@ -27,8 +27,8 @@ class SystemHelper {
 		
 		if(count($version) == 2) 
 			return array(
-			'revision' => $version[0],
-			'date' => $version[1]
+			'revision' => trim($version[0]),
+			'date' => trim($version[1])
 		);
 		else
 			return array(
