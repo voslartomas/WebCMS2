@@ -22,7 +22,8 @@ while [ "$task" != "q" ]; do
 
 		echo "Choose command:"
 		echo "1) First install"
-		echo "2) Post installation"
+		echo "2) update"
+		echo "3) Load versions"
 		echo "q) Quit"
 
 		echo $vypis
@@ -72,6 +73,10 @@ while [ "$task" != "q" ]; do
 		parseVersion
 
 		vypis="System has been updated."
+
+	elif [ "$task" == "3" ]; then
+		
+		parseVersion
 
 	elif [ "$task" == "q" ]; then
 
