@@ -1,6 +1,7 @@
 #!/bin/bash
 
 function postUpdate{
+	
 	rm -rf ../../../../app/webcms2
 	rm -rf ../../../../www/admin-module
 
