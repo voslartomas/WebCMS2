@@ -11,7 +11,7 @@ function postUpdate {
 
 function parseVersion {
 	
-	touch ./app/webcms2/AdminModule/versions
+	touch ./app/webcms2/AdminModule/version
 
 	composer show --installed > ./app/webcms2/AdminModule/version
 }

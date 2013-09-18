@@ -22,19 +22,23 @@ class SystemHelper {
 	 * @return Array[revision, date]
 	 */
 	public static function getVersion(){
-		$versionContent = self::getFileContent(self::VERSION_FILE);
-		$version = explode(";", $versionContent);
+		$packages = self::getPackages();
 		
-		if(count($version) == 2) 
-			return array(
-			'revision' => trim($version[0]),
-			'date' => trim($version[1])
-		);
-		else
-			return array(
-				'revision' => '0',
-				'date' => '0'
-			);
+		return $packages['webcms2'];
+	}
+	
+	private static function getPackages(){
+		$versionContent = self::getFileContent(self::VERSION_FILE);
+		$version = explode('/', $versionContent);
+		
+		$packages = array();
+		foreach($version as $v){
+			$parsed = explode(' ', preg_replace('!\s+!', ' ', $v));
+			
+			if(count($parsed) > 1) $packages[$parsed[0]] = $parsed[1];
+		}
+		
+		return $packages;
 	}
 	
 	/**
