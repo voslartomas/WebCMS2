@@ -1,8 +1,8 @@
 #!/bin/bash
 
 function postUpdate {
-	rm -rf ../../../../app/webcms2 2> /dev/null
-	rm -rf ../../../../www/admin-module 2> /dev/null
+	rm -rf ./app/webcms2
+	rm -rf ./www/admin-module
 
 	cp -r libs/webcms2/webcms2 app/webcms2
 	mkdir www/admin-module
@@ -34,20 +34,20 @@ while [ "$task" != "q" ]; do
 	if [ "$task" == "1" ]; then
 		
 		# creates directories
-		mkdir ../../../../www/upload
-		mkdir ../../../../www/thumbnails
+		mkdir ./www/upload
+		mkdir ./www/thumbnails
 		
 		# sets rights for temp directory
-		chmod -R 777 ../../../../www/upload ../../../../www/thumbnails ../../../../temp ../../../../log ../../../../app/proxies ../../../../composer.lock ../../../../libs/composer ../../../../libs/webcms2 ../../../../libs/autoload.php
+		chmod -R 777 ./www/upload ./www/thumbnails ./temp ./log ./app/proxies ./composer.lock ./libs/composer ./libs/webcms2 ./libs/autoload.php
 		chmod -R g+rwxs temp
 		
 		postUpdate
 
 		# generate DB schema
-		php ../../../../www/index.php --ansi orm:schema-tool:create
+		php www/index.php --ansi orm:schema-tool:create
 
 		# run initial SQL script
-		php ../../../../www/index.php --ansi dbal:import install/initial.sql
+		php www/index.php --ansi dbal:import install/initial.sql
 
 		vypis="Installation has been executed. Choose another command or type 'q' to quit."
 	
@@ -56,13 +56,13 @@ while [ "$task" != "q" ]; do
 		postUpdate
 				
 		# generate DB schema
-		php ../../../../www/index.php --ansi orm:schema-tool:update --force
+		php www/index.php --ansi orm:schema-tool:update --force
 
 		# generate proxies
-		php ../../../../www/index.php --ansi orm:generate-proxies
+		php www/index.php --ansi orm:generate-proxies
 
 		# run initial SQL script
-		php ../../../../www/index.php --ansi dbal:import install/initial.sql
+		php www/index.php --ansi dbal:import install/initial.sql
 
 		vypis="System has been updated."
 
