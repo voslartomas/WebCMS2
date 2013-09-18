@@ -24,20 +24,29 @@ class SystemHelper {
 	public static function getVersion(){
 		$packages = self::getPackages();
 		
-		return $packages['webcms2'];
+		return $packages['webcms2/webcms2'];
 	}
 	
-	private static function getPackages(){
-		$versionContent = self::getFileContent(self::VERSION_FILE);
-		$version = explode('/', $versionContent);
-		
+	public static function getPackages(){
+		$handle = @fopen(self::VERSION_FILE, "r");
 		$packages = array();
-		foreach($version as $v){
-			$parsed = explode(' ', preg_replace('!\s+!', ' ', $v));
-			
-			if(count($parsed) > 1) $packages[$parsed[0]] = $parsed[1];
+		if ($handle) {
+			while (($buffer = fgets($handle, 4096)) !== false) {
+				$parsed = explode(' ', preg_replace('!\s+!', ' ', $buffer));
+				$vendorPackage = explode('/', $parsed[0]);
+				$packages[$parsed[0]] = array(
+							'vendor' => $vendorPackage[0],
+							'package' => $vendorPackage[1],
+							'version' => $parsed[1],
+							'system' => $vendorPackage[0] == 'webcms2' ? FALSE : TRUE
+						);
+			}
+			if (!feof($handle)) {
+				echo "Error: unexpected fgets() fail\n";
+			}
+			fclose($handle);
 		}
-		
+				
 		return $packages;
 	}
 	

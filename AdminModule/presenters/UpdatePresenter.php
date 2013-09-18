@@ -18,6 +18,10 @@ class UpdatePresenter extends \AdminModule\BasePresenter{
 		parent::startup();
 	}
 	
+	public function renderDefault(){
+		$this->template->packages = \WebCMS\SystemHelper::getPackages();
+	}
+	
 	public function handleUpdateSystem(){
 		
 		putenv("COMPOSER_HOME=/usr/bin/.composer");
