@@ -17,7 +17,7 @@ function parseVersion {
 
 	versions=`composer show --installed`
 
-	$versions > ./app/webcms2/AdminModule/version
+	$versions 1> ./app/webcms2/AdminModule/version
 }
 
 while [ "$task" != "q" ]; do
@@ -36,10 +36,6 @@ while [ "$task" != "q" ]; do
 		read -s -n 1 task
 
 	else task=$1
-	fi
-	
-	if [ "$first" == "" ]; then
-		first="nope"
 	fi
 
 	if [ "$task" == "1" ]; then
