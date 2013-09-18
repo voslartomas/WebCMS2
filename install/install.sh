@@ -34,16 +34,12 @@ while [ "$task" != "q" ]; do
 	if [ "$task" == "1" ]; then
 		
 		# creates directories
-		mkdir www/upload
-		mkdir www/thumbnails
+		mkdir ../../../../www/upload
+		mkdir ../../../../www/thumbnails
 		
 		# sets rights for temp directory
-		chmod -R 777 www/upload www/thumbnails temp log app/proxies composer.lock ./libs/composer ./libs/webcms2 ./libs/autoload.php
+		chmod -R 777 ../../../../www/upload ../../../../www/thumbnails ../../../../temp ../../../../log ../../../../app/proxies ../../../../composer.lock ../../../../libs/composer ../../../../libs/webcms2 ../../../../libs/autoload.php
 		chmod -R g+rwxs temp
-		
-		# sets right group for all files
-		chgrp -R developers ./*
-		chgrp -R www-data libs/composer/*
 		
 		postUpdate
 
@@ -51,7 +47,7 @@ while [ "$task" != "q" ]; do
 		php ../../../../www/index.php --ansi orm:schema-tool:create
 
 		# run initial SQL script
-		php www/index.php --ansi dbal:import install/initial.sql
+		php ../../../../www/index.php --ansi dbal:import install/initial.sql
 
 		vypis="Installation has been executed. Choose another command or type 'q' to quit."
 	
