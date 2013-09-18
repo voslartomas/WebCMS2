@@ -7,8 +7,6 @@ function postUpdate {
 	cp -r libs/webcms2/webcms2 app/webcms2
 	mkdir www/admin-module
 	cp -r libs/webcms2/webcms2/AdminModule/client-side/* www/admin-module/
-
-	parseVersion
 }
 
 function parseVersion {
@@ -54,6 +52,8 @@ while [ "$task" != "q" ]; do
 		# run initial SQL script
 		php www/index.php --ansi dbal:import install/initial.sql
 
+		parseVersion
+
 		vypis="Installation has been executed. Choose another command or type 'q' to quit."
 	
 	elif [ "$task" == "2" ]; then
@@ -68,6 +68,8 @@ while [ "$task" != "q" ]; do
 
 		# run initial SQL script
 		php www/index.php --ansi dbal:import install/initial.sql
+		
+		parseVersion
 
 		vypis="System has been updated."
 
