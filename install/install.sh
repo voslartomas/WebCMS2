@@ -1,15 +1,21 @@
 #!/bin/bash
 
+function postUpdate{
+	rm -r app/webcms2
+	rm -r www/admin-module
+
+	cp -r libs/webcms2/webcms2 app/webcms2
+	mkdir www/admin-module
+	cp -r libs/webcms2/webcms2/AdminModule/client-side/* www/admin-module/
+}
+
 while [ "$task" != "q" ]; do
 	
 	if [ "$1" == "" ]; then
 
 		echo "Choose command:"
-		echo "0) First install"
-		echo "1) Clear cache"
-		echo "2) Fix permission (temp and upload)"
-		echo "3) Update database schema"
-		echo "4) Update system"
+		echo "1) First install"
+		echo "2) Post installation"
 		echo "q) Quit"
 
 		echo $vypis
@@ -23,88 +29,44 @@ while [ "$task" != "q" ]; do
 	
 	if [ "$first" == "" ]; then
 		first="nope"
-		cd .. # get into the right directory
 	fi
 
-	if [ "$task" == "0" ]; then
+	if [ "$task" == "1" ]; then
 		
+		# creates directories
 		mkdir www/upload
 		mkdir www/thumbnails
-
-		chmod -R 777 www/upload
-		chmod -R 777 www/thumbnails
-
-		# sets rights for temp directory
-		chmod -R 777 temp
-		chmod -R g+rwxs temp
-		chmod 777 log proxies
 		
-		# clear vendor library
-		rm -rf ./libs/*
-
-		#composer update
-		composer update
+		# sets rights for temp directory
+		chmod -R 777 www/upload www/thumbnails temp log app/proxies composer.lock ./libs/composer ./libs/webcms2 ./libs/autoload.php
+		chmod -R g+rwxs temp
 		
 		# sets right group for all files
 		chgrp -R developers ./*
 		chgrp -R www-data libs/composer/*
 		
-		chmod 777 composer.lock
-		chmod -R 777 ./libs/composer
-		chmod -R 777 ./libs/webcms2
-		chmod 777 ./libs/autoload.php
+		postUpdate
 
 		# generate DB schema
-		php www/index.php --ansi orm:schema-tool:update --force
+		php ../../../../www/index.php --ansi orm:schema-tool:create
 
 		# run initial SQL script
 		php www/index.php --ansi dbal:import install/initial.sql
-		
+
 		vypis="Installation has been executed. Choose another command or type 'q' to quit."
-		
-	elif [ "$task" == "1" ]; then
-
-		# clear temp dir
-		rm -rf ./temp/cache
-		rm -rf ./temp/sessions/*
-		rm -rf ./log/except*
-
-		vypis="Cache has been cleared."
-
-	elif [ "$task" == "2" ]; then
-
-		# sets rights for temp and upload directory
-		chmod -R 777 temp
-		chmod -R 777 www/upload
-
-		vypis="Permissions have been fixed."
-
-	elif [ "$task" == "3" ]; then
-
-		# update DB schema
-		php www/index.php --ansi orm:schema-tool:update --force
-		
-		# generate proxies
-		php www/index.php --ansi orm:generate-proxies
-
-		# run initial SQL script
-		php www/index.php --ansi dbal:import install/initial.sql
-
-		vypis="Database schema has been updated."
 	
-	elif [ "$task" == "4" ]; then
+	elif [ "$task" == "2" ]; then
 		
-		# composer update
-		composer update webcms2/webcms2
-		
+		postUpdate
+				
 		# generate DB schema
-		php www/index.php --ansi orm:schema-tool:update --force
+		php ../../../../www/index.php --ansi orm:schema-tool:update --force
 
 		# generate proxies
-		php www/index.php --ansi orm:generate-proxies
+		php ../../../../www/index.php --ansi orm:generate-proxies
 
 		# run initial SQL script
-		php www/index.php --ansi dbal:import install/initial.sql
+		php ../../../../www/index.php --ansi dbal:import install/initial.sql
 
 		vypis="System has been updated."
 
