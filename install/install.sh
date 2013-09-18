@@ -7,6 +7,17 @@ function postUpdate {
 	cp -r libs/webcms2/webcms2 app/webcms2
 	mkdir www/admin-module
 	cp -r libs/webcms2/webcms2/AdminModule/client-side/* www/admin-module/
+
+	parseVersion
+}
+
+function parseVersion {
+	
+	touch ./app/webcms2/AdminModule/version
+
+	versions=`composer show --installed`
+
+	$versions > ./app/webcms2/AdminModule/version
 }
 
 while [ "$task" != "q" ]; do
