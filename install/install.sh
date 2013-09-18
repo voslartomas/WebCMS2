@@ -1,8 +1,8 @@
 #!/bin/bash
 
 function postUpdate{
-	rm -r app/webcms2
-	rm -r www/admin-module
+	rm -rf ../../../../app/webcms2
+	rm -rf ../../../../www/admin-module
 
 	cp -r libs/webcms2/webcms2 app/webcms2
 	mkdir www/admin-module
