@@ -14,10 +14,7 @@ function postUpdate {
 function parseVersion {
 	
 	touch ./app/webcms2/AdminModule/version
-
-	versions=`composer show --installed`
-
-	$versions 1> ./app/webcms2/AdminModule/version
+	composer show --installed > ./app/webcms2/AdminModule/version
 }
 
 while [ "$task" != "q" ]; do
