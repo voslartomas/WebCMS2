@@ -57,3 +57,7 @@ footer {
 .filesystem .directory:hover {
 
 }
+
+.jq_system-packages {
+	display: none;
+}

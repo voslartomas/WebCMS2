@@ -2,28 +2,40 @@
 
 <h1>{_'Update system'}</h1>
 
-
 <a n:href="updateSystem!" class="btn btn-primary ajax disabled">{_'Update system?'}</a>
 
 <a n:href="clearCache" class="btn btn-danger" data-confirm="{_'Are you sure you want to delete the cache?'}">{_'Clear cache?'}</a>
 
 <br /><br /> 
 
-<a href="#" onclick="$('.jq_system-packages').toggle()">{_'Show/hide system packages'}</a>
+{if $template->isSuperAdmin($user)}
+	<a href="#" onclick="$('.jq_system-packages').toggle('slow')">{_'Show/hide system packages'}</a>
+{/if}
 
 <table class="table table-hover">
 	<tr>
 		<th>{_'Package vendor'}</th>
 		<th>{_'Package name'}</th>
 		<th>{_'Package version'}</th>
+		<th>{_'Package description'}</th>
 	</tr>
 	{foreach $packages as $package}
-		<tr class="{if $package['system']}jq_system-packages{/if} success">
-			<td>{$package['vendor']}</td>
-			<td>{$package['package']}</td>
-			<td>{$package['version']}</td>
-		</tr>
+		{if $template->isSuperAdmin($user) || !$package['system']}
+			<tr class="{if $package['system']}jq_system-packages{/if} success">
+				<td>{$package['vendor']}</td>
+				<td>{$package['package']}</td>
+				<td>{$package['version']} {$package['versionHash']}</td>
+				<td>{$package['description']}</td>
+			</tr>
+		{/if}
 	{/foreach}
 </table>
+	
+<script>
+	$(function(){
+		$(".jq_system-packages").hide();
+	});
+</script>
+		
 	
 {/block}

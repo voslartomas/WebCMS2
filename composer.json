@@ -1,7 +1,7 @@
 {
     "name": "webcms2/webcms2",
     "type": "library",
-    "description": "WebCMS2 system",
+    "description": "WebCMS2 content management system for Nette framework. This package contains system libraries and admin module.",
     "keywords": ["cms","nette-based", "doctrine2"],
     "homepage": "http://www.webcook.cz/WebCMS2",
     "license": "MIT",
