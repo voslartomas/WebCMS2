@@ -44,7 +44,7 @@ while [ "$task" != "q" ]; do
 		mkdir ./www/thumbnails
 		
 		# sets rights for temp directory
-		chmod -R 777 ./www/upload ./www/thumbnails ./temp ./log ./app/proxies ./composer.lock ./libs/composer ./libs/webcms2 ./libs/autoload.php
+		chmod -R 777 ./www/upload ./www/admin-module ./www/thumbnails ./temp ./log ./app/proxies ./composer.lock ./libs/composer ./libs/webcms2 ./libs/autoload.php
 		chmod -R g+rwxs temp
 		
 		postUpdate
