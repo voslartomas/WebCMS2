@@ -24,30 +24,31 @@ class UpdatePresenter extends \AdminModule\BasePresenter{
 	
 	public function handleUpdateSystem(){
 		
+		$installLog = './log/install.log';
+		$installErrorLog = './log/install-error.log';
+		
 		putenv("COMPOSER_HOME=/usr/bin/.composer");
 		
-		system("cd ../;composer update > ./log/install.log 2> ./log/install-error.log");
-		$res = file_get_contents('./log/install.log');
+		exec("cd ../;composer update > $installLog 2> $installErrorLog");
 		
-		$this->flashMessage($res, 'success');
-		if(file_exists('./log/install-error.log')){
-			$resError = file_get_contents('./log/install-error.log');
-			
-			if(!empty($resError)) 
-				$this->flashMessage($resError, 'danger');
-			
-			unlink('./log/install-error.log');
-		}
-				
-		if(file_exists('./log/install.log')){ 
-			unlink('./log/install.log');
-		}
+		$this->flashMessage($this->getMessageFromFile('.' . $installLog), 'success');
+		$this->flashMessage($this->getMessageFromFile('.' . $installErrorLog), 'danger');
 		
 		if(!$this->isAjax())
 			$this->redirect('Update:');
 		else{
 			$this->invalidateControl('footer');
 		}
+	}
+	
+	private function getMessageFromFile($file){
+		if(file_exists($file)){
+			$message = file_get_contents($file);
+		}else{
+			$message = 'error';
+		}
+		
+		return $message;
 	}
 	
 	public function actionClearCache(){
