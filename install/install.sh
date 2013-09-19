@@ -12,7 +12,7 @@ function postUpdate {
 
 function parseVersion {
 	
-	touch ./app/webcms2/AdminModule/version
+	touch ./libs/webcms2/webcms2/AdminModule/version
 
 	composer show --installed > ./libs/webcms2/webcms2/AdminModule/version
 }
