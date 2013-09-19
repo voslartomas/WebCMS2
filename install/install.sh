@@ -23,8 +23,9 @@ while [ "$task" != "q" ]; do
 	if [ "$1" == "" ]; then
 
 		echo "Choose command:"
+		echo "0) Pre update"
 		echo "1) First install"
-		echo "2) update"
+		echo "2) Update"
 		echo "3) Load versions"
 		echo "q) Quit"
 
@@ -36,6 +37,10 @@ while [ "$task" != "q" ]; do
 
 	else task=$1
 	fi
+	
+	if [ "$task" == "0" ]; then
+		
+		rm -rf ./libs/webcms2
 
 	if [ "$task" == "1" ]; then
 		

@@ -24,7 +24,7 @@ class SystemHelper {
 	public static function getVersion(){
 		$packages = self::getPackages();
 		
-		return $packages['webcms2/webcms2'];
+		return array_key_exists('webcms2/webcms2', $packages) ? $packages['webcms2/webcms2'] : 'unknown';
 	}
 	
 	public static function getPackages(){
