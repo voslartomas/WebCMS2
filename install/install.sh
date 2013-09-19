@@ -53,7 +53,7 @@ while [ "$task" != "q" ]; do
 		php www/index.php --ansi orm:schema-tool:create
 
 		# run initial SQL script
-		php www/index.php --ansi dbal:import ./app/webcms2/install/initial.sql
+		php www/index.php --ansi dbal:import ./libs/webcms2/webcms2/install/initial.sql
 
 		parseVersion
 
@@ -70,7 +70,7 @@ while [ "$task" != "q" ]; do
 		php www/index.php --ansi orm:generate-proxies
 
 		# run initial SQL script
-		php www/index.php --ansi dbal:import ./app/webcms2/install/initial.sql
+		php www/index.php --ansi dbal:import ./libs/webcms2/webcms2/install/initial.sql
 		
 		parseVersion
 
