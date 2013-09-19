@@ -1,15 +1,13 @@
 #!/bin/bash
 
 function postUpdate {
-	rm -rf ./app/webcms2
+
 	rm -rf ./www/admin-module
 
-	mkdir ./app/webcms2/
-	cp -r ./libs/webcms2/webcms2/* ./app/webcms2/
 	mkdir ./www/admin-module
 	cp -r ./libs/webcms2/webcms2/AdminModule/client-side/* ./www/admin-module/
 
-	chmod -R 777 ./app/webcms2 ./www/admin-module
+	chmod -R 777 ./www/admin-module
 }
 
 function parseVersion {

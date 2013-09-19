@@ -23,6 +23,6 @@
 		"kdyby/bootstrap-form-renderer": "2.0.*"
     },
     "autoload": {
-        "classmap": ["AdminModule", "libs/"]
+        "classmap": ["AdminModule", "libs"]
     }
 }
