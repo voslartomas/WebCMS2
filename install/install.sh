@@ -39,10 +39,6 @@ while [ "$task" != "q" ]; do
 	else task=$1
 	fi
 	
-	if [ "$task" == "0" ]; then
-		
-		rm -rf ./libs/webcms2
-
 	if [ "$task" == "1" ]; then
 		
 		# creates directories
