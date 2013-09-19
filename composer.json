@@ -24,8 +24,8 @@
     },
     "autoload": {
         "psr-0": {
-				"AdminModule": "AdminModule",
-				"WebCMS" : "libs"
+				"AdminModule": "./AdminModule",
+				"WebCMS" : "./libs"
         }
     }
 }
