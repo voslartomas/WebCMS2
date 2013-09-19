@@ -9,15 +9,9 @@ use Doctrine\ORM\Mapping as orm;
  * @ORM\Entity
  * @author Tomáš Voslař <tomas.voslar at webcook.cz>
  */
-class Setting extends Doctrine\Entity {
+class Setting extends Doctrine\Entity {	
 	/**
-	 * @ORM\Column
-	 * @var String 
-	 */
-	private $name;
-	
-	/**
-	 * @ORM\Column
+	 * @ORM\Column(name="`key`")
 	 * @var String
 	 */
 	private $key;
@@ -53,14 +47,6 @@ class Setting extends Doctrine\Entity {
 	 */
 	private $language;
 	
-	public function getName() {
-		return $this->name;
-	}
-
-	public function setName($name) {
-		$this->name = $name;
-	}
-
 	public function getValue() {
 		return $this->value;
 	}
@@ -89,7 +75,7 @@ class Setting extends Doctrine\Entity {
 		return $this->key;
 	}
 
-	public function setKey(String $key) {
+	public function setKey($key) {
 		$this->key = $key;
 	}
 
@@ -97,15 +83,15 @@ class Setting extends Doctrine\Entity {
 		return $this->section;
 	}
 
-	public function setSection(String $section) {
+	public function setSection($section) {
 		$this->section = $section;
 	}
 	
 	public function getOptions() {
-		return $this->options;
+		return unserialize($this->options);
 	}
 
-	public function setOptions(String $options) {
-		$this->options = $options;
+	public function setOptions($options) {
+		$this->options = serialize($options);
 	}
 }

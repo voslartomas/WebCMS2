@@ -26,7 +26,7 @@ class UpdatePresenter extends \AdminModule\BasePresenter{
 		
 		putenv("COMPOSER_HOME=/usr/bin/.composer");
 		
-		system("../install/install.sh 4 > ../log/install.log 2> ../log/install-error.log");
+		system("composer update > ../log/install.log 2> ../log/install-error.log");
 		$res = file_get_contents('../log/install.log');
 		
 		$this->flashMessage($res, 'success');

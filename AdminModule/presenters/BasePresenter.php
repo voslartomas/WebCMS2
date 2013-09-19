@@ -88,7 +88,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		$this->translator = new \WebCMS\Translator($this->translation);
 		
 		// system settings
-		$this->settings = new \WebCMS\Settings;
+		$this->settings = new \WebCMS\Settings($this->em, $this->state->language);
 		$this->settings->setSettings($this->getSettings());
 		
 		$this->checkPermission();

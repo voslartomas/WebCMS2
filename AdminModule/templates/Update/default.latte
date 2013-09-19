@@ -2,7 +2,9 @@
 
 <h1>{_'Update system'}</h1>
 
-<a n:href="updateSystem!" class="btn btn-primary ajax disabled">{_'Update system?'}</a>
+{if $template->isSuperAdmin($user)}
+	<a n:href="updateSystem!" class="btn btn-primary ajax">{_'Update system?'}</a>
+{/if}
 
 <a n:href="clearCache" class="btn btn-danger" data-confirm="{_'Are you sure you want to delete the cache?'}">{_'Clear cache?'}</a>
 

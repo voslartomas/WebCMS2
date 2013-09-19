@@ -47,17 +47,17 @@ class SystemHelper {
 				), '', $parsed));
 				
 				$packages[$parsed[0]] = array(
-							'vendor' => $vendorPackage[0],
-							'package' => $vendorPackage[1],
-							'versionHash' => $parsed[1] == 'dev-master' ? $parsed[2] : '',
-							'version' => $parsed[1],
-							'system' => $vendorPackage[0] == 'webcms2' ? FALSE : TRUE,
+							'vendor' => $vendor,
+							'package' => $package,
+							'versionHash' => $versionHash,
+							'version' => $version,
+							'system' => $package == 'webcms2' ? FALSE : TRUE,
 							'description' => $description
 						);
 			}
 			
 			if (!feof($handle)) {
-				echo "Error: unexpected fgets() fail\n";
+				// error
 			}
 			fclose($handle);
 		}
