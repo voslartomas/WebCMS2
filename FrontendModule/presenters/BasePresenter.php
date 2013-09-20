@@ -57,7 +57,8 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 	protected function startup(){
 		parent::startup();
 		
-		$this->language = $this->em->find('AdminModule\Language', $this->getParam('language'));
+		if(is_numeric($this->getParam('language'))) $this->language = $this->em->find('AdminModule\Language', $this->getParam('language'));
+		else $this->language = $this->em->find('AdminModule\Language', 1); 
 		
 		// translations
 		$translation = new \WebCMS\Translation($this->em, $this->language , 0);
