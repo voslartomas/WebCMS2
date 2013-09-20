@@ -1,6 +1,6 @@
 <?php
 
-namespace AdminModule;
+namespace FrontendModule;
 
 use Nette;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
@@ -57,7 +57,6 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 	
 	/* Startup method. */
 	protected function startup(){
-		parent::startup();
 		
 		if (!$this->getUser()->isLoggedIn() && $this->presenter->getName() !== "Admin:Login") {
 			$this->redirect('Login:');

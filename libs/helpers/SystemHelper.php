@@ -52,7 +52,8 @@ class SystemHelper {
 							'versionHash' => $versionHash,
 							'version' => $version,
 							'system' => $vendor == 'webcms2' ? FALSE : TRUE,
-							'description' => $description
+							'description' => $description,
+							'module' => $vendor == 'webcms2' && $package != 'webcms2' ? TRUE : FALSE,
 						);
 			}
 			

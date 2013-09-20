@@ -1,0 +1,18 @@
+{var $childrens = $item->getChildren()}
+
+{if count($item->getChildren()) > 0}
+	<ul>
+	{foreach $childrens as $item}
+		<li>
+			{if is_object($item->getModule())}
+				<a class="ajax" n:href=":Admin:{$item->getModule()->getName()}:{$item->getPresenter()}:default id => $item->getId()">
+					{$item->getTitle()}
+				</a>
+			{else}
+				<span title="{_'No module selected!'}">{$item->getTitle()}</span>
+			{/if}
+			{include 'menu.latte' item => $item}
+		</li>
+	{/foreach}
+	</ul>
+{/if}

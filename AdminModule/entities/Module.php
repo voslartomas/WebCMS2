@@ -16,9 +16,9 @@ class Module extends \AdminModule\Doctrine\Entity{
 	private $name;
 	
 	/**
-	 * @orm\Column
+	 * @orm\Column 
 	 */
-	private $class;
+	private $presenters;
 	
 	/**
 	 * @orm\Column(type="boolean")
@@ -33,19 +33,19 @@ class Module extends \AdminModule\Doctrine\Entity{
 		$this->name = $name;
 	}
 
-	public function getClass() {
-		return $this->class;
-	}
-
-	public function setClass($class) {
-		$this->class = $class;
-	}
-
 	public function getActive() {
 		return $this->active;
 	}
 
 	public function setActive($active) {
 		$this->active = $active;
+	}
+	
+	public function getPresenters() {
+		return unserialize($this->presenters);
+	}
+
+	public function setPresenters($presenters) {
+		$this->presenters = serialize($presenters);
 	}
 }

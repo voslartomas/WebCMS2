@@ -92,7 +92,7 @@
 					</select>
 				</form>
 
-				<a n:href="Login:out" class="logout btn btn-danger pull-right" data-confirm="{_'Are you sure?'}">{_'Sign out'}</a>  
+				<a n:href=":Admin:Login:out" class="logout btn btn-danger pull-right" data-confirm="{_'Are you sure?'}">{_'Sign out'}</a>  
 			</div>
 			{/snippet}
 		</div>
@@ -120,7 +120,11 @@
 			{include #content}
 		{/snippet}
 	</div>
-		
+	
+	<div class="">
+		{include 'system/structures.latte'}
+	</div>
+	
 	{snippet footer}
 	<footer class="navbar">
 		<p>WebCMS {_'version'} {$version['version']} {if !empty($version['versionHash'])}{_'revision:'} {$version['versionHash']}{/if}. &copy; Webcook 2009-2013</p>

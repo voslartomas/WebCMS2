@@ -83,11 +83,22 @@ class Page extends Seo{
 	 * @orm\JoinColumn(name="language_id", referencedColumnName="id", onDelete="CASCADE")
 	 */
 	private $language;
-		
+	
+	/**
+	 * @orm\ManyToOne(targetEntity="Module")
+	 * @orm\JoinColumn(name="module_id", referencedColumnName="id", onDelete="SET NULL", nullable=true)
+	 */
+	private $module;
+	
+	/**
+	 * @orm\Column 
+	 */
+	private $presenter;
+	
 	/**
 	 * @orm\Column(type="boolean")
 	 */
-	private $visible;
+	public $visible;
 	
 	/**
 	 * @orm\Column(type="boolean", name="`default`")
@@ -195,6 +206,22 @@ class Page extends Seo{
 
 	public function setDefault($default) {
 		$this->default = $default;
+	}
+	
+	public function getModule() {
+		return $this->module;
+	}
+
+	public function setModule($module) {
+		$this->module = $module;
+	}
+	
+	public function getPresenter() {
+		return $this->presenter;
+	}
+
+	public function setPresenter($presenter) {
+		$this->presenter = $presenter;
 	}
 	
     public function __toString(){

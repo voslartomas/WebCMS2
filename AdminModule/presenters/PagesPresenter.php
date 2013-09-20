@@ -35,8 +35,18 @@ class PagesPresenter extends \AdminModule\BasePresenter{
 		
 		$hierarchy = array(0 => $this->translation['Pick parent']) + $hierarchy;
 		
+		// loads modules
+		$modules = $this->em->getRepository('AdminModule\Module')->findAll();
+		$modulesToSelect = array();
+		foreach($modules as $module){
+			foreach($module->getPresenters() as $presenter){
+				$modulesToSelect[$module->getId() . '-' . $presenter] = $module->getName() . ' ' . $presenter;
+			}
+		}
+		
 		$form = $this->createForm();
 		$form->addText('title', 'Name')->setAttribute('class', 'form-control');
+		$form->addSelect('module', 'Module')->setTranslator(NULL)->setItems($modulesToSelect)->setAttribute('class', 'form-control');
 		$form->addSelect('parent', 'Parent')->setTranslator(NULL)->setItems($hierarchy)->setAttribute('class', 'form-control');
 		$form->addCheckbox('default', 'Default')->setAttribute('class', 'form-control');
 		$form->addCheckbox('visible', 'Show')->setAttribute('class', 'form-control')->setDefaultValue(1);
@@ -45,11 +55,49 @@ class PagesPresenter extends \AdminModule\BasePresenter{
 		
 		$form->onSuccess[] = callback($this, 'pageFormSubmitted');
 		
-		if($this->page) 
+		if($this->page){
 			$form->setDefaults($this->page->toArray());
-
+			if(is_object($this->page->getModule())) $form['module']->setDefaultValue($this->page->getModule()->getId() . '-' . $this->page->getPresenter());
+		}
+			
+		
 		return $form;
 	}
+	
+	public function pageFormSubmitted(UI\Form $form){
+		$values = $form->getValues();
+		
+		if($values->parent)
+			$parent = $this->em->find("AdminModule\Page", $values->parent);
+		else
+			$parent = NULL;
+		
+		if($values->module){
+			$parse = explode('-', $values->module);
+			$module = $this->em->find("AdminModule\Module", $parse[0]);
+			$presenter = $parse[1];
+		}
+		else{
+			$module = NULL;
+			$presenter = '';
+		}
+		
+		$this->page->setTitle($values->title);
+		$this->page->setVisible($values->visible);
+		$this->page->setDefault($values->default);
+		$this->page->setParent($parent);
+		$this->page->setLanguage($this->state->language);
+		$this->page->setModule($module);
+		$this->page->setPresenter($presenter);
+
+		$this->em->persist($this->page); // FIXME only if is new we have to persist entity, otherway it can be just flushed
+		$this->em->flush();
+
+		$this->flashMessage($this->translation['Page has been added.'], 'success');
+		
+		if(!$this->isAjax())
+			$this->redirect('Pages:default');
+	} 
 	
 	protected function createComponentPagesGrid($name){
 		
@@ -142,29 +190,6 @@ class PagesPresenter extends \AdminModule\BasePresenter{
 		if(!$this->isAjax())
 			$this->redirect('Pages:default');
 	}
-	
-	public function pageFormSubmitted(UI\Form $form){
-		$values = $form->getValues();
-		
-		if($values->parent)
-			$parent = $this->em->find("AdminModule\Page", $values->parent);
-		else
-			$parent = NULL;
-		
-		$this->page->setTitle($values->title);
-		$this->page->setVisible($values->visible);
-		$this->page->setDefault($values->default);
-		$this->page->setParent($parent);
-		$this->page->setLanguage($this->state->language);
-
-		$this->em->persist($this->page); // FIXME only if is new we have to persist entity, otherway it can be just flushed
-		$this->em->flush();
-
-		$this->flashMessage($this->translation['Page has been added.'], 'success');
-		
-		if(!$this->isAjax())
-			$this->redirect('Pages:default');
-	} 
 	
 	public function renderUpdatePage($id){
 		$this->reloadModalContent();
