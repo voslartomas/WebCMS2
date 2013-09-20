@@ -1,0 +1,8 @@
+<ul>
+	{foreach $structures as $structure}
+		<li>
+			<span>{$structure->getTitle()}</span>
+			{include 'menu.latte' item => $structure}
+		</li>
+	{/foreach}
+</ul>

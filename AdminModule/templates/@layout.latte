@@ -121,8 +121,10 @@
 		{/snippet}
 	</div>
 	
-	<div class="">
+	<div id="structures">
 		{include 'system/structures.latte'}
+		
+		<span class="toggle-button" onclick="$('#structures').toggleClass('hid');">{_'Hide/Show'}</span>
 	</div>
 	
 	{snippet footer}

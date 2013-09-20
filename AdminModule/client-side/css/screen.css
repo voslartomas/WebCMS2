@@ -61,3 +61,22 @@ footer {
 .jq_system-packages {
 	display: none;
 }
+
+#structures{
+	top: 60px;
+	width: 160px;
+	overflow: auto;
+	position: fixed;
+	height: 100%;
+	background-color: white;
+	z-index: 1001;
+}
+
+#structures.hid {
+	left: -120px;
+}
+
+#structures .toggle-button{
+	position: fixed;
+	top: 48px;
+}
