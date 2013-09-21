@@ -92,6 +92,10 @@ class PagesPresenter extends \AdminModule\BasePresenter{
 		$this->page->setModule($module);
 		$this->page->setModuleName($module->getName());
 		$this->page->setPresenter($presenter);
+		$this->page->setPath('tmp value');
+		
+		$this->em->persist($this->page); // FIXME only if is new we have to persist entity, otherway it can be just flushed
+		$this->em->flush();
 		
 		// creates path
 		$path = $repo->getPath($this->page);
@@ -102,7 +106,6 @@ class PagesPresenter extends \AdminModule\BasePresenter{
 		
 		$this->page->setPath(implode('/', $final));
 		
-		$this->em->persist($this->page); // FIXME only if is new we have to persist entity, otherway it can be just flushed
 		$this->em->flush();
 
 		$this->flashMessage($this->translation['Page has been added.'], 'success');

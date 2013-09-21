@@ -46,6 +46,9 @@ class SystemRouter extends \Nette\Application\Routers\Route{
 		foreach($pages as $p){
 			$page = $p;
 			
+			// abbreviation of language
+			$abbr = $page->getLanguage()->getDefaultFrontend() ? '' : $page->getLanguage()->getAbbr() . '/';
+			
 			$paths = $pageRepo->getPath($p);
 			
 			// check path
@@ -53,12 +56,16 @@ class SystemRouter extends \Nette\Application\Routers\Route{
 			foreach($paths as $pat){
 				if($pat->getParent() != NULL) $finalPath .= $pat->getSlug() . '/';
 			}
+			
+			$finalPath = $abbr . $finalPath;
 
 			if(implode('/', $path) == substr($finalPath, 0, -1)){
 				$this->page = $page;
 				
+				$path = $page->getPath();
+				
 				$presenter = 'Frontend:' . $page->getModule()->getName() . ':' . $page->getPresenter();
-				return new \Nette\Application\Request($presenter, 'GET', array('id' => $page->getId(), 'language' => 1, 'path' => $page->getPath()) + $httpRequest->getQuery());
+				return new \Nette\Application\Request($presenter, 'GET', array('id' => $page->getId(), 'language' => $this->page->getLanguage()->getId(), 'path' => $path, 'root' => $page->getRoot(), 'lft' => $page->getLeft(), 'abbr' => $abbr) + $httpRequest->getQuery());
 			}
 		}
 		
@@ -67,8 +74,8 @@ class SystemRouter extends \Nette\Application\Routers\Route{
 
     function constructUrl(\Nette\Application\Request $appRequest, \Nette\Http\Url $refUrl) {
 		$params = $appRequest->getParameters();
-
-		return $refUrl->getScheme() . '://' . $refUrl->getHost() . $refUrl->getPath() . $params['path'];
+	
+		return $refUrl->getScheme() . '://' . $refUrl->getHost() . $refUrl->getPath() . $params['abbr'] . $params['path'];
 	}
 	
 	private function defineLanguage($url){

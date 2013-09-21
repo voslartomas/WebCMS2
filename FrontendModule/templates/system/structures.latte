@@ -1,13 +1,7 @@
 {if empty($name)}
-	<ul>
-		{foreach $structures as $structure}
-			<li>
-				<span>{$structure->getTitle()}</span>
-				{include 'menu.latte' item => $structure}
-			</li>
-		{/foreach}
-	</ul>
-
+	{foreach $structures as $structure}
+		 {!$structure}
+	{/foreach}
 {else}
-	{include 'menu.latte' structure => $structures[$name]}
+	{!$structures[$name]}
 {/if}

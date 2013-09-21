@@ -1,8 +1,7 @@
-<ul>
-{var $currDepth = -1}
+{var $currDepth = 0}
 {var $count = 0}
 {var $ul = '<ul>'}
-{var $ulEnd = '</li></ul>'}
+{var $ulEnd = '</ul>'}
 {foreach $structure as $item}
 
 	{if $item['level'] > $currDepth}
@@ -14,16 +13,21 @@
   {/if}
 
 	<li>
-		<a class="ajax" n:href="':Frontend:'.$item['moduleName'].':'.$item['presenter'].':default' path => $item['path']">
+		<a class="ajax" n:href="':Frontend:'.$item['moduleName'].':'.$item['presenter'].':default' path => $item['path'], abbr => ''$abbr">
 			{$item['title']}
 		</a>
-
+  
+  {if $count == count($structure) - 1}
+    {!$template->repeat($ulEnd, $currDepth)}
+  {else}
+	{if $item['level'] > $currDepth}    
+		</li>
+	{/if}	
+  {/if}
+		
   {var $currDepth = $item['level']}
   
-  {if $count == count($structure)}
-    {!$template->repeat($ulEnd, $currDepth+1)}
-  {/if}
-
+	{var $count = $count+1}
 	
 {/foreach}
-</ul>
+		

@@ -34,6 +34,9 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 	/* @var Page */
 	public $actualPage;
 	
+	/* @var string */
+	public $abbr;
+	
 	/* Method is executed before render. */
 	protected function beforeRender(){
 		
@@ -45,7 +48,15 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		
 		$this->template->registerHelperLoader('\WebCMS\SystemHelper::loader');
 		
-		$this->template->structures = $this->getStructures();
+		// get top page for sidebar menu
+		$top = $this->actualPage;
+		while($top->getParent() != NULL && $top->getLevel() > 1){
+			$top = $top->getParent();
+		}
+		
+		$this->template->structures = $this->getStructures(FALSE, 'nav navbar-nav', TRUE);
+		$this->template->sidebar = $this->getStructure($top, FALSE, 'nav');
+		
 		$this->template->setTranslator($this->translator);
 		$this->template->actualPage = $this->actualPage;
 		$this->template->user = $this->getUser();
@@ -57,8 +68,11 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 	protected function startup(){
 		parent::startup();
 		
+		// set language
 		if(is_numeric($this->getParam('language'))) $this->language = $this->em->find('AdminModule\Language', $this->getParam('language'));
 		else $this->language = $this->em->find('AdminModule\Language', 1); 
+		
+		$this->abbr = $this->language->getDefaultFrontend() ? '' : $this->language->getAbbr() . '/';
 		
 		// translations
 		$translation = new \WebCMS\Translation($this->em, $this->language , 0);
@@ -84,7 +98,11 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		return $this;
 	}
 	
-	private function getStructures(){
+	/**
+	 * 
+	 * @return type
+	 */
+	private function getStructures($direct = TRUE, $rootClass = 'nav navbar-nav', $dropDown = FALSE){
 		$repo = $this->em->getRepository('AdminModule\Page');
 		
 		$structs = $repo->findBy(array(
@@ -94,9 +112,62 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		
 		$structures = array();
 		foreach($structs as $s){
-			$structures[$s->getTitle()] = $repo->getNodesHierarchy($s, FALSE);
+			$structures[$s->getTitle()] = $this->getStructure($s, $direct, $rootClass, $dropDown);
 		}
 		
 		return $structures;
+	}
+	
+	private function getStructure($node = NULL, $direct = TRUE, $rootClass = 'nav navbar-nav', $dropDown = FALSE){
+		$repo = $this->em->getRepository('AdminModule\Page');
+		
+		return $repo->childrenHierarchy($node, $direct, array(
+							'decorate' => true,
+							'html' => true,
+							'rootOpen' => function($nodes) use($rootClass, $dropDown){
+								
+								$drop = $nodes[0]['level'] == 2 ? TRUE : FALSE;
+								$class = $nodes[0]['level'] < 2 ? $rootClass : '';
+								
+								if($drop && $dropDown)
+									$class .= ' dropdown-menu';
+								
+								return '<ul class="' . $class . '">';
+							},
+							'rootClose' => '</ul>',
+							'childOpen' => function($node) use($dropDown){
+								$hasChildrens = count($node['__children']) > 0 ? TRUE : FALSE;
+								$active = $this->getParam('id') == $node['id'] ? TRUE : FALSE;
+								$class = '';
+								
+								if($this->getParam('lft') > $node['lft'] && $this->getParam('lft') < $node['rgt'] && $this->getParam('root') == $node['root']){
+									$class .= ' active';
+								}
+								
+								
+								if($hasChildrens && $dropDown)
+									$class .= ' dropdown';
+								
+								if($active)
+									$class .= ' active';
+								
+								return '<li class="' . $class . '">';
+							},
+							'childClose' => '</li>',
+							'nodeDecorator' => function($node) use($dropDown) {
+								$hasChildrens = count($node['__children']) > 0 ? TRUE : FALSE;
+								$params = '';
+								$class = '';
+								$link = $this->link(':Frontend:' . $node['moduleName'] . ':' . $node['presenter'] . ':default', array('id' => $node['id'], 'path' => $node['path'], 'abbr' => $this->abbr));
+								
+								if($hasChildrens && $node['level'] == 1 && $dropDown){
+									$params = ' data-toggle="dropdown"';
+									$class .= ' dropdown-toggle';
+									$link = '#';
+								}
+								
+								return '<a ' . $params .' class="' . $class . '" href="' . $link . '">'.$node['title'].'</a>';
+							}
+						));
 	}
 }
