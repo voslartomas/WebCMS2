@@ -118,13 +118,13 @@ class SystemHelper {
 	 */
 	public static function getResources(){
 		return array(
-			'admin:Settings',
-			'admin:Users',
-			'admin:Languages',
-			'admin:Modules',
-			'admin:Pages',
-			'admin:Filesystem',
-			'admin:Update'
+			'admin:Settings' => 'admin:Settings',
+			'admin:Users' => 'admin:Users',
+			'admin:Languages' => 'admin:Languages',
+			'admin:Modules' => 'admin:Modules',
+			'admin:Pages' => 'admin:Pages',
+			'admin:Filesystem' => 'admin:Filesystem',
+			'admin:Update' => 'admin:Update'
 		);
 	}
 }

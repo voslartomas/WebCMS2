@@ -1,0 +1,13 @@
+<ol class="breadcrumb">
+  {foreach $breadcrumb as $item}
+	{if $item->getParent() != NULL}
+		<li>
+			{if $id != $item->getId()}
+				<a n:href="':Frontend:'.$item->getModuleName().':'.$item->getPresenter().':default' path => $item->getPath(), abbr => $abbr">{$item->getTitle()}</a>
+			{else}
+				{$item->getTitle()}
+			{/if}
+		</li>
+	{/if}
+  {/foreach}
+</ol>

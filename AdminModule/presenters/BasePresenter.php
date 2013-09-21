@@ -208,10 +208,20 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		// resources definition
 		$res = \WebCMS\SystemHelper::getResources();
 		
+		// pages resources
+		$pages = $this->em->getRepository('AdminModule\Page')->findAll();
+		
+		foreach($pages as $page){
+			if($page->getParent() != NULL){
+				$key = 'admin:' . $page->getModuleName() . '' . $page->getPresenter() . $page->getId();
+				$res[$key] = $page->getTitle();
+			}
+		}
+		
 		$acl->addResource('admin:Homepage');
 		$acl->addResource('admin:Login');
-		foreach($res as $r){
-			$acl->addResource($r);
+		foreach($res as $key => $r){
+			$acl->addResource($key);
 		}
 		
 		// resources
@@ -235,17 +245,31 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		$hasRigths = false;
 		$check = false;
 		
+		if(substr_count(lcfirst($this->name), ':') == 2) $resource = $this->str_lreplace(':', '', lcfirst($this->name) . $this->getParam('id'));
+		else $resource = lcfirst($this->name);
+
 		foreach ($roles as $role) {
-			//$check = $acl->isAllowed($role, lcfirst($this->name), $this->action);
-			$check = true;
+			$check = $acl->isAllowed($role, $resource, $this->action);
+			
 			if($check)
 				$hasRigths = true;
 		}
 		
 		if(!$hasRigths){
 			$this->presenter->flashMessage($this->translation['You do not have a permission to do this operation!'], 'danger');
-			$this->redirect("Homepage:");
+			$this->redirect(":Admin:Homepage:");
 		}
+	}
+	
+	function str_lreplace($search, $replace, $subject){
+		$pos = strrpos($subject, $search);
+
+		if($pos !== false)
+		{
+			$subject = substr_replace($subject, $replace, $pos, strlen($search));
+		}
+
+		return $subject;
 	}
 	
 	private function getStructures(){

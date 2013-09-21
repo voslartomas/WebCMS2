@@ -18,8 +18,6 @@ class SystemRouter extends \Nette\Application\Routers\Route{
 	/* @var \AdminModule\Page */
 	private $page;
 	
-	private $pages;
-	
 	public function __construct($em){
 		$this->em = $em;
 	}

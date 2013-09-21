@@ -57,9 +57,22 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 			$top = $top->getParent();
 		}
 		
+		// bredcrumb
+		$default = $this->em->getRepository('AdminModule\Page')->findOneBy(array(
+			'default' => TRUE,
+			'language' => $this->language
+		));
+		
+		if($this->actualPage->getDefault())
+			$default = array();
+		else
+			$default = array($default);
+		
+		$this->template->breadcrumb = $default + $this->em->getRepository('AdminModule\Page')->getPath($this->actualPage);
+		$this->template->abbr = $this->abbr;
+		
 		$this->template->structures = $this->getStructures(FALSE, 'nav navbar-nav', TRUE);
 		$this->template->sidebar = $this->getStructure($top, FALSE, 'nav');
-		
 		$this->template->setTranslator($this->translator);
 		$this->template->actualPage = $this->actualPage;
 		$this->template->user = $this->getUser();
@@ -73,7 +86,9 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		
 		// set language
 		if(is_numeric($this->getParam('language'))) $this->language = $this->em->find('AdminModule\Language', $this->getParam('language'));
-		else $this->language = $this->em->find('AdminModule\Language', 1); // TODO default language for frontend
+		else $this->language = $this->em->getRepository('AdminModule\Language')->findOneBy(array(
+			'defaultFrontend' => TRUE
+		));
 		
 		$this->abbr = $this->language->getDefaultFrontend() ? '' : $this->language->getAbbr() . '/';
 		

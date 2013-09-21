@@ -62,7 +62,7 @@ footer {
 	display: none;
 }
 
-#structures{
+.sidebar {
 	top: 60px;
 	width: 160px;
 	overflow: auto;
@@ -72,11 +72,11 @@ footer {
 	z-index: 1001;
 }
 
-#structures.hid {
+#sidebar.hid {
 	left: -120px;
 }
 
-#structures .toggle-button{
+#sidebar .toggle-button{
 	position: fixed;
 	top: 48px;
 }

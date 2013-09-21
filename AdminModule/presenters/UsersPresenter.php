@@ -145,14 +145,27 @@ class UsersPresenter extends \AdminModule\BasePresenter{
 		
 		$resources = \WebCMS\SystemHelper::getResources();
 		
+		$pages = $this->em->getRepository('AdminModule\Page')->findBy(array(
+			'language' => $this->state->language
+		));
+		
+		foreach($pages as $page){
+			if($page->getParent() != NULL){
+				$key = 'admin:' . $page->getModuleName() . ':' . $page->getPresenter() . $page->getId();
+				$resources[$key] = $page->getTitle();
+			}
+		}
+		
 		$form = $this->createForm();
 		$form->addText('name', 'Name')->setAttribute('class', 'form-control');
 		$form->addSubmit('save', 'Save')->setAttribute('class', 'btn btn-success');
 		
 		$c = 0;
-		foreach($resources as $r){
+		foreach($resources as $key => $r){
 			
-			$form->addCheckbox('res' . str_replace(':', '', $r), $r);
+			if(strpos('$r', ':') !== FALSE) $form->addCheckbox('res' . str_replace(':', '', $key), $r);
+			else $form->addCheckbox('res' . str_replace(':', '', $key), $r)->setTranslator(NULL);
+				
 			$c++;
 		}
 		

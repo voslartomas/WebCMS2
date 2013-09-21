@@ -118,10 +118,10 @@
 			{block #content}Výchozí obsah{/block}
 		{/snippet}
 	</div>
-	
-	<div id="structures">
+		
+	<div class="sidebar" data-spy="affix" data-offset-top="20">
 		{include 'system/structures.latte'}
-		<span class="toggle-button" onclick="$('#structures').toggleClass('hid');">{_'Hide/Show'}</span>
+		<span class="toggle-button" onclick="$('.sidebar').toggleClass('hid');">{_'Hide/Show'}</span>
 	</div>
 	
 	{snippet footer}

@@ -1,12 +1,12 @@
 WebCMS2
 =======
 
-Content management system based on Nette Framework and Doctrine2 library.
+Content management system based on Nette Framework with Doctrine2 ORM library.
 
-Contents
+Contains
 --------
 
-* Nette framework 2.0.*
+* Nette framework
 * Doctrine2
 * Nella/doctrine
 * Nella/console
