@@ -37,6 +37,9 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 	/* @var string */
 	public $abbr;
 	
+	/* @var Array */
+	public $languages;
+	
 	/* Method is executed before render. */
 	protected function beforeRender(){
 		
@@ -70,9 +73,12 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		
 		// set language
 		if(is_numeric($this->getParam('language'))) $this->language = $this->em->find('AdminModule\Language', $this->getParam('language'));
-		else $this->language = $this->em->find('AdminModule\Language', 1); 
+		else $this->language = $this->em->find('AdminModule\Language', 1); // TODO default language for frontend
 		
 		$this->abbr = $this->language->getDefaultFrontend() ? '' : $this->language->getAbbr() . '/';
+		
+		// load languages
+		$this->languages = $this->em->getRepository('AdminModule\Language')->findAll();
 		
 		// translations
 		$translation = new \WebCMS\Translation($this->em, $this->language , 0);
@@ -82,7 +88,61 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		$id = $this->getParam('id');
 		if($id) $this->actualPage = $this->em->find('AdminModule\Page', $id);
 	}
+	
+	public function createForm(){
+		$form = new UI\Form();
+		
+		$form->setTranslator($this->translator);
+		
+		return $form;
+	}
+	
+	public function createComponentLanguagesForm(){
+		$form = $this->createForm();
+		$form->getElementPrototype()->action = $this->link('this', array(
+			'id' => $this->actualPage->getId(),
+			'path' => $this->actualPage->getPath(),
+			'abbr' => $this->abbr,
+			'do' => 'languagesForm-submit'
+		));
+		
+		
+		$items = array();
+		foreach($this->languages as $lang){
+			$items[$lang->getId()] = $lang->getName(); 	
+		}
+		
+		$form->addSelect('language', 'Change language')->setItems($items)->setDefaultValue($this->language->getId());
+		$form->addSubmit('submit', 'Change');
+		$form->onSuccess[] = callback($this, 'languagesFormSubmitted', array('abbr' => '', 'path' => $this->actualPage->getPath()));
+		
+		
+		
+		return $form;
+	}
+	
+	public function languagesFormSubmitted($form){
+		$values = $form->getValues();
+		
+		$home = $this->em->getRepository('AdminModule\Page')->findOneBy(array(
+			'language' => $values->language,
+			'default' => TRUE
+		));
+		
+		if(is_object($home)){
+		
+			$abbr = $home->getLanguage()->getDefaultFrontend() ? '' : $home->getLanguage()->getAbbr() . '/';
 
+			$this->redirectUrl($this->link('this', array(
+				'id' => $home->getId(),
+				'path' => $home->getPath(),
+				'abbr' => $abbr,
+			)));
+		}else{
+			$this->flashMessage($this->translation['No default page for selected language.'], 'error');
+		}
+	}
+	
 	/**
 	 * Injects entity manager.
 	 * @param \Doctrine\ORM\EntityManager $em

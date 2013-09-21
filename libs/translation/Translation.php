@@ -21,7 +21,8 @@ class Translation  extends \ArrayObject {
 	public function __construct($em, $language, $backend){
 		
 		$this->translations = $em->getRepository('AdminModule\Translation')->findBy(array(
-			'language' => $language
+			'language' => $language,
+			'backend' => $backend
 		));
 		
 		$this->em = $em;

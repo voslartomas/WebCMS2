@@ -241,18 +241,29 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 			$langs[$l->getId()] = $l->getName();
 		}
 		
+		$backend = array(
+			'' => $this->translation['Pick filter'],
+			0 => $this->translation['No'],
+			1 => $this->translation['Yes']
+		);
+		
 		$grid->addColumn('id', 'ID')->setSortable()->setFilter();
 		$grid->addColumn('key', 'Key')->setSortable()->setFilter();
 		$grid->addColumnText('translation', 'Value')->setSortable()->setCustomRender(function($item){
 			return '<div class="translation" contentEditable>' . $item->getTranslation() . '</div>';
 		});
+		$grid->addColumn('backend', 'Backend')->setReplacement(array(
+			'1' => 'Yes',
+			NULL => 'No'
+		))->setFilterSelect($backend);
+		
 		$grid->addColumnText('language', 'Language')->setCustomRender(function($item){
 			return $item->getLanguage()->getName();
 		})->setSortable();
 		
 		$grid->addFilterSelect('language', 'Language')->getControl()->setTranslator(NULL)->setItems($langs);
 		
-		$grid->setFilterRenderType(\Grido\Components\Filters\Filter::RENDER_OUTER);
+		$grid->setFilterRenderType(\Grido\Components\Filters\Filter::RENDER_INNER);
 		return $grid;
 	}
 	

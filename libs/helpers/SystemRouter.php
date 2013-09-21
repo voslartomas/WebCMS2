@@ -26,8 +26,6 @@ class SystemRouter extends \Nette\Application\Routers\Route{
 	
     function match(\Nette\Http\IRequest $httpRequest){ 
 		
-		$this->defineLanguage($httpRequest->getUrl());
-		
 		$path = $httpRequest->getUrl()->getPath();
 		$query = str_replace($httpRequest->getUrl()->getScriptPath(), '', $path);
 		
@@ -64,8 +62,23 @@ class SystemRouter extends \Nette\Application\Routers\Route{
 				
 				$path = $page->getPath();
 				
+				$params = array(
+					'id' => $page->getId(),
+					'language' => $this->page->getLanguage()->getId(),
+					'path' => $path,
+					'root' => $page->getRoot(),
+					'lft' => $page->getLeft(),
+					'abbr' => $abbr) + $httpRequest->getQuery();
+				
 				$presenter = 'Frontend:' . $page->getModule()->getName() . ':' . $page->getPresenter();
-				return new \Nette\Application\Request($presenter, 'GET', array('id' => $page->getId(), 'language' => $this->page->getLanguage()->getId(), 'path' => $path, 'root' => $page->getRoot(), 'lft' => $page->getLeft(), 'abbr' => $abbr) + $httpRequest->getQuery());
+				return new \Nette\Application\Request(
+						$presenter,
+						$httpRequest->getMethod(),
+						$params,
+						$httpRequest->getPost(),
+						$httpRequest->getFiles(),
+						array(\Nette\Application\Request::SECURED => $httpRequest->isSecured())
+					);
 			}
 		}
 		
@@ -74,12 +87,17 @@ class SystemRouter extends \Nette\Application\Routers\Route{
 
     function constructUrl(\Nette\Application\Request $appRequest, \Nette\Http\Url $refUrl) {
 		$params = $appRequest->getParameters();
-	
-		return $refUrl->getScheme() . '://' . $refUrl->getHost() . $refUrl->getPath() . $params['abbr'] . $params['path'];
-	}
-	
-	private function defineLanguage($url){
 		
+		if(array_key_exists('abbr', $params)) $abbr = $params['abbr'];
+		else $abbr = '';
+		
+		if(array_key_exists('path', $params)) $path = $params['path'];
+		else $path = '';
+		
+		if(array_key_exists('do', $params)) $do = '?do=' . $params['do'];
+		else $do = '';
+		
+		return $refUrl->getScheme() . '://' . $refUrl->getHost() . $refUrl->getPath() . $abbr . $path . $do;
 	}
 }
 
