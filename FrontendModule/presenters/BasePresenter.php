@@ -85,14 +85,18 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 	}
 	
 	private function getStructures(){
-		$qb = $this->em->createQueryBuilder();
+		$repo = $this->em->getRepository('AdminModule\Page');
 		
-		$qb = $this->em->createQueryBuilder();
+		$structs = $repo->findBy(array(
+			'language' => $this->language,
+			'parent' => NULL
+		));
 		
-		$qb->addOrderBy('l.root', 'ASC');
-		$qb->andWhere('l.parent IS NULL');
-		$qb->andWhere('l.language = ' . $this->language->getId());
+		$structures = array();
+		foreach($structs as $s){
+			$structures[$s->getTitle()] = $repo->getNodesHierarchy($s, FALSE);
+		}
 		
-		return $qb->select('l')->from("AdminModule\\Page", 'l')->getQuery()->getResult();
+		return $structures;
 	}
 }

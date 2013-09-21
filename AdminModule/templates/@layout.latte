@@ -112,18 +112,15 @@
 		  <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type} fade in">{$flash->message}<a href="#" class="close" data-dismiss="alert">&times;</a></div>
 	  {/snippet}
 	</div>
-	 {define content}
-		  
-		  {/define}
+	 
 	<div class="container">
 		{snippet content}
-			{include #content}
+			{block #content}Výchozí obsah{/block}
 		{/snippet}
 	</div>
 	
 	<div id="structures">
 		{include 'system/structures.latte'}
-		
 		<span class="toggle-button" onclick="$('#structures').toggleClass('hid');">{_'Hide/Show'}</span>
 	</div>
 	

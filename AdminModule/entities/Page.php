@@ -91,9 +91,19 @@ class Page extends Seo{
 	private $module;
 	
 	/**
+	 * @orm\Column
+	 */
+	private $moduleName;
+	
+	/**
 	 * @orm\Column 
 	 */
 	private $presenter;
+	
+	/**
+	 * @orm\Column
+	 */
+	private $path;
 	
 	/**
 	 * @orm\Column(type="boolean")
@@ -222,6 +232,22 @@ class Page extends Seo{
 
 	public function setPresenter($presenter) {
 		$this->presenter = $presenter;
+	}
+	
+	public function getModuleName() {
+		return $this->moduleName;
+	}
+
+	public function setModuleName($moduleName) {
+		$this->moduleName = $moduleName;
+	}
+	
+	public function getPath() {
+		return $this->path;
+	}
+
+	public function setPath($path) {
+		$this->path = $path;
 	}
 	
     public function __toString(){

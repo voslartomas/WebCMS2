@@ -67,6 +67,8 @@ class PagesPresenter extends \AdminModule\BasePresenter{
 	public function pageFormSubmitted(UI\Form $form){
 		$values = $form->getValues();
 		
+		$repo = $this->em->getRepository('AdminModule\Page');
+		
 		if($values->parent)
 			$parent = $this->em->find("AdminModule\Page", $values->parent);
 		else
@@ -88,8 +90,18 @@ class PagesPresenter extends \AdminModule\BasePresenter{
 		$this->page->setParent($parent);
 		$this->page->setLanguage($this->state->language);
 		$this->page->setModule($module);
+		$this->page->setModuleName($module->getName());
 		$this->page->setPresenter($presenter);
-
+		
+		// creates path
+		$path = $repo->getPath($this->page);
+		$final = array();
+		foreach($path as $p){
+			if($p->getParent() != NULL) $final[] = $p->getSlug();
+		}
+		
+		$this->page->setPath(implode('/', $final));
+		
 		$this->em->persist($this->page); // FIXME only if is new we have to persist entity, otherway it can be just flushed
 		$this->em->flush();
 

@@ -18,6 +18,8 @@ class SystemRouter extends \Nette\Application\Routers\Route{
 	/* @var \AdminModule\Page */
 	private $page;
 	
+	private $pages;
+	
 	public function __construct($em){
 		$this->em = $em;
 	}
@@ -56,7 +58,7 @@ class SystemRouter extends \Nette\Application\Routers\Route{
 				$this->page = $page;
 				
 				$presenter = 'Frontend:' . $page->getModule()->getName() . ':' . $page->getPresenter();
-				return new \Nette\Application\Request($presenter, 'GET', array('id' => $page->getId(), 'language' => 1) + $httpRequest->getQuery());
+				return new \Nette\Application\Request($presenter, 'GET', array('id' => $page->getId(), 'language' => 1, 'path' => $page->getPath()) + $httpRequest->getQuery());
 			}
 		}
 		
@@ -65,18 +67,8 @@ class SystemRouter extends \Nette\Application\Routers\Route{
 
     function constructUrl(\Nette\Application\Request $appRequest, \Nette\Http\Url $refUrl) {
 		$params = $appRequest->getParameters();
-		$repo = $this->em->getRepository('AdminModule\Page');
-		$page = $this->em->find('AdminModule\Page', $params['id']);
-		$path = $repo->getPath($page);
-		
-		$final = array();
-		foreach($path as $p){
-			if($p->getParent() != NULL) $final[] = $p->getSlug();
-		}
-		
-		$url = $refUrl->getScheme() . '://' . $refUrl->getHost() . $refUrl->getPath() . implode('/', $final);
-		
-		return $url;
+
+		return $refUrl->getScheme() . '://' . $refUrl->getHost() . $refUrl->getPath() . $params['path'];
 	}
 	
 	private function defineLanguage($url){

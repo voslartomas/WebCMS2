@@ -251,8 +251,6 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 	private function getStructures(){
 		$qb = $this->em->createQueryBuilder();
 		
-		$qb = $this->em->createQueryBuilder();
-		
 		$qb->addOrderBy('l.root', 'ASC');
 		$qb->andWhere('l.parent IS NULL');
 		$qb->andWhere('l.language = ' . $this->state->language->getId());

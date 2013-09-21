@@ -1,18 +1,29 @@
-{var $childrens = $item->getChildren()}
+<ul>
+{var $currDepth = -1}
+{var $count = 0}
+{var $ul = '<ul>'}
+{var $ulEnd = '</li></ul>'}
+{foreach $structure as $item}
 
-{if count($item->getChildren()) > 0}
-	<ul>
-	{foreach $childrens as $item}
-		<li>
-			{if is_object($item->getModule())}
-				<a class="ajax" n:href=":Frontend:{$item->getModule()->getName()}:{$item->getPresenter()}:default id => $item->getId()">
-					{$item->getTitle()}
-				</a>
-			{else}
-				<span title="{_'No module selected!'}">{$item->getTitle()}</span>
-			{/if}
-			{include 'menu.latte' item => $item}
-		</li>
-	{/foreach}
-	</ul>
-{/if}
+	{if $item['level'] > $currDepth}
+		<ul>
+	{/if}
+
+  {if $item['level'] < $currDepth}    
+    {!$template->repeat($ulEnd, $currDepth - $item['level'])}
+  {/if}
+
+	<li>
+		<a class="ajax" n:href="':Frontend:'.$item['moduleName'].':'.$item['presenter'].':default' path => $item['path']">
+			{$item['title']}
+		</a>
+
+  {var $currDepth = $item['level']}
+  
+  {if $count == count($structure)}
+    {!$template->repeat($ulEnd, $currDepth+1)}
+  {/if}
+
+	
+{/foreach}
+</ul>
