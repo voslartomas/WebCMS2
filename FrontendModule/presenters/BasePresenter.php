@@ -215,7 +215,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 			
 			if(method_exists($object, $box->getFunction())) 
 					$function = $box->getFunction();
-					$finalBoxes[$box->getBox()] = $object->$function();
+					$finalBoxes[$box->getBox()] = call_user_func(array($object, $function));
 		}
 
 		$this->template->boxes = $finalBoxes;
