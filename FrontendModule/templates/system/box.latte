@@ -1,6 +1,6 @@
 {if array_key_exists($index, $boxes)}
 	{if $boxes[$index]}
-		{$boxes[$index]}
+		{!$boxes[$index]}
 	{/if}
 {else}
 	{$index}: {_'box is not defined.'}

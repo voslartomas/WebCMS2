@@ -74,6 +74,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		$this->template->breadcrumb = $default + $this->em->getRepository('AdminModule\Page')->getPath($this->actualPage);
 		$this->template->abbr = $this->abbr;
 		
+		// !params load from settings
 		$this->template->structures = $this->getStructures(FALSE, 'nav navbar-nav', TRUE);
 		$this->template->sidebar = $this->getStructure($top, FALSE, 'nav');
 		$this->template->setTranslator($this->translator);
@@ -209,13 +210,16 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 			'pageTo' => $this->actualPage
 		));
 		
+		// preload pageFrom for every box (one select), DONT CALL getPageFrom function!
+		
 		foreach($assocBoxes as $box){
 			$presenter = 'FrontendModule\\' . $box->getPresenter() . 'Module\\' . $box->getPresenter() . 'Presenter';
 			$object = new $presenter;
 			
 			if(method_exists($object, $box->getFunction())) 
 					$function = $box->getFunction();
-					$finalBoxes[$box->getBox()] = call_user_func(array($object, $function), $this);
+					$pageFrom = $box->getPageFrom();
+					$finalBoxes[$box->getBox()] = call_user_func(array($object, $function), $this, $pageFrom);
 		}
 
 		$this->template->boxes = $finalBoxes;
@@ -225,52 +229,51 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		$repo = $this->em->getRepository('AdminModule\Page');
 		
 		return $repo->childrenHierarchy($node, $direct, array(
-							'decorate' => true,
-							'html' => true,
-							'rootOpen' => function($nodes) use($rootClass, $dropDown){
-								
-								$drop = $nodes[0]['level'] == 2 ? TRUE : FALSE;
-								$class = $nodes[0]['level'] < 2 ? $rootClass : '';
-								
-								if($drop && $dropDown)
-									$class .= ' dropdown-menu';
-								
-								return '<ul class="' . $class . '">';
-							},
-							'rootClose' => '</ul>',
-							'childOpen' => function($node) use($dropDown){
-								$hasChildrens = count($node['__children']) > 0 ? TRUE : FALSE;
-								$active = $this->getParam('id') == $node['id'] ? TRUE : FALSE;
-								$class = '';
-								
-								if($this->getParam('lft') > $node['lft'] && $this->getParam('lft') < $node['rgt'] && $this->getParam('root') == $node['root']){
-									$class .= ' active';
-								}
-								
-								
-								if($hasChildrens && $dropDown)
-									$class .= ' dropdown';
-								
-								if($active)
-									$class .= ' active';
-								
-								return '<li class="' . $class . '">';
-							},
-							'childClose' => '</li>',
-							'nodeDecorator' => function($node) use($dropDown) {
-								$hasChildrens = count($node['__children']) > 0 ? TRUE : FALSE;
-								$params = '';
-								$class = '';
-								$link = $this->link(':Frontend:' . $node['moduleName'] . ':' . $node['presenter'] . ':default', array('id' => $node['id'], 'path' => $node['path'], 'abbr' => $this->abbr));
-								
-								if($hasChildrens && $node['level'] == 1 && $dropDown){
-									$params = ' data-toggle="dropdown"';
-									$class .= ' dropdown-toggle';
-									$link = '#';
-								}
-								
-								return '<a ' . $params .' class="' . $class . '" href="' . $link . '">'.$node['title'].'</a>';
-							}
-						));
+				'decorate' => true,
+				'html' => true,
+				'rootOpen' => function($nodes) use($rootClass, $dropDown){
+
+					$drop = $nodes[0]['level'] == 2 ? TRUE : FALSE;
+					$class = $nodes[0]['level'] < 2 ? $rootClass : '';
+
+					if($drop && $dropDown)
+						$class .= ' dropdown-menu';
+
+					return '<ul class="' . $class . '">';
+				},
+				'rootClose' => '</ul>',
+				'childOpen' => function($node) use($dropDown){
+					$hasChildrens = count($node['__children']) > 0 ? TRUE : FALSE;
+					$active = $this->getParam('id') == $node['id'] ? TRUE : FALSE;
+					$class = '';
+
+					if($this->getParam('lft') > $node['lft'] && $this->getParam('lft') < $node['rgt'] && $this->getParam('root') == $node['root']){
+						$class .= ' active';
+					}
+
+					if($hasChildrens && $dropDown)
+						$class .= ' dropdown';
+
+					if($active)
+						$class .= ' active';
+
+					return '<li class="' . $class . '">';
+				},
+				'childClose' => '</li>',
+				'nodeDecorator' => function($node) use($dropDown) {
+					$hasChildrens = count($node['__children']) > 0 ? TRUE : FALSE;
+					$params = '';
+					$class = '';
+					$link = $this->link(':Frontend:' . $node['moduleName'] . ':' . $node['presenter'] . ':default', array('id' => $node['id'], 'path' => $node['path'], 'abbr' => $this->abbr));
+
+					if($hasChildrens && $node['level'] == 1 && $dropDown){
+						$params = ' data-toggle="dropdown"';
+						$class .= ' dropdown-toggle';
+						$link = '#';
+					}
+
+					return '<a ' . $params .' class="' . $class . '" href="' . $link . '">'.$node['title'].'</a>';
+				}
+			));
 	}
 }
