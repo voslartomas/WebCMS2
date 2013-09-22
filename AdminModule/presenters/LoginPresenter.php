@@ -22,10 +22,12 @@ class LoginPresenter extends BasePresenter{
 		$form = $this->createForm();
 		
 		$form->addText('username', 'Username')
-			->setRequired('Please provide a username.');
+			->setRequired('Please provide a username.')
+			->setAttribute('placeholder', 'Username');
 
 		$form->addPassword('password', 'Password')
-			->setRequired('Please provide a password.');
+			->setRequired('Please provide a password.')
+			->setAttribute('placeholder', 'Password');
 
 		$form->addCheckbox('remember', 'Permanent login?');
 
@@ -52,6 +54,7 @@ class LoginPresenter extends BasePresenter{
 			$this->redirect('Homepage:');
 
 		} catch (NS\AuthenticationException $e) {
+			$this->flashMessage($this->translation[$e->getMessage()], 'danger');
 			$form->addError($e->getMessage());
 		}
 	}
