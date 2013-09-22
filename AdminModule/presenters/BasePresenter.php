@@ -66,7 +66,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		parent::startup();
 		
 		if (!$this->getUser()->isLoggedIn() && $this->presenter->getName() !== "Admin:Login") {
-			$this->redirect('Admin:Login:');
+			$this->redirect(':Admin:Login:');
 		}
 		
 		$this->state = $this->getSession('admin');

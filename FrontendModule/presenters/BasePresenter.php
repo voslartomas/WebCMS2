@@ -68,6 +68,9 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		else
 			$default = array($default);
 		
+		// set up boxes
+		$this->setUpBoxes();
+		
 		$this->template->breadcrumb = $default + $this->em->getRepository('AdminModule\Page')->getPath($this->actualPage);
 		$this->template->abbr = $this->abbr;
 		
@@ -191,6 +194,31 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		}
 		
 		return $structures;
+	}
+	
+	private function setUpBoxes(){
+		$parameters = $this->context->getParameters();
+		$boxes = $parameters['boxes'];
+		
+		$finalBoxes = array();
+		foreach($boxes as $key => $box){
+			$finalBoxes[$key] = NULL;
+		}
+		
+		$assocBoxes = $this->em->getRepository('AdminModule\Box')->findBy(array(
+			'pageTo' => $this->actualPage
+		));
+		
+		foreach($assocBoxes as $box){
+			$presenter = 'FrontendModule\\' . $box->getPresenter() . 'Module\\' . $box->getPresenter() . 'Presenter';
+			$object = new $presenter;
+			
+			if(method_exists($object, $box->getFunction())) 
+					$function = $box->getFunction();
+					$finalBoxes[$box->getBox()] = $object->$function();
+		}
+
+		$this->template->boxes = $finalBoxes;
 	}
 	
 	private function getStructure($node = NULL, $direct = TRUE, $rootClass = 'nav navbar-nav', $dropDown = FALSE){
