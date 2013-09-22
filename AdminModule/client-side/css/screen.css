@@ -25,6 +25,7 @@ a[href^="error:"] {
 	padding: 5px;
 	left: 40%;
 	top: 40%;
+	z-index: 10000;
 }
 
 #loader.active{
@@ -64,19 +65,28 @@ footer {
 
 .sidebar {
 	top: 60px;
-	width: 160px;
+	width: 16em !important;
 	overflow: auto;
-	position: fixed;
+	position: fixed !important;
 	height: 100%;
 	background-color: white;
 	z-index: 1001;
 }
 
-#sidebar.hid {
+.sidebar ul {
+	padding: 0px;
+}
+
+.sidebar ul li {
+	list-style-type: none;
+	padding-left: 5px;
+}
+
+.sidebar.hid {
 	left: -120px;
 }
 
-#sidebar .toggle-button{
+.sidebar .toggle-button{
 	position: fixed;
 	top: 48px;
 }

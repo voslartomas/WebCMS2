@@ -1,0 +1,17 @@
+<h1>{_'Boxes settings'}</h1>
+
+{form boxesForm}
+
+<div class="navbar navbar-default">
+	{foreach $boxes as $key => $box}
+		<div class="navbar navbar-form">
+			<span class="navbar-text">{label $key /}</span>
+			<span class="navbar-form">{input $key}</span>
+		</div>
+	{/foreach}
+	
+	{input submit class => 'btn btn-submit'}
+	
+</div>
+
+{/form}

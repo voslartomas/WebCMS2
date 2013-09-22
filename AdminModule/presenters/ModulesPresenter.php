@@ -81,13 +81,4 @@ class ModulesPresenter extends \AdminModule\BasePresenter{
 		
 		return is_object($exists) ? TRUE : FALSE;
 	}
-	
-	private function createObject($name){
-		$expl = explode('-', $name);
-
-		$objectName = ucfirst($expl[0]);
-		$objectName = "\\WebCMS\\$objectName" . "Module\\" . $objectName;
-		
-		return new $objectName;
-	}
 }

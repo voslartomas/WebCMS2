@@ -150,9 +150,18 @@ class UsersPresenter extends \AdminModule\BasePresenter{
 		));
 		
 		foreach($pages as $page){
+			
 			if($page->getParent() != NULL){
-				$key = 'admin:' . $page->getModuleName() . ':' . $page->getPresenter() . $page->getId();
-				$resources[$key] = $page->getTitle();
+				
+				$module = $this->createObject($page->getModuleName());
+				
+				foreach($module->getPresenters() as $presenter){
+					
+					$suffix = $presenter['name'] == $page->getModuleName() ? '' : ' ' . $presenter['name'];
+					
+					$key = 'admin:' . $page->getModuleName() . ':' . $presenter['name'] . $page->getId();
+					$resources[$key] = $page->getTitle() . $suffix;
+				}
 			}
 		}
 		
@@ -171,6 +180,7 @@ class UsersPresenter extends \AdminModule\BasePresenter{
 		
 		$form->onSuccess[] = callback($this, 'roleFormSubmitted');
 		
+		// defaults setting
 		$new = $this->role->getName();
 		if(!empty($new)){
 			$defaultsPermissions = array();

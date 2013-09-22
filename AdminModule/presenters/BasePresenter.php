@@ -8,7 +8,7 @@ use Nette\Application\UI;
 
 /**
  * Base class for all application presenters.
- *
+ * TODO refactoring
  * @author     Tomáš Voslař <tomas.voslar at webcook.cz>
  * @package    WebCMS2
  */
@@ -43,8 +43,14 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 			$this->invalidateControl('flashMessages');
 		}
 		
-		$this->template->registerHelperLoader('\WebCMS\SystemHelper::loader');
+		// boxes settings, only if page is module
+		if($this->getParam('id')){
+			$this->template->boxesSettings = TRUE;
+		}else{
+			$this->template->boxesSettings = FALSE;
+		}
 		
+		$this->template->registerHelperLoader('\WebCMS\SystemHelper::loader');
 		$this->template->actualPage = $this->actualPage;
 		$this->template->structures = $this->getStructures();
 		$this->template->user = $this->getUser();
@@ -60,7 +66,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		parent::startup();
 		
 		if (!$this->getUser()->isLoggedIn() && $this->presenter->getName() !== "Admin:Login") {
-			$this->redirect('Login:');
+			$this->redirect('Admin:Login:');
 		}
 		
 		$this->state = $this->getSession('admin');
@@ -213,8 +219,13 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		
 		foreach($pages as $page){
 			if($page->getParent() != NULL){
-				$key = 'admin:' . $page->getModuleName() . '' . $page->getPresenter() . $page->getId();
-				$res[$key] = $page->getTitle();
+				
+				$module = $this->createObject($page->getModuleName());
+				
+				foreach($module->getPresenters() as $presenter){
+					$key = 'admin:' . $page->getModuleName() . '' . $presenter['name'] . $page->getId();
+					$res[$key] = $page->getTitle();
+				}
 			}
 		}
 		
@@ -245,7 +256,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		$hasRigths = false;
 		$check = false;
 		
-		if(substr_count(lcfirst($this->name), ':') == 2) $resource = $this->str_lreplace(':', '', lcfirst($this->name) . $this->getParam('id'));
+		if(substr_count(lcfirst($this->name), ':') == 2) $resource = \WebCMS\SystemHelper::strlReplace(':', '', lcfirst($this->name) . $this->getParam('id'));
 		else $resource = lcfirst($this->name);
 
 		foreach ($roles as $role) {
@@ -261,16 +272,16 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		}
 	}
 	
-	function str_lreplace($search, $replace, $subject){
-		$pos = strrpos($subject, $search);
+	protected function createObject($name){
+		$expl = explode('-', $name);
 
-		if($pos !== false)
-		{
-			$subject = substr_replace($subject, $replace, $pos, strlen($search));
-		}
-
-		return $subject;
+		$objectName = ucfirst($expl[0]);
+		$objectName = "\\WebCMS\\$objectName" . "Module\\" . $objectName;
+		
+		return new $objectName;
 	}
+	
+	
 	
 	private function getStructures(){
 		$qb = $this->em->createQueryBuilder();
@@ -280,5 +291,102 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		$qb->andWhere('l.language = ' . $this->state->language->getId());
 		
 		return $qb->select('l')->from("AdminModule\\Page", 'l')->getQuery()->getResult();
+	}
+	
+	/* BOXES SETTINGS */
+	
+	public function renderBoxes($id){
+		
+		$this->reloadContent();
+		
+		$parameters = $this->getContext()->container->getParameters();
+		$boxes = $parameters['boxes'];
+		
+		foreach($boxes as &$box){
+			//$box['component'] = $id . '-' . $box['presenter'] . '-' . $box['function'];
+		}
+		
+		$this->template->boxes = $boxes;
+		$this->template->id = $id;
+	}
+	
+	public function createComponentBoxesForm(){
+		$form = $this->createForm();
+		
+		$parameters = $this->getContext()->container->getParameters();
+		$boxes = $parameters['boxes'];
+		
+		$pages = $this->em->getRepository('AdminModule\Page')->findBy(array(
+			'language' => $this->state->language
+		)); 
+		
+		$boxesAssoc = array();
+		foreach($pages as $page){
+			if($page->getParent() != NULL){
+				$module = $this->createObject($page->getModuleName());
+
+				foreach($module->getBoxes() as $box){
+					$boxesAssoc[$page->getId() . '-' . $box['presenter'] . '-' . $box['function']] = $page->getTitle() . ' - ' . $this->translation[$box['name']];
+				}
+			}
+		}
+		
+		$boxesAssoc = array(
+			0 => $this->translation['Box is not linked.']
+		) + $boxesAssoc;
+		
+		foreach($boxes as $name => $active){
+			$form->addSelect($name, $name, $boxesAssoc)
+					->setTranslator(NULL)
+					->setAttribute('class', 'form-control');
+		}
+		
+		// set defaults
+		$boxes = $this->em->getRepository('AdminModule\Box')->findBy(array(
+			'pageTo' => $this->actualPage
+		)); 
+		
+		$defaults = array();
+		foreach($boxes as $box){
+			$defaults[$box->getBox()] = $box->getPageFrom()->getId() . '-' . $box->getPresenter() . '-' . $box->getFunction();
+		}
+		
+		$form->setDefaults($defaults);
+		$form->addSubmit('submit', 'Save');
+		$form->onSuccess[] = callback($this, 'boxesFormSubmitted');
+		
+		return $form;
+	}
+	
+	public function boxesFormSubmitted(UI\Form $form){
+		$values = $form->getValues();
+		
+		// delete old asscociations
+		$q = $this->em->createQuery('delete from AdminModule\Box m where m.pageTo = ' . $this->actualPage->getId());
+		$numDeleted = $q->execute();
+		
+		// persist new associations
+		foreach($values as $key => $value){
+			if($value){
+				$params = explode('-', $value);
+
+				$pageFrom = $this->em->find('AdminModule\Page', $params[0]);
+
+				$box = new Box();
+				$box->setPageFrom($pageFrom);
+				$box->setPageTo($this->actualPage);
+				$box->setPresenter($params[1]);
+				$box->setFunction($params[2]);
+				$box->setBox($key);
+
+				$this->em->persist($box);
+			}
+		}
+		
+		$this->em->flush();
+		
+		$this->flashMessage($this->translation['Boxes settings has been saved.'], 'success');
+		if(!$this->isAjax())
+			$this->redirect('this');
 	}
 }

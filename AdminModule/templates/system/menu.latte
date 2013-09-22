@@ -1,7 +1,7 @@
 {var $childrens = $item->getChildren()}
 
 {if count($item->getChildren()) > 0}
-	<ul>
+	<ul class="nav">
 	{foreach $childrens as $item}
 		<li>
 			{if is_object($item->getModule())}

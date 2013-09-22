@@ -20,7 +20,9 @@
 		"nella/console": "@dev",
 		"nella/gedmo": "@dev",
 		"doctrine/migrations": "@dev",
-		"kdyby/bootstrap-form-renderer": "2.0.*"
+		"kdyby/bootstrap-form-renderer": "2.0.*",
+		"monolog/monolog" : "1.6.0",
+		"mockery/mockery" : "0.8.*",
     },
     "autoload": {
         "classmap": ["/"]

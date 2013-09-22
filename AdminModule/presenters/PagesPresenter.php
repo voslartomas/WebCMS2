@@ -39,8 +39,10 @@ class PagesPresenter extends \AdminModule\BasePresenter{
 		$modules = $this->em->getRepository('AdminModule\Module')->findAll();
 		$modulesToSelect = array();
 		foreach($modules as $module){
-			foreach($module->getPresenters() as $presenter){
-				$modulesToSelect[$module->getId() . '-' . $presenter] = $module->getName() . ' ' . $presenter;
+			$objectModule = $this->createObject($module->getName());
+			
+			foreach($objectModule->getPresenters() as $presenter){
+				if($presenter['frontend']) $modulesToSelect[$module->getId() . '-' . $presenter['name']] = $module->getName() . ' ' . $presenter['name'];
 			}
 		}
 		

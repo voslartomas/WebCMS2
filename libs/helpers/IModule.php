@@ -9,5 +9,5 @@ namespace WebCMS;
  */
 interface IModule {
 	
-	public function createRoutes();
+	
 }

@@ -114,19 +114,24 @@
 	</div>
 	 
 	<div class="container">
+		
 		{snippet content}
 			{block #content}Výchozí obsah{/block}
 		{/snippet}
+			
+		
 	</div>
 		
-	<div class="sidebar" data-spy="affix" data-offset-top="20">
-		{include 'system/structures.latte'}
-		<span class="toggle-button" onclick="$('.sidebar').toggleClass('hid');">{_'Hide/Show'}</span>
-	</div>
+	
+	<div class="sidebar col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
+          <div class="well sidebar-nav">
+            {include 'system/structures.latte'}
+          </div><!--/.well -->
+        </div>
 	
 	{snippet footer}
-	<footer class="navbar">
-		<p>WebCMS {_'version'} {$version['version']} {if !empty($version['versionHash'])}{_'revision:'} {$version['versionHash']}{/if}. &copy; Webcook 2009-2013</p>
+	<footer class="navbar navbar-default">
+		<p class="navbar-text pull-right">WebCMS {_'version'} {$version['version']} {if !empty($version['versionHash'])}{_'revision:'} {$version['versionHash']}{/if}. &copy; Webcook 2009-2013</p>
 	</footer>
 	{/snippet}
 	
