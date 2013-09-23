@@ -4,8 +4,40 @@
 
 {include 'tabs.latte' active => 'pictures'}
 
-<div class="well">
-	{control picturesSettingsForm}
+<div class="panel-group" id="accordion">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+          {_'Basic settings'}
+        </a>
+      </h4>
+    </div>
+    <div id="collapseTwo" class="panel-collapse collapse {if $panel != 'thumbnails'}in{/if}">
+      <div class="panel-body">
+        {control picturesSettingsForm}
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+          {_'Thumbnails definition'}
+        </a>
+      </h4>
+    </div>
+    <div id="collapseOne" class="panel-collapse collapse {if $panel == 'thumbnails'}in{/if}">
+      <div class="panel-body">
+        <a n:href="Settings:addThumbnail" class="btn btn-primary ajax" data-remote="false" data-target="#myModal" data-toggle="modal">{_'Add thumbnail'}</a>
+
+		<br /><br />
+
+		{control thumbnailGrid}
+      </div>
+    </div>
+  </div>
 </div>
 
 {/block}
+

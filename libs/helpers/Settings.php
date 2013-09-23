@@ -87,5 +87,12 @@ class Settings {
 	public function setSettings($settings) {
 		$this->settings = $settings;
 	}
+	
+	public function getLanguage() {
+		return $this->language;
+	}
 
+	public function setLanguage($language) {
+		$this->language = $language;
+	}	
 }

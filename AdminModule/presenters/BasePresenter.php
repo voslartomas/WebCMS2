@@ -109,9 +109,8 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 	}
 	
 	private function getSettings(){
-		$tmp = $this->em->getRepository('AdminModule\Setting')->findBy(array(
-			'language' => $this->state->language
-		));
+		$query = $this->em->createQuery('SELECT s FROM AdminModule\Setting s WHERE s.language >= ' . $this->state->language->getId() . ' OR s.language IS NULL');
+		$tmp = $query->getResult();	
 		
 		$settings = array();
 		foreach($tmp as $s){

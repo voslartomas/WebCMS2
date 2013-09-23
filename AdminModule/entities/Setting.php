@@ -42,8 +42,7 @@ class Setting extends Doctrine\Entity {
 	
 	/**
 	 * @orm\ManyToOne(targetEntity="Language")
-	 * @orm\JoinColumn(name="language_id", referencedColumnName="id", onDelete="CASCADE")
-	 * @var Int 
+	 * @orm\JoinColumn(name="language_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
 	 */
 	private $language;
 	

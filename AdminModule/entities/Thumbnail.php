@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as orm;
  */
 class Thumbnail extends \AdminModule\Doctrine\Entity{
 	/**
-	 * @ORM\Column
+	 * @ORM\Column(name="`key`")
 	 * @var String
 	 */
 	private $key;
@@ -49,7 +49,7 @@ class Thumbnail extends \AdminModule\Doctrine\Entity{
 	}
 
 	public function getX() {
-		return $this->x;
+		return $this->x == 0 ? NULL : $this->x;
 	}
 
 	public function setX($x) {
@@ -57,7 +57,7 @@ class Thumbnail extends \AdminModule\Doctrine\Entity{
 	}
 
 	public function getY() {
-		return $this->y;
+		return $this->y == 0 ? NULL : $this->y;
 	}
 
 	public function setY($y) {

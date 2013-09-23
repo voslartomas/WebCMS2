@@ -118,13 +118,13 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 	
 	public function createComponentLanguagesForm(){
 		$form = $this->createForm();
+		
 		$form->getElementPrototype()->action = $this->link('this', array(
 			'id' => $this->actualPage->getId(),
 			'path' => $this->actualPage->getPath(),
 			'abbr' => $this->abbr,
 			'do' => 'languagesForm-submit'
 		));
-		
 		
 		$items = array();
 		foreach($this->languages as $lang){
@@ -134,8 +134,6 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		$form->addSelect('language', 'Change language')->setItems($items)->setDefaultValue($this->language->getId());
 		$form->addSubmit('submit', 'Change');
 		$form->onSuccess[] = callback($this, 'languagesFormSubmitted', array('abbr' => '', 'path' => $this->actualPage->getPath()));
-		
-		
 		
 		return $form;
 	}
@@ -178,7 +176,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 	}
 	
 	/**
-	 * 
+	 * Load all system structures.
 	 * @return type
 	 */
 	private function getStructures($direct = TRUE, $rootClass = 'nav navbar-nav', $dropDown = FALSE){
@@ -197,6 +195,9 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		return $structures;
 	}
 	
+	/**
+	 * Set up boxes (call box function and save it into array) and give them to the tempalte.
+	 */
 	private function setUpBoxes(){
 		$parameters = $this->context->getParameters();
 		$boxes = $parameters['boxes'];
@@ -209,9 +210,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		$assocBoxes = $this->em->getRepository('AdminModule\Box')->findBy(array(
 			'pageTo' => $this->actualPage
 		));
-		
-		// preload pageFrom for every box (one select), DONT CALL getPageFrom function!
-		
+
 		foreach($assocBoxes as $box){
 			$presenter = 'FrontendModule\\' . $box->getPresenter() . 'Module\\' . $box->getPresenter() . 'Presenter';
 			$object = new $presenter;
@@ -225,6 +224,14 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		$this->template->boxes = $finalBoxes;
 	}
 	
+	/**
+	 * Get structure by node. In node is set to null whole tree is returned.
+	 * @param type $node
+	 * @param type $direct
+	 * @param type $rootClass
+	 * @param type $dropDown
+	 * @return type
+	 */
 	private function getStructure($node = NULL, $direct = TRUE, $rootClass = 'nav navbar-nav', $dropDown = FALSE){
 		$repo = $this->em->getRepository('AdminModule\Page');
 		

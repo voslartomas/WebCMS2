@@ -13,6 +13,8 @@ class FilesystemPresenter extends \AdminModule\BasePresenter{
 	
 	private $path;
 	
+	private $thumbnailCreator;
+	
 	protected function beforeRender(){
 		parent::beforeRender();
 		
@@ -22,6 +24,9 @@ class FilesystemPresenter extends \AdminModule\BasePresenter{
 	protected function startup(){		
 		parent::startup();
 		
+		$thumbnails = $this->em->getRepository('AdminModule\Thumbnail')->findAll();
+		
+		$this->thumbnailCreator = new \WebCMS\ThumbnailCreator($this->settings, $thumbnails);
 	}
 	
 	public function actionDefault($path){
@@ -66,6 +71,7 @@ class FilesystemPresenter extends \AdminModule\BasePresenter{
 		
 		$this->sendPayload();
 	}
+	
 	// TODO odladit vyjimky
 	public function handleDeleteFile($pathToRemove){
 		if(is_file($pathToRemove))
@@ -73,12 +79,19 @@ class FilesystemPresenter extends \AdminModule\BasePresenter{
 			
 		if(is_dir($pathToRemove))
 			rmdir($pathToRemove);
-			// pokud neni prazdna vratit v odpovedi a potvrdit smazani veskereho obsahu
+		
+		// TODO pokud neni prazdna vratit v odpovedi a potvrdit smazani veskereho obsahu
 		$this->flashMessage($this->translation['File has been removed.'], 'success');
-		$this->redirect('this');
+		
+		if(!$this->isAjax())
+			$this->redirect('this');
 	}
 	
 	public function handleDownloadFile($path){
+		
+	}
+	
+	public function renderFilesDialog(){
 		
 	}
 	
