@@ -139,7 +139,58 @@ Webcms.prototype = {
 		});
 	}
 };
+		
+/* Filesystem */
+function Filesystem(){
+	
+	this.init();
+};
+
+Filesystem.prototype = {
+	
+	selffs : null,
+	
+	init : function(){
+		// defaults values
+		selffs = this;
+		
+		this.__registerListeners();
+	},
+			
+			
+	__registerListeners : function(){
+		
+		$('.filesDialog').live('click', function(e){
+			e.preventDefault();
+			
+			$('.jq_file').die();
+			
+			var options = {
+				container : $(this).data('container'),
+				containerId : $(this).data('container-id')
+			};
+			
+			$('.jq_filesAdd').live('click', function(e){
+				e.preventDefault();
+				
+				// 
+				$('.jq_selected:checked').each(function(){
+					var data = $(this).data();
+					$(options.container).append('<div class="col-md-3 jq_fileBox"><div class="img-thumbnail"><img src="' + data.thumbnail + '" /><input type="hidden" name="files[]" value="' + data.path + '" /><input class="form-control" type="text" name="fileNames[]" /><span class="btn btn-default jq_fileDelete">&times</span></div></div>');
+					$(this).attr('checked', false);
+				});
+			});
+		});
+		
+		$(".jq_fileDelete").live('click', function(e){
+			e.preventDefault();
+			
+			$(this).closest('.jq_fileBox').remove();
+		});
+	}
+};
 
 $(function(){
 	webcms = new Webcms();
+	filesystem = new Filesystem();
 });
