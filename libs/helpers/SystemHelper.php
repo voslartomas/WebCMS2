@@ -156,4 +156,26 @@ class SystemHelper {
 		  rmdir($dir);
 		}
 	 }
+	 
+	/**
+	 * Create relative path from an absolute path.
+	 * @param string $path absolute path
+	 */
+	public static function relative($path){
+		
+		return str_replace(WWW_DIR, '', $path);
+	}
+	
+	public static function thumbnail($path, $thumbnailKey){
+		
+		$path = self::relative($path);
+		$path = str_replace('upload', 'thumbnails', $path);
+		
+		$array = explode('/', $path);
+		$filename = $array[count($array) - 1];
+		
+		$path = str_replace($filename, '', $path);
+		
+		return $path . $thumbnailKey . $filename;
+	}
 }

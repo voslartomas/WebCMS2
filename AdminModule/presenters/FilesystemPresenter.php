@@ -19,7 +19,6 @@ class FilesystemPresenter extends \AdminModule\BasePresenter{
 	protected function beforeRender(){
 		parent::beforeRender();
 		
-		$this->reloadContent();
 	}
 	
 	protected function startup(){		
@@ -36,11 +35,16 @@ class FilesystemPresenter extends \AdminModule\BasePresenter{
 		
 	}
 	
-	public function renderDefault($path){
+	public function renderDefault($path, $dialog, $multiple){
 		$finder = new \Nette\Utils\Finder();
 		$files = $finder->findFiles('*')->in($this->path);
 		$directories = $finder->findDirectories('*')->in($this->path);
-
+		
+		if(empty($dialog))
+			$this->reloadContent();
+		else
+			$this->reloadModalContent();
+		
 		$this->template->backLink = strpos($this->createBackLink($this->path), self::DESTINATION_BASE) === false ? realpath(self::DESTINATION_BASE) : $this->createBackLink($this->path);
 		$this->template->files = $files;
 		$this->template->directories = $directories;
@@ -120,6 +124,7 @@ class FilesystemPresenter extends \AdminModule\BasePresenter{
 	
 	public function renderFilesDialog(){
 		
+		$this->reloadModalContent();
 	}
 	
 }
