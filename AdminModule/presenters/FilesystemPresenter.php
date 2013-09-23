@@ -13,6 +13,7 @@ class FilesystemPresenter extends \AdminModule\BasePresenter{
 	
 	private $path;
 	
+	/* @var \WebCMS\ThumbnailCreator */
 	private $thumbnailCreator;
 	
 	protected function beforeRender(){
@@ -56,7 +57,8 @@ class FilesystemPresenter extends \AdminModule\BasePresenter{
 	
 	public function handleMakeDirectory($name){
 		
-		mkdir($this->path . $name);
+		mkdir($this->path . \Nette\Utils\Strings::webalize($name));
+		mkdir(str_replace(WWW_DIR . '/upload/', WWW_DIR . '/thumbnails/', $this->path) . \Nette\Utils\Strings::webalize($name));
 		
 		$this->flashMessage($this->translation['Directory has been created.'], 'success');
 	}
@@ -66,6 +68,9 @@ class FilesystemPresenter extends \AdminModule\BasePresenter{
 		
 		$file->move($this->path . '' . $file->getSanitizedName());
 		
+		if($file->isImage())
+			$this->thumbnailCreator->createThumbnails($file->getSanitizedName(), $this->path);
+		
 		$this->reloadContent();
 		$this->flashMessage($this->translation['File has been uploaded']);
 		
@@ -74,13 +79,35 @@ class FilesystemPresenter extends \AdminModule\BasePresenter{
 	
 	// TODO odladit vyjimky
 	public function handleDeleteFile($pathToRemove){
-		if(is_file($pathToRemove))
-			unlink($pathToRemove);
+		if(is_file($pathToRemove)){
 			
-		if(is_dir($pathToRemove))
-			rmdir($pathToRemove);
+			// delete all thumbnails if this file is image
+			try {
+				$image = \Nette\Image::fromFile($pathToRemove);
+				
+				$thumbs = $this->em->getRepository('AdminModule\Thumbnail')->findAll();
+				foreach($thumbs as $t){
+					$file = pathinfo($pathToRemove);
+					$filename = $file['filename'] . '.' . $file['extension'];
+					
+					$toRemove = str_replace(WWW_DIR . '/upload/', WWW_DIR . '/thumbnails/', $pathToRemove);
+					$toRemove = str_replace($filename, $t->getKey() . $filename, $toRemove);
+							
+					unlink($toRemove);
+				}
+				
+			} catch (UnknownImageFileException $exc) {
+				// image is not file, so there is nothing to do
+			}
+			
+			unlink($pathToRemove);
+		}
+			
+		if(is_dir($pathToRemove)){
+			\WebCMS\SystemHelper::rrmdir($pathToRemove);
+			\WebCMS\SystemHelper::rrmdir(str_replace(WWW_DIR . '/upload/', WWW_DIR . '/thumbnails/', $pathToRemove));
+		}
 		
-		// TODO pokud neni prazdna vratit v odpovedi a potvrdit smazani veskereho obsahu
 		$this->flashMessage($this->translation['File has been removed.'], 'success');
 		
 		if(!$this->isAjax())
