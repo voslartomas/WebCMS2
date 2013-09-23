@@ -88,7 +88,7 @@ Webcms.prototype = {
 			
 	initTextEditors : function(){
 
-		$(".editor").kendoEditor({
+		$(".editor:not(.k-content)").kendoEditor({
 			tools: [
 				"bold",
                 "italic",
