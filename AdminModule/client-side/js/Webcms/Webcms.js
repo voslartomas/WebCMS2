@@ -118,23 +118,7 @@ Webcms.prototype = {
 			],
 			encoded : false,
 			imageBrowser: {
-				messages: {
-				 dropFilesHere: "Drop files here"
-				},
-				transport: {
-					 read: "/service/ImageBrowser/Read",
-					 destroy: {
-						 url: "/service/ImageBrowser/Destroy",
-						 type: "POST"
-					 },
-					 create: {
-						 url: "/service/ImageBrowser/Create",
-						 type: "POST"
-					 },
-					 thumbnailUrl: "/service/ImageBrowser/Thumbnail",
-					 uploadUrl: "/service/ImageBrowser/Upload",
-					 imageUrl: "/service/ImageBrowser/Image?path={0}"
-				}
+				path: "upload/"
 			 }
 		});
 	}

@@ -74,7 +74,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		// changing language
 		if($this->getParameter('language_id_change')){
 			$this->state->language = $this->em->find('AdminModule\Language', $this->getParameter('language_id_change'));
-			$this->redirect('Homepage:default');
+			$this->redirect(':Admin:Homepage:default');
 		}
 		
 		if(!isset($this->state->language)){
