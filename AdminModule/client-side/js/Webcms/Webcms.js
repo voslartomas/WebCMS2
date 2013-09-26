@@ -6,6 +6,7 @@
 function Webcms(){
 	this.version = '0.1-beta';
 	this.defaultConfirm = 'Opravdu si přejete provést akci?'
+	this.externals = new Array();
 	
 	this.init();
 }
@@ -50,7 +51,7 @@ Webcms.prototype = {
 		$(document).ajaxStart( function() {
 			   $('#loader').addClass("active"); 
 		} ).ajaxStop ( function(){
-				self.initTextEditors();
+				
 				$('#loader').removeClass("active"); 
 		});
 
@@ -58,6 +59,21 @@ Webcms.prototype = {
 		self.__registerListeners();
 		
 	},
+	
+	registerExternal : function(ext){
+		this.externals.push(ext);
+	},
+	
+	onStart : function(){
+		// init wysiwyg editor
+		self.initTextEditors();
+		
+		// load external functions
+		for(var i = 0; i < this.externals.length; i++){
+			eval(this.externals[i]);
+		}
+	},
+	
 	/* Global systems listeners registering. */
 	__registerListeners : function(){
 		// register bootbox confirm window for all danger buttons

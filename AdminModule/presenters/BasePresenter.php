@@ -34,6 +34,9 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 	/* @var Page */
 	public $actualPage;
 	
+	/* @var \WebCMS\ScriptHandler */
+	public $scriptHandler;
+	
 	/* Method is executed before render. */
 	protected function beforeRender(){
 		
@@ -49,6 +52,9 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		}else{
 			$this->template->boxesSettings = FALSE;
 		}
+		
+		// save dynamic javascripts
+		$this->template->dynamicJs = $this->scriptHandler->getAll();
 		
 		$this->template->registerHelperLoader('\WebCMS\SystemHelper::loader');
 		$this->template->actualPage = $this->actualPage;
@@ -101,6 +107,9 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		// system settings
 		$this->settings = new \WebCMS\Settings($this->em, $this->state->language);
 		$this->settings->setSettings($this->getSettings());
+		
+		// script handling
+		$this->scriptHandler = new \WebCMS\ScriptHandler();
 		
 		$id = $this->getParam('id');
 		if($id) $this->actualPage = $this->em->find('AdminModule\Page', $id);
