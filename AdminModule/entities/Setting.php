@@ -45,7 +45,7 @@ class Setting extends Doctrine\Entity {
 	 * @orm\JoinColumn(name="language_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
 	 */
 	private $language;
-	
+		
 	public function getValue() {
 		return $this->value;
 	}

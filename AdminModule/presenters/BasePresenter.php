@@ -58,7 +58,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		
 		$this->template->registerHelperLoader('\WebCMS\SystemHelper::loader');
 		$this->template->actualPage = $this->actualPage;
-		$this->template->structures = $this->getStructures();
+		if(!$this->isAjax()) $this->template->structures = $this->getStructures(); // TODO add function for AJAX and normal request it is not necessary to load everything
 		$this->template->user = $this->getUser();
 		$this->template->setTranslator($this->translator);
 		$this->template->language = $this->state->language;
@@ -123,10 +123,52 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		
 		$settings = array();
 		foreach($tmp as $s){
-			$settings[$s->getSection()][$s->getKey()] = $s;
+				$settings[$s->getSection()][$s->getKey()] = $s;
 		}
 		
 		return $settings;
+	}
+	
+	protected function createSettingsForm($settings){
+		$form = $this->createForm();
+		
+		if(!$settings){
+			return $form;
+		}
+		
+		foreach($settings as $s){
+			$ident = $s->getId();
+			
+			if($s->getType() === 'text')
+				$form->addText($ident, $s->getKey())->setDefaultValue($s->getValue())->setAttribute('class', 'form-control');
+			elseif($s->getType() === 'textarea')
+				$form->addTextArea($ident, $s->getKey())->setDefaultValue($s->getValue())->setAttribute('class', 'editor');
+			elseif($s->getType() === 'radio')				
+				$form->addRadioList($ident, $s->getKey(), $s->getOptions())->setDefaultValue($s->getValue());
+			elseif($s->getType() === 'select')
+				$form->addSelect($ident, $s->getKey(), $s->getOptions())->setDefaultValue($s->getValue());
+			elseif($s->getType() === 'checkbox')
+				$form->addCheckbox($ident, $s->getKey())->setDefaultValue($s->getValue());
+		}
+		
+		$form->addSubmit('submit', 'Save settings');
+		$form->onSuccess[] = callback($this, 'settingsFormSubmitted');
+		
+		return $form;
+	}
+	
+	public function settingsFormSubmitted(\Nette\Application\UI\Form $form){
+		$values = $form->getValues();
+		
+		foreach($values as $key => $v){
+			$setting = $this->em->find('AdminModule\Setting', $key);
+			$setting->setValue($v);
+		}
+		
+		$this->em->flush();
+		
+		$this->flashMessage($this->translation['Settings has been saved.'], 'success');
+		$this->redirect('this');
 	}
 	
 	/* Invalidate ajax content. */

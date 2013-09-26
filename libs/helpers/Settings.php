@@ -37,6 +37,8 @@ class Settings {
 	 * @throws Exception
 	 */
 	public function get($key, $section = 'basic', $type = 'text', $options = array()){
+			
+		// system settings
 		if(array_key_exists($section, $this->settings)){
 			if(array_key_exists($key, $this->settings[$section])){
 				return $this->settings[$section][$key];
@@ -86,10 +88,6 @@ class Settings {
 
 	public function setSettings($settings) {
 		$this->settings = $settings;
-	}
-	
-	public function getLanguage() {
-		return $this->language;
 	}
 
 	public function setLanguage($language) {

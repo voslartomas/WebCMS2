@@ -74,6 +74,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		$this->template->breadcrumb = $default + $this->em->getRepository('AdminModule\Page')->getPath($this->actualPage);
 		$this->template->abbr = $this->abbr;
 		
+		$this->template->settings = $this->settings;
 		// !params load from settings
 		$this->template->structures = $this->getStructures(FALSE, 'nav navbar-nav', TRUE);
 		$this->template->sidebar = $this->getStructure($top, FALSE, 'nav');
@@ -104,8 +105,24 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		$this->translation = $translation->getTranslations();
 		$this->translator = new \WebCMS\Translator($this->translation);
 		
+		// system settings
+		$this->settings = new \WebCMS\Settings($this->em, $this->language);
+		$this->settings->setSettings($this->getSettings());
+		
 		$id = $this->getParam('id');
 		if($id) $this->actualPage = $this->em->find('AdminModule\Page', $id);
+	}
+	
+	private function getSettings(){
+		$query = $this->em->createQuery('SELECT s FROM AdminModule\Setting s WHERE s.language >= ' . $this->language->getId() . ' OR s.language IS NULL');
+		$tmp = $query->getResult();	
+		
+		$settings = array();
+		foreach($tmp as $s){
+				$settings[$s->getSection()][$s->getKey()] = $s;
+		}
+		
+		return $settings;
 	}
 	
 	public function createForm(){
