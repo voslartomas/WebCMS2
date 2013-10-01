@@ -15,7 +15,7 @@ abstract class Module implements IModule {
 	
 	protected $presenters;
 
-	protected $boxes;
+	protected $boxes = array();
 	
 	public function getName() {
 		return $this->name;
