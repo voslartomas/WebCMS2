@@ -111,7 +111,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		// script handling
 		$this->scriptHandler = new \WebCMS\ScriptHandler();
 		
-		$id = $this->getParam('id');
+		$id = $this->getParam('idPage');
 		if($id) $this->actualPage = $this->em->find('AdminModule\Page', $id);
 		
 		$this->checkPermission();
@@ -307,7 +307,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		$hasRigths = false;
 		$check = false;
 		
-		if(substr_count(lcfirst($this->name), ':') == 2) $resource = \WebCMS\SystemHelper::strlReplace(':', '', lcfirst($this->name) . $this->getParam('id'));
+		if(substr_count(lcfirst($this->name), ':') == 2) $resource = \WebCMS\SystemHelper::strlReplace(':', '', lcfirst($this->name) . $this->getParam('idPage'));
 		else $resource = lcfirst($this->name);
 
 		foreach ($roles as $role) {
@@ -331,9 +331,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		
 		return new $objectName;
 	}
-	
-	
-	
+
 	private function getStructures(){
 		$qb = $this->em->createQueryBuilder();
 		
@@ -346,7 +344,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 	
 	/* BOXES SETTINGS */
 	
-	public function renderBoxes($id){
+	public function renderBoxes($idPage){
 		
 		$this->reloadContent();
 		
@@ -358,7 +356,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		}
 		
 		$this->template->boxes = $boxes;
-		$this->template->id = $id;
+		$this->template->idPage = $idPage;
 	}
 	
 	public function createComponentBoxesForm(){

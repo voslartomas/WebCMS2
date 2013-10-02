@@ -5,7 +5,7 @@
 	{foreach $childrens as $item}
 		<li>
 			{if is_object($item->getModule())}
-				<a class="ajax" n:href=":Admin:{$item->getModule()->getName()}:{$item->getPresenter()}:default id => $item->getId()">
+				<a class="ajax" n:href=":Admin:{$item->getModule()->getName()}:{$item->getPresenter()}:default idPage => $item->getId()">
 					{$item->getTitle()}
 				</a>
 			{else}

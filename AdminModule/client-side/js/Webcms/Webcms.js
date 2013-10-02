@@ -51,7 +51,7 @@ Webcms.prototype = {
 		$(document).ajaxStart( function() {
 			   $('#loader').addClass("active"); 
 		} ).ajaxStop ( function(){
-				
+				self.initTextEditors();
 				$('#loader').removeClass("active"); 
 		});
 
