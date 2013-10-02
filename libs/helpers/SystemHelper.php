@@ -178,4 +178,8 @@ class SystemHelper {
 		
 		return $path . $thumbnailKey . $filename;
 	}
+	
+	public static function price($price){
+		return PriceFormatter::format($price);
+	}
 }
