@@ -31,10 +31,13 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 	}
 	
 	protected function createComponentLanguageForm(){
-
+		
+		$locales = \WebCMS\Locales::getSystemLocales();
+		
 		$form = $this->createForm();
 		$form->addText('name', 'Name')->setAttribute('class', 'form-control');
 		$form->addText('abbr', 'Abbreviation')->setAttribute('class', 'form-control');
+		$form->addSelect('locale', 'Locale')->setItems($locales);
 		$form->addCheckbox('defaultFrontend', 'Default fe')->setAttribute('class', 'form-control');
 		$form->addCheckbox('defaultBackend', 'Default be')->setAttribute('class', 'form-control');
 		$form->addUpload('import', 'Import lang');

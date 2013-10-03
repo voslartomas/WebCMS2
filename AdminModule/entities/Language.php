@@ -36,6 +36,11 @@ class Language extends \AdminModule\Doctrine\Entity{
 	 */
 	private $translations;
 	
+	/**
+	 * @orm\Column
+	 */
+	private $locale;
+	
 	public function getTranslations() {
 		return $this->translations;
 	}
