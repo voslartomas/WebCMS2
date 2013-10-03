@@ -37,6 +37,8 @@ abstract class Entity extends \Nette\Object{
 	public function toArray(){
 		$props = $this->getReflection()->getProperties();
 		
+		if(strpos($this->getReflection()->getName(), '__CG__') !== FALSE) $props = $this->getReflection()->getParentClass()->getProperties();
+
 		$array = array();
 		foreach($props as $prop){
 			$getter = 'get' . ucfirst($prop->getName());

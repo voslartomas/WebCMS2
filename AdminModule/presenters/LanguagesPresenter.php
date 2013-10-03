@@ -12,7 +12,7 @@ use Nette\Application\UI;
 class LanguagesPresenter extends \AdminModule\BasePresenter{
 	
 	/* @var Language */
-	private $language;
+	private $lang;
 	
 	/* LANGUAGES */
 	
@@ -45,8 +45,8 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 		
 		$form->onSuccess[] = callback($this, 'languageFormSubmitted');
 		
-		if($this->language) 
-			$form->setDefaults($this->language->toArray());
+		if($this->lang) 
+			$form->setDefaults($this->lang->toArray());
 
 		return $form;
 	}
@@ -149,13 +149,14 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 	}
 	
 	public function actionUpdateLanguage($id){
-		if($id) $this->language = $this->em->find("AdminModule\Language", $id);
-		else $this->language = new Language();
+		
+		if($id) $this->lang = $this->em->find("AdminModule\Language", $id);
+		else $this->lang = new Language();
 	}
 	
 	public function actionDeleteLanguage($id){
-		$this->language = $this->em->find("AdminModule\Language", $id);
-		$this->em->remove($this->language);
+		$this->lang = $this->em->find("AdminModule\Language", $id);
+		$this->em->remove($this->lang);
 		$this->em->flush();
 		
 		$this->flashMessage($this->translation['Language has been removed.'], 'success');
@@ -168,32 +169,32 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 		
 		$this->reloadModalContent();
 		
-		$this->template->language = $this->language;
+		$this->template->language = $this->lang;
 	}
 	
 	public function languageFormSubmitted(UI\Form $form){
 		$values = $form->getValues();
 		
-		$this->language->setName($values->name);
-		$this->language->setAbbr($values->abbr);
-		$this->language->setLocale($values->locale);
-		$this->language->setDefaultFrontend($values->defaultFrontend);
-		$this->language->setDefaultBackend($values->defaultBackend);
+		$this->lang->setName($values->name);
+		$this->lang->setAbbr($values->abbr);
+		$this->lang->setLocale($values->locale);
+		$this->lang->setDefaultFrontend($values->defaultFrontend);
+		$this->lang->setDefaultBackend($values->defaultBackend);
 		
-		$this->em->persist($this->language);
+		$this->em->persist($this->lang);
 		$this->em->flush();
 		
 		if($values->import->getTemporaryFile()){
 			$qb = $this->em->createQueryBuilder();
 			$qb->delete('AdminModule\Translation', 'l')
 					->where('l.language = ?1')
-					->setParameter(1, $this->language)
+					->setParameter(1, $this->lang)
 					->getQuery()
 					->execute();
 			$this->em->flush();
 			
 			$content = file_get_contents($values->import->getTemporaryFile());
-			$this->importLanguage($content, $this->language);
+			$this->importLanguage($content, $this->lang);
 		}
 			
 		// only one item can be default
@@ -202,7 +203,7 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 			$qb->update('AdminModule\Language', 'l')
 					->set('l.defaultFrontend', 0)
 					->where('l.id <> ?1')
-					->setParameter(1, $this->language->getId())
+					->setParameter(1, $this->lang->getId())
 					->getQuery()
 					->execute();
 			$this->em->flush();
@@ -213,7 +214,7 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 			$qb->update('AdminModule\Language', 'l')
 					->set('l.defaultBackend', 0)
 					 ->where('l.id <> ?1')
-					->setParameter(1, $this->language->getId())
+					->setParameter(1, $this->lang->getId())
 					->getQuery()
 					->execute();
 			$this->em->flush();
