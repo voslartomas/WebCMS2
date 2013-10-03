@@ -3,5 +3,7 @@
 		 {!$structure}
 	{/foreach}
 {else}
-	{!$structures[$name]}
+	{if array_key_exists($name, $structures)}
+		{!$structures[$name]}
+	{/if}
 {/if}

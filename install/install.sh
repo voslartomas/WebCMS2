@@ -1,15 +1,5 @@
 #!/bin/bash
 
-function postUpdate {
-
-	rm -rf ./www/admin-module
-
-	mkdir ./www/admin-module
-	cp -r ./libs/webcms2/webcms2/AdminModule/client-side/* ./www/admin-module/
-
-	chmod -R 777 ./www/admin-module
-}
-
 function parseVersion {
 	
 	touch ./libs/webcms2/webcms2/AdminModule/version
@@ -44,10 +34,8 @@ while [ "$task" != "q" ]; do
 		mkdir ./www/thumbnails
 		
 		# sets rights for temp directory
-		chmod -R 777 ./www/upload ./www/admin-module ./www/thumbnails ./temp ./log ./app/proxies ./composer.lock ./libs/composer ./libs/webcms2 ./libs/autoload.php
+		chmod -R 777 ./www/upload ./www/thumbnails ./temp ./log ./app/proxies ./composer.lock ./libs/composer ./libs/webcms2 ./libs/autoload.php
 		chmod -R g+rwxs temp
-		
-		postUpdate
 
 		# generate DB schema
 		php www/index.php --ansi orm:schema-tool:create
@@ -60,9 +48,7 @@ while [ "$task" != "q" ]; do
 		vypis="Installation has been executed. Choose another command or type 'q' to quit."
 	
 	elif [ "$task" == "2" ]; then
-		
-		postUpdate
-				
+						
 		# generate DB schema
 		php www/index.php --ansi orm:schema-tool:update --force
 

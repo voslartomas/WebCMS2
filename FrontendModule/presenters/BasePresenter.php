@@ -40,6 +40,9 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 	/* @var Array */
 	public $languages;
 	
+	/* @var Array */
+	private $breadcrumbs = array();
+	
 	/* Method is executed before render. */
 	protected function beforeRender(){
 		
@@ -57,27 +60,15 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 			$top = $top->getParent();
 		}
 		
-		// bredcrumb
-		$default = $this->em->getRepository('AdminModule\Page')->findOneBy(array(
-			'default' => TRUE,
-			'language' => $this->language
-		));
-		
-		if($this->actualPage->getDefault())
-			$default = array();
-		else
-			$default = array($default);
-		
 		// set up boxes
 		$this->setUpBoxes();
 		
-		$this->template->breadcrumb = $default + $this->em->getRepository('AdminModule\Page')->getPath($this->actualPage);
+		$this->template->breadcrumb = $this->getBreadcrumbs();
 		$this->template->abbr = $this->abbr;
-		
 		$this->template->settings = $this->settings;
 		// !params load from settings
 		$this->template->structures = $this->getStructures(FALSE, 'nav navbar-nav', TRUE);
-		$this->template->sidebar = $this->getStructure($top, FALSE, 'nav');
+		$this->template->sidebar = $this->getStructure($top, $this->em->getRepository('AdminModule\Page'), FALSE, 'nav');
 		$this->template->setTranslator($this->translator);
 		$this->template->actualPage = $this->actualPage;
 		$this->template->user = $this->getUser();
@@ -99,6 +90,8 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		
 		// load languages
 		$this->languages = $this->em->getRepository('AdminModule\Language')->findAll();
+		
+		\WebCMS\PriceFormatter::setLocale($this->language->getLocale());
 		
 		// translations
 		$translation = new \WebCMS\Translation($this->em, $this->language , 0);
@@ -206,7 +199,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		
 		$structures = array();
 		foreach($structs as $s){
-			$structures[$s->getTitle()] = $this->getStructure($s, $direct, $rootClass, $dropDown);
+			$structures[$s->getTitle()] = $this->getStructure($s, $repo, $direct, $rootClass, $dropDown);
 		}
 		
 		return $structures;
@@ -244,13 +237,13 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 	/**
 	 * Get structure by node. In node is set to null whole tree is returned.
 	 * @param type $node
+	 * @param Repository $repo
 	 * @param type $direct
 	 * @param type $rootClass
 	 * @param type $dropDown
 	 * @return type
 	 */
-	private function getStructure($node = NULL, $direct = TRUE, $rootClass = 'nav navbar-nav', $dropDown = FALSE){
-		$repo = $this->em->getRepository('AdminModule\Page');
+	protected function getStructure($node = NULL, $repo, $direct = TRUE, $rootClass = 'nav navbar-nav', $dropDown = FALSE, $system = TRUE){
 		
 		return $repo->childrenHierarchy($node, $direct, array(
 				'decorate' => true,
@@ -284,11 +277,16 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 					return '<li class="' . $class . '">';
 				},
 				'childClose' => '</li>',
-				'nodeDecorator' => function($node) use($dropDown) {
+				'nodeDecorator' => function($node) use($dropDown, $system) {
 					$hasChildrens = count($node['__children']) > 0 ? TRUE : FALSE;
 					$params = '';
 					$class = '';
-					$link = $this->link(':Frontend:' . $node['moduleName'] . ':' . $node['presenter'] . ':default', array('id' => $node['id'], 'path' => $node['path'], 'abbr' => $this->abbr));
+					
+					$moduleName = array_key_exists('moduleName', $node) ? $node['moduleName'] : 'Eshop';
+					$presenter = array_key_exists('presenter', $node) ? $node['presenter'] : 'Categories';
+					$path = $moduleName === 'Eshop' && !$system ? $path = $this->actualPage->getPath() . '/' . $node['path'] : $node['path'];
+							
+					$link = $this->link(':Frontend:' . $moduleName . ':' . $presenter . ':default', array('id' => $node['id'], 'path' => $path, 'abbr' => $this->abbr));
 
 					if($hasChildrens && $node['level'] == 1 && $dropDown){
 						$params = ' data-toggle="dropdown"';
@@ -300,4 +298,47 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 				}
 			));
 	}
+
+	public function getBreadcrumbs(){
+		// bredcrumb
+		$default = $this->em->getRepository('AdminModule\Page')->findOneBy(array(
+			'default' => TRUE,
+			'language' => $this->language
+		));
+		
+		if($this->actualPage->getDefault())
+			$default = array();
+		else
+			$default = array($default);
+		
+		// system breadcrumbs
+		$system = $default + $this->em->getRepository('AdminModule\Page')->getPath($this->actualPage);
+		$finalSystem = array();
+		foreach($system as $item){
+			if($item->getParent()){
+				$finalSystem[] = new \WebCMS\BreadcrumbsItem($item->getId(),
+						$item->getModuleName(), 
+						$item->getPresenter(), 
+						$item->getTitle(), 
+						$item->getPath()
+					);
+			}
+		}
+		
+		foreach($this->breadcrumbs as $b){
+			array_push($finalSystem, $b);
+		}
+		
+		return $finalSystem;
+	}
+	
+	/**
+	 * 
+	 * @param Array $item
+	 */
+	public function addToBreadcrumbs($id, $moduleName, $presenter, $title, $path){
+		
+		$this->breadcrumbs[] = new \WebCMS\BreadcrumbsItem($id, $moduleName, $presenter, $title, $path);
+	}
+
 }

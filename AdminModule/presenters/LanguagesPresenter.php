@@ -176,6 +176,7 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 		
 		$this->language->setName($values->name);
 		$this->language->setAbbr($values->abbr);
+		$this->language->setLocale($values->locale);
 		$this->language->setDefaultFrontend($values->defaultFrontend);
 		$this->language->setDefaultBackend($values->defaultBackend);
 		

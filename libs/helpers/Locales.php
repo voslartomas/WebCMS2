@@ -12,7 +12,7 @@ class Locales {
 	 *	References :
 	 *	1. http://en.wikipedia.org/wiki/ISO_3166-1#Officially_assigned_code_elements
 	 */
-	private $countryCodes = array(
+	private static $countryCodes = array(
 		'AF' => "AFGHANISTAN" , 
 		'AL' => "ALBANIA" , 
 		'DZ' => "ALGERIA" , 
@@ -262,7 +262,7 @@ class Locales {
      * 1. http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
      * 2. http://blog.xoundboy.com/?p=235
 	 */ 
-	private $language_codes = array(
+	private static $languageCodes = array(
         'en' => 'English' , 
         'aa' => 'Afar' , 
         'ab' => 'Abkhazian' , 
@@ -406,25 +406,24 @@ class Locales {
 		//Get locales from Linux terminal command locale
 		$locales = shell_exec('locale -a');
 
-		$locales = explode("n" , $locales);
-
-		foreach($locales as $c => $l)
-		{
-			if(strlen($l))
-			{
+		$locales = explode("\n" , $locales);
+		
+		foreach($locales as $c => $l)		{
+			if(strlen($l))			{
 				$parts = explode('.' , $l);
 				$lc = $parts[0];
+				
+				if(strpos($lc, '_') !== FALSE){
+					list($lcode , $ccode) = explode('_' , $lc);
 
-				list($lcode , $ccode) = explode('_' , $lc);
+					$lcode = strtolower($lcode);
 
-				$lcode = strtolower($lcode);
-
-				$language = $language_codes[$lcode];
-				$country = $country_codes[$ccode];
-
-				if(strlen($language) and strlen($country))
-				{
-					$locale_data[$l] = "$language - $country - {$parts[1]}";
+					$language = self::$languageCodes[$lcode];
+					$country = self::$countryCodes[$ccode];
+					
+					if(strlen($language) && strlen($country))					{
+						$locale_data[$l] = "$language - $country - {$parts[1]}";
+					}
 				}
 			}
 		}

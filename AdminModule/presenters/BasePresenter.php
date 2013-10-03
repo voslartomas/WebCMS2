@@ -37,6 +37,9 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 	/* @var \WebCMS\ScriptHandler */
 	public $scriptHandler;
 	
+	/* @var \WebCMS\PriceFormatter */
+	public $priceFormatter;
+	
 	/* Method is executed before render. */
 	protected function beforeRender(){
 		
@@ -99,6 +102,8 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		// reload entity from db
 		$this->state->language = $this->em->find('AdminModule\Language', $this->state->language->getId());
 		
+		\WebCMS\PriceFormatter::setLocale($this->state->language->getLocale());
+		
 		// translations
 		$translation = new \WebCMS\Translation($this->em, $language , 1);
 		$this->translation = $translation->getTranslations();
@@ -110,6 +115,9 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		
 		// script handling
 		$this->scriptHandler = new \WebCMS\ScriptHandler();
+		
+		// price formatting
+		$this->priceFormatter = new \WebCMS\PriceFormatter($this->state->language->getLocale());
 		
 		$id = $this->getParam('idPage');
 		if($id) $this->actualPage = $this->em->find('AdminModule\Page', $id);

@@ -29,14 +29,37 @@ class SystemRouter extends \Nette\Application\Routers\Route{
 		
 		$path = explode('/', $query);
 		
-		$lastParam = $path[count($path) - 1];
-		
-		// checks whether page exists
-		$pageRepo = $this->em->getRepository('AdminModule\Page');
-		$pages = $pageRepo->findBy(array(
-			'slug' => $lastParam
-		));
-		
+		$paramCount = count($path);
+		$pages = array();
+
+		// look for matching parameter
+		while(count($pages) == 0 && $paramCount != -1){
+			// checks whether page exists
+			$paramCount--;
+			if($paramCount > -1) $lastParam = $path[$paramCount];
+			
+			$pageRepo = $this->em->getRepository('AdminModule\Page');
+			$pages = $pageRepo->findBy(array(
+				'slug' => $lastParam
+			));
+
+			if($paramCount >= 0){
+				$lastParam = $path[$paramCount];
+				
+			}
+		}		
+		// setting of parameters and path
+		$params = count($path) - ($paramCount + 1);
+
+		if($params > 0){
+			$parameters = array_slice($path, -$params);
+			if(empty($parameters[count($parameters) - 1])) unset($parameters[count($parameters) - 1]);
+		}else{
+			$parameters = array();
+		}
+
+		$path = array_slice($path, 0, count($path) - $params);
+
 		// takes the right one
 		$page = NULL;
 		foreach($pages as $p){
@@ -54,8 +77,11 @@ class SystemRouter extends \Nette\Application\Routers\Route{
 			}
 			
 			$finalPath = $abbr . $finalPath;
-
-			if(implode('/', $path) == substr($finalPath, 0, -1)){
+			
+			$moduleObject = $this->createObject($page->getModule()->getName());
+			$presenterSettings = $moduleObject->getPresenterSettings($page->getPresenter());
+			
+			if(implode('/', $path) == substr($finalPath, 0, -1) && (count($parameters) === 0 || $presenterSettings['parameters'])){
 				$this->page = $page;
 				
 				$path = $page->getPath();
@@ -64,6 +90,7 @@ class SystemRouter extends \Nette\Application\Routers\Route{
 					'id' => $page->getId(),
 					'language' => $this->page->getLanguage()->getId(),
 					'path' => $path,
+					'parameters' => $parameters,
 					'root' => $page->getRoot(),
 					'lft' => $page->getLeft(),
 					'abbr' => $abbr) + $httpRequest->getQuery();
@@ -95,7 +122,22 @@ class SystemRouter extends \Nette\Application\Routers\Route{
 		if(array_key_exists('do', $params)) $do = '?do=' . $params['do'];
 		else $do = '';
 		
+		if(array_key_exists('parameters', $params)){
+			if(count($params['parameters']) > 0){
+				$path .= '/' . implode('/', $params['parameters']);
+			}
+		}
+		
 		return $refUrl->getScheme() . '://' . $refUrl->getHost() . $refUrl->getPath() . $abbr . $path . $do;
+	}
+	
+	private function createObject($name){
+		$expl = explode('-', $name);
+
+		$objectName = ucfirst($expl[0]);
+		$objectName = "\\WebCMS\\$objectName" . "Module\\" . $objectName;
+		
+		return new $objectName;
 	}
 }
 

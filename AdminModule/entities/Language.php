@@ -82,5 +82,12 @@ class Language extends \AdminModule\Doctrine\Entity{
 		$this->abbr = $abbr;
 		return $this;
 	}
+	
+	public function getLocale() {
+		return $this->locale;
+	}
 
+	public function setLocale($locale) {
+		$this->locale = $locale;
+	}
 }

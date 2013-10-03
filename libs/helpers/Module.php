@@ -60,4 +60,15 @@ abstract class Module implements IModule {
 	public function getBoxes(){
 		return $this->boxes;
 	}
+	
+	public function getPresenterSettings($presenter){
+		$presenters = $this->getPresenters();
+		
+		foreach($presenters as $p){
+			if($p['name'] === $presenter)
+				return $p;
+		}
+		
+		return FALSE;
+	}
 }
