@@ -122,13 +122,37 @@ class SystemRouter extends \Nette\Application\Routers\Route{
 		if(array_key_exists('do', $params)) $do = '?do=' . $params['do'];
 		else $do = '';
 		
+		if(array_key_exists('action', $params)) $action = $params['action'] != 'default' ? $action = '?action=' . $params['action'] : '';
+		else $action = '';
+		
 		if(array_key_exists('parameters', $params)){
 			if(count($params['parameters']) > 0){
 				$path .= '/' . implode('/', $params['parameters']);
 			}
 		}
+		// TODO refactor
+		unset($params['abbr']);
+		unset($params['path']);
+		unset($params['do']);
+		unset($params['action']);
+		unset($params['parameters']);
+		unset($params['lft']);
+		unset($params['root']);
+		unset($params['id']);
+		unset($params['language']);
 		
-		return $refUrl->getScheme() . '://' . $refUrl->getHost() . $refUrl->getPath() . $abbr . $path . $do;
+		$path = $refUrl->getScheme() . '://' . $refUrl->getHost() . $refUrl->getPath() . $abbr . $path . $do . $action;
+		
+		$query = '';
+		$index = 0;
+		foreach($params as $key => $value){
+			$e = strpos($path, '?') === FALSE ? '?' : '&';
+			$query .= $e . $key . '=' . $value;
+			
+			$index++;
+		}
+		
+		return $path . $query;
 	}
 	
 	private function createObject($name){
