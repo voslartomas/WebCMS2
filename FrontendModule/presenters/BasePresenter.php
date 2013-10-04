@@ -160,11 +160,14 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		
 			$abbr = $home->getLanguage()->getDefaultFrontend() ? '' : $home->getLanguage()->getAbbr() . '/';
 
+			$this->session->destroy();
+			
 			$this->redirectUrl($this->link('this', array(
 				'id' => $home->getId(),
 				'path' => $home->getPath(),
 				'abbr' => $abbr,
 			)));
+			
 		}else{
 			$this->flashMessage($this->translation['No default page for selected language.'], 'error');
 		}
