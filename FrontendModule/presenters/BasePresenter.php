@@ -160,9 +160,9 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		
 			$abbr = $home->getLanguage()->getDefaultFrontend() ? '' : $home->getLanguage()->getAbbr() . '/';
 
-			$this->session->start();
+			/*$this->session->start();
 			$this->session->destroy();
-			$this->session->start();
+			$this->session->start();*/
 			
 			$this->redirectUrl($this->link('this', array(
 				'id' => $home->getId(),
