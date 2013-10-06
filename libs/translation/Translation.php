@@ -51,19 +51,21 @@ class Translation  extends \ArrayObject {
 
 		// save translation if not exists
 		$this->addTranslation($key, $key);
+		
 		return $key;
 	}
 
 	public function addTranslation($key, $value = ""){
 		$translation = new AdminModule\Translation();
-		
-		$translation->setKey($key);
-		$translation->setTranslation($value);
-		$translation->setLanguage($this->language);
-		$translation->setBackend($this->backend);
+		if($key){
+			$translation->setKey($key);
+			$translation->setTranslation($value);
+			$translation->setLanguage($this->language);
+			$translation->setBackend($this->backend);
 
-		$this->em->persist($translation);
-		$this->em->flush();
+			$this->em->persist($translation);
+			$this->em->flush();
+		}
 	}
 
 
