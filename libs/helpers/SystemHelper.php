@@ -6,6 +6,10 @@ class SystemHelper {
 	
 	const VERSION_FILE = '../libs/webcms2/webcms2/AdminModule/version';
 	
+	private static $baseUrl;
+	
+	private static $infoEmail;
+	
 	/**
 	 * Helper loader.
 	 * @param type $helper
@@ -17,6 +21,12 @@ class SystemHelper {
         }
 	 }
 	
+	 public static function setVariables($variables){
+		 foreach($variables as $key => $v){
+				 self::$$key = $v;
+		 }
+	 }
+	 
 	/**
 	 * Gets actual version of the system.
 	 * @return Array[revision, date]
@@ -182,4 +192,28 @@ class SystemHelper {
 	public static function price($price){
 		return PriceFormatter::format($price);
 	}
+	
+	/**
+	 * 
+	 * @param String $string
+	 * @return String
+	 */
+	public static function replaceStatic($string, $fromPush = array(), $toPush = array()){
+				
+		$from = array(
+				"[BASE_URL]",
+				"[INFO_EMAIL]"
+				);
+		
+		$to = array(
+				self::$baseUrl,
+				self::$infoEmail
+				);
+		
+		$from = array_merge($from, $fromPush);
+		$to = array_merge($to, $toPush);
+
+		return str_replace($from, $to, $string);
+	}	
+	
 }

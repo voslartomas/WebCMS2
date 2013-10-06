@@ -3,6 +3,7 @@
 namespace AdminModule;
 
 use Nette\Application\UI;
+use Nette\Mail;
 
 /**
  * Users presenter.
@@ -99,7 +100,25 @@ class UsersPresenter extends \AdminModule\BasePresenter{
 		
 		$this->user->setName($values->name);
 		$this->user->setEmail($values->email);
-		if(!empty($values->password)) $this->user->setPassword($password);
+		if(!empty($values->password)){
+			$this->user->setPassword($password);
+			
+			// send mail with new password
+			$email = new Mail\Message;
+			$email->setFrom($this->settings->get('Info email', \WebCMS\Settings::SECTION_BASIC)->getValue());
+			$email->addTo($this->user->getEmail());
+			$email->setSubject($this->translation['Your password has been changed. '] . $this->presenter->getHttpRequest()->url->baseUrl);
+			$email->setHtmlBody($this->settings->get('User new password', \WebCMS\Settings::SECTION_EMAIL)->getValue(FALSE, array(
+				'[PASSWORD]'
+			),
+				array(
+					$values->password
+				)));
+			$email->send();
+			
+			$this->flashMessage($this->translation['Info email with new password was sent.'], 'success');
+		}
+		
 		$this->user->setUsername($values->username);
 		$this->user->setRole($role);
 		

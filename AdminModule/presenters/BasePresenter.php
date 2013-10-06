@@ -113,6 +113,12 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		$this->settings = new \WebCMS\Settings($this->em, $this->state->language);
 		$this->settings->setSettings($this->getSettings());
 		
+		// system helper sets variables
+		\WebCMS\SystemHelper::setVariables(array(
+			'baseUrl' => $this->presenter->getHttpRequest()->url->baseUrl,
+			'infoEmail' => $this->settings->get('Info email', 'basic')->getValue()
+		));
+		
 		// script handling
 		$this->scriptHandler = new \WebCMS\ScriptHandler();
 		

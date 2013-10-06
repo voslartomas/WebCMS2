@@ -46,8 +46,11 @@ class Setting extends Doctrine\Entity {
 	 */
 	private $language;
 		
-	public function getValue() {
-		return $this->value;
+	public function getValue($raw = TRUE, $fromPush = array(), $toPush = array()) {
+		if($raw) return $this->value;
+		else{
+			return \WebCMS\SystemHelper::replaceStatic($this->value, $fromPush, $toPush);
+		}
 	}
 
 	public function setValue($value) {
