@@ -109,6 +109,15 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		if($id) $this->actualPage = $this->em->find('AdminModule\Page', $id);
 	}
 	
+	public function createTemplate($class = NULL) {
+		$template = parent::createTemplate($class);
+		
+		$template->setTranslator($this->translator);
+		$template->registerHelperLoader('\WebCMS\SystemHelper::loader');
+		
+		return $template;
+	}
+	
 	private function getSettings(){
 		$query = $this->em->createQuery('SELECT s FROM AdminModule\Setting s WHERE s.language >= ' . $this->language->getId() . ' OR s.language IS NULL');
 		$tmp = $query->getResult();	
