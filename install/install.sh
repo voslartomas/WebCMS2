@@ -32,6 +32,8 @@ while [ "$task" != "q" ]; do
 		# creates directories
 		mkdir ./www/upload
 		mkdir ./www/thumbnails
+		mkdir ./temp
+		mkdir ./temp/sessions
 		
 		# sets rights for temp directory
 		chmod -R 777 ./www/upload ./www/thumbnails ./temp ./log ./app/proxies ./composer.lock ./libs/composer ./libs/autoload.php

@@ -107,6 +107,8 @@ Nette.validateForm = function(sender) {
 		}
 	}
 
+	$('form.ajax :submit').die('click');
+
 	return true;
 };
 
@@ -116,7 +118,17 @@ Nette.addError = function(elem, message) {
 		elem.focus();
 	}
 	if (message) {
-		alert(message);
+		$(elem).addClass('error');
+		
+		$(elem).attr('placeholder', message);
+		$(elem).after("<span style='font-size: 1em; padding: 2px 10px; border: 1px solid red;border-radius: 4px; color:red; background-color: white;position: absolute;left: "+(parseInt($(elem).context.offsetLeft))+"px; top: "+(parseInt($(elem).context.offsetTop)-20)+"px;' class='jq_aTooltip'>"+message+"</span>");
+		
+		$(elem).change(function(){
+			if($(this).val().length > 0){
+				$(this).removeClass('error');
+				$(this).parent().find('.jq_aTooltip').remove();
+			}
+		});
 	}
 };
 

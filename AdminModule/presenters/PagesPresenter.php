@@ -52,6 +52,7 @@ class PagesPresenter extends \AdminModule\BasePresenter{
 		$form->addSelect('parent', 'Parent')->setTranslator(NULL)->setItems($hierarchy)->setAttribute('class', 'form-control');
 		$form->addCheckbox('default', 'Default')->setAttribute('class', 'form-control');
 		$form->addCheckbox('visible', 'Show')->setAttribute('class', 'form-control')->setDefaultValue(1);
+		$form->addText('class', 'Menu item class')->setAttribute('class', 'form-control');
 		
 		$form->addSubmit('save', 'Save')->setAttribute('class', 'btn btn-success');
 		
@@ -95,6 +96,7 @@ class PagesPresenter extends \AdminModule\BasePresenter{
 		$this->page->setModuleName($module->getName());
 		$this->page->setPresenter($presenter);
 		$this->page->setPath('tmp value');
+		$this->page->setClass($values->class);
 		
 		$this->em->persist($this->page); // FIXME only if is new we have to persist entity, otherway it can be just flushed
 		$this->em->flush();

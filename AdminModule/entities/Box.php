@@ -36,6 +36,11 @@ class Box extends \AdminModule\Doctrine\Entity{
 	/**
 	 * @orm\Column
 	 */
+	private $moduleName;
+	
+	/**
+	 * @orm\Column
+	 */
 	private $function;
 	
 	public function getPageFrom() {
@@ -76,6 +81,14 @@ class Box extends \AdminModule\Doctrine\Entity{
 
 	public function setFunction($function) {
 		$this->function = $function;
+	}
+	
+	public function getModuleName() {
+		return $this->moduleName;
+	}
+
+	public function setModuleName($moduleName) {
+		$this->moduleName = $moduleName;
 	}
 }
 
