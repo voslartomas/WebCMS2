@@ -115,6 +115,11 @@ class Page extends Seo{
 	 */
 	private $default;
 	
+	/**
+	 * @orm\Column
+	 */
+	private $class;
+	
     public function __construct()    {
         $this->children = new ArrayCollection();
     }
@@ -250,8 +255,15 @@ class Page extends Seo{
 		$this->path = $path;
 	}
 	
+	public function getClass() {
+		return $this->class;
+	}
+
+	public function setClass($class) {
+		$this->class = $class;
+	}
+	
     public function __toString(){
         return $this->getTitle();
-    }
-	
+    }	
 }

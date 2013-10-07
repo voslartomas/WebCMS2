@@ -47,12 +47,16 @@ abstract class Module implements IModule {
 	 * @param string $presenter
 	 * @param string $function
 	 */
-	public function addBox($name, $presenter, $function){
+	public function addBox($name, $presenter, $function, $moduleName = NULL){
+		
+		if(!$moduleName)
+			$moduleName = $presenter;
 		
 		$this->boxes[] = array(
 			'key' => \Nette\Utils\Strings::webalize($name),
 			'name' => $name,
 			'presenter' => $presenter,
+			'module' => $moduleName,
 			'function' => $function
 		);
 	}

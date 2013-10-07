@@ -390,7 +390,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 				$module = $this->createObject($page->getModuleName());
 
 				foreach($module->getBoxes() as $box){
-					$boxesAssoc[$page->getId() . '-' . $box['presenter'] . '-' . $box['function']] = $page->getTitle() . ' - ' . $this->translation[$box['name']];
+					$boxesAssoc[$page->getId() . '-' . $box['module'] . '-' . $box['presenter'] . '-' . $box['function']] = $page->getTitle() . ' - ' . $this->translation[$box['name']];
 				}
 			}
 		}
@@ -412,7 +412,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		
 		$defaults = array();
 		foreach($boxes as $box){
-			$defaults[$box->getBox()] = $box->getPageFrom()->getId() . '-' . $box->getPresenter() . '-' . $box->getFunction();
+			$defaults[$box->getBox()] = $box->getPageFrom()->getId() . '-' . $box->getModuleName() . '-' . $box->getPresenter() . '-' . $box->getFunction();
 		}
 		
 		$form->setDefaults($defaults);
@@ -439,8 +439,9 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 				$box = new Box();
 				$box->setPageFrom($pageFrom);
 				$box->setPageTo($this->actualPage);
-				$box->setPresenter($params[1]);
-				$box->setFunction($params[2]);
+				$box->setModuleName($params[1]);
+				$box->setPresenter($params[2]);
+				$box->setFunction($params[3]);
 				$box->setBox($key);
 
 				$this->em->persist($box);

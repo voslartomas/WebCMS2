@@ -71,7 +71,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		$this->template->settings = $this->settings;
 		// !params load from settings
 		$this->template->structures = $this->getStructures(FALSE, 'nav navbar-nav', TRUE);
-		$this->template->sidebar = $this->getStructure($top, $this->em->getRepository('AdminModule\Page'), FALSE, 'nav');
+		$this->template->sidebar = $this->getStructure($this, $top, $this->em->getRepository('AdminModule\Page'), FALSE, 'nav');
 		$this->template->setTranslator($this->translator);
 		$this->template->actualPage = $this->actualPage;
 		$this->template->user = $this->getUser();
@@ -195,26 +195,6 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 	}
 	
 	/**
-	 * Load all system structures.
-	 * @return type
-	 */
-	private function getStructures($direct = TRUE, $rootClass = 'nav navbar-nav', $dropDown = FALSE){
-		$repo = $this->em->getRepository('AdminModule\Page');
-		
-		$structs = $repo->findBy(array(
-			'language' => $this->language,
-			'parent' => NULL
-		));
-		
-		$structures = array();
-		foreach($structs as $s){
-			$structures[$s->getTitle()] = $this->getStructure($s, $repo, $direct, $rootClass, $dropDown);
-		}
-		
-		return $structures;
-	}
-	
-	/**
 	 * Set up boxes (call box function and save it into array) and give them to the tempalte.
 	 */
 	private function setUpBoxes(){
@@ -231,16 +211,37 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		));
 
 		foreach($assocBoxes as $box){
-			$presenter = 'FrontendModule\\' . $box->getPresenter() . 'Module\\' . $box->getPresenter() . 'Presenter';
+			$presenter = 'FrontendModule\\' . $box->getModuleName() . 'Module\\' . $box->getPresenter() . 'Presenter';
 			$object = new $presenter;
 			
-			if(method_exists($object, $box->getFunction())) 
+			if(method_exists($object, $box->getFunction())){ 
 					$function = $box->getFunction();
 					$pageFrom = $box->getPageFrom();
 					$finalBoxes[$box->getBox()] = call_user_func(array($object, $function), $this, $pageFrom);
+			}
 		}
 
 		$this->template->boxes = $finalBoxes;
+	}
+	
+	/**
+	 * Load all system structures.
+	 * @return type
+	 */
+	private function getStructures($direct = TRUE, $rootClass = 'nav navbar-nav', $dropDown = FALSE){
+		$repo = $this->em->getRepository('AdminModule\Page');
+		
+		$structs = $repo->findBy(array(
+			'language' => $this->language,
+			'parent' => NULL
+		));
+		
+		$structures = array();
+		foreach($structs as $s){
+			$structures[$s->getTitle()] = $this->getStructure($this, $s, $repo, $direct, $rootClass, $dropDown);
+		}
+		
+		return $structures;
 	}
 	
 	/**
@@ -252,7 +253,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 	 * @param type $dropDown
 	 * @return type
 	 */
-	protected function getStructure($node = NULL, $repo, $direct = TRUE, $rootClass = 'nav navbar-nav', $dropDown = FALSE, $system = TRUE){
+	protected function getStructure($context, $node = NULL, $repo, $direct = TRUE, $rootClass = 'nav navbar-nav', $dropDown = FALSE, $system = TRUE, $fromPage = NULL){
 		
 		return $repo->childrenHierarchy($node, $direct, array(
 				'decorate' => true,
@@ -268,12 +269,12 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 					return '<ul class="' . $class . '">';
 				},
 				'rootClose' => '</ul>',
-				'childOpen' => function($node) use($dropDown){
+				'childOpen' => function($node) use($dropDown, $context){
 					$hasChildrens = count($node['__children']) > 0 ? TRUE : FALSE;
-					$active = $this->getParam('id') == $node['id'] ? TRUE : FALSE;
+					$active = $context->getParam('id') == $node['id'] ? TRUE : FALSE;
 					$class = '';
 
-					if($this->getParam('lft') > $node['lft'] && $this->getParam('lft') < $node['rgt'] && $this->getParam('root') == $node['root']){
+					if($context->getParam('lft') > $node['lft'] && $context->getParam('lft') < $node['rgt'] && $context->getParam('root') == $node['root']){
 						$class .= ' active';
 					}
 
@@ -282,28 +283,36 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 
 					if($active)
 						$class .= ' active';
-
+					
+					if(!$node['visible'])
+						$class .= ' hidden';
+					
 					return '<li class="' . $class . '">';
 				},
 				'childClose' => '</li>',
-				'nodeDecorator' => function($node) use($dropDown, $system) {
+				'nodeDecorator' => function($node) use($dropDown, $system, $context, $fromPage) {
 					$hasChildrens = count($node['__children']) > 0 ? TRUE : FALSE;
 					$params = '';
 					$class = '';
 					
 					$moduleName = array_key_exists('moduleName', $node) ? $node['moduleName'] : 'Eshop';
 					$presenter = array_key_exists('presenter', $node) ? $node['presenter'] : 'Categories';
-					$path = $moduleName === 'Eshop' && !$system ? $path = $this->actualPage->getPath() . '/' . $node['path'] : $node['path'];
+					$path = $moduleName === 'Eshop' && !$system ? $path = $fromPage->getPath() . '/' . $node['path'] : $node['path'];
 							
-					$link = $this->link(':Frontend:' . $moduleName . ':' . $presenter . ':default', array('id' => $node['id'], 'path' => $path, 'abbr' => $this->abbr));
+					$link = $context->link(':Frontend:' . $moduleName . ':' . $presenter . ':default', array('id' => $node['id'], 'path' => $path, 'abbr' => $context->abbr));
 
+					$span = '';
 					if($hasChildrens && $node['level'] == 1 && $dropDown){
 						$params = ' data-toggle="dropdown"';
 						$class .= ' dropdown-toggle';
-						$link = '#';
+						//$link = '#';
+						$span = '<span class="caret"></span>';
 					}
 
-					return '<a ' . $params .' class="' . $class . '" href="' . $link . '">'.$node['title'].'</a>';
+					if(!empty($node['class']))
+						$class .= ' ' . $node['class'];
+					
+					return '<a ' . $params .' class="' . $class . '" href="' . $link . '">'.$node['title']. $span . '</a>';
 				}
 			));
 	}
