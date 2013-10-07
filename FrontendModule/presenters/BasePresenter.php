@@ -46,7 +46,10 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 	/* Method is executed before render. */
 	protected function beforeRender(){
 		
-		$this->setLayout("layout");
+		if($this->actualPage->getDefault()) 
+			$this->setLayout("layoutDefault");
+		else
+			$this->setLayout("layout");
 		
 		if($this->isAjax()){
 			$this->invalidateControl('flashMessages');
