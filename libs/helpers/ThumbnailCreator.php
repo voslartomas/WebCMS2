@@ -29,7 +29,7 @@ class ThumbnailCreator {
 		$thumbnails = WWW_DIR . '/thumbnails/';
 		$files = WWW_DIR . '/upload/';
 		$thumbnails = str_replace($files, $thumbnails, $filepath);
-		
+				
 		$filepath .= $filename;
 		if(file_exists($filepath)){
 			$image = \Nette\Image::fromFile($filepath);

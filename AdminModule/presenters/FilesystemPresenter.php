@@ -67,13 +67,13 @@ class FilesystemPresenter extends \AdminModule\BasePresenter{
 		$this->flashMessage($this->translation['Directory has been created.'], 'success');
 	}
 	
-	public function handleUploadFile(){
+	public function handleUploadFile($path){
 		$file = new \Nette\Http\FileUpload($_FILES['files']);
 		
 		$file->move($this->path . '' . $file->getSanitizedName());
 		
 		if($file->isImage())
-			$this->thumbnailCreator->createThumbnails($file->getSanitizedName(), $this->path);
+			$this->thumbnailCreator->createThumbnails($file->getSanitizedName(), $path);
 		
 		$this->reloadContent();
 		$this->flashMessage($this->translation['File has been uploaded']);
