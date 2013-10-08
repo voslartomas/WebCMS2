@@ -42,19 +42,22 @@ abstract class Entity extends \Nette\Object{
 		$array = array();
 		foreach($props as $prop){
 			$getter = 'get' . ucfirst($prop->getName());
-			$empty = $this->$getter();
-			$empty = is_null($empty) || empty($empty);
 			
-			if(method_exists($this, $getter))
-					if(!is_object($this->$getter())){
-						if(($notEmptyValues && !$empty) || !$empty){
-							$array[$prop->getName()] = $this->$getter();
-						}
+			if(method_exists($this, $getter)){
+				
+				$empty = $this->$getter();
+				$empty = is_null($empty) || empty($empty);
+				
+				if(!is_object($this->$getter())){
+					if(($notEmptyValues && !$empty) || !$empty){
+						$array[$prop->getName()] = $this->$getter();
 					}
-					elseif(is_object($this->$getter())){
-						if(method_exists($this->$getter(), 'getId'))
-							$array[$prop->getName()] = $this->$getter()->getId();
-					}
+				}
+				elseif(is_object($this->$getter())){
+					if(method_exists($this->$getter(), 'getId'))
+						$array[$prop->getName()] = $this->$getter()->getId();
+				}
+			}
 		}
 		
 		return $array;
