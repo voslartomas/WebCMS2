@@ -105,6 +105,12 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		$this->settings = new \WebCMS\Settings($this->em, $this->language);
 		$this->settings->setSettings($this->getSettings());
 		
+		// system helper sets variables
+		\WebCMS\SystemHelper::setVariables(array(
+			'baseUrl' => $this->presenter->getHttpRequest()->url->baseUrl,
+			'infoEmail' => $this->settings->get('Info email', 'basic')->getValue()
+		));
+		
 		$id = $this->getParam('id');
 		if($id) $this->actualPage = $this->em->find('AdminModule\Page', $id);
 	}
@@ -130,8 +136,15 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		return $settings;
 	}
 	
-	public function createForm(){
+	public function createForm($do = ''){
 		$form = new UI\Form();
+		
+		$form->getElementPrototype()->action = $this->link('this', array(
+			'id' => $this->actualPage->getId(),
+			'path' => $this->actualPage->getPath(),
+			'abbr' => $this->abbr,
+			'do' => $do
+		));
 		
 		$form->setTranslator($this->translator);
 		//$form->setRenderer(new BootstrapRenderer);
@@ -366,6 +379,18 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 	public function addToBreadcrumbs($id, $moduleName, $presenter, $title, $path){
 		
 		$this->breadcrumbs[] = new \WebCMS\BreadcrumbsItem($id, $moduleName, $presenter, $title, $path);
+	}
+	
+	public function selfRedirect($path = ''){
+		$this->redirect('this', array(
+				'id' => $this->actualPage->getId(),
+				'path' => $this->actualPage->getPath() . $path,
+				'abbr' => $this->abbr,
+			));
+	}
+	
+	public function flashMessageTranslated($message, $type = 'info'){
+		$this->flashMessage($this->translation[$message], $type);
 	}
 
 }

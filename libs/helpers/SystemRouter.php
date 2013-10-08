@@ -113,17 +113,25 @@ class SystemRouter extends \Nette\Application\Routers\Route{
     function constructUrl(\Nette\Application\Request $appRequest, \Nette\Http\Url $refUrl) {
 		$params = $appRequest->getParameters();
 		
+		$sign = '?';
+		
 		if(array_key_exists('abbr', $params)) $abbr = $params['abbr'];
 		else $abbr = '';
 		
 		if(array_key_exists('path', $params)) $path = $params['path'];
 		else $path = '';
 		
-		if(array_key_exists('do', $params)) $do = '?do=' . $params['do'];
+		if(array_key_exists('do', $params)){
+			$do = $sign . 'do=' . $params['do'];
+			$sign = '&';
+		}
 		else $do = '';
 		
-		if(array_key_exists('action', $params)) $action = $params['action'] != 'default' ? $action = '?action=' . $params['action'] : '';
-		else $action = '';
+		if(array_key_exists('action', $params)){
+			
+			$action = $params['action'] != 'default' ? $action = $sign . 'action=' . $params['action'] : '';
+		}else 
+			$action = '';
 		
 		if(array_key_exists('parameters', $params)){
 			if(count($params['parameters']) > 0){
