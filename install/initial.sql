@@ -7,3 +7,6 @@ INSERT IGNORE INTO `User` (`id`, `username`, `email`, `password`, `role_id`, `na
 
 INSERT IGNORE INTO `Language` (`id`, `name`, `abbr`, `defaultFrontend`, `defaultBackend`) VALUES
 (1, 'Čeština', 'cs', 1, 1);
+
+INSERT INTO `thumbnail` (`id`, `key`, `x`, `y`, `watermark`, `system`) VALUES
+(1, 'system', 180, 0, 0, 1);

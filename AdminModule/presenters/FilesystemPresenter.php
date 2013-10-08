@@ -60,10 +60,9 @@ class FilesystemPresenter extends \AdminModule\BasePresenter{
 	}
 	
 	public function handleMakeDirectory($name){
-		
-		mkdir($this->path . \Nette\Utils\Strings::webalize($name));
-		mkdir(str_replace(WWW_DIR . '/upload/', WWW_DIR . '/thumbnails/', $this->path) . \Nette\Utils\Strings::webalize($name));
-		
+                @mkdir($this->path . \Nette\Utils\Strings::webalize($name));
+                @mkdir(str_replace("upload", "thumbnails", $this->path) . \Nette\Utils\Strings::webalize($name));
+                
 		$this->flashMessage($this->translation['Directory has been created.'], 'success');
 	}
 	
@@ -73,7 +72,7 @@ class FilesystemPresenter extends \AdminModule\BasePresenter{
 		$file->move($this->path . '' . $file->getSanitizedName());
 		
 		if($file->isImage())
-			$this->thumbnailCreator->createThumbnails($file->getSanitizedName(), $path);
+			$this->thumbnailCreator->createThumbnails($file->getSanitizedName(), $this->path);
 		
 		$this->reloadContent();
 		$this->flashMessage($this->translation['File has been uploaded']);
@@ -94,7 +93,7 @@ class FilesystemPresenter extends \AdminModule\BasePresenter{
 					$file = pathinfo($pathToRemove);
 					$filename = $file['filename'] . '.' . $file['extension'];
 					
-					$toRemove = str_replace(WWW_DIR . '/upload/', WWW_DIR . '/thumbnails/', $pathToRemove);
+					$toRemove = str_replace('upload', 'thumbnails', $pathToRemove);
 					$toRemove = str_replace($filename, $t->getKey() . $filename, $toRemove);
 							
 					unlink($toRemove);
@@ -109,7 +108,7 @@ class FilesystemPresenter extends \AdminModule\BasePresenter{
 			
 		if(is_dir($pathToRemove)){
 			\WebCMS\SystemHelper::rrmdir($pathToRemove);
-			\WebCMS\SystemHelper::rrmdir(str_replace(WWW_DIR . '/upload/', WWW_DIR . '/thumbnails/', $pathToRemove));
+			\WebCMS\SystemHelper::rrmdir(str_replace('upload', 'thumbnails', $pathToRemove));
 		}
 		
 		$this->flashMessage($this->translation['File has been removed.'], 'success');
