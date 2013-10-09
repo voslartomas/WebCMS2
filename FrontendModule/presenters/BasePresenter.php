@@ -136,10 +136,10 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		return $settings;
 	}
 	
-	public function createForm($do = ''){
+	public function createForm($do = '', $action = 'default'){
 		$form = new UI\Form();
 		
-		$form->getElementPrototype()->action = $this->link('default', array(
+		$form->getElementPrototype()->action = $this->link($action, array(
 			'path' => $this->actualPage->getPath(),
 			'abbr' => $this->abbr,
 			'do' => $do

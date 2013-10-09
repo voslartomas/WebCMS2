@@ -129,9 +129,12 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 			$t->setTranslation($translation['translation']);
 			$t->setBackend($translation['backend']);
 			
-			if(!$this->translationExists($t)){
+			$exists = $this->translationExists($t);
+			if(!$exists){
 				$this->em->persist($t);
 				$translations[] = $t;
+			}else{
+				$t->setTranslation($translation['translation']);
 			}
 		}
 
@@ -140,12 +143,15 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 	}
 	
 	private function translationExists($translation){
-		$exists = $this->em->getRepository('AdminModule\Translation')->findBy(array(
+		$exists = $this->em->getRepository('AdminModule\Translation')->findOneBy(array(
 			'language' => $translation->getLanguage(),
 			'key' => $translation->getKey()
 		));
 		
-		return $exists ? TRUE : FALSE;
+		if(is_object($exists))		
+			return $exists;
+		else
+			return FALSE;
 	}
 	
 	public function actionUpdateLanguage($id){
@@ -186,12 +192,12 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 		
 		if($values->import->getTemporaryFile()){
 			$qb = $this->em->createQueryBuilder();
-			$qb->delete('AdminModule\Translation', 'l')
+			/*$qb->delete('AdminModule\Translation', 'l')
 					->where('l.language = ?1')
 					->setParameter(1, $this->lang)
 					->getQuery()
 					->execute();
-			$this->em->flush();
+			$this->em->flush();*/
 			
 			$content = file_get_contents($values->import->getTemporaryFile());
 			$this->importLanguage($content, $this->lang);
