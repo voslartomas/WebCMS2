@@ -13,7 +13,7 @@ function Webcms(){
 
 Webcms.prototype = {
 	self : null,
-	
+
 	init : function (){
 		self = this;
 		
@@ -143,6 +143,8 @@ Webcms.prototype = {
 /* Filesystem */
 function Filesystem(){
 	
+	this.path = new String();
+	
 	this.init();
 };
 
@@ -157,7 +159,14 @@ Filesystem.prototype = {
 		this.__registerListeners();
 	},
 			
-			
+	setPath : function(path){
+		this.path = path;
+	},
+	
+	getPath : function(path){
+		return this.path;
+	},
+	
 	__registerListeners : function(){
 		
 		$('.filesDialog').live('click', function(e){

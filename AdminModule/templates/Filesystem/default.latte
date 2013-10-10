@@ -15,6 +15,10 @@
 				$.nette.ajax({ url : {plink makeDirectory!}, data : { name : text } })
 			});
 		});
+		var path;
+		$(".dir").live('click', function(){
+			filesystem.setPath($(this).data('path'));
+		});
 	});
 </script>
 
@@ -35,6 +39,11 @@
 		
 		var directory = '';
 		
+		function onComplete(){
+			
+			$.nette.ajax({ url : {plink default}, data : { path : filesystem.getPath() } })
+		}
+		
 		$(document).ready(function () {
 			$("#upload").kendoUpload({
 				multiple: true,
@@ -54,7 +63,8 @@
 					'statusUploaded' : {_'Upload has been successful.'},
 					'statusUploading' : {_'Files are beeing uploaded.'},
 					'uploadSelectedFiles' : {_'Upload files'}
-				}
+				},
+				complete: onComplete,
 			});
 		});
 
@@ -153,13 +163,13 @@
 		<div class="directory">
 			<span class="time">{$file->getATime()|date:'%d.%m.%Y %H:%M:%S'}</span>
 			<span class="name">
-				<a class="ajax" n:href="default path => $file->getRealpath()">
+				<a class="ajax dir" data-path="{$file->getRealpath()}" n:href="default path => $file->getRealpath()">
 					{$file->getBasename()}
 				</a>
 			</span>
 			<span class="size">{$file->getSize()|bytes}</span>
 			<span class="action pull-right">
-				<a n:href="deleteFile! pathToRemove => $file->getPathname()" class="btn btn-danger ajax">{_'Delete'}</a>
+				<a n:href="deleteFile! pathToRemove => $file->getPathname()" class="btn btn-danger">{_'Delete'}</a>
 			</span>
 		</div>
 
@@ -167,12 +177,15 @@
 	{/foreach}
 	{foreach $files as $path => $file}
 		<div class="file">
+			{if $file->getExtension() == 'png' || $file->getExtension() == 'jpg'}
+				<img style="width: 80px;" src="{$basePath}{$file->getPathname()|thumbnail:'system'}" />
+			{/if}
 			<span class="time">{$file->getATime()|date:'%d.%m.%Y %H:%M:%S'}</span>
 			<span class="name">{$file->getBasename()}</span>
 			<span class="size">{$file->getSize()|bytes}</span>
 			<span class="action pull-right">
 				<a n:href="downloadFile" class="btn btn-primary">{_'Download'}</a>
-				<a n:href="deleteFile! pathToRemove => $file->getPathname()" class="btn btn-danger ajax">{_'Delete'}</a>
+				<a n:href="deleteFile! pathToRemove => $file->getPathname()" class="btn btn-danger">{_'Delete'}</a>
 			</span>
 		</div>
 

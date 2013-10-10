@@ -60,8 +60,8 @@ class FilesystemPresenter extends \AdminModule\BasePresenter{
 	}
 	
 	public function handleMakeDirectory($name){
-                @mkdir($this->path . \Nette\Utils\Strings::webalize($name));
-                @mkdir(str_replace("upload", "thumbnails", $this->path) . \Nette\Utils\Strings::webalize($name));
+		@mkdir($this->path . \Nette\Utils\Strings::webalize($name));
+		@mkdir(str_replace("upload", "thumbnails", $this->path) . \Nette\Utils\Strings::webalize($name));
                 
 		$this->flashMessage($this->translation['Directory has been created.'], 'success');
 	}
