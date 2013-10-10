@@ -12,7 +12,9 @@
 			e.preventDefault();
 			
 			bootbox.prompt({_'Enter name of the new directory:'}, function(text){
-				$.nette.ajax({ url : {plink makeDirectory!}, data : { name : text } })
+				
+				if(text) 
+					$.nette.ajax({ url : {plink makeDirectory!}, data : { name : text } })
 			});
 		});
 		var path;
