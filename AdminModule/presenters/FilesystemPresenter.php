@@ -117,8 +117,16 @@ class FilesystemPresenter extends \AdminModule\BasePresenter{
 			$this->redirect('this');
 	}
 	
-	public function handleDownloadFile($path){
+	public function actionDownloadFile($path){
 		
+		$file = pathinfo($path);
+		$filename = $file['filename'] . '.' . $file['extension'];
+		
+		$finfo = finfo_open(FILEINFO_MIME_TYPE); // return mime type ala mimetype extension
+
+		$mimeType = finfo_file($finfo, $path);
+		
+		$this->sendResponse(new \Nette\Application\Responses\FileResponse($path, $filename, $mimeType));
 	}
 	
 	public function renderFilesDialog(){

@@ -4,7 +4,7 @@
 
 <a class="btn btn-success jq_newDir" n:href="makeDirectory!">{_'Create new directory'}</a>
 
-<a class="btn btn-success jq_newDir" n:href="makeBackup!">{_'Create backup'}</a>
+{*<a class="btn btn-success jq_newDir" n:href="makeBackup!">{_'Create backup'}</a>*}
 
 <script>
 	$(function(){
@@ -160,40 +160,46 @@
 	
 <a class="btn btn-primary ajax" n:href="default path => $backLink">{_'Back'}</a>
 
-<div class="filesystem">
+<table class="table table-bordered table-hover">
+	<thead>
+		<tr>
+			{*<th>{_'Date'}</th>*}
+			<th>{_'Name'}</th>
+			<th>{_'Size'}</th>
+			<th>{_'Actions'}</th>
+		</tr>
+	</thead>
 	{foreach $directories as $path => $file}
-		<div class="directory">
-			<span class="time">{$file->getATime()|date:'%d.%m.%Y %H:%M:%S'}</span>
-			<span class="name">
+		<tr>
+			{*<td class="time">{$file->getATime()|date:'%d.%m.%Y %H:%M:%S'}</td>*}
+			<td class="name">
 				<a class="ajax dir" data-path="{$file->getRealpath()}" n:href="default path => $file->getRealpath()">
 					{$file->getBasename()}
 				</a>
-			</span>
-			<span class="size">{$file->getSize()|bytes}</span>
-			<span class="action pull-right">
+			</td>
+			<td class="size">{$file->getSize()|bytes}</td>
+			<td class="action">
 				<a n:href="deleteFile! pathToRemove => $file->getPathname()" class="btn btn-danger">{_'Delete'}</a>
-			</span>
-		</div>
-
-		<br class="clearfix" />
+			</td>
+		</tr>
 	{/foreach}
 	{foreach $files as $path => $file}
-		<div class="file">
-			{if $file->getExtension() == 'png' || $file->getExtension() == 'jpg'}
-				<img style="width: 80px;" src="{$basePath}{$file->getPathname()|thumbnail:'system'}" />
-			{/if}
-			<span class="time">{$file->getATime()|date:'%d.%m.%Y %H:%M:%S'}</span>
-			<span class="name">{$file->getBasename()}</span>
-			<span class="size">{$file->getSize()|bytes}</span>
-			<span class="action pull-right">
-				<a n:href="downloadFile" class="btn btn-primary">{_'Download'}</a>
+		<tr class="file">
+			{*<td class="time">{$file->getATime()|date:'%d.%m.%Y %H:%M:%S'}</td>*}
+			<td class="name">
+				{if $file->getExtension() == 'png' || $file->getExtension() == 'jpg'}
+					<img style="width: 80px;" src="{$basePath}{$file->getPathname()|thumbnail:'system'}" />
+				{/if}
+				{$file->getBasename()}
+			</td>
+			<td class="size">{$file->getSize()|bytes}</td>
+			<td class="action">
+				<a n:href="downloadFile path => $file->getPathname()" class="btn btn-primary">{_'Download'}</a>
 				<a n:href="deleteFile! pathToRemove => $file->getPathname()" class="btn btn-danger">{_'Delete'}</a>
-			</span>
-		</div>
-
-		<br class="clearfix" />
+			</td>
+		</tr>
 	{/foreach}
-</div>
+</table>
 
 
 {/block}
