@@ -61,10 +61,10 @@ class UsersPresenter extends \AdminModule\BasePresenter{
 			'id <> 1'
 		));
 		
-		$grid->addColumn('username', 'Name')->setSortable();
+		$grid->addColumnText('username', 'Name')->setSortable();
 		
-		$grid->addAction("updateUser", 'Edit')->getElementPrototype()->addAttributes(array('class' => 'btn btn-primary ajax', 'data-toggle' => 'modal', 'data-target' => '#myModal', 'data-remote' => 'false'));
-		$grid->addAction("deleteUser", 'Delete')->getElementPrototype()->addAttributes(array('class' => 'btn btn-danger', 'data-confirm' => 'Are you sure you want to delete the item?'));
+		$grid->addActionHref("updateUser", 'Edit')->getElementPrototype()->addAttributes(array('class' => 'btn btn-primary ajax', 'data-toggle' => 'modal', 'data-target' => '#myModal', 'data-remote' => 'false'));
+		$grid->addActionHref("deleteUser", 'Delete')->getElementPrototype()->addAttributes(array('class' => 'btn btn-danger', 'data-confirm' => 'Are you sure you want to delete the item?'));
 
 		return $grid;
 	}
@@ -219,10 +219,10 @@ class UsersPresenter extends \AdminModule\BasePresenter{
 			'id <> 1'
 		));
 		
-		$grid->addColumn('name', 'Name')->setSortable();
+		$grid->addColumnText('name', 'Name')->setSortable();
 		
-		$grid->addAction("updateRole", 'Edit')->getElementPrototype()->addAttributes(array('class' => 'btn btn-primary ajax', 'data-toggle' => 'modal', 'data-target' => '#myModal', 'data-remote' => 'false'));
-		$grid->addAction("deleteRole", 'Delete')->getElementPrototype()->addAttributes(array('class' => 'btn btn-danger', 'data-confirm' => 'Are you sure you want to delete the item?'));
+		$grid->addActionHref("updateRole", 'Edit')->getElementPrototype()->addAttributes(array('class' => 'btn btn-primary ajax', 'data-toggle' => 'modal', 'data-target' => '#myModal', 'data-remote' => 'false'));
+		$grid->addActionHref("deleteRole", 'Delete')->getElementPrototype()->addAttributes(array('class' => 'btn btn-danger', 'data-confirm' => 'Are you sure you want to delete the item?'));
 
 		return $grid;
 	}

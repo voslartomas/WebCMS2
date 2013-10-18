@@ -55,20 +55,20 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 		
 		$grid = $this->createGrid($this, $name, "Language");
 		
-		$grid->addColumn('name', 'Name')->setSortable();
+		$grid->addColumnText('name', 'Name')->setSortable();
 		$grid->addColumnText('abbr', 'Abbreviation')->setSortable();
-		$grid->addColumn('defaultFrontend', 'Default fe')->setReplacement(array(
+		$grid->addColumnText('defaultFrontend', 'Default fe')->setReplacement(array(
 			'1' => 'Yes',
 			NULL => 'No'
 		));
-		$grid->addColumn('defaultBackend', 'Default be')->setReplacement(array(
+		$grid->addColumnText('defaultBackend', 'Default be')->setReplacement(array(
 			'1' => 'Yes',
 			NULL => 'No'
 		));
 		
-		$grid->addAction("exportLanguage", 'Export')->getElementPrototype()->addAttributes(array('class' => 'btn btn-primary'));
-		$grid->addAction("updateLanguage", 'Edit')->getElementPrototype()->addAttributes(array('class' => 'btn btn-primary ajax', 'data-toggle' => 'modal', 'data-target' => '#myModal', 'data-remote' => 'false'));
-		$grid->addAction("deleteLanguage", 'Delete')->getElementPrototype()->addAttributes(array('class' => 'btn btn-danger', 'data-confirm' => 'Are you sure you want to delete the item?'));
+		$grid->addActionHref("exportLanguage", 'Export')->getElementPrototype()->addAttributes(array('class' => 'btn btn-primary'));
+		$grid->addActionHref("updateLanguage", 'Edit')->getElementPrototype()->addAttributes(array('class' => 'btn btn-primary ajax', 'data-toggle' => 'modal', 'data-target' => '#myModal', 'data-remote' => 'false'));
+		$grid->addActionHref("deleteLanguage", 'Delete')->getElementPrototype()->addAttributes(array('class' => 'btn btn-danger', 'data-confirm' => 'Are you sure you want to delete the item?'));
 
 		return $grid;
 	}
@@ -258,12 +258,12 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 			1 => $this->translation['Yes']
 		);
 		
-		$grid->addColumn('id', 'ID')->setSortable()->setFilter();
-		$grid->addColumn('key', 'Key')->setSortable()->setFilter();
+		$grid->addColumnNumber('id', 'ID')->setSortable()->setFilterNumber();
+		$grid->addColumnText('key', 'Key')->setSortable()->setFilterText();
 		$grid->addColumnText('translation', 'Value')->setSortable()->setCustomRender(function($item){
 			return '<div class="translation" contentEditable>' . $item->getTranslation() . '</div>';
 		});
-		$grid->addColumn('backend', 'Backend')->setReplacement(array(
+		$grid->addColumnText('backend', 'Backend')->setReplacement(array(
 			'1' => 'Yes',
 			NULL => 'No'
 		))->setFilterSelect($backend);

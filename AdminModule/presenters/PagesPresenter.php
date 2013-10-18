@@ -139,7 +139,7 @@ class PagesPresenter extends \AdminModule\BasePresenter{
 			)
 		);
 		
-		$grid->addColumn('title', 'Name')->setCustomRender(function($item){
+		$grid->addColumnText('title', 'Name')->setCustomRender(function($item){
 			return str_repeat("-", $item->getLevel()) . $item->getTitle();
 		});
 		
@@ -149,15 +149,15 @@ class PagesPresenter extends \AdminModule\BasePresenter{
 		
 		$grid->addFilterSelect('root', 'Structure')->getControl()->setTranslator(NULL)->setItems($prnts);
 		
-		$grid->addColumn('visible', 'Visible')->setReplacement(array(
+		$grid->addColumnText('visible', 'Visible')->setReplacement(array(
 			'1' => 'Yes',
 			NULL => 'No'
 		));
 		
-		$grid->addAction("moveUp", "Move up");
-		$grid->addAction("moveDown", "Move down");
-		$grid->addAction("updatePage", 'Edit')->getElementPrototype()->addAttributes(array('class' => 'btn btn-primary ajax', 'data-toggle' => 'modal', 'data-target' => '#myModal', 'data-remote' => 'false'));
-		$grid->addAction("deletePage", 'Delete')->getElementPrototype()->addAttributes(array('class' => 'btn btn-danger', 'data-confirm' => 'Are you sure you want to delete this item?'));
+		$grid->addActionHref("moveUp", "Move up");
+		$grid->addActionHref("moveDown", "Move down");
+		$grid->addActionHref("updatePage", 'Edit')->getElementPrototype()->addAttributes(array('class' => 'btn btn-primary ajax', 'data-toggle' => 'modal', 'data-target' => '#myModal', 'data-remote' => 'false'));
+		$grid->addActionHref("deletePage", 'Delete')->getElementPrototype()->addAttributes(array('class' => 'btn btn-danger', 'data-confirm' => 'Are you sure you want to delete this item?'));
 
 		return $grid;
 	}

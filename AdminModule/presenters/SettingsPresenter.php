@@ -156,22 +156,22 @@ class SettingsPresenter extends \AdminModule\BasePresenter{
 		
 		$grid = $this->createGrid($this, $name, "Thumbnail");
 		
-		$grid->addColumn('key', 'Key');
+		$grid->addColumnText('key', 'Key');
 		$grid->addColumnText('x', 'Width');
 		$grid->addColumnText('y', 'Height');
 		
-		$grid->addColumn('watermark', 'Watermark')->setReplacement(array(
+		$grid->addColumnText('watermark', 'Watermark')->setReplacement(array(
 			1 => 'Yes',
 			NULL => 'No'
 		));
 		
-		$grid->addColumn('system', 'System')->setReplacement(array(
+		$grid->addColumnText('system', 'System')->setReplacement(array(
 			1 => 'Yes',
 			NULL => 'No'
 		));
 		
-		$grid->addAction("addThumbnail", 'Edit')->getElementPrototype()->addAttributes(array('class' => 'btn btn-primary ajax', 'data-toggle' => 'modal', 'data-target' => '#myModal', 'data-remote' => 'false'));
-		$grid->addAction("deleteThumbnail", 'Delete')->getElementPrototype()->addAttributes(array('class' => 'btn btn-danger', 'data-confirm' => 'Are you sure you want to delete this item?'));
+		$grid->addActionHref("addThumbnail", 'Edit')->getElementPrototype()->addAttributes(array('class' => 'btn btn-primary ajax', 'data-toggle' => 'modal', 'data-target' => '#myModal', 'data-remote' => 'false'));
+		$grid->addActionHref("deleteThumbnail", 'Delete')->getElementPrototype()->addAttributes(array('class' => 'btn btn-danger', 'data-confirm' => 'Are you sure you want to delete this item?'));
 
 		return $grid;
 	}
