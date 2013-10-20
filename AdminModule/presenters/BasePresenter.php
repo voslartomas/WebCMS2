@@ -370,6 +370,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 			//$box['component'] = $id . '-' . $box['presenter'] . '-' . $box['function'];
 		}
 		
+                $this->template->actualPage = $this->actualPage;
 		$this->template->boxes = $boxes;
 		$this->template->idPage = $idPage;
 	}
