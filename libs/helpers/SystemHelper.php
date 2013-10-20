@@ -184,7 +184,7 @@ class SystemHelper {
 		$info = pathinfo($path);
 		
 		$path = str_replace($info['filename'], $thumbnailKey . $info['filename'], $path);
-		
+		$path = str_replace('\\', '/', $path);
 		return $path;
 	}
 	
