@@ -186,12 +186,11 @@ class SystemHelper {
 		$path = self::relative($path);
 		$path = str_replace("upload", 'thumbnails', $path);
 		
-		$array = explode('/', $path);
-		$filename = $array[count($array) - 1];
+		$info = pathinfo($path);
 		
-		$path = str_replace($filename, '', $path);
+		$path = str_replace($info['filename'], $thumbnailKey . $info['filename'], $path);
 		
-		return $path . $thumbnailKey . $filename;
+		return $path;
 	}
 	
 	public static function price($price){
