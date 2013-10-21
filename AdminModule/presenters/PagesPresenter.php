@@ -93,7 +93,8 @@ class PagesPresenter extends \AdminModule\BasePresenter{
 		$this->page->setParent($parent);
 		$this->page->setLanguage($this->state->language);
 		$this->page->setModule($module);
-		$this->page->setModuleName($module->getName());
+		if($module) 
+			$this->page->setModuleName($module->getName());
 		$this->page->setPresenter($presenter);
 		$this->page->setPath('tmp value');
 		$this->page->setClass($values->class);

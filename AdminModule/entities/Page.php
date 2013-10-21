@@ -91,7 +91,7 @@ class Page extends Seo{
 	private $module;
 	
 	/**
-	 * @orm\Column
+	 * @orm\Column(nullable=true)
 	 */
 	private $moduleName;
 	
