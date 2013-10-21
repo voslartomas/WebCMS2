@@ -104,7 +104,10 @@ Webcms.prototype = {
 			
 	initTextEditors : function(){
 		
-		$(".editor:not(.k-content)").ckeditor();
+		$(".editor:not(.k-content)").ckeditor({
+						filebrowserBrowseUrl: basePath  + '/admin/filesystem?dialog=1',
+						filebrowserImageBrowseUrl: basePath + '/admin/filesystem?dialog=1&filter=images'
+					});
 
 	}
 };

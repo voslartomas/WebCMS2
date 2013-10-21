@@ -92,7 +92,11 @@ var config = {
 	languages : {
 		'cs' : 1,
 		'en' : 1,
-	}
+	},
+	filebrowserBrowseUrl: '/browser/browse.php',
+    filebrowserImageBrowseUrl: '/browser/browse.php?type=Images',
+    filebrowserUploadUrl: '/uploader/upload.php',
+    filebrowserImageUploadUrl: '/uploader/upload.php?type=Images'
 };
 
 CKEDITOR.editorConfig = function( config ) {
