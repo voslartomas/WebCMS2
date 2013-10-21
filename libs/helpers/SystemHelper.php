@@ -177,19 +177,14 @@ class SystemHelper {
 	}
 	
 	public static function thumbnail($path, $thumbnailKey){
-		
-		if(strpos($path, "\\") !== FALSE){
-			echo 'asd';
-			$path = str_replace("/", "\\", $path);
-		}
-		
+				
 		$path = self::relative($path);
 		$path = str_replace("upload", 'thumbnails', $path);
 		
 		$info = pathinfo($path);
 		
 		$path = str_replace($info['filename'], $thumbnailKey . $info['filename'], $path);
-		
+		$path = str_replace('\\', '/', $path);
 		return $path;
 	}
 	
