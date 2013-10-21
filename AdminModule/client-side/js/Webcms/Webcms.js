@@ -103,40 +103,9 @@ Webcms.prototype = {
 	},
 			
 	initTextEditors : function(){
+		
+		$(".editor:not(.k-content)").ckeditor();
 
-		$(".editor:not(.k-content)").kendoEditor({
-			tools: [
-				"bold",
-                "italic",
-                "underline",
-                "strikethrough",
-                "justifyLeft",
-                "justifyCenter",
-                "justifyRight",
-                "justifyFull",
-                "insertUnorderedList",
-                "insertOrderedList",
-                "indent",
-                "outdent",
-                "createLink",
-                "unlink",
-                "insertImage",
-                "subscript",
-                "superscript",
-                "createTable",
-                "addRowAbove",
-                "addRowBelow",
-                "addColumnLeft",
-                "addColumnRight",
-                "deleteRow",
-                "deleteColumn",
-                "viewHtml"
-			],
-			encoded : false,
-			imageBrowser: {
-				path: "upload/"
-			 }
-		});
 	}
 };
 		
