@@ -70,7 +70,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		$this->template->abbr = $this->abbr;
 		$this->template->settings = $this->settings;
 		// !params load from settings
-		$this->template->structures = $this->getStructures(FALSE, 'nav navbar-nav', TRUE);
+		$this->template->structures = $this->getStructures(FALSE, $this->settings->get('Navbar class', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue(), TRUE);
 		$this->template->sidebar = $this->getStructure($this, $top, $this->em->getRepository('AdminModule\Page'), FALSE, 'nav');
 		$this->template->setTranslator($this->translator);
 		$this->template->actualPage = $this->actualPage;
