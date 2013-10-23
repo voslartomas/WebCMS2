@@ -129,9 +129,28 @@ class FilesystemPresenter extends \AdminModule\BasePresenter{
 		$this->sendResponse(new \Nette\Application\Responses\FileResponse($path, $filename, $mimeType));
 	}
 	
+	public function actionFilesDialog($path){
+		if(!empty($path)) $this->path = $path . '/';
+		else $this->path = realpath(self::DESTINATION_BASE) . '/';
+		
+	}
+	
 	public function renderFilesDialog(){
 		
-		$this->reloadModalContent();
+		$finder = new \Nette\Utils\Finder();
+		
+		$template = $this->createTemplate();
+		$template->setFile('../libs/webcms2/webcms2/AdminModule/templates/Filesystem/filesDialog.latte');
+		
+		$template->files = $finder->findFiles('*')->in($this->path);
+		$template->directories = $finder->findDirectories('*')->in($this->path);
+		$template->setTranslator($this->translator);
+		$template->registerHelperLoader('\WebCMS\SystemHelper::loader');
+		$template->backLink = strpos($this->createBackLink($this->path), self::DESTINATION_BASE) === false ? realpath(self::DESTINATION_BASE) : $this->createBackLink($this->path);
+		
+		$template->render();
+		
+		$this->terminate();
 	}
 	
 }

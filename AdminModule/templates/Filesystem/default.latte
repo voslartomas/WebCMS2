@@ -226,7 +226,7 @@
 			<span><input id="{$file->getPathname()}" type="checkbox" class="checkbox-inline jq_selected" name="files" value="{$file->getPathname()}" data-path="{$path|relative}" data-thumbnail="{$basePath}{$path|thumbnail:'system'}" /></span>
 			<label for="{$file->getPathname()}">
 				{$file->getBasename()}
-			</span>
+			</label>
 			<span class="size">{$file->getSize()|bytes}</span>
 		</div>
 		
