@@ -63,8 +63,8 @@ class UsersPresenter extends \AdminModule\BasePresenter{
 		
 		$grid->addColumnText('username', 'Name')->setSortable();
 		
-		$grid->addActionHref("updateUser", 'Edit')->getElementPrototype()->addAttributes(array('class' => 'btn btn-primary ajax', 'data-toggle' => 'modal', 'data-target' => '#myModal', 'data-remote' => 'false'));
-		$grid->addActionHref("deleteUser", 'Delete')->getElementPrototype()->addAttributes(array('class' => 'btn btn-danger', 'data-confirm' => 'Are you sure you want to delete the item?'));
+		$grid->addActionHref("updateUser", 'Edit')->getElementPrototype()->addAttributes(array('class' => array('btn', 'btn-primary', 'ajax'), 'data-toggle' => 'modal', 'data-target' => '#myModal', 'data-remote' => 'false'));
+		$grid->addActionHref("deleteUser", 'Delete')->getElementPrototype()->addAttributes(array('class' => array('btn', 'btn-danger'), 'data-confirm' => 'Are you sure you want to delete the item?'));
 
 		return $grid;
 	}
@@ -221,8 +221,8 @@ class UsersPresenter extends \AdminModule\BasePresenter{
 		
 		$grid->addColumnText('name', 'Name')->setSortable();
 		
-		$grid->addActionHref("updateRole", 'Edit')->getElementPrototype()->addAttributes(array('class' => 'btn btn-primary ajax', 'data-toggle' => 'modal', 'data-target' => '#myModal', 'data-remote' => 'false'));
-		$grid->addActionHref("deleteRole", 'Delete')->getElementPrototype()->addAttributes(array('class' => 'btn btn-danger', 'data-confirm' => 'Are you sure you want to delete the item?'));
+		$grid->addActionHref("updateRole", 'Edit')->getElementPrototype()->addAttributes(array('class' => array('btn', 'btn-primary', 'ajax'), 'data-toggle' => 'modal', 'data-target' => '#myModal', 'data-remote' => 'false'));
+		$grid->addActionHref("deleteRole", 'Delete')->getElementPrototype()->addAttributes(array('class' => array('btn', 'btn-danger'), 'data-confirm' => 'Are you sure you want to delete the item?'));
 
 		return $grid;
 	}

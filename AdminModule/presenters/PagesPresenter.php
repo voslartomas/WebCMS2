@@ -157,8 +157,8 @@ class PagesPresenter extends \AdminModule\BasePresenter{
 		
 		$grid->addActionHref("moveUp", "Move up");
 		$grid->addActionHref("moveDown", "Move down");
-		$grid->addActionHref("updatePage", 'Edit')->getElementPrototype()->addAttributes(array('class' => 'btn btn-primary ajax', 'data-toggle' => 'modal', 'data-target' => '#myModal', 'data-remote' => 'false'));
-		$grid->addActionHref("deletePage", 'Delete')->getElementPrototype()->addAttributes(array('class' => 'btn btn-danger', 'data-confirm' => 'Are you sure you want to delete this item?'));
+		$grid->addActionHref("updatePage", 'Edit')->getElementPrototype()->addAttributes(array('class' => array('btn', 'btn-primary', 'ajax'), 'data-toggle' => 'modal', 'data-target' => '#myModal', 'data-remote' => 'false'));
+		$grid->addActionHref("deletePage", 'Delete')->getElementPrototype()->addAttributes(array('class' => array('btn', 'btn-danger'), 'data-confirm' => 'Are you sure you want to delete this item?'));
 
 		return $grid;
 	}

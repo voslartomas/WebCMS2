@@ -172,8 +172,8 @@ class SettingsPresenter extends \AdminModule\BasePresenter{
 			NULL => 'No'
 		));
 		
-		$grid->addActionHref("addThumbnail", 'Edit')->getElementPrototype()->addAttributes(array('class' => 'btn btn-primary ajax', 'data-toggle' => 'modal', 'data-target' => '#myModal', 'data-remote' => 'false'));
-		$grid->addActionHref("deleteThumbnail", 'Delete')->getElementPrototype()->addAttributes(array('class' => 'btn btn-danger', 'data-confirm' => 'Are you sure you want to delete this item?'));
+		$grid->addActionHref("addThumbnail", 'Edit')->getElementPrototype()->addAttributes(array('class' => array('btn', 'btn-primary', 'ajax'), 'data-toggle' => 'modal', 'data-target' => '#myModal', 'data-remote' => 'false'));
+		$grid->addActionHref("deleteThumbnail", 'Delete')->getElementPrototype()->addAttributes(array('class' => array('btn', 'btn-danger'), 'data-confirm' => 'Are you sure you want to delete this item?'));
 
 		return $grid;
 	}

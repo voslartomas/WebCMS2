@@ -66,9 +66,9 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 			NULL => 'No'
 		));
 		
-		$grid->addActionHref("exportLanguage", 'Export')->getElementPrototype()->addAttributes(array('class' => 'btn btn-primary'));
-		$grid->addActionHref("updateLanguage", 'Edit')->getElementPrototype()->addAttributes(array('class' => 'btn btn-primary ajax', 'data-toggle' => 'modal', 'data-target' => '#myModal', 'data-remote' => 'false'));
-		$grid->addActionHref("deleteLanguage", 'Delete')->getElementPrototype()->addAttributes(array('class' => 'btn btn-danger', 'data-confirm' => 'Are you sure you want to delete the item?'));
+		$grid->addActionHref("exportLanguage", 'Export')->getElementPrototype()->addAttributes(array('class' => array('btn', 'btn-primary')));
+		$grid->addActionHref("updateLanguage", 'Edit')->getElementPrototype()->addAttributes(array('class' => array('btn', 'btn-primary', 'ajax'), 'data-toggle' => 'modal', 'data-target' => '#myModal', 'data-remote' => 'false'));
+		$grid->addActionHref("deleteLanguage", 'Delete')->getElementPrototype()->addAttributes(array('class' => array('btn', 'btn-danger'), 'data-confirm' => 'Are you sure you want to delete the item?'));
 
 		return $grid;
 	}
@@ -258,7 +258,6 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 			1 => $this->translation['Yes']
 		);
 		
-		$grid->addColumnNumber('id', 'ID')->setSortable()->setFilterNumber();
 		$grid->addColumnText('key', 'Key')->setSortable()->setFilterText();
 		$grid->addColumnText('translation', 'Value')->setSortable()->setCustomRender(function($item){
 			return '<div class="translation" contentEditable>' . $item->getTranslation() . '</div>';

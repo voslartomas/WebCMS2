@@ -54,8 +54,11 @@ abstract class Entity extends \Nette\Object{
 					}
 				}
 				elseif(is_object($this->$getter())){
-					if(method_exists($this->$getter(), 'getId'))
+					if(method_exists($this->$getter(), 'getId')){
 						$array[$prop->getName()] = $this->$getter()->getId();
+					}else if($this->$getter() instanceof \DateTime){
+						$array[$prop->getName()] = $this->$getter()->format('d.m.Y');
+					}
 				}
 			}
 		}

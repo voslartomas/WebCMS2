@@ -51,13 +51,22 @@ Webcms.prototype = {
 		$(document).ajaxStart( function() {
 			   $('#loader').addClass("active"); 
 		} ).ajaxStop ( function(){
-				self.initTextEditors();
+				self.afterReload();
 				$('#loader').removeClass("active"); 
 		});
-
-		self.initTextEditors();
+		
+		self.afterReload();
 		self.__registerListeners();
 		
+	},
+	
+	afterReload : function(){
+		
+		$(".datepicker:not(.k-input)").kendoDatePicker({
+			format : 'dd.MM.yyyy'
+		});
+		
+		self.initTextEditors();
 	},
 	
 	registerExternal : function(ext){
