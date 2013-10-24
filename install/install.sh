@@ -43,6 +43,9 @@ while [ "$task" != "q" ]; do
 		# generate DB schema
 		php www/index.php --ansi orm:schema-tool:create
 
+		# generate proxies
+		php www/index.php --ansi orm:generate-proxies
+
 		# run initial SQL script
 		php www/index.php --ansi dbal:import ./libs/webcms2/webcms2/install/initial.sql
 
