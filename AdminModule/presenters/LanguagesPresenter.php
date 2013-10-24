@@ -87,11 +87,13 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 		);
 		
 		foreach($language->getTranslations() as $translation){
-			$export['translations'][] = array(
-				'key' => $translation->getKey(),
-				'translation' => $translation->getTranslation(),
-				'backend' => $translation->getBackend()
-			);
+			if($translation->getBackend()){
+				$export['translations'][] = array(
+					'key' => $translation->getKey(),
+					'translation' => $translation->getTranslation(),
+					'backend' => $translation->getBackend()
+				);
+			}
 		}
 		
 		$export = json_encode($export);
