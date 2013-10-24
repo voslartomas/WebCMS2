@@ -32,6 +32,7 @@ while [ "$task" != "q" ]; do
 		# creates directories
 		mkdir ./www/upload
 		mkdir ./www/thumbnails
+		mkdir ./log
 		mkdir ./temp
 		mkdir ./temp/sessions
 		
