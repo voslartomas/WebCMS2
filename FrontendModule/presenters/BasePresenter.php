@@ -71,7 +71,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		$this->template->settings = $this->settings;
 		// !params load from settings
 		$this->template->structures = $this->getStructures(!$this->settings->get('Navbar dropdown', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue(), $this->settings->get('Navbar class', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue(), $this->settings->get('Navbar dropdown', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue());
-		$this->template->sidebar = $this->getStructure($this, $top, $this->em->getRepository('AdminModule\Page'), FALSE, 'nav');
+		$this->template->sidebar = $this->getStructure($this, $top, $this->em->getRepository('AdminModule\Page'), FALSE, $this->settings->get('Sidebar class', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue(), FALSE, FALSE, NULL, $this->settings->get('Sidebar class', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue());
 		$this->template->setTranslator($this->translator);
 		$this->template->actualPage = $this->actualPage;
 		$this->template->user = $this->getUser();
@@ -274,7 +274,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 	 * @param type $dropDown
 	 * @return type
 	 */
-	protected function getStructure($context, $node = NULL, $repo, $direct = TRUE, $rootClass = 'nav navbar-nav', $dropDown = FALSE, $system = TRUE, $fromPage = NULL){
+	protected function getStructure($context, $node = NULL, $repo, $direct = TRUE, $rootClass = 'nav navbar-nav', $dropDown = FALSE, $system = TRUE, $fromPage = NULL, $sideClass = 'nav navbar'){
 		
 		return $repo->childrenHierarchy($node, $direct, array(
 				'decorate' => true,
@@ -282,7 +282,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 				'rootOpen' => function($nodes) use($rootClass, $dropDown){
 
 					$drop = $nodes[0]['level'] == 2 ? TRUE : FALSE;
-					$class = $nodes[0]['level'] < 2 ? $rootClass : '';
+					$class = $nodes[0]['level'] < 2 ? $rootClass : $sideClass;
 
 					if($drop && $dropDown)
 						$class .= ' dropdown-menu';
