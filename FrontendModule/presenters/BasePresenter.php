@@ -146,7 +146,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		));
 		
 		$form->setTranslator($this->translator);
-		//$form->setRenderer(new BootstrapRenderer);
+		$form->setRenderer(new BootstrapRenderer);
 		
 		return $form;
 	}
