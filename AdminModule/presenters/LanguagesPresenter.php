@@ -134,7 +134,7 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 				$this->em->persist($t);
 				$translations[] = $t;
 			}else{
-				$t->setTranslation($translation['translation']);
+				$exists->setTranslation($translation['translation']);
 			}
 		}
 
