@@ -279,7 +279,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		return $repo->childrenHierarchy($node, $direct, array(
 				'decorate' => true,
 				'html' => true,
-				'rootOpen' => function($nodes) use($rootClass, $dropDown){
+				'rootOpen' => function($nodes) use($rootClass, $dropDown, $sideClass){
 
 					$drop = $nodes[0]['level'] == 2 ? TRUE : FALSE;
 					$class = $nodes[0]['level'] < 2 ? $rootClass : $sideClass;
