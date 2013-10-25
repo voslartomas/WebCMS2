@@ -276,8 +276,21 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 		
 		$grid->addFilterSelect('language', 'Language')->getControl()->setTranslator(NULL)->setItems($langs);
 		
+		$grid->addActionHref("deleteTranslation", 'Delete')->getElementPrototype()->addAttributes(array('class' => array('btn', 'btn-danger'), 'data-confirm' => 'Are you sure you want to delete the item?'));
+		
 		$grid->setFilterRenderType(\Grido\Components\Filters\Filter::RENDER_INNER);
 		return $grid;
+	}
+	
+	public function actionDeleteTranslation($id){
+		$translation = $this->em->find("AdminModule\Translation", $id);
+		$this->em->remove($translation);
+		$this->em->flush();
+		
+		$this->flashMessage($this->translation['Translation has been removed.'], 'success');
+		
+		if(!$this->isAjax())
+			$this->redirect('Languages:Translates');
 	}
 	
 	public function handleUpdateTranslation($idTranslation, $value){
