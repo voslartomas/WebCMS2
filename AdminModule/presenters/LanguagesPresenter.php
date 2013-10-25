@@ -260,7 +260,7 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 			1 => $this->translation['Yes']
 		);
 		
-		$grid->addColumnNumber('id', 'ID')->setSortable()->setFilterNumber();
+		$grid->addColumnText('id', 'ID')->setSortable()->setFilterNumber();
 		$grid->addColumnText('key', 'Key')->setSortable()->setFilterText();
 		$grid->addColumnText('translation', 'Value')->setSortable()->setCustomRender(function($item){
 			return '<div class="translation" contentEditable>' . $item->getTranslation() . '</div>';
