@@ -15,7 +15,7 @@
     ],
     "require": {
         "php": ">=5.4.0",
-		"o5/grido": "dev-master",
+		"o5/grido": "0.*",
 		"nella/doctrine": "@dev",
 		"nella/console": "@dev",
 		"nella/gedmo": "@dev",
