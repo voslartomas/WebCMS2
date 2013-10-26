@@ -12,7 +12,6 @@ while [ "$task" != "q" ]; do
 	if [ "$1" == "" ]; then
 
 		echo "Choose command:"
-		echo "0) Pre update"
 		echo "1) First install"
 		echo "2) Update"
 		echo "3) Load versions"
@@ -39,6 +38,9 @@ while [ "$task" != "q" ]; do
 		# sets rights for temp directory
 		chmod -R 777 ./www/upload ./www/thumbnails ./temp ./log ./app/proxies ./composer.lock ./libs/composer ./libs/autoload.php
 		chmod -R g+rwxs temp
+		
+		rm -f ./libs/nette/nette/Nette/Aplication/UI/Form.php
+		cp ./libs/webcms2/webcms2/install/Form.php ./libs/nette/nette/Nette/Aplication/UI/Form.php
 
 		# generate DB schema
 		php www/index.php --ansi orm:schema-tool:create
