@@ -32,6 +32,7 @@ class SettingsPresenter extends \AdminModule\BasePresenter{
 		
 		$settings[] = $this->settings->get('Seo keywords', \WebCMS\Settings::SECTION_BASIC, 'text');
 		$settings[] = $this->settings->get('Seo title', \WebCMS\Settings::SECTION_BASIC, 'text');
+		$settings[] = $this->settings->get('Seo title before', \WebCMS\Settings::SECTION_BASIC, 'checkbox');
 		$settings[] = $this->settings->get('Seo description', \WebCMS\Settings::SECTION_BASIC, 'text');
 		
 		return $this->createSettingsForm($settings);

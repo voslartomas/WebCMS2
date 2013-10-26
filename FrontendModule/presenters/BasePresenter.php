@@ -100,9 +100,15 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		
 		$temp = $this->actualPage->getMetaTitle();
 		if(!empty($temp)){
-			$this->template->seoTitle = $this->settings->get('Seo title', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue() . $this->actualPage->getMetaTitle();
+			$this->template->seoTitle = $this->actualPage->getMetaTitle();
 		}else{
-			$this->template->seoTitle = $this->settings->get('Seo title', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue() . $this->actualPage->getTitle();
+			$this->template->seoTitle = $this->actualPage->getTitle();
+		}
+		
+		if($this->settings->get('Seo title before', \WebCMS\Settings::SECTION_BASIC, 'checkbox')->getValue()){
+			$this->template->seoTitle = $this->settings->get('Seo title', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue() . $this->template->seoTitle;
+		}else{
+			$this->template->seoTitle = $this->template->seoTitle . $this->settings->get('Seo title', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue();
 		}
 	}
 	
