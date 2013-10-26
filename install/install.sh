@@ -39,8 +39,8 @@ while [ "$task" != "q" ]; do
 		chmod -R 777 ./www/upload ./www/thumbnails ./temp ./log ./app/proxies ./composer.lock ./libs/composer ./libs/autoload.php
 		chmod -R g+rwxs temp
 		
-		rm -f ./libs/nette/nette/Nette/Aplication/UI/Form.php
-		cp ./libs/webcms2/webcms2/install/Form.php ./libs/nette/nette/Nette/Aplication/UI/Form.php
+		rm -f ./libs/nette/nette/Nette/Application/UI/Form.php
+		cp ./libs/webcms2/webcms2/install/Form.php ./libs/nette/nette/Nette/Application/UI/Form.php
 
 		# generate DB schema
 		php www/index.php --ansi orm:schema-tool:create
