@@ -66,6 +66,9 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		// set up boxes
 		$this->setUpBoxes();
 		
+		// set default seo settings
+		$this->setDefaultSeo();
+		
 		$this->template->breadcrumb = $this->getBreadcrumbs();
 		$this->template->abbr = $this->abbr;
 		$this->template->settings = $this->settings;
@@ -77,6 +80,30 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		$this->template->user = $this->getUser();
 		$this->template->activePresenter = $this->getPresenter()->getName();
 		$this->template->languages = $this->em->getRepository('AdminModule\Language')->findAll();
+	}
+	
+	private function setDefaultSeo(){
+		
+		$temp = $this->actualPage->getMetaKeywords();
+		if(!empty($temp)){
+			$this->template->seoKeywords = $this->actualPage->getMetaKeywords();
+		}else{
+			$this->template->seoKeywords = $this->settings->get('Seo keywords', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue();
+		}
+		
+		$temp = $this->actualPage->getMetaDescription();
+		if(!empty($temp)){
+			$this->template->seoDescription = $this->actualPage->getMetaDescription();
+		}else{
+			$this->template->seoDescription = $this->settings->get('Seo description', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue();
+		}
+		
+		$temp = $this->actualPage->getMetaTitle();
+		if(!empty($temp)){
+			$this->template->seoTitle = $this->settings->get('Seo title', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue() . $this->actualPage->getMetaTitle();
+		}else{
+			$this->template->seoTitle = $this->settings->get('Seo title', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue() . $this->actualPage->getTitle();
+		}
 	}
 	
 	/* Startup method. */

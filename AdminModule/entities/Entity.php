@@ -36,7 +36,11 @@ abstract class Entity extends \Nette\Object{
 	 */
 	public function toArray($notEmptyValues = FALSE){
 		$props = $this->getReflection()->getProperties();
-		
+		if($this->getReflection()->getParentClass()){
+			$temp = $this->getReflection()->getParentClass()->getProperties();
+			$props = array_merge($props, $temp);
+		}
+
 		if(strpos($this->getReflection()->getName(), '__CG__') !== FALSE) $props = $this->getReflection()->getParentClass()->getProperties();
 
 		$array = array();

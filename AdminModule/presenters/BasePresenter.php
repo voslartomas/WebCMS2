@@ -357,6 +357,42 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		return $qb->select('l')->from("AdminModule\\Page", 'l')->getQuery()->getResult();
 	}
 	
+	/* SEO SETTINGS */
+	
+	public function renderSeo($idPage){
+		$this->reloadContent();
+		
+		$this->template->actualPage = $this->actualPage;
+		$this->template->idPage = $idPage;
+	}
+	
+	public function createComponentSeoForm(){
+		$form = $this->createForm();
+		
+		$form->addText('metaTitle', 'Seo title')->setAttribute('class', 'form-control');
+		$form->addText('metaKeywords', 'Seo keywords')->setAttribute('class', 'form-control');
+		$form->addText('metaDescription', 'Seo description')->setAttribute('class', 'form-control');
+		$form->addSubmit('send', 'Save')->setAttribute('class', 'btn btn-success');
+		$form->onSuccess[] = callback($this, 'seoFormSubmitted');
+
+		$form->setDefaults($this->actualPage->toArray());
+		
+		return $form;
+	}
+	
+	public function seoFormSubmitted($form){
+		$values = $form->getValues();
+		
+		$this->actualPage->setMetaTitle($values->metaTitle);
+		$this->actualPage->setMetaKeywords($values->metaKeywords);
+		$this->actualPage->setMetaDescription($values->metaDescription);
+		
+		$this->em->flush();
+		
+		$this->flashMessage($this->translation['Seo settings has been saved.'], 'success');
+		$this->redirect('this');
+	}
+	
 	/* BOXES SETTINGS */
 	
 	public function renderBoxes($idPage){
@@ -370,7 +406,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 			//$box['component'] = $id . '-' . $box['presenter'] . '-' . $box['function'];
 		}
 		
-                $this->template->actualPage = $this->actualPage;
+        $this->template->actualPage = $this->actualPage;
 		$this->template->boxes = $boxes;
 		$this->template->idPage = $idPage;
 	}
