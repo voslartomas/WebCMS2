@@ -31,11 +31,21 @@ class UpdatePresenter extends \AdminModule\BasePresenter{
 		
 		exec("cd ../;git pull --no-interaction;composer update --no-interaction --prefer-dist > $installLog 2> $installErrorLog");
 		
-		$this->flashMessage($this->getMessageFromFile('.' . $installLog), 'success');
+		$successMessage = $this->getMessageFromFile('.' . $installLog);
+		
+		if($this->user->isInRole('superadmin')){
+			$this->flashMessage($successMessage, 'success');
+		}
+		
+		if(strpos($successMessage, 'System has been updated.') !== FALSE){
+			$this->flashMessage($this->translation['System has been udpated.'], 'success');
+		}
 		
 		$errorMessage = $this->getMessageFromFile('.' . $installErrorLog);
-		if(!empty($errorMessage)){
+		if(!empty($errorMessage) && $this->user->isInRole('superadmin')){
 			$this->flashMessage($errorMessage, 'danger');
+		}elseif(!empty($errorMessage)){
+			$this->flashMessage($this->translation['Error while updating system. Please contact administrator.'], 'danger');
 		}
 		
 		if(!$this->isAjax())
