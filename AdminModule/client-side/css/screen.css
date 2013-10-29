@@ -9,6 +9,20 @@ h1 {
 	color: #3484D2;
 }
 
+.system-menu {
+	max-width: 100% !important;
+}
+
+.content {
+	max-width: 100% !important;
+	margin-left: 224px !important;
+}
+
+.footer {
+	max-width: 100% !important;
+	margin-left: 224px !important;
+}
+
 a[href^="error:"] {
 	background: red;
 	color: white;

@@ -299,6 +299,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 	}
 	
 	/**
+	 * TODO refactor, maybe it will be better in template
 	 * Get structure by node. In node is set to null whole tree is returned.
 	 * @param type $node
 	 * @param Repository $repo
@@ -351,7 +352,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 					
 					$moduleName = array_key_exists('moduleName', $node) ? $node['moduleName'] : 'Eshop';
 					$presenter = array_key_exists('presenter', $node) ? $node['presenter'] : 'Categories';
-					$path = $moduleName === 'Eshop' && !$system ? $path = $fromPage->getPath() . '/' . $node['path'] : $node['path'];
+					$path = $moduleName === 'Eshop' && !$system ? (is_object($fromPage) ? $fromPage->getPath() . '/' : '') . $node['path'] : $node['path'];
 							
 					$link = $context->link(':Frontend:' . $moduleName . ':' . $presenter . ':default', array('id' => $node['id'], 'path' => $path, 'abbr' => $context->abbr));
 
