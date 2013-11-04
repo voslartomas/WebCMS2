@@ -246,7 +246,6 @@ class SettingsPresenter extends \AdminModule\BasePresenter{
 		
 		$exists = $this->em->getRepository('AdminModule\Box')->findOneBy(array(
 			'pageTo' => $pageTo,
-			'pageFrom' => $pageFrom,
 			'box' => $box
 		));
 		
@@ -266,7 +265,7 @@ class SettingsPresenter extends \AdminModule\BasePresenter{
 		if(!$boxAssign->getId()){
 			$this->em->persist($boxAssign);
 		}
-		
+		$this->em->persist($boxAssign);
 		$this->em->flush();
 		
 		$this->flashMessage($this->translation['Box settings changed.'], 'success');
