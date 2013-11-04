@@ -72,10 +72,15 @@ class PagesPresenter extends \AdminModule\BasePresenter{
 		
 		$repo = $this->em->getRepository('AdminModule\Page');
 		
-		if($values->parent)
+		if($values->parent){
 			$parent = $this->em->find("AdminModule\Page", $values->parent);
-		else
+			
+			// copy boxes
+			$tmpBoxes = $parent->getBoxes();
+		}
+		else{
 			$parent = NULL;
+		}
 		
 		if($values->module){
 			$parse = explode('-', $values->module);
@@ -92,14 +97,32 @@ class PagesPresenter extends \AdminModule\BasePresenter{
 		$this->page->setDefault($values->default);
 		$this->page->setParent($parent);
 		$this->page->setLanguage($this->state->language);
-		$this->page->setModule($module);
-		if($module) 
-			$this->page->setModuleName($module->getName());
+		$this->page->setModule($module);	
 		$this->page->setPresenter($presenter);
 		$this->page->setPath('tmp value');
 		$this->page->setClass($values->class);
 		
-		$this->em->persist($this->page); // FIXME only if is new we have to persist entity, otherway it can be just flushed
+		if($module){
+			$this->page->setModuleName($module->getName());
+		}
+		
+		if(!$this->page->getId()){
+			$this->em->persist($this->page); 
+			
+			// create boxes from parent
+			foreach($tmpBoxes as $box){
+				$tmp = new Box();
+				$tmp->setBox($box->getBox());
+				$tmp->setFunction($box->getFunction());
+				$tmp->setModuleName($box->getModuleName());
+				$tmp->setPresenter($box->getPresenter());
+				$tmp->setPageFrom($box->getPageFrom());
+				$tmp->setPageTo($this->page);
+				
+				$this->em->persist($tmp);
+			}
+		}
+		
 		$this->em->flush();
 		
 		// creates path
