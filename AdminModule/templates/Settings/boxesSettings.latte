@@ -25,7 +25,7 @@
 						{var $selected = 0}
 					{/if}
 					<td>
-						<select name="{$page->getId()}-{$name}" class="jq_box">
+						<select name="{$page->getId()}-{$name}" class="jq_box form-control">
 							{foreach $boxesAssoc as $key => $ba}
 								<option value="{$key}" {if $key === $selected}selected{/if}>{$ba}</option>
 							{/foreach}
