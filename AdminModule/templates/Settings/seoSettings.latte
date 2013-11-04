@@ -1,0 +1,43 @@
+{block content}
+
+<h1>{_'Boxes settings'}</h1>
+
+{include 'tabs.latte' active => 'seo'}
+
+
+<table class="table table-bordered table-hover">
+	<tr>
+		<th>{_'Page name'}</th>
+		<th>{_'Title'}</th>
+		<th>{_'Keywords'}</th>
+		<th>{_'Description'}</th>
+	</tr>
+	{foreach $pages as $page}
+		{if $page->getParent() != NULL}
+			<tr>
+				<td>{$page->getTitle()}</td>
+				<td>
+					<input type="text" class="form-control jq_meta" data-type="title" name="{$page->getId()}" value="{$page->getMetaTitle()}" />
+				</td>
+				<td>
+					<input type="text" class="form-control jq_meta" data-type="keywords" name="{$page->getId()}" value="{$page->getMetaKeywords()}" />
+				</td>
+				<td>
+					<input type="text" class="form-control jq_meta" data-type="description" name="{$page->getId()}" value="{$page->getMetaDescription()}" />
+				</td>
+			</tr>
+		{/if}
+	{/foreach}
+</table>
+	
+<script>
+	$('.jq_meta').live('blur', function(){
+		var id = $(this).attr('name');
+		var value = $(this).val();
+		var type = $(this).data('type');
+
+		$.nette.ajax({ url : {link updateMeta}, data : { idPage : id, value : value, type : type} });
+	});
+</script>
+		
+{/block}

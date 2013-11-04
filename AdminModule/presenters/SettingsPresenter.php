@@ -270,4 +270,33 @@ class SettingsPresenter extends \AdminModule\BasePresenter{
 		
 		$this->flashMessage($this->translation['Box settings changed.'], 'success');
 	}
+	
+	/* SEO SETTINGS - BATCH*/
+	public function renderSeoSettings(){
+		$this->reloadContent();
+				
+		// fetch all pages
+		$pages = $this->em->getRepository('AdminModule\Page')->findBy(array(
+			'language' => $this->state->language
+		));
+
+		$this->template->pages = $pages;
+	}
+	
+	public function actionUpdateMeta($idPage, $type, $value){
+		$page = $this->em->getRepository('AdminModule\Page')->find($idPage);
+		
+		if($type === 'title'){
+			$page->setMetaTitle($value);
+		}elseif($type === 'keywords'){
+			$page->setMetaKeywords($value);
+		}elseif($type === 'description'){
+			$page->setMetaDescription($value);
+		}
+		
+		$this->em->flush();
+		
+		$this->flashMessage($this->translation['Seo has been updated.'], 'success');
+		$this->invalidateControl('flashMessages');
+	}
 }
