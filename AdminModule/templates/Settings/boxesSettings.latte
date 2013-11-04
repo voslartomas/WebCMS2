@@ -1,0 +1,50 @@
+{block content}
+
+<h1>{_'Boxes settings'}</h1>
+
+{include 'tabs.latte' active => 'boxes'}
+
+<div class="well">
+	<table class="table table-bordered table-hover">
+		<tr>
+			<th>{_'Page name'}</th>
+			{foreach $boxes as $key => $box}
+				<th>
+					{$key}
+				</th>
+			{/foreach}
+		</tr>
+		{foreach $pages as $page}
+			{if $page->getParent() != NULL}
+				<tr>
+					<td>{$page->getTitle()}</td>
+					{foreach $boxes as $name => $box}
+						{if $temp = $page->getBox($name)}
+							{var $selected = $temp->getPageFrom()->getId()-$temp->getModuleName()-$temp->getPresenter()-$temp->getFunction()}
+						{else}
+							{var $selected = 0}
+						{/if}
+						<td>
+							<select name="{$page->getId()}-{$name}" class="jq_box">
+								{foreach $boxesAssoc as $key => $ba}
+									<option value="{$key}" {if $key == $selected}selected{/if}>{$ba}</option>
+								{/foreach}
+							</select>
+						</td>
+					{/foreach}
+				</tr>
+			{/if}
+		{/foreach}
+	</table>
+</div>
+
+	<script>
+		$('.jq_box').live('change', function(){
+			var name = $(this).attr('name');
+			var value = $(this).val();
+			
+			$.nette.ajax({ url : {link updateBox!}, data : { name : name, value : value} });
+		});
+	</script>
+		
+{/block}

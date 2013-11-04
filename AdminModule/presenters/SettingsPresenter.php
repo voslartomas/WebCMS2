@@ -197,4 +197,78 @@ class SettingsPresenter extends \AdminModule\BasePresenter{
 	public function renderEmails(){
 		$this->reloadContent();
 	}
+	
+	/* BOXES SETTINGS - BATCH */
+	
+	public function renderBoxesSettings(){
+		$this->reloadContent();
+		
+		// fetch all boxes
+		$parameters = $this->getContext()->container->getParameters();
+		
+		// fetch all pages
+		$pages = $this->em->getRepository('AdminModule\Page')->findBy(array(
+			'language' => $this->state->language
+		));
+		
+		$boxesAssoc = array();
+		foreach($pages as $page){
+			if($page->getParent() != NULL){
+				$module = $this->createObject($page->getModuleName());
+
+				foreach($module->getBoxes() as $box){
+					$boxesAssoc[$page->getId() . '-' . $box['module'] . '-' . $box['presenter'] . '-' . $box['function']] = $page->getTitle() . ' - ' . $this->translation[$box['name']];
+				}
+			}
+		}
+		
+		$boxesAssoc = array(
+			0 => $this->translation['Box is not linked.']
+		) + $boxesAssoc;
+		
+		$this->template->boxes = $parameters['boxes'];
+		$this->template->pages = $pages;
+		$this->template->boxesAssoc = $boxesAssoc;
+	}
+	
+	public function handleUpdateBox($name, $value){
+		$this->reloadContent();
+		
+		$parsed = explode('-', $name);
+		$pageTo = $this->em->getRepository('AdminModule\Page')->find($parsed[0]);
+		$box = $parsed[1];
+		
+		$parsed = explode('-', $value);
+		$pageFrom = $this->em->getRepository('AdminModule\Page')->find($parsed[0]);
+		$moduleName = $parsed[1];
+		$presenter = $parsed[2];
+		$function = $parsed[3];
+		
+		$exists = $this->em->getRepository('AdminModule\Box')->findOneBy(array(
+			'pageTo' => $pageTo,
+			'pageFrom' => $pageFrom,
+			'box' => $box
+		));
+		
+		if(is_object($exists)){
+			$boxAssign = $exists;
+		}else{
+			$boxAssign = new Box();
+		}
+		
+		$boxAssign->setBox($box);
+		$boxAssign->setFunction($function);
+		$boxAssign->setModuleName($moduleName);
+		$boxAssign->setPresenter($presenter);
+		$boxAssign->setPageFrom($pageFrom);
+		$boxAssign->setPageTo($pageTo);
+		
+		if(!$boxAssign->getId()){
+			$this->em->persist($boxAssign);
+		}
+		
+		$this->em->flush();
+		
+		$this->flashMessage($this->translation['Box settings changed.'], 'success');
+	}
 }

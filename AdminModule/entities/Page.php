@@ -120,6 +120,11 @@ class Page extends Seo{
 	 */
 	private $class;
 	
+	/**
+     * @orm\OneToMany(targetEntity="Box", mappedBy="pageTo")
+     */
+	private $boxes;
+	
     public function __construct()    {
         $this->children = new ArrayCollection();
     }
@@ -266,4 +271,22 @@ class Page extends Seo{
     public function __toString(){
         return $this->getTitle();
     }	
+	
+	public function getBoxes() {
+		return $this->boxes;
+	}
+
+	public function setBoxes($boxes) {
+		$this->boxes = $boxes;
+	}
+	
+	public function getBox($name){
+		foreach($this->boxes as $box){
+			if($box->getBox() === $name){
+				return $box;
+			}
+		}
+		
+		return NULL;
+	}
 }
