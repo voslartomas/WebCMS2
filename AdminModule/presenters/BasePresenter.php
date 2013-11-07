@@ -449,7 +449,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		
 		$defaults = array();
 		foreach($boxes as $box){
-			$defaults[$box->getBox()] = $box->getPageFrom()->getId() . '-' . $box->getModuleName() . '-' . $box->getPresenter() . '-' . $box->getFunction();
+			if(is_object($box->getPageFrom())) $defaults[$box->getBox()] = $box->getPageFrom()->getId() . '-' . $box->getModuleName() . '-' . $box->getPresenter() . '-' . $box->getFunction();
 		}
 		
 		$form->setDefaults($defaults);
