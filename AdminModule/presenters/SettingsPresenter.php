@@ -304,14 +304,19 @@ class SettingsPresenter extends \AdminModule\BasePresenter{
 	public function createComponentProjectSettingsForm(){
 		
 		$parameters = $this->getContext()->container->getParameters();
-		$projectSettings = $parameters['settings'];
-		
 		$settings = array();
 		
-		foreach($projectSettings as $key => $value){
-			$settings[] = $this->settings->get($key, \WebCMS\Settings::SECTION_BASIC, 'checkbox');
+		if(array_key_exists('settings', $parameters)){
+			
+			$projectSettings = $parameters['settings'];
+
+			foreach($projectSettings as $key => $value){
+				$settings[] = $this->settings->get($key, \WebCMS\Settings::SECTION_BASIC, 'checkbox');
+			}
+		}else{
+			$this->flashMessage($this->translation['There are no settings in config file.'], 'info');
 		}
-		
+			
 		return $this->createSettingsForm($settings);
 	}
 	

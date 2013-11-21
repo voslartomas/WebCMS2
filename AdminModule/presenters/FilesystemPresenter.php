@@ -86,17 +86,22 @@ class FilesystemPresenter extends \AdminModule\BasePresenter{
 			
 			// delete all thumbnails if this file is image
 			try {
-				$image = \Nette\Image::fromFile($pathToRemove);
 				
-				$thumbs = $this->em->getRepository('AdminModule\Thumbnail')->findAll();
-				foreach($thumbs as $t){
-					$file = pathinfo($pathToRemove);
-					$filename = $file['filename'] . '.' . $file['extension'];
-					
-					$toRemove = str_replace('upload', 'thumbnails', $pathToRemove);
-					$toRemove = str_replace($filename, $t->getKey() . $filename, $toRemove);
-							
-					unlink($toRemove);
+				if(getimagesize($pathToRemove)){
+				
+					$image = \Nette\Image::fromFile($pathToRemove);
+
+					$thumbs = $this->em->getRepository('AdminModule\Thumbnail')->findAll();
+					foreach($thumbs as $t){
+						$file = pathinfo($pathToRemove);
+						$filename = $file['filename'] . '.' . $file['extension'];
+
+						$toRemove = str_replace('upload', 'thumbnails', $pathToRemove);
+						$toRemove = str_replace($filename, $t->getKey() . $filename, $toRemove);
+
+						unlink($toRemove);
+					}
+				
 				}
 				
 			} catch (UnknownImageFileException $exc) {

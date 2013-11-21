@@ -72,4 +72,22 @@ class UpdatePresenter extends \AdminModule\BasePresenter{
 		$this->flashMessage('Mezipaměť byla smazána.', 'success');
 		$this->redirect("Update:");
 	}
+	
+	public function handleBackupDatabase(){
+		
+		$par = $this->context->getParameters();
+		
+		if(!file_exists('./upload/backups')){
+			mkdir('./upload/backups');
+		}
+		
+		$user = $par['database']['user'];
+		$password = $par['database']['password'];
+		$password = $par['database']['password'];
+		$database = $par['database']['dbname'];
+		
+		exec("mysqldump -u $user -p $password $database > ./upload/backups/db-backup-" . time() . ".sql");
+		
+		$this->flashMessage($this->translation['Backup has been create. You can download this backup in filesystem - backup directory.'], 'success');
+	}
 }
