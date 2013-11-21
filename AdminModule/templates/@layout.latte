@@ -111,14 +111,14 @@
 			</div>
 		  </div>
 	</div>
-			
-	<div class="container flash-messages">
-	  {snippet flashMessages}
-		  <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type} fade in">{$flash->message}<a href="#" class="close" data-dismiss="alert">&times;</a></div>
-	  {/snippet}
-	</div>
 	 
 	<div class="container content">
+		
+		<div class="container flash-messages">
+			{snippet flashMessages}
+				<div n:foreach="$flashes as $flash" class="alert alert-{$flash->type} fade in">{$flash->message}<a href="#" class="close" data-dismiss="alert">&times;</a></div>
+			{/snippet}
+		</div>
 		
 		{snippet content}
 			{block #content}Výchozí obsah{/block}

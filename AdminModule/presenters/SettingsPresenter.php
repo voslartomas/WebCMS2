@@ -299,4 +299,23 @@ class SettingsPresenter extends \AdminModule\BasePresenter{
 		$this->flashMessage($this->translation['Seo has been updated.'], 'success');
 		$this->invalidateControl('flashMessages');
 	}
+	
+	/* PROJECT SPECIFIC SETTINGS */
+	public function createComponentProjectSettingsForm(){
+		
+		$parameters = $this->getContext()->container->getParameters();
+		$projectSettings = $parameters['settings'];
+		
+		$settings = array();
+		
+		foreach($projectSettings as $key => $value){
+			$settings[] = $this->settings->get($key, \WebCMS\Settings::SECTION_BASIC, 'checkbox');
+		}
+		
+		return $this->createSettingsForm($settings);
+	}
+	
+	public function renderProject(){
+		$this->reloadContent();
+	}
 }
