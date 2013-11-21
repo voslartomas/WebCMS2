@@ -163,20 +163,20 @@
 <table class="table table-bordered table-hover">
 	<thead>
 		<tr>
-			{*<th>{_'Date'}</th>*}
 			<th>{_'Name'}</th>
+			<th>{_'Date'}</th>
 			<th>{_'Size'}</th>
 			<th>{_'Actions'}</th>
 		</tr>
 	</thead>
 	{foreach $directories as $path => $file}
 		<tr>
-			{*<td class="time">{$file->getATime()|date:'%d.%m.%Y %H:%M:%S'}</td>*}
 			<td class="name">
 				<a class="ajax dir" data-path="{$file->getRealpath()}" n:href="default path => $file->getRealpath()">
 					{$file->getBasename()}
 				</a>
 			</td>
+			<td class="time">{$file->getATime()|date:'%d.%m.%Y %H:%M:%S'}</td>
 			<td class="size">{$file->getSize()|bytes}</td>
 			<td class="action">
 				<a n:href="deleteFile! pathToRemove => $file->getPathname()" class="btn btn-danger">{_'Delete'}</a>
@@ -185,13 +185,13 @@
 	{/foreach}
 	{foreach $files as $path => $file}
 		<tr class="file">
-			{*<td class="time">{$file->getATime()|date:'%d.%m.%Y %H:%M:%S'}</td>*}
 			<td class="name">
 				{if $file->getExtension() == 'png' || $file->getExtension() == 'jpg'}
 					<img style="width: 80px;" src="{$basePath}{$file->getPathname()|thumbnail:'system'}" />
 				{/if}
 				{$file->getBasename()}
 			</td>
+			<td class="time">{$file->getATime()|date:'%d.%m.%Y %H:%M:%S'}</td>
 			<td class="size">{$file->getSize()|bytes}</td>
 			<td class="action">
 				<a n:href="downloadFile path => $file->getPathname()" class="btn btn-primary">{_'Download'}</a>

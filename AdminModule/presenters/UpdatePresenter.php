@@ -86,7 +86,7 @@ class UpdatePresenter extends \AdminModule\BasePresenter{
 		$password = $par['database']['password'];
 		$database = $par['database']['dbname'];
 		
-		exec("mysqldump -u $user -p $password $database > ./upload/backups/db-backup-" . time() . ".sql");
+		exec("mysqldump -u $user -p$password $database > ./upload/backups/db-backup-" . time() . ".sql");
 		
 		$this->flashMessage($this->translation['Backup has been create. You can download this backup in filesystem - backup directory.'], 'success');
 	}
