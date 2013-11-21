@@ -72,6 +72,7 @@ class PagesPresenter extends \AdminModule\BasePresenter{
 		
 		$repo = $this->em->getRepository('AdminModule\Page');
 		
+		$tmpBoxes = array();
 		if($values->parent){
 			$parent = $this->em->find("AdminModule\Page", $values->parent);
 			
