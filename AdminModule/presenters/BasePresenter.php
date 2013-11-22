@@ -105,7 +105,11 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		\WebCMS\PriceFormatter::setLocale($this->state->language->getLocale());
 		
 		// translations
-		$translation = new \WebCMS\Translation($this->em, $language , 1);
+		$default = $this->em->getRepository('AdminModule\Language')->findOneBy(array(
+				'defaultBackend' => 1
+		));
+		
+		$translation = new \WebCMS\Translation($this->em, $default , 1);
 		$this->translation = $translation->getTranslations();
 		$this->translator = new \WebCMS\Translator($this->translation);
 		
