@@ -133,7 +133,7 @@ body:after {
 }
 /* line 93, ../sass/lightbox.sass */
 .lb-next:hover {
-  background: url(../img/next.png) right 48% no-repeat;
+  background: url(./../img/next.png) right 48% no-repeat;
 }
 
 /* line 96, ../sass/lightbox.sass */
