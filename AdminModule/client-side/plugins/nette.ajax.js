@@ -376,10 +376,12 @@ $.nette.ext('forms', {
 // default snippet handler
 $.nette.ext('snippets', {
 	success: function (payload) {
+		
 		var snippets = [];
 		var elements = [];
 		if (payload.snippets) {
 			for (var i in payload.snippets) {
+				
 				var $el = this.getElement(i);
 				if ($el.get(0)) {
 					elements.push($el.get(0));
