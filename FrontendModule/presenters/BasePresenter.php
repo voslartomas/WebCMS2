@@ -46,10 +46,12 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 	/* Method is executed before render. */
 	protected function beforeRender(){
 		
-		if($this->actualPage->getDefault()) 
-			$this->setLayout("layoutDefault");
-		else
-			$this->setLayout("layout");
+		if(is_object($this->actualPage)){
+			if($this->actualPage->getDefault()) 
+				$this->setLayout("layoutDefault");
+			else
+				$this->setLayout("layout");
+		}
 		
 		if($this->isAjax()){
 			$this->invalidateControl('flashMessages');
@@ -58,23 +60,28 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		$this->template->registerHelperLoader('\WebCMS\SystemHelper::loader');
 		
 		// get top page for sidebar menu
-		$top = $this->actualPage;
-		while($top->getParent() != NULL && $top->getLevel() > 1){
-			$top = $top->getParent();
+		if(is_object($this->actualPage)){
+			$top = $this->actualPage;
+			while($top->getParent() != NULL && $top->getLevel() > 1){
+				$top = $top->getParent();
+			}
 		}
 		
 		// set up boxes
 		$this->setUpBoxes();
 		
 		// set default seo settings
-		$this->setDefaultSeo();
+		if(is_object($this->actualPage)){
+			$this->setDefaultSeo();
 		
-		$this->template->breadcrumb = $this->getBreadcrumbs();
+			$this->template->breadcrumb = $this->getBreadcrumbs();
+			$this->template->sidebar = $this->getStructure($this, $top, $this->em->getRepository('AdminModule\Page'), FALSE, $this->settings->get('Sidebar class', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue(), FALSE, FALSE, NULL, $this->settings->get('Sidebar class', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue());
+		}
+		
 		$this->template->abbr = $this->abbr;
 		$this->template->settings = $this->settings;
 		// !params load from settings
 		$this->template->structures = $this->getStructures(!$this->settings->get('Navbar dropdown', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue(), $this->settings->get('Navbar class', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue(), $this->settings->get('Navbar dropdown', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue());
-		$this->template->sidebar = $this->getStructure($this, $top, $this->em->getRepository('AdminModule\Page'), FALSE, $this->settings->get('Sidebar class', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue(), FALSE, FALSE, NULL, $this->settings->get('Sidebar class', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue());
 		$this->template->setTranslator($this->translator);
 		$this->template->actualPage = $this->actualPage;
 		$this->template->user = $this->getUser();
