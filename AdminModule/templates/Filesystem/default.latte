@@ -189,7 +189,12 @@
 				{if $file->getExtension() == 'png' || $file->getExtension() == 'jpg'}
 					<img style="width: 80px;" src="{$basePath}{$file->getPathname()|thumbnail:'system'}" />
 				{/if}
-				{$file->getBasename()}
+				{$file->getBasename()} <br />
+				
+				{if strpos($file->getPath(), 'exports') !== FALSE}
+					{$baseUri}/upload/exports/{$file->getBasename()}
+				{/if}
+				
 			</td>
 			<td class="time">{$file->getATime()|date:'%d.%m.%Y %H:%M:%S'}</td>
 			<td class="size">{$file->getSize()|bytes}</td>
