@@ -19,7 +19,18 @@ class UpdatePresenter extends \AdminModule\BasePresenter{
 	}
 	
 	public function renderDefault(){
-		$this->template->packages = \WebCMS\SystemHelper::getPackages();
+		
+		$packages = \WebCMS\SystemHelper::getPackages();
+		
+		foreach($packages as &$package){
+			if($package['module']){
+				$module = $this->createObject($package['package']);
+				
+				$package['registered'] = $this->isRegistered($module->getName());
+			}
+		}
+		
+		$this->template->packages = $packages;
 	}
 	
 	public function handleUpdateSystem(){
@@ -83,11 +94,74 @@ class UpdatePresenter extends \AdminModule\BasePresenter{
 		
 		$user = $par['database']['user'];
 		$password = $par['database']['password'];
-		$password = $par['database']['password'];
 		$database = $par['database']['dbname'];
 		
 		exec("mysqldump -u $user -p$password $database > ./upload/backups/db-backup-" . time() . ".sql");
 		
 		$this->flashMessage($this->translation['Backup has been create. You can download this backup in filesystem - backup directory.'], 'success');
+	}
+	
+	// REFACTOR
+	public function actionRegister($name){
+		$module = $this->createObject($name);
+
+		if(!$this->isRegistered($name)){
+		
+			$exists = $this->em->getRepository('AdminModule\Module')->findOneBy(array(
+				'name' => $module->getName()
+			));
+			
+			if(is_object($exists)){
+				$exists->setActive(TRUE);
+			}else{
+				$mod = new Module;
+				$mod->setName($module->getName());
+				$mod->setPresenters($module->getPresenters());
+				$mod->setActive(TRUE);
+
+				$this->em->persist($mod);
+			}
+			
+			$this->em->flush();
+			$this->copyTemplates($name);
+			$this->flashMessage('Module has been registered.', 'success');
+		}else{
+			
+			$this->flashMessage('Module is already registered.', 'danger');
+		}
+		
+		if(!$this->isAjax())
+			$this->redirect('default');
+	}
+	
+	private function copyTemplates($name){
+		if(!file_exists('../app/templates/' . $name)) mkdir('../app/templates/' . $name);
+		exec('cp -r ../libs/webcms2/' . $name . '/Frontend/templatesDefault/* ../app/templates/' . $name);
+	}
+	
+	public function actionUnregister($name){
+		$module = $this->createObject($name);
+		$module = $this->em->getRepository('AdminModule\Module')->findOneBy(array(
+			'name' => $module->getName()
+		));
+		
+		$module->setActive(FALSE);
+		$this->em->flush();
+		
+		$this->flashMessage('Module has been unregistered from system.', 'success');
+		if(!$this->isAjax())
+			$this->redirect('default');
+	}
+	
+	private function isRegistered($name){
+		$exists = $this->em->getRepository('AdminModule\Module')->findOneBy(array(
+			'name' => $name
+		));
+		
+		if(is_object($exists) && $exists->getActive()){
+			return TRUE;
+		}else{
+			return FALSE;
+		}
 	}
 }

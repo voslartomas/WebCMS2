@@ -36,7 +36,7 @@ while [ "$task" != "q" ]; do
 		mkdir ./temp/sessions
 		
 		# sets rights for temp directory
-		chmod -R 777 ./www/upload ./www/thumbnails ./temp ./log ./app/proxies ./composer.lock ./libs/composer ./libs
+		chmod -R 777 ./www/upload ./www/thumbnails ./temp ./log ./app/proxies ./app/templates ./composer.lock ./libs/composer ./libs
 		chmod -R g+rwxs temp
 		
 		rm -f ./libs/nette/nette/Nette/Application/UI/Form.php

@@ -55,11 +55,6 @@
 							<a class="ajax" n:href=":Admin:Pages:">{_'Pages'}</a>
 						</li>
 					{/if}
-					{if $template->checkPermissions($user, 'admin:Modules')}
-					  <li {if $activePresenter == "Admin:Modules"}class="active"{/if}>
-						  <a class="ajax" n:href=":Admin:Modules:">{_'Modules'}</a>
-					  </li>
-					{/if}
 					{if $template->checkPermissions($user, 'admin:Users')}
 					  <li {if $activePresenter == "Admin:Users"}class="active"{/if}>
 						  <a class="ajax" n:href=":Admin:Users:">{_'Users'}</a>
