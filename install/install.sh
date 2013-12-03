@@ -42,6 +42,10 @@ while [ "$task" != "q" ]; do
 		rm -f ./libs/nette/nette/Nette/Application/UI/Form.php
 		cp ./libs/webcms2/webcms2/install/Form.php ./libs/nette/nette/Nette/Application/UI/Form.php
 
+		# activate basic module
+		mkdir ./app/templates/page-module
+		cp -r ./libs/webcms2/page-module/Frontend/templatesDefault/* ./app/templates/page-module/
+
 		# generate DB schema
 		php www/index.php --ansi orm:schema-tool:create
 
