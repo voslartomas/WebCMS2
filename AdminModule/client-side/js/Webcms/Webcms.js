@@ -166,7 +166,8 @@ Filesystem.prototype = {
 				// 
 				$('.jq_selected:checked').each(function(){
 					var data = $(this).data();
-					$(options.container).append('<div class="col-md-3 jq_fileBox"><div class="img-thumbnail"><img src="' + data.thumbnail + '" /><input type="hidden" name="files[]" value="' + data.path + '" /><input class="form-control" type="text" name="fileNames[]" /><span class="btn btn-default jq_fileDelete">&times</span></div></div>');
+					var id = parseInt($('input:radio:last').val()) + 1;
+					$(options.container).append('<div class="col-md-3 jq_fileBox"><div class="img-thumbnail"><img src="' + data.thumbnail + '" /><input type="hidden" name="files[]" value="' + data.path + '" /><input class="form-control" type="text" name="fileNames[]" /><input class="form-control" type="radio" name="fileDefault[]" value="'+id+'" /><span class="btn btn-default jq_fileDelete">&times</span></div></div>');
 					$(this).attr('checked', false);
 				});
 			});
