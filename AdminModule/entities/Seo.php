@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping as orm;
 abstract class Seo extends Doctrine\Entity{
 	
 	/**
-	 * @orm\Column(type="boolean")
+	 * @orm\Column(type="boolean", nullable=true)
 	 */
 	private $ownSeo;
 	
