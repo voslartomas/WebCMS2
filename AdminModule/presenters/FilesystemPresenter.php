@@ -48,6 +48,7 @@ class FilesystemPresenter extends \AdminModule\BasePresenter{
 		$this->template->backLink = strpos($this->createBackLink($this->path), self::DESTINATION_BASE) === false ? realpath(self::DESTINATION_BASE) : $this->createBackLink($this->path);
 		$this->template->files = $files;
 		$this->template->directories = $directories;
+		$this->template->multiple = $multiple;
 	}
 	
 	private function createBackLink($path){

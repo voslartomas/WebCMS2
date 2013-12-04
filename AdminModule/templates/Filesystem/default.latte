@@ -211,13 +211,13 @@
 
 {block modalContent}
 
-	<a class="btn btn-primary ajax" n:href="default path => $backLink, dialog => true">{_'Back'}</a>
+	<a class="btn btn-primary ajax" n:href="default path => $backLink, dialog => true, multiple => $multiple">{_'Back'}</a>
 
 	{foreach $directories as $path => $file}
 		<div class="directory">
 			<span class="time">{$file->getATime()|date:'%d.%m.%Y %H:%M:%S'}</span>
 			<span class="name">
-				<a class="ajax" n:href="default path => $file->getRealpath(), dialog => true">
+				<a class="ajax" n:href="default path => $file->getRealpath(), dialog => true, multiple => $multiple">
 					{$file->getBasename()}
 				</a>
 			</span>
@@ -228,7 +228,13 @@
 	{/foreach}
 	{foreach $files as $path => $file}
 		<div class="file ">
-			<span><input id="{$file->getPathname()}" type="checkbox" class="checkbox-inline jq_selected" name="files" value="{$file->getPathname()}" data-path="{$path|relative}" data-thumbnail="{$basePath}{$path|thumbnail:'system'}" /></span>
+			<span>
+				{if $multiple}
+						<input id="{$file->getPathname()}" type="checkbox" class="checkbox-inline jq_selected" name="files" value="{$file->getPathname()}" data-path="{$path|relative}" data-thumbnail="{$basePath}{$path|thumbnail:'system'}" />
+					{else}
+						<input id="{$file->getPathname()}" type="radio" class="checkbox-inline jq_selected" name="files" value="{$file->getPathname()}" data-path="{$path|relative}" data-thumbnail="{$basePath}{$path|thumbnail:'system'}" />
+					{/if}
+			</span>
 			<label for="{$file->getPathname()}">
 				{$file->getBasename()}
 			</label>
