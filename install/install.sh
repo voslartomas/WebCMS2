@@ -28,17 +28,18 @@ while [ "$task" != "q" ]; do
 	
 	if [ "$task" == "1" ]; then
 		
-		# creates directories
+		# creates dirs
 		mkdir ./www/upload
 		mkdir ./www/thumbnails
 		mkdir ./log
 		mkdir ./temp
 		mkdir ./temp/sessions
 		
-		# sets rights for temp directory
+		# sets permissions for dirs
 		chmod -R 777 ./www/upload ./www/thumbnails ./temp ./log ./app/proxies ./app/templates ./composer.lock ./libs/composer ./libs
 		chmod -R g+rwxs temp
 		
+		# bugfix for Nette
 		rm -f ./libs/nette/nette/Nette/Application/UI/Form.php
 		cp ./libs/webcms2/webcms2/install/Form.php ./libs/nette/nette/Nette/Application/UI/Form.php
 
