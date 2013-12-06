@@ -373,6 +373,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 	public function createComponentSeoForm(){
 		$form = $this->createForm();
 		
+		$form->addText('slug', 'Seo url')->setAttribute('class', 'form-control');
 		$form->addText('metaTitle', 'Seo title')->setAttribute('class', 'form-control');
 		$form->addText('metaKeywords', 'Seo keywords')->setAttribute('class', 'form-control');
 		$form->addText('metaDescription', 'Seo description')->setAttribute('class', 'form-control');
@@ -387,9 +388,22 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 	public function seoFormSubmitted($form){
 		$values = $form->getValues();
 		
+		if(empty($values->slug)){
+			$this->actualPage->setSlug(NULL);
+		}else{
+			$this->actualPage->setSlug($values->slug);
+		}
 		$this->actualPage->setMetaTitle($values->metaTitle);
 		$this->actualPage->setMetaKeywords($values->metaKeywords);
 		$this->actualPage->setMetaDescription($values->metaDescription);
+		
+		$path = $this->em->getRepository('AdminModule\Page')->getPath($this->actualPage);
+		$final = array();
+		foreach($path as $p){
+			if($p->getParent() != NULL) $final[] = $p->getSlug();
+		}
+
+		$this->actualPage->setPath(implode('/', $final));
 		
 		$this->em->flush();
 		

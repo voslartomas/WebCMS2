@@ -292,6 +292,16 @@ class SettingsPresenter extends \AdminModule\BasePresenter{
 			$page->setMetaKeywords($value);
 		}elseif($type === 'description'){
 			$page->setMetaDescription($value);
+		}elseif($type === 'slug'){
+			$page->setSlug($value);
+			
+			$path = $this->em->getRepository('AdminModule\Page')->getPath($page);
+			$final = array();
+			foreach($path as $p){
+				if($p->getParent() != NULL) $final[] = $p->getSlug();
+			}
+		
+			$page->setPath(implode('/', $final));
 		}
 		
 		$this->em->flush();

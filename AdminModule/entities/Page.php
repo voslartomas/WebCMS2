@@ -289,4 +289,8 @@ class Page extends Seo{
 		
 		return NULL;
 	}
+	
+	public function setSlug($slug) {
+		$this->slug = $slug;
+	}
 }
