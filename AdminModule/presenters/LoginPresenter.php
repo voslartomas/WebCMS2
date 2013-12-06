@@ -23,11 +23,11 @@ class LoginPresenter extends BasePresenter{
 		
 		$form->addText('username', 'Username')
 			->setRequired('Please provide a username.')
-			->setAttribute('placeholder', 'Username');
+			->setAttribute('placeholder', $this->translation['Username']);
 
 		$form->addPassword('password', 'Password')
 			->setRequired('Please provide a password.')
-			->setAttribute('placeholder', 'Password');
+			->setAttribute('placeholder', $this->translation['Password']);
 
 		$form->addCheckbox('remember', 'Permanent login?');
 
