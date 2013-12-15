@@ -188,8 +188,8 @@ class SystemHelper {
 		return $path;
 	}
 	
-	public static function price($price){
-		return PriceFormatter::format($price);
+	public static function price($price, $string = "%2n"){
+		return PriceFormatter::format($price, $string);
 	}
 	
 	/**

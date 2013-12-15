@@ -14,12 +14,10 @@ class PriceFormatter{
 		self::$locale = $locale;
 	}
 	
-	public static function format($price){
+	public static function format($price, $string = "%2n"){
 		
 		setlocale(LC_MONETARY, self::$locale);
-		
-		$string = "%2n";
-		
+
 		if(function_exists("money_format"))
 			return money_format($string, $price);
 		else
