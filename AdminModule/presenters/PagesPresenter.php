@@ -48,11 +48,12 @@ class PagesPresenter extends \AdminModule\BasePresenter{
 		
 		$form = $this->createForm();
 		$form->addText('title', 'Name')->setAttribute('class', 'form-control');
+		$form->addText('redirect', 'Redirect')->setAttribute('class', 'form-control');
+		$form->addText('class', 'Menu item class')->setAttribute('class', 'form-control');
 		$form->addSelect('module', 'Module')->setTranslator(NULL)->setItems($modulesToSelect)->setAttribute('class', 'form-control');
 		$form->addSelect('parent', 'Parent')->setTranslator(NULL)->setItems($hierarchy)->setAttribute('class', 'form-control');
 		$form->addCheckbox('default', 'Default')->setAttribute('class', 'form-control');
 		$form->addCheckbox('visible', 'Show')->setAttribute('class', 'form-control')->setDefaultValue(1);
-		$form->addText('class', 'Menu item class')->setAttribute('class', 'form-control');
 		
 		$form->addSubmit('save', 'Save')->setAttribute('class', 'btn btn-success');
 		
@@ -94,6 +95,13 @@ class PagesPresenter extends \AdminModule\BasePresenter{
 		}
 		
 		$this->page->setTitle($values->title);
+		
+		if(!empty($values->redirect)){
+			$this->page->setRedirect($values->redirect);
+		}else{
+			$this->page->setRedirect(NULL);
+		}
+		
 		$this->page->setVisible($values->visible);
 		$this->page->setDefault($values->default);
 		$this->page->setParent($parent);

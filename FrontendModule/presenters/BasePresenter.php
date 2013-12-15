@@ -153,6 +153,10 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		
 		$id = $this->getParam('id');
 		if($id) $this->actualPage = $this->em->find('AdminModule\Page', $id);
+		
+		if($this->actualPage->getRedirect() != NULL){			
+			$this->redirectUrl($this->presenter->getHttpRequest()->url->baseUrl . $this->actualPage->getRedirect());
+		}
 	}
 	
 	public function createTemplate($class = NULL) {

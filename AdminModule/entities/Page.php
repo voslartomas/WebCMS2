@@ -125,6 +125,11 @@ class Page extends Seo{
      */
 	private $boxes;
 	
+	/**
+	 * @orm\Column(nullable=true)
+	 */
+	private $redirect;
+	
     public function __construct()    {
         $this->children = new ArrayCollection();
     }
@@ -292,5 +297,13 @@ class Page extends Seo{
 	
 	public function setSlug($slug) {
 		$this->slug = $slug;
+	}
+	
+	public function getRedirect() {
+		return $this->redirect;
+	}
+
+	public function setRedirect($redirect) {
+		$this->redirect = $redirect;
 	}
 }
