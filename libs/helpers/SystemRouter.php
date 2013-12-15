@@ -90,6 +90,7 @@ class SystemRouter extends \Nette\Application\Routers\Route{
 					'id' => $page->getId(),
 					'language' => $this->page->getLanguage()->getId(),
 					'path' => $path,
+					'fullPath' => $path . '/' . implode('/', $parameters),
 					'parameters' => $parameters,
 					'root' => $page->getRoot(),
 					'lft' => $page->getLeft(),
@@ -148,6 +149,7 @@ class SystemRouter extends \Nette\Application\Routers\Route{
 		unset($params['root']);
 		unset($params['id']);
 		unset($params['language']);
+		unset($params['fullPath']);
 		
 		$path = $refUrl->getScheme() . '://' . $refUrl->getHost() . $refUrl->getPath() . $abbr . $path . $do . $action;
 		

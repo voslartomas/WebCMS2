@@ -337,9 +337,10 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 				'rootClose' => '</ul>',
 				'childOpen' => function($node) use($dropDown, $context){
 					$hasChildrens = count($node['__children']) > 0 ? TRUE : FALSE;
-					$active = $context->getParam('id') == $node['id'] ? TRUE : FALSE;
+					$param = $context->getRequest()->getParameters();
+					$active = $context->getParam('id') == $node['id'] || $param['fullPath'] == $node['redirect'] ? TRUE : FALSE;
 					$class = '';
-
+					
 					if($context->getParam('lft') > $node['lft'] && $context->getParam('lft') < $node['rgt'] && $context->getParam('root') == $node['root']){
 						$class .= ' active';
 					}
