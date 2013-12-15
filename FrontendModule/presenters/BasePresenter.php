@@ -152,10 +152,12 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		));
 		
 		$id = $this->getParam('id');
-		if($id) $this->actualPage = $this->em->find('AdminModule\Page', $id);
-		
-		if($this->actualPage->getRedirect() != NULL){			
-			$this->redirectUrl($this->presenter->getHttpRequest()->url->baseUrl . $this->actualPage->getRedirect());
+		if($id){
+			$this->actualPage = $this->em->find('AdminModule\Page', $id);
+			
+			if($this->actualPage->getRedirect() != NULL){			
+				$this->redirectUrl($this->presenter->getHttpRequest()->url->baseUrl . $this->actualPage->getRedirect());
+			}
 		}
 	}
 	
@@ -338,8 +340,14 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 				'childOpen' => function($node) use($dropDown, $context){
 					$hasChildrens = count($node['__children']) > 0 ? TRUE : FALSE;
 					$param = $context->getRequest()->getParameters();
-					$active = $context->getParam('id') == $node['id'] || $param['fullPath'] == $node['redirect'] ? TRUE : FALSE;
+					$active = $context->getParam('id') == $node['id'] ? TRUE : FALSE;
 					$class = '';
+					
+					if(array_key_exists('redirect', $node)){
+						if($param['fullPath'] == $node['redirect']){
+							$active = TRUE;
+						}
+					}
 					
 					if($context->getParam('lft') > $node['lft'] && $context->getParam('lft') < $node['rgt'] && $context->getParam('root') == $node['root']){
 						$class .= ' active';
