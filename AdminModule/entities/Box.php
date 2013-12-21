@@ -91,5 +91,3 @@ class Box extends \AdminModule\Doctrine\Entity{
 		$this->moduleName = $moduleName;
 	}
 }
-
-?>
