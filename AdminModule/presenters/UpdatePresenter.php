@@ -80,7 +80,7 @@ class UpdatePresenter extends \AdminModule\BasePresenter{
 		// pomoci skriptu jen hned po skriptu ukoncit pomoc terminate, ajaxove
 		$this->context->cacheStorage->clean(array(\Nette\Caching\Cache::ALL => TRUE));
 		
-		$this->flashMessage('Mezipaměť byla smazána.', 'success');
+		$this->flashMessage($this->translation['Mezipaměť byla smazána.'], 'success');
 		$this->redirect("Update:");
 	}
 	

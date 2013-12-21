@@ -182,16 +182,28 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		return $settings;
 	}
 	
-	public function createForm($do = '', $action = 'default'){
+	public function createForm($do = '', $action = 'default', $context = null){
 		$form = new UI\Form();
 		
-		$form->getElementPrototype()->action = $this->link($action, array(
-			'path' => $this->actualPage->getPath(),
-			'abbr' => $this->abbr,
+		if($context != null){
+			$page = $context->actualPage;
+			$abbr = $context->abbr;
+			$translator = $context->translator;
+			$c = $context;
+		}else{
+			$page = $this->actualPage;
+			$abbr = $this->abbr;
+			$translator = $this->translator;
+			$c = $this;
+		}
+		
+		$form->getElementPrototype()->action = $c->link($action, array(
+			'path' => $page->getPath(),
+			'abbr' => $abbr,
 			'do' => $do
 		));
 		
-		$form->setTranslator($this->translator);
+		$form->setTranslator($translator);
 		$form->setRenderer(new BootstrapRenderer);
 		
 		return $form;
