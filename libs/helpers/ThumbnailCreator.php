@@ -26,11 +26,15 @@ class ThumbnailCreator {
 	 */
 	public function createThumbnails($filename, $filepath){
 		
-                $thumbnails = 'thumbnails';
-                $files = 'upload';
+		$thumbnails = 'thumbnails';
+		$files = 'upload';
 
 		$thumbnails = str_replace($files, $thumbnails, $filepath);
-
+		
+		if(!file_exists($thumbnails)){
+			mkdir($thumbnails, 0777, true);
+		}
+		
 		$filepath .= $filename;
 		if(file_exists($filepath)){
 			$image = \Nette\Image::fromFile($filepath);

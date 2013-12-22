@@ -312,7 +312,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		else $permissions = array();
 
 		foreach($permissions as $key => $p){
-			if($p) $acl->allow($identity->roles[0], $key, Nette\Security\Permission::ALL);
+			if($p && $acl->hasResource($key)) $acl->allow($identity->roles[0], $key, Nette\Security\Permission::ALL);
 		}
 		
 		// homepage and login page can access everyone

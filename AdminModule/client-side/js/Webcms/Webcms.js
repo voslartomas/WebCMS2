@@ -42,17 +42,33 @@ Webcms.prototype = {
 			selector: null
 		});
 		
+		var longRun = false;
+		$(".ajax").live('click', function(){
+			if($(this).hasClass('longRun')){
+				longRun = true;
+			}else{
+				longRun = false;
+			}
+			console.log(longRun);
+		});
+		
 		$.nette.init(function (ajaxHandler) {
 			$('a.ajax:not(.no-ajax)').live('click', ajaxHandler);
 			$('form.ajax :submit').live('click', ajaxHandler);
 		});
-
+		
 		//ajax loader animation
 		$(document).ajaxStart( function() {
-			   $('#loader').addClass("active"); 
+			if(longRun){
+				$('.spinner-wrapper').show(); 
+			}else{
+				$('#loader').addClass("active"); 
+			}
 		} ).ajaxStop ( function(){
 				self.afterReload();
+				
 				$('#loader').removeClass("active"); 
+				$('.spinner-wrapper').hide(); 
 		});
 		
 		self.afterReload();

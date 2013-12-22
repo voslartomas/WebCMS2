@@ -23,7 +23,11 @@
 </script>
 
 <div id="uploader" class="k-content">
-	<a class="btn btn-success jq_newDir" n:href="makeDirectory!">{_'Create new directory'}</a>
+	<a class="btn btn-primary jq_newDir" n:href="makeDirectory!">{_'Create new directory'}</a>
+	
+	{if $template->isSuperAdmin($user)}
+		<a class="btn btn-primary ajax longRun" n:href="regenerateThumbnails!">{_'Regenerate thumbnails'}</a>
+	{/if}
 	
 	<input type="file" name="files" id="upload" />
 
@@ -175,7 +179,7 @@
 				</a>
 			</td>
 			<td class="time">{$file->getATime()|date:'%d.%m.%Y %H:%M:%S'}</td>
-			<td class="size">{$file->getSize()|bytes}</td>
+			<td class="size">{$file->getRealPath()|dirSize|bytes}</td>
 			<td class="action">
 				<a n:href="deleteFile! pathToRemove => $file->getPathname()" class="btn btn-danger">{_'Delete'}</a>
 			</td>
