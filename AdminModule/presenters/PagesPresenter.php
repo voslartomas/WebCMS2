@@ -130,10 +130,28 @@ class PagesPresenter extends \AdminModule\BasePresenter{
 				
 				$this->em->persist($tmp);
 			}
+			
+			$this->em->flush();
+			
+			// sets permissions for users roles
+			$roles = $this->em->getRepository('AdminModule\Role')->findBy(array(
+				'automaticEnable' => true
+			));
+
+			foreach($roles as $r){
+				$module = $this->createObject($this->page->getModuleName());
+				foreach($module->getPresenters() as $presenter){
+					$permission = new Permission;
+
+					$resource = 'admin:' . $this->page->getModuleName() . $presenter['name'] . $this->page->getId();
+					$permission->setResource($resource);
+					$permission->setRead(true);
+
+					$r->addPermission($permission);
+				}
+			}
 		}
-		
 		$this->em->flush();
-		
 		// creates path
 		$path = $repo->getPath($this->page);
 		$final = array();

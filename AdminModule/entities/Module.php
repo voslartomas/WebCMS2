@@ -16,7 +16,7 @@ class Module extends \AdminModule\Doctrine\Entity{
 	private $name;
 	
 	/**
-	 * @orm\Column 
+	 * @orm\Column(type="text")
 	 */
 	private $presenters;
 	

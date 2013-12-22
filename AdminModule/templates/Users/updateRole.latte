@@ -1,3 +1,32 @@
-{block modalContent}
+{block content}
+
+	<h1>{_'Role settings'}</h1>
+
+	{include 'tabs.latte' active => 'roles'}
+
+	<br />
+	
+	<input id="checkAll" type="button" class="btn btn-primary btn-xs" value="{_'Check all'}" />
+	<input id="uncheckAll" type="button" class="btn btn-primary btn-xs" value="{_'Uncheck all'}" />
+	
+	<script>
+		$("#checkAll").click(function(){
+			$(".check").each(function(){
+				$(this).attr('checked', true);	
+			});
+		});
+		
+		$("#uncheckAll").click(function(){
+			$(".check").each(function(){
+				$(this).attr('checked', false);	
+			});
+		});
+	</script>
+	
+	<br />
+	<br />
+	
+	<div class="alert alert-info">{_'Automatic enable function adds permissions to newly created pages.'}</div>
+	
 	{control roleForm}
 {/block}

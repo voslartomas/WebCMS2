@@ -22,8 +22,19 @@ class Role extends Doctrine\Entity{
 	 */
 	private $permissions;
 	
+	/**
+	 * @orm\Column(type="boolean")
+	 */
+	private $automaticEnable;
+	
 	public function __construct() {
 		$this->permissions = new \Doctrine\Common\Collections\ArrayCollection();
+	}
+	
+	public function addPermission(Permission $permission){
+		if(!$this->getPermissions()->contains($permission)){
+			$this->permissions->add($permission);
+		}
 	}
 	
 	public function getName() {
@@ -40,6 +51,14 @@ class Role extends Doctrine\Entity{
 
 	public function setPermissions($permissions) {
 		$this->permissions = $permissions;
+	}
+	
+	public function getAutomaticEnable() {
+		return $this->automaticEnable;
+	}
+
+	public function setAutomaticEnable($automaticEnable) {
+		$this->automaticEnable = $automaticEnable;
 	}
 }
 

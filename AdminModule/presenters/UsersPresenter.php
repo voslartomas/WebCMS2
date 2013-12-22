@@ -159,7 +159,7 @@ class UsersPresenter extends \AdminModule\BasePresenter{
 	
 	public function renderUpdateRole($id){
 		
-		$this->reloadModalContent();
+		$this->reloadContent();
 		
 		$this->template->role = $this->role;
 	}
@@ -189,19 +189,17 @@ class UsersPresenter extends \AdminModule\BasePresenter{
 		}
 		
 		$form = $this->createForm();
+		$form->addCheckbox('automaticEnable', 'Automatic enable');
 		$form->addText('name', 'Name')->setAttribute('class', 'form-control');
-		$form->addSubmit('save', 'Save')->setAttribute('class', 'btn btn-success');
 		
 		$c = 0;
 		foreach($resources as $key => $r){
 			
-			if(strpos('$r', ':') !== FALSE) $form->addCheckbox('res' . str_replace(':', '', $key), $r);
-			else $form->addCheckbox('res' . str_replace(':', '', $key), $r)->setTranslator(NULL);
+			if(strpos('$r', ':') !== FALSE) $form->addCheckbox('res' . str_replace(':', '', $key), $r)->setAttribute('class', 'check');
+			else $form->addCheckbox('res' . str_replace(':', '', $key), $r)->setTranslator(NULL)->setAttribute('class', 'check');
 				
 			$c++;
 		}
-		
-		$form->onSuccess[] = callback($this, 'roleFormSubmitted');
 		
 		// defaults setting
 		$new = $this->role->getName();
@@ -214,6 +212,9 @@ class UsersPresenter extends \AdminModule\BasePresenter{
 			$form->setDefaults($this->role->toArray() + $defaultsPermissions);
 		}
 
+		$form->onSuccess[] = callback($this, 'roleFormSubmitted');
+		$form->addSubmit('save', 'Save')->setAttribute('class', 'btn btn-success');
+		
 		return $form;
 	}
 	
@@ -225,7 +226,7 @@ class UsersPresenter extends \AdminModule\BasePresenter{
 		
 		$grid->addColumnText('name', 'Name')->setSortable();
 		
-		$grid->addActionHref("updateRole", 'Edit')->getElementPrototype()->addAttributes(array('class' => array('btn', 'btn-primary', 'ajax'), 'data-toggle' => 'modal', 'data-target' => '#myModal', 'data-remote' => 'false'));
+		$grid->addActionHref("updateRole", 'Edit')->getElementPrototype()->addAttributes(array('class' => array('btn', 'btn-primary', 'ajax')));
 		$grid->addActionHref("deleteRole", 'Delete')->getElementPrototype()->addAttributes(array('class' => array('btn', 'btn-danger'), 'data-confirm' => 'Are you sure you want to delete the item?'));
 
 		return $grid;
@@ -235,8 +236,11 @@ class UsersPresenter extends \AdminModule\BasePresenter{
 		$values = $form->getValues();
 		
 		$this->role->setName($values->name);
+		$this->role->setAutomaticEnable($values->automaticEnable);
 		
-		$this->em->persist($this->role); // TODO persist only if its new
+		if(!$this->role->getId()){
+			$this->em->persist($this->role);
+		}
 
 		$this->flashMessage($this->translation['Role has been added.'], 'success');
 		
