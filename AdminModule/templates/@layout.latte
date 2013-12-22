@@ -85,16 +85,16 @@
 			<div class="navbar-form navbar-right">
 				
 				<div class="btn-group">
-					<button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
-						{_'Options'} <span class="caret"></span>
-					</button>
 					<form method="get" class="pull-left">
-						<select id="languageChanger" name='language_id_change' class="btn btn-xs">
+						<select id="languageChanger" name='language_id_change' class="btn btn-primary btn-ms">
 							{foreach $languages as $l}
 								<option value="{$l->getId()}" {if $l->getId() == $language->getId()}selected{/if}>{$l->getName()}</option>
 							{/foreach}
 						</select>
 					</form>
+					<button type="button" class="btn btn-primary btn-ms dropdown-toggle" data-toggle="dropdown">
+						{_'Options'} <span class="caret"></span>
+					</button>
 				  <ul class="dropdown-menu" role="menu">
 					<li><a n:href=":Admin:users:updateUser id =>  $user->getIdentity()->id" class="ajax" data-remote="false" data-target="#myModal" data-toggle="modal">{_'Account settings'}</a></li>
 					<li>
