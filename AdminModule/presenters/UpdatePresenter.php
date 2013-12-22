@@ -202,6 +202,12 @@ class UpdatePresenter extends \AdminModule\BasePresenter{
 		$setting = $this->em->find('AdminModule\Setting', $nuc->getId());
 		$setting->setValue($needUpdateCount);
 		
+		if($needUpdateCount > 0){
+			$this->flashMessage($this->translation['Available ' . $needUpdateCount . ' new updates. You can upgrade your system in Update section.'], 'success');
+		}else{
+			$this->flashMessage($this->translation['Your system is up to date.'], 'success');
+		}
+		
 		$this->em->flush();
 	}
 }
