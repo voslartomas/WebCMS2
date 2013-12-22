@@ -1,6 +1,8 @@
 <?php
 
 namespace AdminModule;
+use Dubture\Monolog\Reader\LogReader;
+
 
 /**
  * Admin presenter.
@@ -13,6 +15,16 @@ class HomepagePresenter extends \AdminModule\BasePresenter{
 		parent::beforeRender();
 		
 		$this->reloadContent();
+
+		$logFile = '../log/webcms.log';
+		$reader = new LogReader($logFile, 2);
+
+		$logs = array();
+		foreach($reader as $log){
+			$logs[] = $log;
+		}
+		
+		$this->template->logReader = array_reverse($logs);
 	}
 	
 	protected function startup(){		
