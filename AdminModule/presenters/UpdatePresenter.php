@@ -171,18 +171,18 @@ class UpdatePresenter extends \AdminModule\BasePresenter{
 		
 		$needUpdateCount = 0;
 		foreach($packages as &$package){
-			if($package['module']){
-				
+			if($package['vendor'] === 'webcms2'){
+			
 				$apiResult = $client->get($package['vendor'] . '/' . $package['package']);
 				$versions = $apiResult->getVersions();
-				
+
 				$devVersion = $versions['dev-master'];
 				if(count($versions) > 1){
 					$newestVersion = next($versions);   
 				}else{
 					$newestVersion = null;
 				}
-				
+
 				// development or production version?
 				if($package['version'] === 'dev-master'){
 					if($package['versionHash'] !== mb_substr($devVersion->getSource()->getReference(), 0, 7)){
@@ -193,7 +193,6 @@ class UpdatePresenter extends \AdminModule\BasePresenter{
 						$needUpdateCount++;
 					}
 				}
-				
 			}
 		}
 		
@@ -203,5 +202,7 @@ class UpdatePresenter extends \AdminModule\BasePresenter{
 		$setting->setValue($needUpdateCount);
 		
 		$this->em->flush();
+		
+		$this->invalidateControl('header');
 	}
 }
