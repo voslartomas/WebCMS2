@@ -2,8 +2,6 @@
 
 <h1>{_'Filesystem'}</h1>
 
-<a class="btn btn-success jq_newDir" n:href="makeDirectory!">{_'Create new directory'}</a>
-
 {*<a class="btn btn-success jq_newDir" n:href="makeBackup!">{_'Create backup'}</a>*}
 
 <script>
@@ -25,6 +23,8 @@
 </script>
 
 <div id="uploader" class="k-content">
+	<a class="btn btn-success jq_newDir" n:href="makeDirectory!">{_'Create new directory'}</a>
+	
 	<input type="file" name="files" id="upload" />
 
 	<script id="fileTemplate" type="text/x-kendo-template">
@@ -155,8 +155,6 @@
 	</style>
 	
 </div>
-				
-
 	
 <a class="btn btn-primary ajax" n:href="default path => $backLink">{_'Back'}</a>
 
@@ -228,6 +226,9 @@
 	{/foreach}
 	{foreach $files as $path => $file}
 		<div class="file ">
+			<span>
+				<img src="{$basePath}{$path|thumbnail:'system'}" style="width: 80px;" />
+			</span>
 			<span>
 				{if $multiple}
 						<input id="{$file->getPathname()}" type="checkbox" class="checkbox-inline jq_selected" name="files" value="{$file->getPathname()}" data-path="{$path|relative}" data-thumbnail="{$basePath}{$path|thumbnail:'system'}" />
