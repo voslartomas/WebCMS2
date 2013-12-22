@@ -25,15 +25,10 @@ class SettingsPresenter extends \AdminModule\BasePresenter{
 	public function createComponentBasicSettingsForm(){
 		
 		$settings = array();
+		$settings[] = $this->settings->get('Navbar dropdown', \WebCMS\Settings::SECTION_BASIC, 'checkbox');
 		$settings[] = $this->settings->get('Info email', \WebCMS\Settings::SECTION_BASIC, 'text');
 		$settings[] = $this->settings->get('Navbar class', \WebCMS\Settings::SECTION_BASIC, 'text');
-		$settings[] = $this->settings->get('Navbar dropdown', \WebCMS\Settings::SECTION_BASIC, 'checkbox');
 		$settings[] = $this->settings->get('Sidebar class', \WebCMS\Settings::SECTION_BASIC, 'text');
-		
-		$settings[] = $this->settings->get('Seo keywords', \WebCMS\Settings::SECTION_BASIC, 'text');
-		$settings[] = $this->settings->get('Seo title', \WebCMS\Settings::SECTION_BASIC, 'text');
-		$settings[] = $this->settings->get('Seo title before', \WebCMS\Settings::SECTION_BASIC, 'checkbox');
-		$settings[] = $this->settings->get('Seo description', \WebCMS\Settings::SECTION_BASIC, 'text');
 		
 		return $this->createSettingsForm($settings);
 	}
@@ -281,6 +276,18 @@ class SettingsPresenter extends \AdminModule\BasePresenter{
 		));
 
 		$this->template->pages = $pages;
+	}
+	
+	public function createComponentSeoBasicForm() {
+		
+		$settings = array();
+		
+		$settings[] = $this->settings->get('Seo keywords', \WebCMS\Settings::SECTION_BASIC, 'text');
+		$settings[] = $this->settings->get('Seo title', \WebCMS\Settings::SECTION_BASIC, 'text');
+		$settings[] = $this->settings->get('Seo description', \WebCMS\Settings::SECTION_BASIC, 'text');
+		$settings[] = $this->settings->get('Seo title before', \WebCMS\Settings::SECTION_BASIC, 'checkbox');
+		
+		return $this->createSettingsForm($settings);
 	}
 	
 	public function actionUpdateMeta($idPage, $type, $value){
