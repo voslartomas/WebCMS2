@@ -35,9 +35,13 @@ class UsersPresenter extends \AdminModule\BasePresenter{
 		$roles = $this->em->getRepository("AdminModule\Role")->findAll();
 		$tmp = array();
 		foreach($roles as $r){
-			if($r->getName() !== 'superadmin') $tmp[$r->getId()] = $r->getName();
+			$tmp[$r->getId()] = $r->getName();
 		}
 		$roles = $tmp;
+		
+		if($this->getUser()->getRoles()[0] !== 'superadmin'){
+			unset($roles[1]);
+		}
 		
 		$form = $this->createForm();
 		$form->addText('username', 'Username')->setAttribute('class', 'form-control');

@@ -72,8 +72,9 @@ class FilesystemPresenter extends \AdminModule\BasePresenter{
 		
 		$file->move($this->path . '' . $file->getSanitizedName());
 		
-		if($file->isImage())
+		if($file->isImage()){
 			$this->thumbnailCreator->createThumbnails($file->getSanitizedName(), $this->path);
+		}
 		
 		$this->reloadContent();
 		$this->flashMessage($this->translation['File has been uploaded']);
@@ -81,7 +82,6 @@ class FilesystemPresenter extends \AdminModule\BasePresenter{
 		$this->sendPayload();
 	}
 	
-	// TODO odladit vyjimky
 	public function handleDeleteFile($pathToRemove){
 		if(is_file($pathToRemove)){
 			

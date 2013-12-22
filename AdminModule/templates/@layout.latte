@@ -84,15 +84,30 @@
 			
 			<div class="navbar-form navbar-right">
 				
-				<form method="get" class="pull-left">
-					<select id="languageChanger" name='language_id_change' class="form-control">
-						{foreach $languages as $l}
-							<option value="{$l->getId()}" {if $l->getId() == $language->getId()}selected{/if}>{$l->getName()}</option>
-						{/foreach}
-					</select>
-				</form>
-
-				<a n:href=":Admin:Login:out" class="logout btn btn-danger pull-right" data-confirm="{_'Are you sure?'}">{_'Sign out'} {$user->getIdentity()->getData()['username']}</a>  
+				<div class="btn-group">
+					<button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
+						{_'Options'} <span class="caret"></span>
+					</button>
+					<br />
+					<form method="get" class="pull-left">
+						<select id="languageChanger" name='language_id_change' class="btn btn-xs">
+							{foreach $languages as $l}
+								<option value="{$l->getId()}" {if $l->getId() == $language->getId()}selected{/if}>{$l->getName()}</option>
+							{/foreach}
+						</select>
+					</form>
+				  <ul class="dropdown-menu" role="menu">
+					<li><a n:href=":Admin:users:updateUser id =>  $user->getIdentity()->id" class="ajax" data-remote="false" data-target="#myModal" data-toggle="modal">{_'Account settings'}</a></li>
+					<li>
+						<a n:href=":Frontend:Homepage:" onclick="$(this).attr('target', '_blank');">{_'Go to frontend'}</a>  
+					</li>
+					<li class="divider"></li>
+					<li>
+						<a n:href=":Admin:Login:out" class="logout" data-confirm="{_'Are you sure?'}">{_'Sign out'}</a>  
+					</li>
+				  </ul>
+				</div>
+					
 			</div>
 			{/snippet}
 		</div>
