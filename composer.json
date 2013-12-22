@@ -25,7 +25,7 @@
 		"mockery/mockery" : "0.8.*",
 		"nitra/php-min": "0.0.*",
 		"knplabs/packagist-api": "1.*@dev",
-		"pulse00/monolog-parser": "dev-master"
+		"ddtraceweb/monolog-parser": "@dev"
     },
     "autoload": {
         "classmap": ["/"]
