@@ -163,4 +163,45 @@ class UpdatePresenter extends \AdminModule\BasePresenter{
 			return FALSE;
 		}
 	}
+	
+	public function handleCheckUpdates(){
+		$client = new \Packagist\Api\Client();
+
+		$packages = \WebCMS\SystemHelper::getPackages();
+		
+		$needUpdateCount = 0;
+		foreach($packages as &$package){
+			if($package['module']){
+				
+				$apiResult = $client->get($package['vendor'] . '/' . $package['package']);
+				$versions = $apiResult->getVersions();
+				
+				$devVersion = $versions['dev-master'];
+				if(count($versions) > 1){
+					$newestVersion = next($versions);   
+				}else{
+					$newestVersion = null;
+				}
+				
+				// development or production version?
+				if($package['version'] === 'dev-master'){
+					if($package['versionHash'] !== mb_substr($devVersion->getSource()->getReference(), 0, 7)){
+						$needUpdateCount++;
+					}
+				}else{
+					if($package['version'] !== $newestVersion->getName()){
+						$needUpdateCount++;
+					}
+				}
+				
+			}
+		}
+		
+		$nuc = $this->settings->get('needUpdateCount', 'system', 'text');
+		
+		$setting = $this->em->find('AdminModule\Setting', $nuc->getId());
+		$setting->setValue($needUpdateCount);
+		
+		$this->em->flush();
+	}
 }

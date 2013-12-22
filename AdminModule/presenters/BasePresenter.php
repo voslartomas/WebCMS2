@@ -67,6 +67,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		$this->template->language = $this->state->language;
 		$this->template->version = \WebCMS\SystemHelper::getVersion();
 		$this->template->activePresenter = $this->getPresenter()->getName();
+		$this->template->settings = $this->settings;
 		$this->template->languages = $this->em->getRepository('AdminModule\Language')->findAll();
 	}
 	

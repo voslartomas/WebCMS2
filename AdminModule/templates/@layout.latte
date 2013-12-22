@@ -77,7 +77,7 @@
 					{/if}
 					{if $template->checkPermissions($user, 'admin:Update')}
 					  <li {if $activePresenter == "Admin:Update"}class="active"{/if}>
-						  <a class="ajax" n:href=":Admin:Update:">{_'Update'} <span class="badge">0</span></a>
+						  <a class="ajax" n:href=":Admin:Update:">{_'Update'} <span class="badge">{$settings->get('needUpdateCount', 'system', 'text')->getValue()}</span></a>
 					  </li>
 					{/if}
 				  </ul>
