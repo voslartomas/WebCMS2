@@ -5,6 +5,8 @@ namespace AdminModule;
 use Nette;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Nette\Application\UI;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
 
 /**
  * Base class for all application presenters.
@@ -134,6 +136,22 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		if($id) $this->actualPage = $this->em->find('AdminModule\Page', $id);
 		
 		$this->checkPermission();
+		
+		// logger
+		// Create the logger
+		$logger = new Logger('History');
+		// Now add some handlers
+		$logger->pushHandler(new StreamHandler('../log/webcms.log', Logger::DEBUG));
+		
+		$data = array(
+			'user' => $this->getUser()->getIdentity()->getData()['username'],
+			'action' => $this->getAction(),
+			'presenter' => $this->getName(),
+			'title' => is_object($this->actualPage) ? $this->actualPage->getTitle() : 'System',
+			'url' => $this->getHttpRequest()->url->absoluteUrl
+		);
+		
+		$logger->addInfo('Request catcher', $data);
 	}
 	
 	private function getSettings(){

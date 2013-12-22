@@ -24,7 +24,8 @@
 		"monolog/monolog" : "1.6.0",
 		"mockery/mockery" : "0.8.*",
 		"nitra/php-min": "0.0.*",
-		"knplabs/packagist-api": "1.*@dev"
+		"knplabs/packagist-api": "1.*@dev",
+		"pulse00/monolog-parser": "0.*"
     },
     "autoload": {
         "classmap": ["/"]
