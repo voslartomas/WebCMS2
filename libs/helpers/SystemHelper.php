@@ -239,4 +239,13 @@ class SystemHelper {
 		return ($binary{0} == "0" ? bindec($binary) :
 		-(pow(2, 31) - bindec(substr($binary, 1))));
 	}
+	
+	public static function dirSize($directory) {
+		$size = 0;
+			foreach(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($directory)) as $file){
+				$size+=$file->getSize();
+			}
+			
+		return $size;
+	} 
 }
