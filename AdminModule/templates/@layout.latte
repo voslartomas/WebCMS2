@@ -85,13 +85,15 @@
 			<div class="navbar-form navbar-right">
 				
 				<div class="btn-group">
-					<form method="get" class="pull-left">
-						<select id="languageChanger" name='language_id_change' class="btn btn-primary btn-ms">
-							{foreach $languages as $l}
-								<option value="{$l->getId()}" {if $l->getId() == $language->getId()}selected{/if}>{$l->getName()}</option>
-							{/foreach}
-						</select>
-					</form>
+					{if count($languages) > 1}
+						<form method="get" class="pull-left">
+							<select id="languageChanger" name='language_id_change' class="btn btn-primary btn-ms">
+								{foreach $languages as $l}
+									<option value="{$l->getId()}" {if $l->getId() == $language->getId()}selected{/if}>{$l->getName()}</option>
+								{/foreach}
+							</select>
+						</form>
+					{/if}
 					<button type="button" class="btn btn-primary btn-ms dropdown-toggle" data-toggle="dropdown">
 						{_'Options'} <span class="caret"></span>
 					</button>
