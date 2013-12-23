@@ -24,7 +24,14 @@ class HomepagePresenter extends \AdminModule\BasePresenter{
 			$logs[] = $log;
 		}
 		
+		// favourite links
+		$user = $this->em->getRepository('AdminModule\User')->find($this->getUser()->getId());
+		$favourites = $this->em->getRepository('AdminModule\Favourites')->findBy(array(
+			'user' => $user
+		));
+		
 		$this->template->logReader = array_reverse($logs);
+		$this->template->links = $favourites;
 	}
 	
 	protected function startup(){		

@@ -49,12 +49,27 @@ Webcms.prototype = {
 			}else{
 				longRun = false;
 			}
-			console.log(longRun);
 		});
 		
 		$.nette.init(function (ajaxHandler) {
 			$('a.ajax:not(.no-ajax)').live('click', ajaxHandler);
 			$('form.ajax :submit').live('click', ajaxHandler);
+		});
+		
+		// links context menu
+		$('a').live('contextmenu', function(e){
+			e.preventDefault();
+			
+			$('.context-menu').remove();
+			if(!$(this).hasClass('favourite')){
+				$(this).parent().append('<div style="position: absolute;" class="nav navbar context-menu"><a class="btn btn-default ajax" href="?do=addToFavourite&link=' + $(this).attr('href') + '&title=' + $(this).html() + '">Add to favourite</a></div>')
+			}else{
+				$(this).parent().append('<div style="position: absolute;" class="nav navbar context-menu"><a class="btn btn-default ajax" href="?do=removeFromFavourite&idFav=' + $(this).data('id') + '">Remove</a></div>')
+			}
+		});
+		
+		$(document).live('click', function(){
+			$('.context-menu').remove();
 		});
 		
 		//ajax loader animation
@@ -67,6 +82,7 @@ Webcms.prototype = {
 		} ).ajaxStop ( function(){
 				self.afterReload();
 				
+				$('.context-menu').remove();
 				$('#loader').removeClass("active"); 
 				$('.spinner-wrapper').hide(); 
 		});

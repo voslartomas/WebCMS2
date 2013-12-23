@@ -528,4 +528,29 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		if(!$this->isAjax())
 			$this->redirect('this');
 	}
+	
+	public function handleAddToFavourite($link, $title){
+		$user = $this->em->getRepository('AdminModule\User')->find($this->getUser()->getId());
+		
+		$fav = new Favourites();
+		$fav->setLink($link);
+		$fav->setUser($user);
+		$fav->setTitle($title);
+		
+		$this->em->persist($fav);
+		
+		$this->em->flush();
+		
+		$this->flashMessage($this->translation['Link has been added to favourites.'], 'success');
+	}
+	
+	public function handleRemoveFromFavourite($idFav){
+		$fav = $this->em->getRepository('AdminModule\Favourites')->find($idFav);
+		
+		$this->em->remove($fav);
+		$this->em->flush();
+		
+		$this->flashMessage($this->translation['Link has been removed from favourites.'], 'success');
+	}
+	
 }

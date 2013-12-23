@@ -28,4 +28,8 @@
 
 <h2>{_'Favourite links'}</h2>
 
+{foreach $links as $l}
+	<a class="ajax btn btn-primary favourite" data-id="{$l->getId()}" href="{$l->getLink()}">{$l->getTitle()}</a>
+{/foreach}
+
 {/block}
