@@ -1,12 +1,11 @@
 common:
 	php:
 		date.timezone: Europe/Prague
-		session.save_path "%tempDir%/sessions"
-		
+		session.save_path: "%tempDir%/sessions"
 	nette:
 		session:
 			autoStart: smart
-			
+
 	doctrine:
 		connection: %database%
 		console: true
@@ -21,7 +20,7 @@ common:
 		authenticator: Authenticator( @database::getRepository('AdminModule\User') )
 		
 		cacheStorage: 
-			\Nette\Caching\Storages\DevNullStorage
+			class: \Nette\Caching\Storages\DevNullStorage
 	gedmo: 
 		orm:
 			em: @doctrine.entityManager
@@ -32,5 +31,7 @@ common:
 production < common:
 	services: 
 		cacheStorage:
-			\Nette\Caching\Storages\MemcachedStorage(%cacheNamespace%)
+			class: \Nette\Caching\Storages\MemcachedStorage(%cacheNamespace%)
+
+development < common:
 			
