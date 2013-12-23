@@ -1,0 +1,36 @@
+common:
+	php:
+		date.timezone: Europe/Prague
+		session.save_path "%tempDir%/sessions"
+		
+	nette:
+		session:
+			autoStart: smart
+			
+	doctrine:
+		connection: %database%
+		console: true
+		entityDirs: { %appDir%, %appDir%/../libs/webcms2 }
+		
+	migrations:
+		connection: @doctrine.connection
+		
+	services:
+		database: @doctrine.entityManager
+		
+		authenticator: Authenticator( @database::getRepository('AdminModule\User') )
+		
+		cacheStorage: 
+			\Nette\Caching\Storages\DevNullStorage
+	gedmo: 
+		orm:
+			em: @doctrine.entityManager
+			tree: true
+			sluggable: true
+			timestable: true
+			
+production < common:
+	services: 
+		cacheStorage:
+			\Nette\Caching\Storages\MemcachedStorage(%cacheNamespace%)
+			
