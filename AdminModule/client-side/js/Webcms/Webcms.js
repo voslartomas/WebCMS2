@@ -62,9 +62,9 @@ Webcms.prototype = {
 			
 			$('.context-menu').remove();
 			if(!$(this).hasClass('favourite')){
-				$(this).parent().append('<div style="position: absolute;" class="nav navbar context-menu"><a class="btn btn-default ajax" href="?do=addToFavourite&link=' + $(this).attr('href') + '&title=' + $(this).html() + '">Add to favourite</a></div>')
+				$(this).append('<div style="position: absolute;" class="nav navbar context-menu"><a class="btn btn-default ajax" href="?do=addToFavourite&link=' + $(this).attr('href') + '&title=' + $(this).html() + '">Add to favourite</a></div>')
 			}else{
-				$(this).parent().append('<div style="position: absolute;" class="nav navbar context-menu"><a class="btn btn-default ajax" href="?do=removeFromFavourite&idFav=' + $(this).data('id') + '">Remove</a></div>')
+				$(this).append('<div style="position: absolute;" class="nav navbar context-menu"><a class="btn btn-default ajax" href="?do=removeFromFavourite&idFav=' + $(this).data('id') + '">Remove</a></div>')
 			}
 		});
 		
