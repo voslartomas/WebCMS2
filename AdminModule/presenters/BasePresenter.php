@@ -554,6 +554,6 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 	}
 	
 	public function flashMessage($text, $type){
-		parent::flashMessage($text, $type);
+		parent::flashMessage($this->translation[$text], $type);
 	}
 }
