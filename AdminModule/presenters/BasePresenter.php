@@ -553,4 +553,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		$this->flashMessage($this->translation['Link has been removed from favourites.'], 'success');
 	}
 	
+	protected function flashMessage($text, $type){
+		parent::flashMessage($text, $type);
+	}
 }
