@@ -178,7 +178,8 @@ class UpdatePresenter extends \AdminModule\BasePresenter{
 
 				$devVersion = $versions['dev-master'];
 				if(count($versions) > 1){
-					$newestVersion = next($versions);   
+					$newestVersion = next($versions);
+					$newestVersion = next($versions); 
 				}else{
 					$newestVersion = null;
 				}
