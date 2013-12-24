@@ -454,8 +454,12 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 			));
 	}
 	
+	/* @deprecated */
 	public function flashMessageTranslated($message, $type = 'info'){
 		$this->flashMessage($this->translation[$message], $type);
 	}
 
+	public function flashMessage($text, $type){
+                parent::flashMessage($this->translation[$text], $type);
+        }
 }
