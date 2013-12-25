@@ -45,7 +45,7 @@ while [ "$task" != "q" ]; do
 
 		# copy new boostrap
 		rm -f ./app/bootstrap.php
-		cp ./libs/webcms2/webcms2/install/bootstrap.php ./app/bootstrap.php
+		cp ./libs/webcms2/webcms2/install/bootstrap ./app/bootstrap.php
 
 		# sets permissions for dirs
 		chmod -R 777 ./www/upload ./www/thumbnails ./temp ./log ./app/proxies ./app/templates ./composer.lock ./libs/composer ./libs ./app/bootstrap.php
@@ -68,7 +68,7 @@ while [ "$task" != "q" ]; do
 		
 		# copy new bootstrap
 		rm -f ./app/bootstrap.php
-		cp ./libs/webcms2/webcms2/install/bootstrap.php ./app/bootstrap.php
+		cp ./libs/webcms2/webcms2/install/bootstrap ./app/bootstrap.php
 			
 		# generate DB schema
 		php www/index.php --ansi orm:schema-tool:update --force
