@@ -132,7 +132,7 @@ class PagesPresenter extends \AdminModule\BasePresenter{
 			}
 			
 			$this->em->flush();
-			
+			die();
 			// sets permissions for users roles
 			$roles = $this->em->getRepository('AdminModule\Role')->findBy(array(
 				'automaticEnable' => true

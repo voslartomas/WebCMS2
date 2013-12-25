@@ -9,5 +9,5 @@ namespace WebCMS;
  */
 interface IModule {
 	
-	
+	public function cloneData($entityManager, $oldLanguge, $newLanguage, $transformTable);
 }
