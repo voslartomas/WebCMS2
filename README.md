@@ -116,7 +116,7 @@ There is `boxes` section, here defined boxes are shown in page settings.
 
 Another important setting is `cacheNamespace`, which defines project specific namespace. If you use memcached cache storage, there can be a problem if two projects have same namespace.
 
-``
+```
 common:
 	parameters:
 		database:
@@ -140,6 +140,6 @@ production < common:
 			password: 
 
 development < common:
-``
+```
 
 
