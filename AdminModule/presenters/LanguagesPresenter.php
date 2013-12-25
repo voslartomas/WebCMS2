@@ -243,16 +243,22 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 		$this->reloadContent();
 	}
 	
-	protected function createComponentTranslationGrid($name){
-		
-		$grid = $this->createGrid($this, $name, "Translation");
-		
+	private function getAllLanguages(){
 		$languages = $this->em->getRepository('AdminModule\Language')->findAll();
 		
 		$langs = array('' => $this->translation['Pick a language']);
 		foreach($languages as $l){
 			$langs[$l->getId()] = $l->getName();
 		}
+		
+		return $langs;
+	}
+	
+	protected function createComponentTranslationGrid($name){
+		
+		$grid = $this->createGrid($this, $name, "Translation");
+		
+		$langs = $this->getAllLanguages();
 		
 		$backend = array(
 			'' => $this->translation['Pick filter'],
@@ -307,5 +313,87 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 		
 		if(!$this->isAjax())
 			$this->redirect('Languages:Translates');
+	}
+	
+	/* TRANSLATIONS */
+	
+	public function renderCloning(){
+		$this->reloadContent();
+	}
+	
+	public function createComponentCloningForm(){
+		$form = $this->createForm();
+		
+		$langs = $this->getAllLanguages();
+		$packages = \WebCMS\SystemHelper::getPackages();
+		
+		$form->addGroup('Copy structures');
+		
+		$form->addSelect('languageFrom', 'Copy from', $langs)->setRequired('Please pick up language.')->setAttribute('class', 'form-control');
+		$form->addSelect('languageTo', 'Copy to', $langs)->setRequired('Please pick up language.')->setAttribute('class', 'form-control');
+		$form->addCheckbox('removeData', 'Remove data?');
+		
+		$form->addGroup('Copy data from modules');
+		
+		foreach($packages as $key => $package){
+			
+			if($package['vendor'] === 'webcms2' && $package['package'] !== 'webcms2'){
+				$object = $this->createObject($package['package']);
+				
+				if($object->isClonable()){
+					$form->addCheckbox(str_replace('-', '_',$package['package']), $package['package']);
+				}else{
+					$form->addCheckbox(str_replace('-', '_',$package['package']), $package['package'] . ' not clonable.')->setDisabled(true);
+				}
+			}
+		}
+		
+		$form->onSuccess[] = callback($this, 'cloningFormSubmitted');
+		$form->addSubmit('send', 'Clone');
+		
+		return $form;
+	}
+	
+	public function cloningFormSubmitted(UI\Form $form){
+		$values = $form->getValues();
+		
+		$languageFrom = $this->em->getRepository('AdminModule\Langauge')->find($values->languageFrom);
+		$languageTo = $this->em->getRepository('AdminModule\Langauge')->find($values->languageTo);
+		$removeData = $values->removeData;
+		unset($values->languageFrom);
+		unset($values->languageTo);
+		unset($values->removeData);
+		
+		// remove data first
+		if($removeData){
+			$pages = $this->em->getRepository('AdminModule\Page')->findBy(array(
+				'language' => $langaugeTo
+			));
+			
+			foreach($pages as $page){
+				$this->em->remove($page);
+			}
+		}
+		
+		// clone page structure
+		
+		
+		// clone all data
+		foreach($values as $key => $value){
+			if($value){
+				$module = $this->createObject(str_replace('_', '-', $key));
+				
+				if($module->isClonable()){
+					$module->cloneData();
+				}
+			}
+		}
+
+		$this->flush();
+		
+		$this->flashMessage('Cloning has been successfuly done.', 'success');
+		if(!$this->isAjax()){
+			$this->redirect('Languages:cloning');
+		}
 	}
 }
