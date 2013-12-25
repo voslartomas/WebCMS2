@@ -24,7 +24,7 @@ common:
 			em: @doctrine.entityManager
 			tree: true
 			sluggable: true
-			timestable: true
+			timestampable: true
 			
 production < common:
 	services: 
