@@ -19,8 +19,6 @@ common:
 		
 		authenticator: Authenticator( @database::getRepository('AdminModule\User') )
 		
-		cacheStorage: 
-			class: \Nette\Caching\Storages\DevNullStorage
 	gedmo: 
 		orm:
 			em: @doctrine.entityManager
@@ -34,4 +32,6 @@ production < common:
 			class: \Nette\Caching\Storages\MemcachedStorage(%cacheNamespace%)
 
 development < common:
-			
+	services:
+		cacheStorage: 
+			class: \Nette\Caching\Storages\DevNullStorage

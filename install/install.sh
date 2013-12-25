@@ -35,10 +35,6 @@ while [ "$task" != "q" ]; do
 		mkdir ./temp
 		mkdir ./temp/sessions
 		
-		# sets permissions for dirs
-		chmod -R 777 ./www/upload ./www/thumbnails ./temp ./log ./app/proxies ./app/templates ./composer.lock ./libs/composer ./libs
-		chmod -R g+rwxs temp
-		
 		# bugfix for Nette
 		rm -f ./libs/nette/nette/Nette/Application/UI/Form.php
 		cp ./libs/webcms2/webcms2/install/Form.php ./libs/nette/nette/Nette/Application/UI/Form.php
@@ -46,6 +42,14 @@ while [ "$task" != "q" ]; do
 		# activate basic module
 		mkdir ./app/templates/page-module
 		cp -r ./libs/webcms2/page-module/Frontend/templatesDefault/* ./app/templates/page-module/
+
+		# copy new boostrap
+		rm -f ./app/bootstrap.php
+		cp ./libs/webcms2/webcms2/install/bootstrap.php ./app/bootstrap.php
+
+		# sets permissions for dirs
+		chmod -R 777 ./www/upload ./www/thumbnails ./temp ./log ./app/proxies ./app/templates ./composer.lock ./libs/composer ./libs ./app/bootstrap.php
+		chmod -R g+rwxs temp
 
 		# generate DB schema
 		php www/index.php --ansi orm:schema-tool:create
@@ -61,7 +65,11 @@ while [ "$task" != "q" ]; do
 		vypis="Installation has been executed. Choose another command or type 'q' to quit."
 	
 	elif [ "$task" == "2" ]; then
-						
+		
+		# copy new bootstrap
+		rm -f ./app/bootstrap.php
+		cp ./libs/webcms2/webcms2/install/bootstrap.php ./app/bootstrap.php
+			
 		# generate DB schema
 		php www/index.php --ansi orm:schema-tool:update --force
 

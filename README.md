@@ -28,11 +28,15 @@ This command will download all required packages, create DB schema, make all nec
 composer install
 ```
 
-It is must to create bootstrap. Here is example.
+BOOTSTRAP example
+--
 
 ```
 <?php
 
+/**
+ * My Application bootstrap file.
+ */
 use Nette\Application\Routers\Route;
 
 
@@ -44,10 +48,11 @@ $configurator = new Nette\Config\Configurator;
 
 // detects environment via virtual server name
 if(PHP_SAPI === 'cli'){
-	if(php_uname('n') === 'YOUR PRODUCTION SERVER NAME')
+	if(php_uname('n') === 'YOUR PRODUCTION SERVER NAME'){
 		$environment = 'production';
-	else
+	}else{
 		$environment = 'development';
+	}
 }else{
 	$environment = NULL;
 }
@@ -67,7 +72,7 @@ if(!$environment){
 	$configurator->addConfig(LIBS_DIR . '/webcms2/webcms2/config.neon');
 }
 else{
-	$configurator->addConfig(__DIR__ . '/config/config.neon');
+	$configurator->addConfig(__DIR__ . '/config/config.neon', $environment);
 	$configurator->addConfig(LIBS_DIR . '/webcms2/webcms2/config.neon', $environment);
 }
 
@@ -97,18 +102,44 @@ $container->router[] =  new Route('admin/<presenter>/<action>[/<id>]', array(
 	'action' => 'default'
 ));
 
-$container->router[] =  new Route('install/install.php/<action>', array(
-	'module' => 'Install',
-	'presenter' => 'Install',
-	'action' => 'default'
-));
-
 $entityManager = $container->getService('doctrine.entityManager');
 $container->router[] = new WebCMS\SystemRouter($entityManager);
 
 // Configure and run the application!
 $container->application->run();
-
 ```
+
+CONFIG.neon example
+--
+
+There is `boxes` section, here defined boxes are shown in page settings.
+
+Another important setting is `cacheNamespace`, which defines project specific namespace. If you use memcached cache storage, there can be a problem if two projects have same namespace.
+
+``
+common:
+	parameters:
+		database:
+			driver: pdo_mysql
+			host: localhost
+			dbname: nameOfDatabase
+			user: root
+			password:
+			charset: utf8
+			collation: utf8_czech_ci
+		boxes:
+			box1: true
+			box2: true
+			box3: true
+
+		cacheNamespace: 'projectNamespace'
+
+production < common:
+	parameters:
+		database:
+			password: 
+
+development < common:
+``
 
 
