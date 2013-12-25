@@ -79,7 +79,7 @@ class UpdatePresenter extends \AdminModule\BasePresenter{
 	public function actionClearCache(){
 		$this->context->cacheStorage->clean(array(\Nette\Caching\Cache::ALL => TRUE));
 		
-		$this->flashMessage('Mezipaměť byla smazána.', 'success');
+		$this->flashMessage('Cache has been cleared.', 'success');
 		$this->redirect("Update:");
 	}
 	
@@ -179,7 +179,7 @@ class UpdatePresenter extends \AdminModule\BasePresenter{
 				$devVersion = $versions['dev-master'];
 				if(count($versions) > 1){
 					$newestVersion = next($versions);
-					$newestVersion = next($versions); 
+					$newestVersion = $newestVersion->getVersion();
 				}else{
 					$newestVersion = null;
 				}
@@ -203,7 +203,7 @@ class UpdatePresenter extends \AdminModule\BasePresenter{
 		$setting->setValue($needUpdateCount);
 		
 		if($needUpdateCount > 0){
-			$this->flashMessage('Available ' . $needUpdateCount . ' new updates. You can upgrade your system in Update section.', 'success');
+			$this->flashMessage('Available new updates.', 'success');
 		}else{
 			$this->flashMessage('Your system is up to date.', 'success');
 		}
