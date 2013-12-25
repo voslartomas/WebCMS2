@@ -190,7 +190,7 @@ class UpdatePresenter extends \AdminModule\BasePresenter{
 						$needUpdateCount++;
 					}
 				}else{
-					if($package['version'] !== $newestVersion->getName()){
+					if($package['version'] !== $newestVersion){
 						$needUpdateCount++;
 					}
 				}
