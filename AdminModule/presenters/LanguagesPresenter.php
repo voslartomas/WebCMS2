@@ -167,7 +167,7 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 		$this->em->remove($this->lang);
 		$this->em->flush();
 		
-		$this->flashMessage($this->translation['Language has been removed.'], 'success');
+		$this->flashMessage('Language has been removed.', 'success');
 		
 		if(!$this->isAjax())
 			$this->redirect('Languages:default');
@@ -228,7 +228,7 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 			$this->em->flush();
 		}
 
-		$this->flashMessage($this->translation['Language has been added.'], 'success');
+		$this->flashMessage('Language has been added.', 'success');
 		
 		if(!$this->isAjax())
 			$this->redirect('Languages:default');
@@ -287,7 +287,7 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 		$this->em->remove($translation);
 		$this->em->flush();
 		
-		$this->flashMessage($this->translation['Translation has been removed.'], 'success');
+		$this->flashMessage('Translation has been removed.', 'success');
 		
 		if(!$this->isAjax())
 			$this->redirect('Languages:Translates');
@@ -301,7 +301,7 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 		$this->em->persist($translation);
 		$this->em->flush();
 		
-		$this->flashMessage($this->translation['Translation has been added.'], 'success');
+		$this->flashMessage('Translation has been added.', 'success');
 		
 		$this->invalidateControl('flashMessages');
 		

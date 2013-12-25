@@ -49,14 +49,14 @@ class UpdatePresenter extends \AdminModule\BasePresenter{
 		}
 		
 		if(strpos($successMessage, 'System has been updated.') !== FALSE){
-			$this->flashMessage($this->translation['System has been udpated.'], 'success');
+			$this->flashMessage('System has been udpated.', 'success');
 		}
 		
 		$errorMessage = $this->getMessageFromFile('.' . $installErrorLog);
 		if(!empty($errorMessage) && $this->user->isInRole('superadmin')){
 			$this->flashMessage($errorMessage, 'danger');
 		}elseif(!empty($errorMessage)){
-			$this->flashMessage($this->translation['Error while updating system. Please contact administrator.'], 'danger');
+			$this->flashMessage('Error while updating system. Please contact administrator.', 'danger');
 		}
 		
 		if(!$this->isAjax())
@@ -79,7 +79,7 @@ class UpdatePresenter extends \AdminModule\BasePresenter{
 	public function actionClearCache(){
 		$this->context->cacheStorage->clean(array(\Nette\Caching\Cache::ALL => TRUE));
 		
-		$this->flashMessage($this->translation['Mezipaměť byla smazána.'], 'success');
+		$this->flashMessage('Mezipaměť byla smazána.', 'success');
 		$this->redirect("Update:");
 	}
 	
@@ -97,7 +97,7 @@ class UpdatePresenter extends \AdminModule\BasePresenter{
 		
 		exec("mysqldump -u $user -p$password $database > ./upload/backups/db-backup-" . time() . ".sql");
 		
-		$this->flashMessage($this->translation['Backup has been create. You can download this backup in filesystem - backup directory.'], 'success');
+		$this->flashMessage('Backup has been create. You can download this backup in filesystem - backup directory.', 'success');
 	}
 	
 	// REFACTOR
@@ -203,9 +203,9 @@ class UpdatePresenter extends \AdminModule\BasePresenter{
 		$setting->setValue($needUpdateCount);
 		
 		if($needUpdateCount > 0){
-			$this->flashMessage($this->translation['Available ' . $needUpdateCount . ' new updates. You can upgrade your system in Update section.'], 'success');
+			$this->flashMessage('Available ' . $needUpdateCount . ' new updates. You can upgrade your system in Update section.', 'success');
 		}else{
-			$this->flashMessage($this->translation['Your system is up to date.'], 'success');
+			$this->flashMessage('Your system is up to date.', 'success');
 		}
 		
 		$this->em->flush();

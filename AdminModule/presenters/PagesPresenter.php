@@ -163,7 +163,7 @@ class PagesPresenter extends \AdminModule\BasePresenter{
 		
 		$this->em->flush();
 
-		$this->flashMessage($this->translation['Page has been added.'], 'success');
+		$this->flashMessage('Page has been added.', 'success');
 		
 		if(!$this->isAjax())
 			$this->redirect('Pages:default');
@@ -223,7 +223,7 @@ class PagesPresenter extends \AdminModule\BasePresenter{
 		$this->em->remove($this->page);
 		$this->em->flush();
 		
-		$this->flashMessage($this->translation['Page has been removed.'], 'success');
+		$this->flashMessage('Page has been removed.', 'success');
 		
 		if(!$this->isAjax())
 			$this->redirect('Pages:default');
@@ -236,9 +236,9 @@ class PagesPresenter extends \AdminModule\BasePresenter{
 			$repository = $this->em->getRepository('AdminModule\Page');
 			$repository->moveUp($this->page);
 			
-			$this->flashMessage($this->translation['Page has been moved up.'], 'success');
+			$this->flashMessage('Page has been moved up.', 'success');
 		}else{
-			$this->flashMessage($this->translation['Page has not been moved up, because it is root page.'], 'warning');
+			$this->flashMessage('Page has not been moved up, because it is root page.', 'warning');
 		}
 		
 		if(!$this->isAjax())
@@ -252,9 +252,9 @@ class PagesPresenter extends \AdminModule\BasePresenter{
 			$repository = $this->em->getRepository('AdminModule\Page');
 			$repository->moveDown($this->page);
 			
-			$this->flashMessage($this->translation['Page has been moved down.'], 'success');
+			$this->flashMessage('Page has been moved down.', 'success');
 		}else{
-			$this->flashMessage($this->translation['Page has not been moved up, because it is root page.'], 'warning');
+			$this->flashMessage('Page has not been moved up, because it is root page.', 'warning');
 		}
 		
 		if(!$this->isAjax())
