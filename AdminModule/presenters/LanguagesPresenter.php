@@ -357,8 +357,8 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 	public function cloningFormSubmitted(UI\Form $form){
 		$values = $form->getValues();
 		
-		$languageFrom = $this->em->getRepository('AdminModule\Langauge')->find($values->languageFrom);
-		$languageTo = $this->em->getRepository('AdminModule\Langauge')->find($values->languageTo);
+		$languageFrom = $this->em->getRepository('AdminModule\Language')->find($values->languageFrom);
+		$languageTo = $this->em->getRepository('AdminModule\Language')->find($values->languageTo);
 		$removeData = $values->removeData;
 		unset($values->languageFrom);
 		unset($values->languageTo);
@@ -367,7 +367,8 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 		// remove data first
 		if($removeData){
 			$pages = $this->em->getRepository('AdminModule\Page')->findBy(array(
-				'language' => $langaugeTo
+				'language' => $languageTo,
+				'parent' => NULL
 			));
 			
 			foreach($pages as $page){
@@ -376,21 +377,74 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 		}
 		
 		// clone page structure
+		$transformTable = array();
 		
+		$pages = $this->em->getRepository('AdminModule\Page')->findBy(array(
+				'language' => $languageFrom
+			), array('lft' => 'asc'));
+		
+		foreach($pages as $page){
+			$new = new Page;
+			$new->setLanguage($languageTo);
+			$new->setTitle($page->getTitle());
+			$new->setPresenter($page->getPresenter());
+			$new->setPath('tmp');
+			$new->setVisible($page->getVisible());
+			$new->setDefault($page->getDefault());
+			$new->setClass($page->getClass());
+			$new->setModule($page->getModule());
+			$new->setModuleName($page->getModuleName());
+			
+			if($page->getParent()){
+				$new->setParent($transformTable[$page->getParent()->getId()]);
+			}
+			
+			$this->em->persist($new);
+			$this->em->flush();
+			
+			$path = $this->em->getRepository('AdminModule\Page')->getPath($new);
+			$final = array();
+			foreach($path as $p){
+				if($p->getParent() != NULL) $final[] = $p->getSlug();
+			}
+		
+			$new->setPath(implode('/', $final));
+			$this->em->flush();
+			
+			$transformTable[$page->getId()] = $new;
+		}
+		
+		foreach($pages as $page){
+			// clone boxes settings
+			$boxes = $this->em->getRepository('AdminModule\Box')->findBy(array(
+				'pageTo' => $page
+			));
+			
+			foreach($boxes as $box){
+				$newBox = new Box();
+				$newBox->setBox($box->getBox());
+				$newBox->setFunction($box->getFunction());
+				$newBox->setModuleName($box->getModuleName());
+				$newBox->setPresenter($box->getPresenter());
+				$newBox->setPageFrom($transformTable[$box->getPageFrom()->getId()]);
+				$newBox->setPageTo($transformTable[$box->getPageTo()->getId()]);
+				
+				$this->em->persist($newBox);
+			}
+		}
 		
 		// clone all data
 		foreach($values as $key => $value){
 			if($value){
 				$module = $this->createObject(str_replace('_', '-', $key));
-				
 				if($module->isClonable()){
-					$module->cloneData();
+					$module->cloneData($this->em, $languageFrom, $languageTo, $transformTable);
 				}
 			}
 		}
-
-		$this->flush();
 		
+		$this->em->flush();
+
 		$this->flashMessage('Cloning has been successfuly done.', 'success');
 		if(!$this->isAjax()){
 			$this->redirect('Languages:cloning');
