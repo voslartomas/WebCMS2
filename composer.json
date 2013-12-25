@@ -29,5 +29,10 @@
     },
     "autoload": {
         "classmap": ["/"]
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.x-dev"
+        }
     }
 }
