@@ -83,7 +83,7 @@ class UsersPresenter extends \AdminModule\BasePresenter{
 		$this->em->remove($this->language);
 		$this->em->flush();
 		
-		$this->flashMessage($this->translation['Language has been removed.'], 'success');
+		$this->flashMessage('Language has been removed.', 'success');
 		
 		if(!$this->isAjax())
 			$this->redirect('Languages:default');
@@ -120,7 +120,7 @@ class UsersPresenter extends \AdminModule\BasePresenter{
 				)));
 			$email->send();
 			
-			$this->flashMessage($this->translation['Info email with new password was sent.'], 'success');
+			$this->flashMessage('Info email with new password was sent.', 'success');
 		}
 		
 		$this->user->setUsername($values->username);
@@ -129,7 +129,7 @@ class UsersPresenter extends \AdminModule\BasePresenter{
 		$this->em->persist($this->user);
 		$this->em->flush();
 		
-		$this->flashMessage($this->translation['User has been added.'], 'success');
+		$this->flashMessage('User has been added.', 'success');
 		
 		if(!$this->isAjax())
 			$this->redirect('Users:default');
@@ -151,7 +151,7 @@ class UsersPresenter extends \AdminModule\BasePresenter{
 		$this->em->remove($this->role);
 		$this->em->flush();
 		
-		$this->flashMessage($this->translation['Role has been removed.'], 'success');
+		$this->flashMessage('Role has been removed.', 'success');
 		
 		if(!$this->isAjax())
 			$this->redirect('Users:roles');
@@ -242,7 +242,7 @@ class UsersPresenter extends \AdminModule\BasePresenter{
 			$this->em->persist($this->role);
 		}
 
-		$this->flashMessage($this->translation['Role has been added.'], 'success');
+		$this->flashMessage('Role has been added.', 'success');
 		
 		// delete permissions
 		$permissions = $this->role->getPermissions();

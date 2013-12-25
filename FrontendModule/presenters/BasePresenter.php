@@ -254,7 +254,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 			)));
 			
 		}else{
-			$this->flashMessage($this->translation['No default page for selected language.'], 'error');
+			$this->flashMessage('No default page for selected language.', 'error');
 		}
 	}
 	
@@ -459,7 +459,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		$this->flashMessage($this->translation[$message], $type);
 	}
 
-	public function flashMessage($text, $type){
-                parent::flashMessage($this->translation[$text], $type);
-        }
+	public function flashMessage($text, $type = 'info'){
+		parent::flashMessage($this->translation[$text], $type);
+	}
 }

@@ -92,7 +92,7 @@ class SettingsPresenter extends \AdminModule\BasePresenter{
 		$this->em->remove($this->thumbnail);
 		$this->em->flush();
 		
-		$this->flashMessage($this->translation['Thumbnail has been removed.'], 'success');
+		$this->flashMessage('Thumbnail has been removed.', 'success');
 		
 		if(!$this->isAjax())
 			$this->redirect('Settings:pictures', array('panel' => 'thumbnails'));
@@ -263,7 +263,7 @@ class SettingsPresenter extends \AdminModule\BasePresenter{
 		$this->em->persist($boxAssign);
 		$this->em->flush();
 		
-		$this->flashMessage($this->translation['Box settings changed.'], 'success');
+		$this->flashMessage('Box settings changed.', 'success');
 	}
 	
 	/* SEO SETTINGS - BATCH*/
@@ -313,7 +313,7 @@ class SettingsPresenter extends \AdminModule\BasePresenter{
 		
 		$this->em->flush();
 		
-		$this->flashMessage($this->translation['Seo has been updated.'], 'success');
+		$this->flashMessage('Seo has been updated.', 'success');
 		$this->invalidateControl('flashMessages');
 	}
 	
@@ -331,7 +331,7 @@ class SettingsPresenter extends \AdminModule\BasePresenter{
 				$settings[] = $this->settings->get($key, \WebCMS\Settings::SECTION_BASIC, 'checkbox');
 			}
 		}else{
-			$this->flashMessage($this->translation['There are no settings in config file.'], 'info');
+			$this->flashMessage('There are no settings in config file.', 'info');
 		}
 			
 		return $this->createSettingsForm($settings);

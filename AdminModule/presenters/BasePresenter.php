@@ -204,7 +204,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		
 		$this->em->flush();
 		
-		$this->flashMessage($this->translation['Settings has been saved.'], 'success');
+		$this->flashMessage('Settings has been saved.', 'success');
 		$this->redirect('this');
 	}
 	
@@ -426,7 +426,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		
 		$this->em->flush();
 		
-		$this->flashMessage($this->translation['Seo settings has been saved.'], 'success');
+		$this->flashMessage('Seo settings has been saved.', 'success');
 		$this->redirect('this');
 	}
 	
@@ -524,7 +524,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		
 		$this->em->flush();
 		
-		$this->flashMessage($this->translation['Boxes settings has been saved.'], 'success');
+		$this->flashMessage('Boxes settings has been saved.', 'success');
 		if(!$this->isAjax())
 			$this->redirect('this');
 	}
@@ -541,7 +541,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		
 		$this->em->flush();
 		
-		$this->flashMessage($this->translation['Link has been added to favourites.'], 'success');
+		$this->flashMessage('Link has been added to favourites.', 'success');
 	}
 	
 	public function handleRemoveFromFavourite($idFav){
@@ -550,10 +550,10 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		$this->em->remove($fav);
 		$this->em->flush();
 		
-		$this->flashMessage($this->translation['Link has been removed from favourites.'], 'success');
+		$this->flashMessage('Link has been removed from favourites.', 'success');
 	}
 	
-	public function flashMessage($text, $type){
+	public function flashMessage($text, $type = 'info'){
 		parent::flashMessage($this->translation[$text], $type);
 	}
 }
