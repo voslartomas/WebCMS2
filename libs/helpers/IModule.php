@@ -21,8 +21,10 @@ interface IModule {
 	/**
 	 * Translates module data.
 	 * @param \Doctrine\ORM\EntityManager $entityManager
-	 * @param \AdminModule\Language $oldLanguge
-	 * @param \AdminModule\Language $newLanguage
+	 * @param \AdminModule\Language $language
+	 * @param abbr $from
+         * @param abbr $to
+         * @param \Webcook\Translator\ITranslator $translator
 	 */
-	public function translateData($entityManager, $oldLanguge, $newLanguage);
+	public function translateData($entityManager, $language, $from, $to, \Webcook\Translator\ITranslator $translator);
 }

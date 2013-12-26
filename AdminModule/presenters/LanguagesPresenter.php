@@ -14,6 +14,12 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 	/* @var Language */
 	private $lang;
 	
+        /* @var \Webcook\Translator\ServiceFactory */
+        private $serviceFactory;
+        
+        /* @var \Webcook\Translator\ITranslator */
+        private $translatorService;
+        
 	/* LANGUAGES */
 	
 	protected function beforeRender(){
@@ -457,15 +463,88 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 		$this->reloadContent();
 	}
 	
+        public function actionTranslator(){
+            $this->serviceFactory = new \Webcook\Translator\ServiceFactory();
+            
+            $this->translatorService = $this->serviceFactory->build(\Webcook\Translator\ServiceFactory::YANDEX, array(
+                    'key' => $this->settings->get('Yandex API key', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue()
+                ));
+        }
+        
 	public function createComponentTranslatorForm(){
 		$form = $this->createForm();
 		
+                $packages = \WebCMS\SystemHelper::getPackages();
+                
+                $yandexLangs = $this->translatorService->getLanguages();
+                $langst = array();
+                foreach($yandexLangs as $yl){
+                    $langst[$yl->getAbbreviation()] = $yl->getName();
+                }
+                
+                $form->addGroup('System');
+                $form->addSelect('systemLanguage', 'System language', $this->getAllLanguages())->setAttribute('class', 'form-control');
+                
+                $form->addGroup('Service');
+                $form->addSelect('languageFrom', 'From', $langst)->setAttribute('class', 'form-control');
+                $form->addSelect('languageTo', 'To', $langst)->setAttribute('class', 'form-control');
+                
+                $form->addGroup('Settings');
+                
+		foreach($packages as $key => $package){
+			
+			if($package['vendor'] === 'webcms2' && $package['package'] !== 'webcms2'){
+				$object = $this->createObject($package['package']);
+				
+				if($object->isTranslatable()){
+					$form->addCheckbox(str_replace('-', '_',$package['package']), $package['package']);
+				}else{
+					$form->addCheckbox(str_replace('-', '_',$package['package']), $package['package'] . ' not translatable.')->setDisabled(true);
+				}
+			}
+		}
+                
+                $form->addSubmit('translate', 'Translate');
+                $form->onSuccess[] = callback($this, 'translatorFormSubmitted');
+                
 		return $form;
 	}
 	
 	public function translatorFormSubmitted(UI\Form $form){
 		$values = $form->getValues();
+		$from = $values->languageFrom;
+                $to = $values->languageTo;
+                $language = $this->em->getRepository('AdminModule\Language')->find($values->systemLanguage);
+               
+                // clear values
+                unset($values->languageFrom);
+                unset($values->languageTo);
+                unset($values->systemLanguage);
+                
+                $pages = $this->em->getRepository('AdminModule\Page')->findBy(array(
+				'language' => $language
+			), array('lft' => 'asc'));
 		
-		
+                foreach($pages as $page){
+                    $t = $this->translatorService->translate($page->getTitle(), $from, $to);
+                    $page->setTitle($t->getTranslation());
+                }
+                
+                // clone all data
+		foreach($values as $key => $value){
+			if($value){
+				$module = $this->createObject(str_replace('_', '-', $key));
+				if($module->isTranslatable()){
+					$module->translateData($this->em, $language, $from, $to, $this->translatorService);
+				}
+			}
+		}
+                
+                $this->em->flush();
+                
+                $this->flashMessage('Translation of language finished.', 'success');
+                if(!$this->isAjax()){
+                    $this->redirect('Languages:translator');
+                }
 	}
 }

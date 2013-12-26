@@ -340,4 +340,18 @@ class SettingsPresenter extends \AdminModule\BasePresenter{
 	public function renderProject(){
 		$this->reloadContent();
 	}
+        
+        /* API third party */
+	
+        public function renderApi(){
+		$this->reloadContent();
+	}
+        
+	public function createComponentApiSettingsForm(){
+		
+		$settings = array();
+		$settings[] = $this->settings->get('Yandex API key', \WebCMS\Settings::SECTION_BASIC, 'text');
+		
+		return $this->createSettingsForm($settings);
+	}
 }
