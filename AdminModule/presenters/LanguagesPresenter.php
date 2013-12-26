@@ -340,7 +340,7 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 			if($package['vendor'] === 'webcms2' && $package['package'] !== 'webcms2'){
 				$object = $this->createObject($package['package']);
 				
-				if($object->isClonable()){
+				if($object->isCloneable()){
 					$form->addCheckbox(str_replace('-', '_',$package['package']), $package['package']);
 				}else{
 					$form->addCheckbox(str_replace('-', '_',$package['package']), $package['package'] . ' not clonable.')->setDisabled(true);
@@ -437,7 +437,7 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 		foreach($values as $key => $value){
 			if($value){
 				$module = $this->createObject(str_replace('_', '-', $key));
-				if($module->isClonable()){
+				if($module->isCloneable()){
 					$module->cloneData($this->em, $languageFrom, $languageTo, $transformTable);
 				}
 			}
@@ -449,5 +449,23 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 		if(!$this->isAjax()){
 			$this->redirect('Languages:cloning');
 		}
+	}
+	
+	/* TRANSLATOR */
+	
+	public function renderTranslator(){
+		$this->reloadContent();
+	}
+	
+	public function createComponentTranslatorForm(){
+		$form = $this->createForm();
+		
+		return $form;
+	}
+	
+	public function translatorFormSubmitted(UI\Form $form){
+		$values = $form->getValues();
+		
+		
 	}
 }
