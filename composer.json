@@ -26,7 +26,7 @@
 		"nitra/php-min": "0.0.*",
 		"knplabs/packagist-api": "1.*@dev",
 		"ddtraceweb/monolog-parser": "@dev",
-                "webcook/translator" : "0.*@dev"
+                "webcook/translator" : "@dev"
     },
     "autoload": {
         "classmap": ["/"]
