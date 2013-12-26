@@ -17,7 +17,9 @@ abstract class Module implements IModule {
 
 	protected $boxes = array();
 	
-	protected $clonable = false;
+	protected $cloneable = false;
+	
+	protected $translatable = false;
 	
 	public function getName() {
 		return $this->name;
@@ -79,12 +81,22 @@ abstract class Module implements IModule {
 	}
 	
 	public function cloneData($entityManager, $oldLanguge, $newLanguage, $transformTable){
-		if(!$this->isClonable()){
+		if(!$this->isCloneable()){
 			return false;
 		}
 	}
 	
-	public function isClonable(){
-		return $this->clonable;
+	public function isCloneable(){
+		return $this->cloneable;
+	}
+	
+	public function translateData($entityManager, $oldLanguge, $newLanguage){
+		if(!$this->isTranslatable()){
+			return false;
+		}
+	}
+	
+	public function isTranslatable(){
+		return $this->translatable;
 	}
 }
