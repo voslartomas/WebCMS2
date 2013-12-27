@@ -33,7 +33,7 @@ class SystemHelper {
 	 */
 	public static function getVersion(){
 		$packages = self::getPackages();
-		
+
 		return array_key_exists('webcms2/webcms2', $packages) ? $packages['webcms2/webcms2'] : 'unknown';
 	}
 	
@@ -48,7 +48,7 @@ class SystemHelper {
 				$vendor = $vendorPackage[0];
 				$package = $vendorPackage[1];
 				$version = $parsed[1];
-				$versionHash = ($parsed[1] == 'dev-master' ? $parsed[2] : '');
+				$versionHash = (strpos($parsed[1], 'dev') !== false ? $parsed[2] : '');
 				
 				$description = implode(' ', str_replace(array(
 					$parsed[0],
@@ -97,8 +97,9 @@ class SystemHelper {
 	public static function checkPermissions($user, $permission){
 		$roles = $user->getRoles();
 		
-		if($roles[0] === 'superadmin')
+		if($roles[0] === 'superadmin'){
 			return true;
+                }
 		
 		$identity = $user->getIdentity();
 		
