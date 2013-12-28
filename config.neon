@@ -29,7 +29,7 @@ common:
 production < common:
 	services: 
 		cacheStorage:
-			class: \Nette\Caching\Storages\MemcachedStorage(%cacheNamespace%)
+			class: \Nette\Caching\Storages\MemcachedStorage('localhost', 11211, %cacheNamespace%)
 
 development < common:
 	services:
