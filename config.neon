@@ -34,4 +34,4 @@ production < common:
 development < common:
 	services:
 		cacheStorage: 
-			class: \Nette\Caching\Storages\DevNullStorage
+			class: \Nette\Caching\Storages\MemcachedStorage('localhost', 11211, %cacheNamespace%)

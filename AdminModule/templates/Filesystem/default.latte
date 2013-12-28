@@ -230,9 +230,9 @@
 	{/foreach}
 	{foreach $files as $path => $file}
 		<div class="file ">
-			<span>
-				<img src="{$basePath}{$path|thumbnail:'system'}" style="width: 80px;" />
-			</span>
+                        <span>
+                                <img src="{$basePath}{$path|thumbnail:'system'}" style="width: 80px;" />
+                        </span>
 			<span>
 				{if $multiple}
 						<input id="{$file->getPathname()}" type="checkbox" class="checkbox-inline jq_selected" name="files" value="{$file->getPathname()}" data-path="{$path|relative}" data-thumbnail="{$basePath}{$path|thumbnail:'system'}" />
