@@ -58,6 +58,12 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 			$this->template->boxesSettings = FALSE;
 		}
 		
+		// check filled info email
+		$infoEmail = $this->settings->get('Info email', \WebCMS\Settings::SECTION_BASIC)->getValue();
+		if(!Nette\Utils\Validators::isEmail($infoEmail)){
+		    $this->flashMessage('Please fill in correct info email. Settings -> Basic settings.', 'warning');
+		}
+		
 		// save dynamic javascripts
 		$this->template->dynamicJs = $this->scriptHandler->getAll();
 		
@@ -151,7 +157,11 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 			'url' => $this->getHttpRequest()->url->absoluteUrl
 		);
 		
-		$logger->addInfo('Request catcher', $data);
+		if($this->getName() === 'Admin:Homepage' || $this->getName() === 'Admin:Login'){
+		    $logger->addNotice('Login', $data);
+		}else{
+		    $logger->addInfo('Request catcher', $data);   
+		}
 	}
 	
 	private function getSettings(){

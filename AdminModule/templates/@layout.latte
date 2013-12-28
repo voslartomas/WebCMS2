@@ -95,7 +95,7 @@
 						</form>
 					{/if}
 					<button type="button" class="btn btn-primary btn-ms dropdown-toggle" data-toggle="dropdown">
-						{_'Options'} <span class="caret"></span>
+						{$user->getIdentity()->getData()['username']} <span class="caret"></span>
 					</button>
 				  <ul class="dropdown-menu" role="menu">
 					<li><a n:href=":Admin:users:updateUser id =>  $user->getIdentity()->id" class="ajax" data-remote="false" data-target="#myModal" data-toggle="modal">{_'Account settings'}</a></li>
