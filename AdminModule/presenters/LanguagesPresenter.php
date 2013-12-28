@@ -466,9 +466,14 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
         public function actionTranslator(){
             $this->serviceFactory = new \Webcook\Translator\ServiceFactory();
             
-            $this->translatorService = $this->serviceFactory->build(\Webcook\Translator\ServiceFactory::YANDEX, array(
-                    'key' => $this->settings->get('Yandex API key', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue()
-                ));
+            $yandexApi = $this->settings->get('Yandex API key', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue();
+            if(!empty($yandexApi)){
+                $this->translatorService = $this->serviceFactory->build(\Webcook\Translator\ServiceFactory::YANDEX, array(
+                        'key' => $yandexApi
+                    ));
+            }else{
+                $this->flashMessage('You must fill in API key.', 'danger');
+            }
         }
         
 	public function createComponentTranslatorForm(){
@@ -476,35 +481,41 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 		
                 $packages = \WebCMS\SystemHelper::getPackages();
                 
-                $yandexLangs = $this->translatorService->getLanguages();
-                $langst = array();
-                foreach($yandexLangs as $yl){
-                    $langst[$yl->getAbbreviation()] = $yl->getName();
+                if($this->translatorService instanceof \Webcook\Translator\ITranslator){
+                
+                    $yandexLangs = $this->translatorService->getLanguages();
+                    $langst = array();
+                    foreach($yandexLangs as $yl){
+                        $langst[$yl->getAbbreviation()] = $yl->getName();
+                    }
+
+                    $form->addGroup('System');
+                    $form->addSelect('systemLanguage', 'System language', $this->getAllLanguages())->setAttribute('class', 'form-control');
+
+                    $form->addGroup('Service');
+                    $form->addSelect('languageFrom', 'From', $langst)->setAttribute('class', 'form-control');
+                    $form->addSelect('languageTo', 'To', $langst)->setAttribute('class', 'form-control');
+
+                    $form->addGroup('Settings');
+
+                    foreach($packages as $key => $package){
+
+                            if($package['vendor'] === 'webcms2' && $package['package'] !== 'webcms2'){
+                                    $object = $this->createObject($package['package']);
+
+                                    if($object->isTranslatable()){
+                                            $form->addCheckbox(str_replace('-', '_',$package['package']), $package['package']);
+                                    }else{
+                                            $form->addCheckbox(str_replace('-', '_',$package['package']), $package['package'] . ' not translatable.')->setDisabled(true);
+                                    }
+                            }
+                    }
+
+
+                    $form->addSubmit('translate', 'Translate');
+                
                 }
                 
-                $form->addGroup('System');
-                $form->addSelect('systemLanguage', 'System language', $this->getAllLanguages())->setAttribute('class', 'form-control');
-                
-                $form->addGroup('Service');
-                $form->addSelect('languageFrom', 'From', $langst)->setAttribute('class', 'form-control');
-                $form->addSelect('languageTo', 'To', $langst)->setAttribute('class', 'form-control');
-                
-                $form->addGroup('Settings');
-                
-		foreach($packages as $key => $package){
-			
-			if($package['vendor'] === 'webcms2' && $package['package'] !== 'webcms2'){
-				$object = $this->createObject($package['package']);
-				
-				if($object->isTranslatable()){
-					$form->addCheckbox(str_replace('-', '_',$package['package']), $package['package']);
-				}else{
-					$form->addCheckbox(str_replace('-', '_',$package['package']), $package['package'] . ' not translatable.')->setDisabled(true);
-				}
-			}
-		}
-                
-                $form->addSubmit('translate', 'Translate');
                 $form->onSuccess[] = callback($this, 'translatorFormSubmitted');
                 
 		return $form;
