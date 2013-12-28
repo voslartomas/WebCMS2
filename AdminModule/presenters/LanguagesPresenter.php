@@ -466,7 +466,12 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
         public function actionTranslator(){
             $this->serviceFactory = new \Webcook\Translator\ServiceFactory();
             
-	    $this->translatorService = $this->getTranslateService();
+	    try {
+		$this->translatorService = $this->getTranslateService();
+	    } catch (Exception $exc) {
+		$this->flashMessage($exc->getMessage(), 'danger');
+	    }
+
             if(!$this->translatorService instanceof \Webcook\Translator\ITranslator){
                 $this->flashMessage('You must fill in API key.', 'danger');
             }
@@ -475,55 +480,20 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 	private function getTranslateService(){
 	    $serviceId = $this->settings->get('Translate service', \WebCMS\Settings::SECTION_BASIC, 'select')->getValue();
 	    
-	    switch ($serviceId) {
-		case \Webcook\Translator\ServiceFactory::YANDEX:
-		    
-		    $key = $this->settings->get('Yandex API key', \WebCMS\Settings::SECTION_BASIC)->getValue();
-		    
-		    if(empty($key)){
-			return null;
-		    }
-		    
-		    $service = \Webcook\Translator\ServiceFactory::YANDEX;
-		    $params = array(
-			'key' => $key
-		    );
-		    
-		    break;
-		    
-		case \Webcook\Translator\ServiceFactory::GOOGLE:
-		    
-		    $key = $this->settings->get('Google API key', \WebCMS\Settings::SECTION_BASIC)->getValue();
-		    
-		    if(empty($key)){
-			return null;
-		    }
-		    
-		    $service = \Webcook\Translator\ServiceFactory::GOOGLE;
-		    $params = array(
-			'key' => $key
-		    );
-		    
-		case \Webcook\Translator\ServiceFactory::BING:
-		    
-		    $clientId = $this->settings->get('Bing client id', \WebCMS\Settings::SECTION_BASIC)->getValue();
-		    $clientSecret = $this->settings->get('Bing client secret', \WebCMS\Settings::SECTION_BASIC)->getValue();
-		   
-		    if(empty($clientId) || empty($clientSecret)){
-			return null;
-		    }
-		    
-		    $service = \Webcook\Translator\ServiceFactory::BING;
-		    $params = array(
-			'clientId' => $clientId,
-			'clientSecret' => $clientSecret
-		    );
-		    
-		default:
-		    break;
-	    }
-	    
-	    return $this->serviceFactory->build($service, $params);
+	    $this->serviceFactory->setSettings(array(
+		\Webcook\Translator\ServiceFactory::YANDEX => array(
+		    'key' => $this->settings->get('Yandex API key', \WebCMS\Settings::SECTION_BASIC)->getValue()
+		),
+		\Webcook\Translator\ServiceFactory::GOOGLE => array(
+		    'key' => $this->settings->get('Google API key', \WebCMS\Settings::SECTION_BASIC)->getValue()
+		),
+		\Webcook\Translator\ServiceFactory::BING => array(
+		    'clientId' => $this->settings->get('Bing client id', \WebCMS\Settings::SECTION_BASIC)->getValue(),
+		    'clientSecret' => $this->settings->get('Bing client secret', \WebCMS\Settings::SECTION_BASIC)->getValue()
+		)
+	    ));
+
+	    return $this->serviceFactory->build($serviceId);
 	}
 	
 	private function getLanguages(){
