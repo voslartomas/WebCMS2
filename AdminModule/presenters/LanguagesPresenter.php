@@ -526,6 +526,21 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 	    return $this->serviceFactory->build($service, $params);
 	}
 	
+	private function getLanguages(){
+	    
+	    $serviceId = $this->settings->get('Translate service', \WebCMS\Settings::SECTION_BASIC, 'select')->getValue();
+	    
+	    $cache = new \Nette\Caching\Cache($this->getContext()->getService('cacheStorage'), 'htmlFront');
+	    
+	    if(!$languages = $cache->load('tl' . $serviceId)){
+		$languages = $this->translatorService->getLanguages();
+		
+		$cache->save('tl' . $serviceId, $languages);
+	    }
+	    
+	    return $languages;
+	}
+	
 	public function createComponentTranslatorForm(){
 		$form = $this->createForm();
 		
@@ -533,9 +548,9 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
                 
                 if($this->translatorService instanceof \Webcook\Translator\ITranslator){
                 
-                    $yandexLangs = $this->translatorService->getLanguages();
+                    $langs = $this->getLanguages();
                     $langst = array();
-                    foreach($yandexLangs as $yl){
+                    foreach($langs as $yl){
                         $langst[$yl->getAbbreviation()] = $yl->getName();
                     }
 
