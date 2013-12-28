@@ -59,6 +59,8 @@ class UpdatePresenter extends \AdminModule\BasePresenter{
 			$this->flashMessage('Error while updating system. Please contact administrator.', 'danger');
 		}
 		
+		$this->handleCheckUpdates();
+		
 		if(!$this->isAjax())
 			$this->redirect('Update:');
 		else{

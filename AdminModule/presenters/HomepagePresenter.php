@@ -21,7 +21,9 @@ class HomepagePresenter extends \AdminModule\BasePresenter{
 
 		$logs = array();
 		foreach($reader as $log){
+		    if(!empty($log) && $log['level'] === 'INFO'){
 			$logs[] = $log;
+		    }
 		}
 		
 		// favourite links

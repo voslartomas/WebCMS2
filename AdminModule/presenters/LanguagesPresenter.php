@@ -301,6 +301,8 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 		
 		$this->flashMessage('Translation has been removed.', 'success');
 		
+		$this->cleanCache();
+		
 		if(!$this->isAjax())
 			$this->redirect('Languages:Translates');
 	}
@@ -317,8 +319,17 @@ class LanguagesPresenter extends \AdminModule\BasePresenter{
 		
 		$this->invalidateControl('flashMessages');
 		
+		$this->cleanCache();
+		
 		if(!$this->isAjax())
 			$this->redirect('Languages:Translates');
+		
+	}
+	
+	private function cleanCache(){
+	    $this->context->cacheStorage->clean(array(
+		\Nette\Caching\Cache::TAGS => array(\WebCMS\Translation::CACHE_NAMESPACE)
+	    ));
 	}
 	
 	/* TRANSLATIONS */
