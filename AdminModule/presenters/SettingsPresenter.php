@@ -352,6 +352,11 @@ class SettingsPresenter extends \AdminModule\BasePresenter{
 		$settings = array();
 		$settings[] = $this->settings->get('Yandex API key', \WebCMS\Settings::SECTION_BASIC, 'text');
 		
+		$settings[] = $this->settings->get('Google API key', \WebCMS\Settings::SECTION_BASIC, 'text');
+		
+		$settings[] = $this->settings->get('Bing client id', \WebCMS\Settings::SECTION_BASIC, 'text');
+		$settings[] = $this->settings->get('Bing client secret', \WebCMS\Settings::SECTION_BASIC, 'text');
+		
 		return $this->createSettingsForm($settings);
 	}
 }
