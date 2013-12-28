@@ -12,6 +12,8 @@
 
 <a n:href="checkUpdates!" class="btn btn-primary ajax">{_'Check updates'}</a>
 
+<a class="btn btn-primary ajax" n:href="addModule" data-remote="false" data-target="#myModal" data-toggle="modal" >{_'Add module'}</a>
+
 <br /><br /> 
 
 {if $template->isSuperAdmin($user)}
@@ -40,6 +42,8 @@
 						{else}
 							<a class="btn btn-primary" n:href="Register name => $package['package']">{_'Module register'}</a>
 						{/if}
+                                                {var $moduleName = $package['vendor'] . '/' . $package['package']}
+                                                <a class="btn btn-danger ajax" n:href="deleteModule! name => $moduleName">{_'Module remove'}</a>
 					{/if}
 				</td>
 			</tr>
