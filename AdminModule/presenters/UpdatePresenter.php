@@ -226,8 +226,13 @@ class UpdatePresenter extends \AdminModule\BasePresenter {
 	
 	file_put_contents('../composer.json', json_encode($config));
 	
+	$installLog = './log/install.log';
+	$installErrorLog = './log/install-error.log';
+	
 	putenv("COMPOSER_HOME=/usr/bin/.composer");
-	exec("cd ../;composer update $name -n");
+	exec("cd ../;composer update $name -n > $installLog 2> $installErrorLog");
+	exec("cd ../;composer dumpautoload");
+	exec("./libs/webcms2/webcms2/install/install.sh 3");
 
     }
     
@@ -241,10 +246,30 @@ class UpdatePresenter extends \AdminModule\BasePresenter {
     
     public function createComponentAddModuleForm(){
 	$form = $this->createForm();
-	$this->getModulesToInstall();
-	$form->addSelect('module', 'Module');
+	
+	$form->addSelect('module', 'Module', $this->getModulesToInstall())->setAttribute('class', 'form-control');
+	$form->addText('version', 'Module version')->setDefaultValue('0.*')->setAttribute('class', 'form-control');
+	
+	$form->addSubmit('install', 'Install module');
+	$form->onSuccess[] = callback($this, 'addModuleFormSubmitted');
 	
 	return $form;
+    }
+    
+    public function addModuleFormSubmitted($form){
+	$values = $form->getValues();
+	
+	putenv("COMPOSER_HOME=/usr/bin/.composer");
+	
+	$installLog = './log/install.log';
+	$installErrorLog = './log/install-error.log';
+	
+	$module = $values->module;
+	$version = $values->version;
+	exec("cd ../;composer require $module $version > $installLog 2> $installErrorLog");
+	exec("../libs/webcms2/webcms2/install/install.sh 3; >");
+	
+	$this->redirect('default');
     }
     
     private function getModulesToInstall(){
@@ -260,8 +285,7 @@ class UpdatePresenter extends \AdminModule\BasePresenter {
 	    }
 	}
 	
-	dump($notInstalled);
-	die();
+	return $notInstalled;
     }
 
 }
