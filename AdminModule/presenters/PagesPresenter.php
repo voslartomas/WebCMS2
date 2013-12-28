@@ -145,6 +145,7 @@ class PagesPresenter extends \AdminModule\BasePresenter{
 
 					$resource = 'admin:' . $this->page->getModuleName() . $presenter['name'] . $this->page->getId();
 					$permission->setResource($resource);
+					$permission->setPage($this->page);
 					$permission->setRead(true);
 
 					$r->addPermission($permission);
@@ -220,7 +221,7 @@ class PagesPresenter extends \AdminModule\BasePresenter{
 	
 	public function actionDeletePage($id){
 		$this->page = $this->em->find("AdminModule\Page", $id);
-		$this->em->remove($this->page);
+		$this->em->remove($this->page);		
 		$this->em->flush();
 		
 		$this->flashMessage('Page has been removed.', 'success');

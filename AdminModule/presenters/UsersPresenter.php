@@ -120,7 +120,7 @@ class UsersPresenter extends \AdminModule\BasePresenter{
 				)));
 			$email->send();
 			
-			$this->flashMessage('Info email with new password was sent.', 'success');
+			$this->flashMessage('Info email with new password has been sent.', 'success');
 		}
 		
 		$this->user->setUsername($values->username);
@@ -168,9 +168,7 @@ class UsersPresenter extends \AdminModule\BasePresenter{
 		
 		$resources = \WebCMS\SystemHelper::getResources();
 		
-		$pages = $this->em->getRepository('AdminModule\Page')->findBy(array(
-			'language' => $this->state->language
-		));
+		$pages = $this->em->getRepository('AdminModule\Page')->findAll();
 		
 		foreach($pages as $page){
 			
@@ -183,7 +181,7 @@ class UsersPresenter extends \AdminModule\BasePresenter{
 					$suffix = $presenter['name'] == $page->getModuleName() ? '' : ' ' . $presenter['name'];
 					
 					$key = 'admin:' . $page->getModuleName() . ':' . $presenter['name'] . $page->getId();
-					$resources[$key] = $page->getTitle() . $suffix;
+					$resources[$key] = $page->getTitle() . $suffix . ' (' . $page->getLanguage()->getName() . ')';
 				}
 			}
 		}
@@ -256,11 +254,14 @@ class UsersPresenter extends \AdminModule\BasePresenter{
 			if(strpos($key, 'res') !== FALSE){
 				$permission = new Permission();
 				
+				$pageId = filter_var($key, FILTER_SANITIZE_NUMBER_INT);
+				$page = $this->em->getRepository('AdminModule\Page')->find($pageId);
+				
 				$resource = 'admin:' . str_replace('resadmin', '', $key);
 				$permission->setResource($resource);
+				$permission->setPage($page);
 				$permission->setRead($val);
 				
-				//$this->em->persist($permission);
 				$perArray[] = $permission;
 			}
 		}

@@ -9,36 +9,62 @@ use AdminModule, Nette;
  */
 class Translation  extends \ArrayObject {
 	
-	private $translations;
+	private $translations = null;
 	private $em;
 	private $language;
 	private $backend;
+	
+	const CACHE_NAMESPACE = 'frontendTranslations';
 	
 	/**
 	 * A constructor
 	 * Prevents direct creation of object
 	 */
-	public function __construct($em, $language, $backend){
-		
-		$this->translations = $em->getRepository('AdminModule\Translation')->findBy(array(
-			'language' => $language,
-			'backend' => $backend
-		));
-		
-		$this->em = $em;
-		$this->language = $language;
-		$this->backend = $backend;
-	}
+	public function __construct($em, $language, $backend, $cacheStorage = null){
+	
+	    $this->translations = new TranslationArray($this);
+	    
+	    // cache translations for frontend
+	    if($cacheStorage != null && $backend == false){
+		$cache = new \Nette\Caching\Cache($cacheStorage);
 
-	public function getTranslations(){
+		if(!$translations = $cache->load(self::CACHE_NAMESPACE)){
 
-		$translation = new TranslationArray($this);
+		    $translations = $this->loadFromDb($em, $language, $backend);
 
-		foreach($this->translations as $t){
-			$translation[$t->getKey()] = $t->getTranslation();
+		    foreach($translations as $t){
+			    $this->translations[$t->getKey()] = $t->getTranslation();
+		    }
+
+		    $cache->save(self::CACHE_NAMESPACE, $this->translations->getData(), array(
+				    \Nette\Caching\Cache::TAGS => array(self::CACHE_NAMESPACE),
+				));
+		}else{
+		   
+		   $this->translations->setData($translations);
 		}
-
-		return $translation;
+	    }else{
+		$translations = $this->loadFromDb($em, $language, $backend);
+		
+		foreach($translations as $t){
+			$this->translations[$t->getKey()] = $t->getTranslation();
+		}
+	    }
+		
+	    $this->em = $em;
+	    $this->language = $language;
+	    $this->backend = $backend;
+	}
+	
+	private function loadFromDb($em, $language, $backend){
+	    return $em->getRepository('AdminModule\Translation')->findBy(array(
+			    'language' => $language,
+			    'backend' => $backend
+		    ));
+	}
+	
+	public function getTranslations(){
+		return $this->translations;
 	}
 
 	public function getTranslationByKey($key){
