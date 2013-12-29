@@ -1,0 +1,54 @@
+{block content}
+
+<h1>{_'System functions'}</h1>
+
+{include 'tabs.latte' active => 'functions'}
+
+<div class="tab-content">
+	<div class="tab-pane active">
+
+            <table class="table table-striped table-bordered">
+                <tr>
+                    <th style="width: 180px;"></th>
+                    <th>{_'Description'}</th>
+                </tr>
+                {if $template->isSuperAdmin($user)}
+                    <tr>
+                        <td>
+                            <a n:href="updateSystem!" class="btn btn-primary ajax longRun">{_'Update system?'}</a>
+                        </td>
+                        <td>
+                            {_'This function downloads all new updates for all packages. Generate differencies new autoload classes and changes in database.'}
+                        </td>
+                    </tr>
+                {/if}
+                <tr>
+                    <td>
+                        <a n:href="clearCache" class="btn btn-danger" data-confirm="{_'Are you sure you want to delete the cache?'}">{_'Clear cache?'}</a>
+                    </td>
+                    <td>
+                        {_'Clears cache of all system components.'}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a n:href="backupDatabase!" class="btn btn-primary ajax">{_'Backup database?'}</a>
+                    </td>
+                    <td>
+                        {_"Makes database dump and save into the filesystem's directory `backups`"}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a n:href="checkUpdates!" class="btn btn-primary ajax">{_'Check updates'}</a>
+                    </td>
+                    <td>
+                        {_'Checks whether all modules and libraries are up to date.'}
+                    </td>
+                </tr>
+            </table>            
+
+	</div>
+</div>
+
+{/block}
