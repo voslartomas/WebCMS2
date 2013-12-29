@@ -83,7 +83,7 @@ class UpdatePresenter extends \AdminModule\BasePresenter {
 	$this->context->cacheStorage->clean(array(\Nette\Caching\Cache::ALL => TRUE));
 
 	$this->flashMessage('Cache has been cleared.', 'success');
-	$this->redirect("Update:");
+	$this->redirect("Update:functions");
     }
 
     public function handleBackupDatabase() {
@@ -233,7 +233,8 @@ class UpdatePresenter extends \AdminModule\BasePresenter {
 	exec("cd ../;composer update $name -n > $installLog 2> $installErrorLog");
 	exec("cd ../;composer dumpautoload");
 	exec("./libs/webcms2/webcms2/install/install.sh 3");
-
+	
+	$this->redirect('default');
     }
     
     public function actionAddModule(){
@@ -287,5 +288,8 @@ class UpdatePresenter extends \AdminModule\BasePresenter {
 	
 	return $notInstalled;
     }
-
+    
+    public function renderFunctions(){
+	$this->reloadContent();
+    }
 }

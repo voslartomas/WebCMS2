@@ -2,60 +2,63 @@
 
 <h1>{_'Update system'}</h1>
 
-{if $template->isSuperAdmin($user)}
-	<a n:href="updateSystem!" class="btn btn-primary ajax longRun">{_'Update system?'}</a>
-{/if}
+{include 'tabs.latte' active => 'modules'}
 
-<a n:href="clearCache" class="btn btn-danger" data-confirm="{_'Are you sure you want to delete the cache?'}">{_'Clear cache?'}</a>
+<div class="tab-content">
+	<div class="tab-pane active">
 
-<a n:href="backupDatabase!" class="btn btn-primary ajax">{_'Backup database?'}</a>
+            <br />
+            
+            <a class="btn btn-primary ajax" n:href="addModule" data-remote="false" data-target="#myModal" data-toggle="modal" >{_'Add module'}</a>
 
-<a n:href="checkUpdates!" class="btn btn-primary ajax">{_'Check updates'}</a>
+            <br /><br /> 
 
-<a class="btn btn-primary ajax" n:href="addModule" data-remote="false" data-target="#myModal" data-toggle="modal" >{_'Add module'}</a>
+            {if $template->isSuperAdmin($user)}
+                    <a href="#" onclick="$('.jq_system-packages').toggle('slow')">{_'Show/hide system packages'}</a>
+            {/if}
 
-<br /><br /> 
+            <table class="table table-hover">
+                    <tr>
+                            <th>{_'Package vendor'}</th>
+                            <th>{_'Package name'}</th>
+                            <th>{_'Package version'}</th>
+                            <th>{_'Package description'}</th>
+                            <th>{_'Module actions'}</th>
+                    </tr>
+                    {foreach $packages as $package}
+                            {if $template->isSuperAdmin($user) || !$package['system']}
+                                    <tr class="{if $package['system']}jq_system-packages{/if} success">
+                                            <td>{$package['vendor']}</td>
+                                            <td>{$package['package']}</td>
+                                            <td>{$package['version']} {$package['versionHash']}</td>
+                                            <td>{$package['description']}</td>
+                                            <td>
+                                                    {if $package['module']}
+                                                            {if $package['registered']}
+                                                                    <a class="btn btn-danger" n:href="Unregister name => $package['package']">{_'Module unregister'}</a>
+                                                            {else}
+                                                                    <a class="btn btn-primary" n:href="Register name => $package['package']">{_'Module register'}</a>
+                                                            {/if}
+                                                            
+                                                            {if $template->isSuperAdmin($user)}
+                                                                {var $moduleName = $package['vendor'] . '/' . $package['package']}
+                                                                <a class="btn btn-danger ajax" n:href="deleteModule! name => $moduleName">{_'Module remove'}</a>
+                                                            {/if}
+                                                    {/if}
+                                            </td>
+                                    </tr>
+                            {/if}
+                    {/foreach}
+            </table>
 
-{if $template->isSuperAdmin($user)}
-	<a href="#" onclick="$('.jq_system-packages').toggle('slow')">{_'Show/hide system packages'}</a>
-{/if}
-
-<table class="table table-hover">
-	<tr>
-		<th>{_'Package vendor'}</th>
-		<th>{_'Package name'}</th>
-		<th>{_'Package version'}</th>
-		<th>{_'Package description'}</th>
-		<th>{_'Module actions'}</th>
-	</tr>
-	{foreach $packages as $package}
-		{if $template->isSuperAdmin($user) || !$package['system']}
-			<tr class="{if $package['system']}jq_system-packages{/if} success">
-				<td>{$package['vendor']}</td>
-				<td>{$package['package']}</td>
-				<td>{$package['version']} {$package['versionHash']}</td>
-				<td>{$package['description']}</td>
-				<td>
-					{if $package['module']}
-						{if $package['registered']}
-							<a class="btn btn-danger" n:href="Unregister name => $package['package']">{_'Module unregister'}</a>
-						{else}
-							<a class="btn btn-primary" n:href="Register name => $package['package']">{_'Module register'}</a>
-						{/if}
-                                                {var $moduleName = $package['vendor'] . '/' . $package['package']}
-                                                <a class="btn btn-danger ajax" n:href="deleteModule! name => $moduleName">{_'Module remove'}</a>
-					{/if}
-				</td>
-			</tr>
-		{/if}
-	{/foreach}
-</table>
+            <script>
+                    $(function(){
+                            $(".jq_system-packages").hide();
+                    });
+            </script>
 	
-<script>
-	$(function(){
-		$(".jq_system-packages").hide();
-	});
-</script>
-		
+	</div>
+</div>
+
 	
 {/block}
