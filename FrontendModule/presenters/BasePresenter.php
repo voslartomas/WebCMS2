@@ -123,6 +123,11 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 	protected function startup(){
 		parent::startup();
 		
+		// change language
+		if(is_numeric($this->getParam('l'))){
+		    $this->changeLanguage($this->getParam('l'));
+		}
+		
 		// set language
 		if(is_numeric($this->getParam('language'))) $this->language = $this->em->find('AdminModule\Language', $this->getParam('language'));
 		else $this->language = $this->em->getRepository('AdminModule\Language')->findOneBy(array(
@@ -235,28 +240,26 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 	public function languagesFormSubmitted($form){
 		$values = $form->getValues();
 		
-		$home = $this->em->getRepository('AdminModule\Page')->findOneBy(array(
-			'language' => $values->language,
-			'default' => TRUE
-		));
-		
-		if(is_object($home)){
-		
-			$abbr = $home->getLanguage()->getDefaultFrontend() ? '' : $home->getLanguage()->getAbbr() . '/';
+		$this->changeLanguage($values->language);
+	}
+	
+	private function changeLanguage($idLanguage){
+	    $home = $this->em->getRepository('AdminModule\Page')->findOneBy(array(
+		    'language' => $idLanguage,
+		    'default' => TRUE
+	    ));
 
-			/*$this->session->start();
-			$this->session->destroy();
-			$this->session->start();*/
-			
-			$this->redirectUrl($this->link('this', array(
-				'id' => $home->getId(),
-				'path' => $home->getPath(),
-				'abbr' => $abbr,
-			)));
-			
-		}else{
-			$this->flashMessage('No default page for selected language.', 'error');
-		}
+	    if(is_object($home)){
+
+		    $abbr = $home->getLanguage()->getDefaultFrontend() ? '' : $home->getLanguage()->getAbbr() . '/';
+		    
+		    $this->redirectUrl(
+			$abbr . $home->getPath() 
+		    );
+
+	    }else{
+		    $this->flashMessage('No default page for selected language.', 'error');
+	    }
 	}
 	
 	/**
