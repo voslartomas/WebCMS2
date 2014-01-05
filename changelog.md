@@ -1,5 +1,13 @@
 CHANGE LOG
 --
+v0.3.0
+
+- Implemented languages cloning
+- Implemented translator
+- Added watermark option to filesystem
+- Managing of modules
+- Updated layout
+- Some fixes
 
 v0.2.0
 
