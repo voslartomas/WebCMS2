@@ -1,5 +1,9 @@
 CHANGE LOG
 --
+
+v0.3.1
+- fixed ajax requests => added invalidation
+
 v0.3.0
 
 - Implemented languages cloning
