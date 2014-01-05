@@ -34,6 +34,12 @@ class Permission extends Doctrine\Entity {
 	 */
 	private $remove;
 	
+	/**
+	 * @orm\ManyToOne(targetEntity="Page")
+	 * @orm\JoinColumn(onDelete="CASCADE")
+	 */
+	private $page;
+	
 	public function getResource() {
 		return $this->resource;
 	}
@@ -64,5 +70,13 @@ class Permission extends Doctrine\Entity {
 
 	public function setRemove($remove) {
 		$this->remove = $remove;
+	}
+	
+	public function getPage() {
+	    return $this->page;
+	}
+
+	public function setPage($page) {
+	    $this->page = $page;
 	}
 }

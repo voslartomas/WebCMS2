@@ -36,7 +36,7 @@ class User extends Doctrine\Entity{
 	/**
 	 * @orm\ManyToOne(targetEntity="Role", fetch="EAGER")
 	 *
-	 * @orm\JoinColumn(name="role_id", referencedColumnName="id", onDelete="CASCADE")
+	 * @orm\JoinColumn(name="role_id", referencedColumnName="id", onDelete="SET NULL")
 	 */
 	private $role;
 	

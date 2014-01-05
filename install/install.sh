@@ -48,7 +48,7 @@ while [ "$task" != "q" ]; do
 		cp ./libs/webcms2/webcms2/install/bootstrap ./app/bootstrap.php
 
 		# sets permissions for dirs
-		chmod -R 777 ./www/upload ./www/thumbnails ./temp ./log ./app/proxies ./app/templates ./composer.lock ./libs/composer ./libs ./app/bootstrap.php
+		chmod -R 777 ./www/upload ./www/thumbnails ./temp ./log ./app/proxies ./app/templates ./composer.json ./composer.lock ./libs/composer ./libs ./app/bootstrap.php
 		chmod -R g+rwxs temp
 
 		# generate DB schema
