@@ -46,6 +46,8 @@ class SettingsPresenter extends \AdminModule\BasePresenter{
 		// global settings for all languages
 		$this->settings->setLanguage(NULL);
 		
+                $settings[] = $this->settings->get('Watermark picture path', \WebCMS\Settings::SECTION_IMAGE, 'text');
+                
 		$settings[] = $this->settings->get('Apply watermark', \WebCMS\Settings::SECTION_IMAGE, 'radio', array(
 			0 => 'Do not apply watermark',
 			1 => 'Use picture as watermark',
@@ -55,9 +57,10 @@ class SettingsPresenter extends \AdminModule\BasePresenter{
 		$settings[] = $this->settings->get('Watermark text', \WebCMS\Settings::SECTION_IMAGE, 'text');
 		$settings[] = $this->settings->get('Watermark text size', \WebCMS\Settings::SECTION_IMAGE, 'text');
 		$settings[] = $this->settings->get('Watermark text font', \WebCMS\Settings::SECTION_IMAGE, 'select', array(
-			0 => 'Comic sans',
-			1 => 'Arial',
-			2 => 'Times new roman'
+			'Courier New.ttf' => 'Courier new',
+                        'Comic Sans MS.ttf' => 'Comic sans',
+			'Arial.ttf' => 'Arial',
+			'Times New Roman.ttf' => 'Times new roman'
 		));
 		
 		$settings[] = $this->settings->get('Watermark text color', \WebCMS\Settings::SECTION_IMAGE, 'text');
@@ -79,6 +82,7 @@ class SettingsPresenter extends \AdminModule\BasePresenter{
 	public function renderPictures($panel){
 		$this->reloadContent();
 		
+                $this->template->watermarkPath = $this->settings->get('Watermark picture path', \WebCMS\Settings::SECTION_IMAGE)->getValue();
 		$this->template->panel = $panel;
 	}
 	
@@ -339,5 +343,27 @@ class SettingsPresenter extends \AdminModule\BasePresenter{
 	
 	public function renderProject(){
 		$this->reloadContent();
+	}
+        
+        /* API third party */
+	
+        public function renderApi(){
+		$this->reloadContent();
+	}
+        
+	public function createComponentApiSettingsForm(){
+		
+		$settings = array();
+		
+		$settings[] = $this->settings->get('Translate service', \WebCMS\Settings::SECTION_BASIC, 'select', \Webcook\Translator\ServiceFactory::getServices());
+		
+		$settings[] = $this->settings->get('Yandex API key', \WebCMS\Settings::SECTION_BASIC, 'text');
+		
+		$settings[] = $this->settings->get('Google API key', \WebCMS\Settings::SECTION_BASIC, 'text');
+		
+		$settings[] = $this->settings->get('Bing client id', \WebCMS\Settings::SECTION_BASIC, 'text');
+		$settings[] = $this->settings->get('Bing client secret', \WebCMS\Settings::SECTION_BASIC, 'text');
+		
+		return $this->createSettingsForm($settings);
 	}
 }

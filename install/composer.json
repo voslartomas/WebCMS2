@@ -1,0 +1,24 @@
+{
+	"name": "webcms",
+	"description": "WebCMS",
+	"config": {
+		"vendor-dir": "./libs"
+	},
+        "minimum-stability" : "dev",
+        "prefer-stable": true,
+	"require": {
+		"webcms2/webcms2" : "0.*",
+		"webcms2/page-module" : "0.*"
+	},
+	"scripts": {
+		"post-install-cmd" : [
+			"libs/webcms2/webcms2/install/install.sh 1"
+		],
+		"pre-update-cmd" : [
+			
+		],
+		"post-update-cmd" : [ 
+			"libs/webcms2/webcms2/install/install.sh 2"
+		]
+    }
+}

@@ -54,8 +54,9 @@ class ThumbnailCreator {
 					$tmpImage->resize($conf->getX(), $conf->getY());
 				
 				// watermark
-				if($this->settings->get('Apply watermark', \WebCMS\Settings::SECTION_IMAGE)->getValue() == 1) 
+				if($this->settings->get('Apply watermark', \WebCMS\Settings::SECTION_IMAGE)->getValue() !== 0 && $conf->getWatermark()){ 
 						$tmpImage = $this->applyWatermark($tmpImage);
+                                }
 				
 				$key = $conf->getKey();
 				if(!empty($key)) 
@@ -70,8 +71,8 @@ class ThumbnailCreator {
 	 * @return type
 	 */
 	public function applyWatermark($image){
-		
-		$section = \WebCMS\Settings::SECTION_IMAGE;
+            
+                $section = \WebCMS\Settings::SECTION_IMAGE;
 		
 		if($this->settings->get('Apply watermark', $section)->getValue() == 1){
 		
@@ -115,7 +116,7 @@ class ThumbnailCreator {
 			$text = $this->settings->get('Watermark text', $section)->getValue();
 			$font = $this->settings->get('Watermark text font', $section)->getValue();
 			$color = $this->settings->get('Watermark text color', $section)->getValue();
-			$font = "libs/fonts/".$font;
+			$font = "../libs/webcms2/webcms2/AdminModule/static/fonts/".$font;
 			$size = $this->settings->get('Watermark text size', $section)->getValue();
 			
 			$dimensions = imagettfbbox($size, 0, $font, $text);
@@ -126,7 +127,7 @@ class ThumbnailCreator {
 			/* Watermark positioning */
 			if($this->settings->get('Watermark position', $section)->getValue() == 0){
 				$left = 0;
-				$top = $string_height;
+				$top = $stringHeight;
 			}elseif($this->settings->get('Watermark position', $section)->getValue() == 1){
 				$left = $image->getWidth() - $stringWidth;
 				$top = $stringHeight;

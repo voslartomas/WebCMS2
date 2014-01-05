@@ -17,6 +17,10 @@ abstract class Module implements IModule {
 
 	protected $boxes = array();
 	
+	protected $cloneable = false;
+	
+	protected $translatable = false;
+	
 	public function getName() {
 		return $this->name;
 	}
@@ -74,5 +78,25 @@ abstract class Module implements IModule {
 		}
 		
 		return FALSE;
+	}
+	
+	public function cloneData($entityManager, $oldLanguge, $newLanguage, $transformTable){
+		if(!$this->isCloneable()){
+			return false;
+		}
+	}
+	
+	public function isCloneable(){
+		return $this->cloneable;
+	}
+	
+	public function translateData($entityManager, $language, $from, $to, \Webcook\Translator\ITranslator $translator){
+		if(!$this->isTranslatable()){
+			return false;
+		}
+	}
+	
+	public function isTranslatable(){
+		return $this->translatable;
 	}
 }
