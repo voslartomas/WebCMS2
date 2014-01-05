@@ -165,6 +165,10 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 				$this->redirectUrl($this->presenter->getHttpRequest()->url->baseUrl . $this->actualPage->getRedirect());
 			}
 		}
+		
+		if ($this->isAjax()) {
+			$this->invalidateControl();
+		}
 	}
 	
 	public function createTemplate($class = NULL) {
