@@ -25,7 +25,9 @@ class SystemRouter extends \Nette\Application\Routers\Route{
     function match(\Nette\Http\IRequest $httpRequest){ 
 		
 		$path = $httpRequest->getUrl()->getPath();
-		$query = str_replace($httpRequest->getUrl()->getScriptPath(), '', $path);
+		
+		if($httpRequest->getUrl()->getScriptPath() !== '/') $query = str_replace($httpRequest->getUrl()->getScriptPath(), '', $path);
+		else $query = substr($path, 1, strlen($path));
 		
 		$path = explode('/', $query);
 		
