@@ -1,6 +1,9 @@
 CHANGE LOG
 --
 
+v0.3.2
+- fixed client side for administration
+
 v0.3.1
 - fixed ajax requests => added invalidation
 
