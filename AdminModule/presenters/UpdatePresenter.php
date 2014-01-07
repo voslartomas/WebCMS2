@@ -179,7 +179,7 @@ class UpdatePresenter extends \AdminModule\BasePresenter {
 				$apiResult = $client->get($package['vendor'] . '/' . $package['package']);
 				$versions = $apiResult->getVersions();
 
-				$devVersion = $versions['dev-master'];
+				$devVersion = $versions[$package['version']];
 				if (count($versions) > 1) {
 					
 					$newestVersion = next($versions);
