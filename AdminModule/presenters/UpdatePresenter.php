@@ -224,7 +224,7 @@ class UpdatePresenter extends \AdminModule\BasePresenter {
 	    unset($config->require->$name);
 	}
 	
-	file_put_contents('../composer.json', json_encode($config));
+	file_put_contents('../composer.json', json_encode($config, JSON_PRETTY_PRINT));
 	
 	$installLog = './log/install.log';
 	$installErrorLog = './log/install-error.log';
