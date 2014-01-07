@@ -1,7 +1,7 @@
 {**
  * Administration main layout WebCMS2.
  *
- * @copyright  Copyright (c) 2013 Tomáš Voslař
+ * @copyright  Copyright (c) 2013 - 2014 Tomáš Voslař
  * @package    WebCMS
  *
  * @param string   $basePath web base path
@@ -20,11 +20,11 @@
 	{block head}
 		{* TODO vytvorit hlavni soubory pro js a css, include pouze techto dvou *}
 		<link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/../libs/webcms2/webcms2/AdminModule/client-side/css/screen.css" type="text/css">
-		<link rel="stylesheet" media="print" href="{$basePath}/../libs/webcms2/webcms2/AdminModule/client-side/css/print.css" type="text/css">
-		<link rel="stylesheet" media="screen" href="{$basePath}/../libs/webcms2/webcms2/AdminModule/client-side/grido/grido.css" type="text/css">
-		<link rel="stylesheet" media="screen" href="{$basePath}/../libs/webcms2/webcms2/AdminModule/client-side/kendoui/kendo.common.css" type="text/css">
-		<link rel="stylesheet" media="screen" href="{$basePath}/../libs/webcms2/webcms2/AdminModule/client-side/kendoui/kendo.default.css" type="text/css">
-		<link rel="stylesheet" media="screen" href="{$basePath}/../libs/webcms2/webcms2/AdminModule/client-side/bootstrap/css/bootstrap.css" type="text/css">
+		<link rel="stylesheet" media="print" href="{$basePath}/client-admin/css/print.css" type="text/css">
+		<link rel="stylesheet" media="screen" href="{$basePath}/client-admin/grido/grido.css" type="text/css">
+		<link rel="stylesheet" media="screen" href="{$basePath}/client-admin/kendoui/kendo.common.css" type="text/css">
+		<link rel="stylesheet" media="screen" href="{$basePath}/client-admin/kendoui/kendo.default.css" type="text/css">
+		<link rel="stylesheet" media="screen" href="{$basePath}/client-admin/bootstrap/css/bootstrap.css" type="text/css">
 		<link rel="shortcut icon" href="{$basePath}/favicon.ico" type="image/x-icon">
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
 	{/block}
@@ -179,14 +179,14 @@
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 	
-		<script type="text/javascript" src="{$basePath}/../libs/webcms2/webcms2/AdminModule/client-side/kendoui/kendo.web.js"></script>
-		<script type="text/javascript" src="{$basePath}/../libs/webcms2/webcms2/AdminModule/client-side/ckeditor/ckeditor.js"></script>
-		<script src="{$basePath}/../libs/webcms2/webcms2/AdminModule/client-side/ckeditor/adapters/jquery.js"></script>
-		<script type="text/javascript" src="{$basePath}/../libs/webcms2/webcms2/AdminModule/client-side/bootstrap/js/bootstrap.js"></script>
-		<script type="text/javascript" src="{$basePath}/../libs/webcms2/webcms2/AdminModule/client-side/plugins/bootbox.min.js"></script>
-		<script type="text/javascript" src="{$basePath}/../libs/webcms2/webcms2/AdminModule/client-side/grido/grido.js"></script>
-		<script type="text/javascript" src="{$basePath}/../libs/webcms2/webcms2/AdminModule/client-side/plugins/nette.ajax.js"></script>
-		<script type="text/javascript" src="{$basePath}/../libs/webcms2/webcms2/AdminModule/client-side/js/netteForms.js"></script>
-		<script type="text/javascript" src="{$basePath}/../libs/webcms2/webcms2/AdminModule/client-side/js/Webcms/Webcms.js"></script>
+		<script type="text/javascript" src="{$basePath}/client-admin/kendoui/kendo.web.js"></script>
+		<script type="text/javascript" src="{$basePath}/client-admin/ckeditor/ckeditor.js"></script>
+		<script src="{$basePath}/client-admin/ckeditor/adapters/jquery.js"></script>
+		<script type="text/javascript" src="{$basePath}/client-admin/bootstrap/js/bootstrap.js"></script>
+		<script type="text/javascript" src="{$basePath}/client-admin/plugins/bootbox.min.js"></script>
+		<script type="text/javascript" src="{$basePath}/client-admin/grido/grido.js"></script>
+		<script type="text/javascript" src="{$basePath}/client-admin/plugins/nette.ajax.js"></script>
+		<script type="text/javascript" src="{$basePath}/client-admin/js/netteForms.js"></script>
+		<script type="text/javascript" src="{$basePath}/client-admin/js/Webcms/Webcms.js"></script>
 </body>
 </html>
