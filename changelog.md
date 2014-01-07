@@ -1,5 +1,9 @@
 CHANGE LOG
 --
+v0.3.5
+- fixed spinner z-index
+- fixed install script (rm proxies directory before regenerating)
+- added pretty print to composer.json when removing module
 
 v0.3.2
 - fixed client side for administration
