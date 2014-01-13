@@ -40,7 +40,7 @@ class UpdatePresenter extends \AdminModule\BasePresenter {
 
 		putenv("COMPOSER_HOME=/usr/bin/.composer");
 
-		exec("cd ../;git pull;composer update > $installLog 2> $installErrorLog");
+		exec("cd ../;git pull;composer update -n > $installLog 2> $installErrorLog");
 
 		$successMessage = $this->getMessageFromFile('.' . $installLog);
 
