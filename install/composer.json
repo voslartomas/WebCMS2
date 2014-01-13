@@ -2,7 +2,8 @@
 	"name": "webcms",
 	"description": "WebCMS",
 	"config": {
-		"vendor-dir": "./libs"
+		"vendor-dir": "./libs",
+		"discard-changes": true
 	},
         "minimum-stability" : "dev",
         "prefer-stable": true,
