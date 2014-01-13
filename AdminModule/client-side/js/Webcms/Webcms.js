@@ -146,9 +146,10 @@ Webcms.prototype = {
 	initTextEditors : function(){
 		
 		$(".editor:not(.k-content)").ckeditor({
-						filebrowserBrowseUrl: basePath  + '/admin/filesystem/files-dialog?multi=0',
-						filebrowserImageBrowseUrl: basePath + '/admin/filesystem/files-dialog?filter=images&multi=0'
-					});
+			filebrowserBrowseUrl: basePath  + '/admin/filesystem/files-dialog?multi=0',
+			filebrowserImageBrowseUrl: basePath + '/admin/filesystem/files-dialog?filter=images&multi=0',
+			allowedContent: true
+		});
 
 	}
 };
