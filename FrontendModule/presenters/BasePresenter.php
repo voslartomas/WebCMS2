@@ -183,6 +183,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
             ));
             $this->payload->nameSeo = $this->actualPage->getSlug();
             $this->payload->name = $this->actualPage->getTitle();
+            $this->payload->class = $this->actualPage->getClass();
         }
     }
 
