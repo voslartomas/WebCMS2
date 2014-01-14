@@ -78,6 +78,17 @@ class UsersPresenter extends \AdminModule\BasePresenter{
 		else $this->user = new User();
 	}
 	
+	public function actionDeleteUser($id){
+		$this->user = $this->em->find("AdminModule\User", $id);
+		$this->em->remove($this->user);
+		$this->em->flush();
+		
+		$this->flashMessage('User has been removed.', 'success');
+		
+		if(!$this->isAjax())
+			$this->redirect('Users:default');
+	}
+	
 	public function actionDeleteLanguage($id){
 		$this->language = $this->em->find("AdminModule\Language", $id);
 		$this->em->remove($this->language);
