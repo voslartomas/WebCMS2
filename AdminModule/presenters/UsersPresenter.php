@@ -113,10 +113,12 @@ class UsersPresenter extends \AdminModule\BasePresenter{
 			$email->addTo($this->user->getEmail());
 			$email->setSubject($this->translation['Your password has been changed. '] . $this->presenter->getHttpRequest()->url->baseUrl);
 			$email->setHtmlBody($this->settings->get('User new password', \WebCMS\Settings::SECTION_EMAIL)->getValue(FALSE, array(
-				'[PASSWORD]'
+				'[PASSWORD]',
+				'[LOGIN]'
 			),
 				array(
-					$values->password
+					$values->password,
+					$values->username
 				)));
 			$email->send();
 			
