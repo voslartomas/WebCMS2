@@ -36,7 +36,7 @@ class Settings {
 	 * @return String
 	 * @throws Exception
 	 */
-	public function get($key, $section = 'basic', $type = 'text', $options = array()){
+	public function get($key, $section = 'basic', $type = null, $options = array()){
 			
 		// system settings
 		if(array_key_exists($section, $this->settings)){
@@ -67,7 +67,7 @@ class Settings {
 	 * @param String $key
 	 * @param String $section
 	 */
-	private function save($key, $section, $type = 'text', $options = array()){
+	private function save($key, $section, $type = null, $options = array()){
 		$setting = new \AdminModule\Setting;
 		$setting->setKey($key);
 		$setting->setSection($section);
