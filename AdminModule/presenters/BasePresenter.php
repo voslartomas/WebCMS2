@@ -186,7 +186,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		foreach($settings as $s){
 			$ident = $s->getId();
 			
-			if($s->getType() === 'text')
+			if($s->getType() === 'text' || $s->getType() === null)
 				$form->addText($ident, $s->getKey())->setDefaultValue($s->getValue())->setAttribute('class', 'form-control');
 			elseif($s->getType() === 'textarea')
 				$form->addTextArea($ident, $s->getKey())->setDefaultValue($s->getValue())->setAttribute('class', 'editor');
