@@ -29,7 +29,7 @@ class Setting extends Doctrine\Entity {
 	private $section;
 	
 	/**
-	 * @ORM\Column
+	 * @ORM\Column(nullable=true)
 	 * @var String 
 	 */
 	private $type;
