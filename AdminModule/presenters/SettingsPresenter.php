@@ -116,6 +116,14 @@ class SettingsPresenter extends \AdminModule\BasePresenter{
 		$form->addText('key', 'Key');
 		$form->addText('x', 'Width');
 		$form->addText('y', 'Height');
+                $form->addSelect('resize', 'Resize type', array(
+                    \Nette\Image::EXACT => 'Exact',
+                    \Nette\Image::FILL => 'Fill',
+                    \Nette\Image::FIT => 'Fit',
+                    \Nette\Image::SHRINK_ONLY => 'Shrink',
+                    \Nette\Image::STRETCH => 'Stretch'
+                ));
+                $form->addCheckbox('crop', 'Crop?');
 		$form->addCheckbox('watermark', 'Watermark?');
 		
 		if(\WebCMS\SystemHelper::isSuperAdmin($this->user))
@@ -147,6 +155,8 @@ class SettingsPresenter extends \AdminModule\BasePresenter{
 		$thumb->setKey($values->key);
 		$thumb->setX($values->x);
 		$thumb->setY($values->y);
+                $thumb->setResize($values->resize);
+                $thumb->setCrop($values->crop);
 		$thumb->setWatermark($values->watermark);
 		$thumb->setSystem($values->system);
 		

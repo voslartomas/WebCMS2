@@ -39,7 +39,35 @@ class Thumbnail extends \AdminModule\Doctrine\Entity{
 	 * @var Boolean 
 	 */
 	private $system;
-	
+        
+        /**
+         * @ORM\Column(type="integer")
+         * @var Int
+         */
+        private $resize;
+
+        /**
+         * @ORM\Column(type="boolean")
+         * @var 
+         */
+        private $crop;
+        
+        public function getCrop() {
+            return $this->crop;
+        }
+
+        public function setCrop($crop) {
+            $this->crop = $crop;
+        }
+        
+        public function getResize() {
+            return $this->resize;
+        }
+
+        public function setResize($resize) {
+            $this->resize = $resize;
+        }
+        
 	public function getKey() {
 		return $this->key;
 	}
