@@ -88,11 +88,22 @@ class Translation  extends \ArrayObject {
 			$translation->setTranslation($value);
 			$translation->setLanguage($this->language);
 			$translation->setBackend($this->backend);
-
+			$translation->setHash();
+			
 			$this->em->persist($translation);
 			$this->em->flush();
 		}
 	}
 
-
+	public function hashTranslations(){
+	    $translations = $this->em->getRepository('AdminModule\Translation')->findBy(array(
+		'hash' => ''
+	    ));
+	    
+	    foreach($translations as $tr){
+		$tr->setHash();
+	    }
+	    
+	    $this->em->flush();
+	}
 }

@@ -135,7 +135,8 @@ class LanguagesPresenter extends \AdminModule\BasePresenter {
 	    $t->setKey($translation['key']);
 	    $t->setTranslation($translation['translation']);
 	    $t->setBackend($translation['backend']);
-
+	    $t->setHash();
+	    
 	    $exists = $this->translationExists($t);
 	    if (!$exists) {
 		$this->em->persist($t);

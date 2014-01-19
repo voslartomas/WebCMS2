@@ -149,7 +149,9 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
         $translation = new \WebCMS\Translation($this->em, $this->language, 0, $this->getContext()->getService('cacheStorage'));
         $this->translation = $translation->getTranslations();
         $this->translator = new \WebCMS\Translator($this->translation);
-
+	
+	$translation->hashTranslations();
+	
         // system settings
         $this->settings = new \WebCMS\Settings($this->em, $this->language);
         $this->settings->setSettings($this->getSettings());
