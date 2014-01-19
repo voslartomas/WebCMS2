@@ -1,5 +1,11 @@
 CHANGE LOG
 --
+
+v0.3.8
+- added unique hash to translations
+- fixed deletion of user
+- bugfixes
+
 v0.3.5
 - fixed spinner z-index
 - fixed install script (rm proxies directory before regenerating)
