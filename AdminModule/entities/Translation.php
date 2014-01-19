@@ -32,6 +32,21 @@ class Translation extends \AdminModule\Doctrine\Entity {
 	 */
 	private $backend;
 	
+	/**
+	 * TODO unique=true
+	 * @orm\Column()
+	 * @var 
+	 */
+	private $hash;
+	
+	public function getHash() {
+	    return $this->hash;
+	}
+
+	public function setHash() {
+	    $this->hash = sha1($this->getKey() . $this->getLanguage()->getId() . $this->getBackend());
+	}
+	
 	public function getKey() {
 		return $this->key;
 	}
