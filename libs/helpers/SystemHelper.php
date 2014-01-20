@@ -180,7 +180,7 @@ class SystemHelper {
 	public static function thumbnail($path, $thumbnailKey){
 				
 		$path = self::relative($path);
-		$path = str_replace("upload", 'thumbnails', $path);
+		$path = str_replace("upload/", 'thumbnails/', $path);
 		
 		$info = pathinfo($path);
 		
