@@ -8,9 +8,14 @@
 <table class="table table-bordered table-hover">
 	<tr>
 		<th>{_'Page name'}</th>
-		{foreach $boxes as $key => $box}
+		{foreach $boxes as $name => $box}
 			<th>
-				{$key}
+				{$name} <select class="jq_box_batch form-control">
+                                                {foreach $boxesAssoc as $key => $ba}
+                                                        <option value="{$key}">{$ba}</option>
+                                                {/foreach}
+                                        </select>
+                                        <a class="btn btn-success jq_assign_boxes" data-boxId="{$name}">{_'Assing to all'}</a>
 			</th>
 		{/foreach}
 	</tr>
@@ -39,6 +44,17 @@
 
 
 <script>
+    
+        $('.jq_assign_boxes').click(function(){
+            var toAssign = $(this).parent().find('.jq_box_batch').val();
+            var boxId = $(this).data('boxid');
+            
+            $("select[name*=" + boxId + "]").each(function(){
+                 $(this).val(toAssign);
+                 $(this).change();
+            });
+        });
+    
 	$('.jq_box').live('change', function(){
 		var name = $(this).attr('name');
 		var value = $(this).val();
