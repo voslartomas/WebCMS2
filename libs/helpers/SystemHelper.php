@@ -132,7 +132,6 @@ class SystemHelper {
 			'admin:Settings' => 'admin:Settings',
 			'admin:Users' => 'admin:Users',
 			'admin:Languages' => 'admin:Languages',
-			'admin:Modules' => 'admin:Modules',
 			'admin:Pages' => 'admin:Pages',
 			'admin:Filesystem' => 'admin:Filesystem',
 			'admin:Update' => 'admin:Update'
@@ -180,7 +179,7 @@ class SystemHelper {
 	public static function thumbnail($path, $thumbnailKey){
 				
 		$path = self::relative($path);
-		$path = str_replace("upload/", 'thumbnails/', $path);
+		$path = str_replace("upload", 'thumbnails', $path);
 		
 		$info = pathinfo($path);
 		
