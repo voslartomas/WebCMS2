@@ -2,6 +2,11 @@
 
 <h1>{_'Translations'}</h1>
 
+{if $template->isSuperAdmin($user)}
+    <a class="btn btn-primary" n:href="regenerateTranslations!">{_'Regenerate translations'}</a>
+    <br /><br />
+{/if}
+
 {include 'tabs.latte' active => 'translates'}
 
 <a id="updateTranslationLink" n:href="updateTranslation!"></a>

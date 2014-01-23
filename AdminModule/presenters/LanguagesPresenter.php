@@ -38,14 +38,20 @@ class LanguagesPresenter extends \AdminModule\BasePresenter {
     protected function createComponentLanguageForm() {
 
 	$locales = \WebCMS\Locales::getSystemLocales();
-
+	$translationFiles = \WebCMS\SystemHelper::getTranslationFiles();
+	$files = array('Pick a file');
+	
+	foreach($translationFiles as $f){
+	    $files[$f] = $f;
+	}
+	
 	$form = $this->createForm();
 	$form->addText('name', 'Name')->setAttribute('class', 'form-control');
 	$form->addText('abbr', 'Abbreviation')->setAttribute('class', 'form-control');
-	$form->addSelect('locale', 'Locale')->setItems($locales);
-	$form->addCheckbox('defaultFrontend', 'Default fe')->setAttribute('class', 'form-control');
-	$form->addCheckbox('defaultBackend', 'Default be')->setAttribute('class', 'form-control');
-	$form->addUpload('import', 'Import lang');
+	$form->addSelect('locale', 'Locale')->setItems($locales)->setAttribute('class', 'form-control');
+	$form->addCheckbox('defaultFrontend', 'Default fe');
+	$form->addCheckbox('defaultBackend', 'Default be');
+	$form->addSelect('import', 'Import translation', $files)->setAttribute('class', 'form-control');
 	$form->addSubmit('save', 'Save')->setAttribute('class', 'btn btn-success');
 
 	$form->onSuccess[] = callback($this, 'languageFormSubmitted');
@@ -56,6 +62,64 @@ class LanguagesPresenter extends \AdminModule\BasePresenter {
 	return $form;
     }
 
+    public function languageFormSubmitted(UI\Form $form) {
+	$values = $form->getValues();
+
+	$this->lang->setName($values->name);
+	$this->lang->setAbbr($values->abbr);
+	$this->lang->setLocale($values->locale);
+	$this->lang->setDefaultFrontend($values->defaultFrontend);
+	$this->lang->setDefaultBackend($values->defaultBackend);
+
+	$this->em->persist($this->lang);
+	$this->em->flush();
+
+	if ($values->import) {
+	    /*$qb = $this->em->createQueryBuilder();
+	     $qb->delete('AdminModule\Translation', 'l')
+	      ->where('l.language = ?1')
+	      ->setParameter(1, $this->lang)
+	      ->getQuery()
+	      ->execute();
+	      $this->em->flush(); */
+	    $file = \WebCMS\SystemHelper::WEBCMS_PATH . 'AdminModule/static/translations/' . $values->import;
+
+	    $content = file_get_contents($file);
+	    $this->importLanguage($content, $this->lang);
+	}
+
+	// only one item can be default
+	if ($values->defaultFrontend) {
+	    $qb = $this->em->createQueryBuilder();
+	    $qb->update('AdminModule\Language', 'l')
+		->set('l.defaultFrontend', 0)
+		->where('l.id <> ?1')
+		->setParameter(1, $this->lang->getId())
+		->getQuery()
+		->execute();
+	    $this->em->flush();
+	}
+
+	if ($values->defaultBackend) {
+	    $qb = $this->em->createQueryBuilder();
+	    $qb->update('AdminModule\Language', 'l')
+		->set('l.defaultBackend', 0)
+		->where('l.id <> ?1')
+		->setParameter(1, $this->lang->getId())
+		->getQuery()
+		->execute();
+	    $this->em->flush();
+	}
+
+	$this->flashMessage('Language has been added.', 'success');
+
+	if (!$this->isAjax())
+	    $this->redirect('Languages:default');
+	else {
+	    $this->invalidateControl('header');
+	}
+    }
+    
     protected function createComponentGrid($name) {
 
 	$grid = $this->createGrid($this, $name, "Language");
@@ -188,63 +252,6 @@ class LanguagesPresenter extends \AdminModule\BasePresenter {
 	$this->template->language = $this->lang;
     }
 
-    public function languageFormSubmitted(UI\Form $form) {
-	$values = $form->getValues();
-
-	$this->lang->setName($values->name);
-	$this->lang->setAbbr($values->abbr);
-	$this->lang->setLocale($values->locale);
-	$this->lang->setDefaultFrontend($values->defaultFrontend);
-	$this->lang->setDefaultBackend($values->defaultBackend);
-
-	$this->em->persist($this->lang);
-	$this->em->flush();
-
-	if ($values->import->getTemporaryFile()) {
-	    $qb = $this->em->createQueryBuilder();
-	    /* $qb->delete('AdminModule\Translation', 'l')
-	      ->where('l.language = ?1')
-	      ->setParameter(1, $this->lang)
-	      ->getQuery()
-	      ->execute();
-	      $this->em->flush(); */
-
-	    $content = file_get_contents($values->import->getTemporaryFile());
-	    $this->importLanguage($content, $this->lang);
-	}
-
-	// only one item can be default
-	if ($values->defaultFrontend) {
-	    $qb = $this->em->createQueryBuilder();
-	    $qb->update('AdminModule\Language', 'l')
-		->set('l.defaultFrontend', 0)
-		->where('l.id <> ?1')
-		->setParameter(1, $this->lang->getId())
-		->getQuery()
-		->execute();
-	    $this->em->flush();
-	}
-
-	if ($values->defaultBackend) {
-	    $qb = $this->em->createQueryBuilder();
-	    $qb->update('AdminModule\Language', 'l')
-		->set('l.defaultBackend', 0)
-		->where('l.id <> ?1')
-		->setParameter(1, $this->lang->getId())
-		->getQuery()
-		->execute();
-	    $this->em->flush();
-	}
-
-	$this->flashMessage('Language has been added.', 'success');
-
-	if (!$this->isAjax())
-	    $this->redirect('Languages:default');
-	else {
-	    $this->invalidateControl('header');
-	}
-    }
-
     /* TRANSLATIONS */
 
     public function renderTranslates() {
@@ -283,6 +290,11 @@ class LanguagesPresenter extends \AdminModule\BasePresenter {
 	    '1' => 'Yes',
 	    NULL => 'No'
 	))->setFilterSelect($backend);
+	
+	$grid->addColumnText('translated', 'Translated')->setReplacement(array(
+	    '1' => 'Yes',
+	    NULL => 'No'
+	))->setFilterSelect($backend);
 
 	$grid->addColumnText('language', 'Language')->setCustomRender(function($item) {
 	    return $item->getLanguage()->getName();
@@ -313,7 +325,7 @@ class LanguagesPresenter extends \AdminModule\BasePresenter {
 
 	$translation = $this->em->find('AdminModule\Translation', trim($idTranslation));
 	$translation->setTranslation(trim($value));
-
+	
 	$this->em->persist($translation);
 	$this->em->flush();
 
@@ -326,7 +338,17 @@ class LanguagesPresenter extends \AdminModule\BasePresenter {
 	if (!$this->isAjax())
 	    $this->redirect('Languages:Translates');
     }
-
+    
+    public function handleRegenerateTranslations(){
+	$translations = $this->em->getRepository('AdminModule\Translation')->findAll();
+	
+	foreach($translations as $t){
+	    $t->setTranslation($t->getTranslation());
+	}
+	
+	$this->em->flush();
+    }
+    
     private function cleanCache() {
 	$this->context->cacheStorage->clean(array(
 	    \Nette\Caching\Cache::TAGS => array(\WebCMS\Translation::CACHE_NAMESPACE)

@@ -39,6 +39,12 @@ class Translation extends \AdminModule\Doctrine\Entity {
 	 */
 	private $hash;
 	
+	/**
+	 * @orm\Column(type="boolean")
+	 * @var Boolean 
+	 */
+	private $translated;
+	
 	public function getHash() {
 	    return $this->hash;
 	}
@@ -69,6 +75,7 @@ class Translation extends \AdminModule\Doctrine\Entity {
 
 	public function setTranslation($translation) {
 		$this->translation = $translation;
+		$this->translated = $this->getTranslated();
 	}
 
 	public function setLanguage($language) {
@@ -77,5 +84,9 @@ class Translation extends \AdminModule\Doctrine\Entity {
 
 	public function setBackend($backend) {
 		$this->backend = $backend;
+	}
+	
+	public function getTranslated() {
+	    return $this->key !== $this->translation;
 	}
 }
