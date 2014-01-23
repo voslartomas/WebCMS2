@@ -198,7 +198,8 @@ class SettingsPresenter extends \AdminModule\BasePresenter{
 	public function createComponentEmailsSettingsForm(){
 		
 		$settings = array();
-		$settings[] = $this->settings->get('User new password', \WebCMS\Settings::SECTION_EMAIL, 'textarea');
+		$settings[] = $this->settings->get('User new password subject', \WebCMS\Settings::SECTION_EMAIL, 'text');
+                $settings[] = $this->settings->get('User new password', \WebCMS\Settings::SECTION_EMAIL, 'textarea');
 		
 		return $this->createSettingsForm($settings);
 	}

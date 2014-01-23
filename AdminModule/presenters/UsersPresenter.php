@@ -122,7 +122,7 @@ class UsersPresenter extends \AdminModule\BasePresenter{
 			$email = new Mail\Message;
 			$email->setFrom($this->settings->get('Info email', \WebCMS\Settings::SECTION_BASIC)->getValue());
 			$email->addTo($this->user->getEmail());
-			$email->setSubject($this->translation['Your password has been changed. '] . $this->presenter->getHttpRequest()->url->baseUrl);
+			$email->setSubject($this->settings->get('User new password subject', \WebCMS\Settings::SECTION_BASIC)->getValue());
 			$email->setHtmlBody($this->settings->get('User new password', \WebCMS\Settings::SECTION_EMAIL)->getValue(FALSE, array(
 				'[PASSWORD]',
 				'[LOGIN]'
@@ -142,7 +142,7 @@ class UsersPresenter extends \AdminModule\BasePresenter{
 		$this->em->persist($this->user);
 		$this->em->flush();
 		
-		$this->flashMessage('User has been added.', 'success');
+		$this->flashMessage('User has been updated.', 'success');
 		
 		if(!$this->isAjax())
 			$this->redirect('Users:default');
