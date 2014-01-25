@@ -164,8 +164,7 @@ class FilesystemPresenter extends \AdminModule\BasePresenter {
 
         set_time_limit(0);
 
-        \WebCMS\SystemHelper::rrmdir('thumbnails');
-        mkdir('thumbnails');
+        \WebCMS\SystemHelper::rrmdir('thumbnails', true);
 
         $timeStart = time();
 
