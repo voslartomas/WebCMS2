@@ -1,6 +1,9 @@
 CHANGE LOG
 --
 
+v0.3.9
+- fixed filesystem (symlink path)
+
 v0.3.8
 - added unique hash to translations
 - fixed deletion of user
