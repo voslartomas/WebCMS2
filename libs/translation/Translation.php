@@ -94,8 +94,7 @@ use AdminModule,
 		$translation->setLanguage($this->language);
 		$translation->setBackend($this->backend);
 		$translation->setHash();
-		dump($translation);
-		die();
+		
 		$this->em->persist($translation);
 		$this->em->flush();
 	    }
