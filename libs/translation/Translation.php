@@ -25,7 +25,7 @@ use AdminModule,
 
 	    $this->translations = new TranslationArray($this);
 
-	    $cacheKey = self::CACHE_NAMESPACE . $language->getId();
+	    /*$cacheKey = self::CACHE_NAMESPACE . $language->getId();
 
 	    // cache translations for frontend
 	    if ($cacheStorage != null && $backend == false) {
@@ -46,13 +46,13 @@ use AdminModule,
 
 		    $this->translations->setData($translations);
 		}
-	    } else {
+	    } else {*/
 		$translations = $this->loadFromDb($em, $language, $backend);
 
 		foreach ($translations as $t) {
 		    $this->translations[$t->getKey()] = $t->getTranslation();
 		}
-	    }
+	    //}
 
 	    $this->em = $em;
 	    $this->language = $language;
