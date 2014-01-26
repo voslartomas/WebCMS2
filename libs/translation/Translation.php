@@ -24,11 +24,13 @@ class Translation  extends \ArrayObject {
 	
 	    $this->translations = new TranslationArray($this);
 	    
+	    $cacheKey = self::CACHE_NAMESPACE . $language;
+	    
 	    // cache translations for frontend
 	    if($cacheStorage != null && $backend == false){
 		$cache = new \Nette\Caching\Cache($cacheStorage);
 
-		if(!$translations = $cache->load(self::CACHE_NAMESPACE)){
+		if(!$translations = $cache->load($cacheKey)){
 
 		    $translations = $this->loadFromDb($em, $language, $backend);
 
@@ -36,8 +38,8 @@ class Translation  extends \ArrayObject {
 			    $this->translations[$t->getKey()] = $t->getTranslation();
 		    }
 
-		    $cache->save(self::CACHE_NAMESPACE, $this->translations->getData(), array(
-				    \Nette\Caching\Cache::TAGS => array(self::CACHE_NAMESPACE),
+		    $cache->save($cacheKey, $this->translations->getData(), array(
+				    \Nette\Caching\Cache::TAGS => array($cacheKey),
 				));
 		}else{
 		   
