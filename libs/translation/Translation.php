@@ -24,7 +24,7 @@ class Translation  extends \ArrayObject {
 	
 	    $this->translations = new TranslationArray($this);
 	    
-	    $cacheKey = self::CACHE_NAMESPACE . $language;
+	    $cacheKey = self::CACHE_NAMESPACE . $language->getId();
 	    
 	    // cache translations for frontend
 	    if($cacheStorage != null && $backend == false){

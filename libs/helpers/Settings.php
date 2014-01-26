@@ -36,7 +36,7 @@ class Settings {
 	 * @return String
 	 * @throws Exception
 	 */
-	public function get($key, $section = 'basic', $type = null, $options = array()){
+	public function get($key, $section = 'basic', $type = null, $options = array(), $language = true){
 			
 		// system settings
 		if(array_key_exists($section, $this->settings)){
@@ -45,7 +45,7 @@ class Settings {
 			}
 		}
 		
-		return $this->save($key, $section, $type, $options);
+		return $this->save($key, $section, $type, $options, $language);
 	}
 	
 	/**
@@ -67,13 +67,17 @@ class Settings {
 	 * @param String $key
 	 * @param String $section
 	 */
-	private function save($key, $section, $type = null, $options = array()){
+	private function save($key, $section, $type = null, $options = array(), $language = true){
 		$setting = new \AdminModule\Setting;
 		$setting->setKey($key);
 		$setting->setSection($section);
 		$setting->setType($type);
 		$setting->setValue('');
-		$setting->setLanguage($this->language);
+		
+		if($language){
+		    $setting->setLanguage($this->language);
+		}
+		
 		$setting->setOptions($options);
 		
 		$this->em->persist($setting);
