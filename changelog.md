@@ -1,6 +1,14 @@
 CHANGE LOG
 --
 
+v0.3.10
+
+- composer updates
+- added unique hash to translation
+- removed caching (temporary fix)
+- other bugfixes
+- added clearing of cache for doctrine2 into update
+
 v0.3.9
 - fixed filesystem (symlink path)
 
