@@ -27,6 +27,7 @@
                              $('.jq_selected:checked').each(function(){
                                     var data = $(this).data();
                                     $("input:first").val(data.path.substr(1, data.path.length));
+                                    $("#watermarkImage").attr('src', data.path));
 				});
                           });
                   }, 250);
@@ -34,7 +35,9 @@
         </script>
           
         {if !empty($watermarkPath)}
-            <img src="{$basePath}/{$watermarkPath|thumbnail:'system'}" style="width: 80px;" />
+            <img src="{$basePath}/{$watermarkPath|thumbnail:'system'}" id="watermarkImage" style="width: 80px;" />
+        {else}
+        	<img src="" id="watermarkImage" style="width: 80px;" />
         {/if}
         
         {control picturesSettingsForm}
