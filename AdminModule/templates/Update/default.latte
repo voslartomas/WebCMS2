@@ -11,6 +11,10 @@
             
             <a class="btn btn-primary ajax" n:href="addModule" data-remote="false" data-target="#myModal" data-toggle="modal" >{_'Add module'}</a>
 
+			{if $template->isSuperAdmin($user)}
+                    <a class="btn btn-primary ajax" n:href="createModule" data-remote="false" data-target="#myModal" data-toggle="modal" >{_'Create new module'}</a>
+            {/if}
+			
             <br /><br /> 
 
             {if $template->isSuperAdmin($user)}
