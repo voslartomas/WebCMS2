@@ -1,6 +1,9 @@
 CHANGE LOG
 --
 
+v0.3.11
+- new package for connection with doctrine
+
 v0.3.10
 
 - composer updates
