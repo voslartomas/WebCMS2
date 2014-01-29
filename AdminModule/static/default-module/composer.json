@@ -1,7 +1,7 @@
 {
     "name": "webcms2/#name#-module",
     "type": "library",
-    "description": "#Descriptions#",
+    "description": "#Description#",
     "keywords": ["webcms2","module"],
     "homepage": "http://www.webcook.cz/WebCMS2",
     "license": "MIT",
@@ -14,7 +14,7 @@
         }
     ],
     "require": {
-		"webcms2/#name#": "0.*"
+		"webcms2/webcms2": "0.*"
     },
     "autoload": {
         "classmap": ["/"]
