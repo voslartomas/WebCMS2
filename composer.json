@@ -29,7 +29,7 @@
                 "webcook/translator" : "0.*@dev"
     },
     "autoload": {
-        "classmap": ["AdminModule/presenters/", "FrontendModule/presenters/", "libs", "AdminModule/model", "entities", "Search.php"]
+        "classmap": ["AdminModule/presenters/", "FrontendModule/presenters/", "libs", "AdminModule/model", "entities"]
     },
     "extra": {
         "branch-alias": {
