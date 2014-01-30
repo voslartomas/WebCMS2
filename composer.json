@@ -29,7 +29,8 @@
                 "webcook/translator" : "0.*@dev"
     },
     "autoload": {
-        "classmap": ["/"]
+        "classmap": ["/"],
+		"exclude-from-classmap": ["/AdminModule/static/"]
     },
     "extra": {
         "branch-alias": {
