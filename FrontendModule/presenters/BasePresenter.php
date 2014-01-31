@@ -474,7 +474,16 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
             'abbr' => $this->abbr,
         ));
     }
+    
+    protected function createObject($name){
+        $expl = explode('-', $name);
 
+        $objectName = ucfirst($expl[0]);
+        $objectName = "\\WebCMS\\$objectName" . "Module\\" . $objectName;
+
+        return new $objectName;
+    }
+    
     /* @deprecated */
 
     public function flashMessageTranslated($message, $type = 'info') {

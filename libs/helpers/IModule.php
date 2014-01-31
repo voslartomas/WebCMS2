@@ -34,5 +34,5 @@ interface IModule {
          * @param String phrase
          * @param \AdminModule\Language $language
          */
-	public function search($entityManager, $phrase, $language);
+	public function search(\Doctrine\ORM\EntityManager $entityManager, $phrase, \AdminModule\Language $language);
 }
