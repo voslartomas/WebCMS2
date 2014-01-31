@@ -27,4 +27,12 @@ interface IModule {
          * @param \Webcook\Translator\ITranslator $translator
 	 */
 	public function translateData($entityManager, $language, $from, $to, \Webcook\Translator\ITranslator $translator);
+        
+        
+        /**
+         * @param \Doctrine\ORM\EntityManager $entityManager
+         * @param String phrase
+         * @param \AdminModule\Language $language
+         */
+	public function search($entityManager, $phrase, $language);
 }

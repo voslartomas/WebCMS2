@@ -24,7 +24,8 @@ if [ "$action" = "create" ]; then
 	fi
 
 	# copy default module directory
-	tar -xf ../AdminModule/static/default-module.tar ../../$name-module
+	tar -xf ../AdminModule/static/default-module.tar -C ../../
+	mv ../../default-module ../../$name-module
 	
 	# rename files
 	find ../../$name-module -name 'Name*' -type f -exec bash -c "mv \"\$1\" \"\${1/Name/$Name}\"" -- {} \;
