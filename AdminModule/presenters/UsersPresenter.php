@@ -122,7 +122,7 @@ class UsersPresenter extends \AdminModule\BasePresenter{
 			$email = new Mail\Message;
 			$email->setFrom($this->settings->get('Info email', \WebCMS\Settings::SECTION_BASIC)->getValue());
 			$email->addTo($this->user->getEmail());
-			$email->setSubject($this->settings->get('User new password subject', \WebCMS\Settings::SECTION_EMAIL)->getValue());
+			$email->setSubject($this->settings->get('User new password subject', \WebCMS\Settings::SECTION_EMAIL)->getValue(FALSE));
 			$email->setHtmlBody($this->settings->get('User new password', \WebCMS\Settings::SECTION_EMAIL)->getValue(FALSE, array(
 				'[PASSWORD]',
 				'[LOGIN]'
