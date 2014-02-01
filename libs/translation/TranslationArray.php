@@ -21,7 +21,7 @@ class TranslationArray extends \ArrayObject {
     
     public function offsetGet($name) {
 
-	if (empty($this->data[$name])) {
+	if (!array_key_exists($name, $this->data)) {
 	    $this->translation->addTranslation($name, $name);
 	    $this->data[$name] = $name;
 	}
