@@ -358,7 +358,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
      * @param type $dropDown
      * @return type
      */
-    protected function getStructure($context, $node = NULL, $repo, $direct = TRUE, $rootClass = 'nav navbar-nav', $dropDown = FALSE, $system = TRUE, $fromPage = NULL, $sideClass = 'nav navbar') {
+    protected function getStructure($context, $node = NULL, $repo, $direct = TRUE, $rootClass = 'nav navbar-nav', $dropDown = FALSE, $system = TRUE, $fromPage = NULL, $sideClass = 'nav navbar', $moduleNameAbstract = null) {
 
         return $repo->childrenHierarchy($node, $direct, array(
                     'decorate' => true,
@@ -402,14 +402,14 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
                 return '<li class="' . $class . '">';
             },
                     'childClose' => '</li>',
-                    'nodeDecorator' => function($node) use($dropDown, $system, $context, $fromPage) {
+                    'nodeDecorator' => function($node) use($dropDown, $system, $context, $fromPage, $moduleNameAbstract) {
                 $hasChildrens = count($node['__children']) > 0 ? TRUE : FALSE;
                 $params = '';
                 $class = '';
 
-                $moduleName = array_key_exists('moduleName', $node) ? $node['moduleName'] : 'Eshop';
+                $moduleName = array_key_exists('moduleName', $node) ? $node['moduleName'] : $moduleNameAbstract;
                 $presenter = array_key_exists('presenter', $node) ? $node['presenter'] : 'Categories';
-                $path = $moduleName === 'Eshop' && !$system ? (is_object($fromPage) ? $fromPage->getPath() . '/' : '') . $node['path'] : $node['path'];
+                $path = $moduleName === $moduleNameAbstract && !$system ? (is_object($fromPage) ? $fromPage->getPath() . '/' : '') . $node['path'] : $node['path'];
 
                 $link = $context->link(':Frontend:' . $moduleName . ':' . $presenter . ':default', array('id' => $node['id'], 'path' => $path, 'abbr' => $context->abbr));
 
