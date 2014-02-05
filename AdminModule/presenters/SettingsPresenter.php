@@ -362,6 +362,7 @@ class SettingsPresenter extends \AdminModule\BasePresenter {
 	    }
 	} else {
 	    $this->flashMessage('There are no settings in config file.', 'info');
+
 	}
 
 	return $this->createSettingsForm($settings);

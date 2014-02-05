@@ -351,7 +351,7 @@ class LanguagesPresenter extends \AdminModule\BasePresenter {
     
     private function cleanCache() {
 	$this->context->cacheStorage->clean(array(
-	    \Nette\Caching\Cache::TAGS => array(\WebCMS\Translation::CACHE_NAMESPACE)
+	    \Nette\Caching\Cache::TAGS => array(\WebCMS\Translation::CACHE_NAMESPACE . $this->state->language->getId())
 	));
     }
 
@@ -607,9 +607,20 @@ class LanguagesPresenter extends \AdminModule\BasePresenter {
 	foreach ($pages as $page) {
 	    $t = $this->translatorService->translate($page->getTitle(), $from, $to);
 	    $page->setTitle($t->getTranslation());
+	    $page->setSlug(\Nette\Utils\Strings::webalize($page->getTitle()));
+	    
+	    $this->em->flush();
+	    
+	    $path = $this->em->getRepository('AdminModule\Page')->getPath($page);
+	    $final = array();
+	    foreach($path as $p){
+		    if($p->getParent() != NULL) $final[] = $p->getSlug();
+	    }
+
+	    $page->setPath(implode('/', $final));
 	}
 
-	// clone all data
+	// translate all data
 	foreach ($values as $key => $value) {
 	    if ($value) {
 		$module = $this->createObject(str_replace('_', '-', $key));
@@ -618,7 +629,18 @@ class LanguagesPresenter extends \AdminModule\BasePresenter {
 		}
 	    }
 	}
-
+	
+	// translate all static texts
+	$translations = $this->em->getRepository('AdminModule\Translation')->findBy(array(
+	    'language' => $language
+	));
+	
+	foreach($translations as $translation){
+	    $t = $this->translatorService->translate($translation->getTranslation(), $from, $to);
+	    $translation->setTranslation($t->getTranslation());
+	    $translation->setHash();
+	}
+	
 	$this->em->flush();
 
 	$this->flashMessage('Translation of language finished.', 'success');

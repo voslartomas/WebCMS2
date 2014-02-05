@@ -138,7 +138,7 @@ class SystemHelper {
 	    'admin:Update' => 'admin:Update'
 	);
     }
-
+    
     public static function strlReplace($search, $replace, $subject) {
 	$pos = strrpos($subject, $search);
 
@@ -152,8 +152,9 @@ class SystemHelper {
     /**
      * Recursively removes given directory.
      * @param string $dir
+     * @param boolean $inside if inside is true removes only content of the directory
      */
-    public static function rrmdir($dir) {
+    public static function rrmdir($dir, $inside = false) {
 
 	if (is_dir($dir)) {
 	    $objects = scandir($dir);
@@ -166,26 +167,39 @@ class SystemHelper {
 		}
 	    }
 	    reset($objects);
-	    rmdir($dir);
+
+	    if(!$inside){
+		rmdir($dir);
+	    }
 	}
     }
-
+    
     /**
      * Create relative path from an absolute path.
      * @param string $path absolute path
      */
     public static function relative($path) {
-
-	return str_replace(WWW_DIR, '', $path);
+	// windows fix :/
+	$path = str_replace('\\', '/', $path);
+	
+	// standard working directory
+	if(strpos($path, WWW_DIR) !== false){
+	    return str_replace(WWW_DIR, '', $path);
+	}
+	
+	// symlink
+	$pos = strpos($path, 'upload/');
+	
+	return substr($path, $pos - 1);
     }
 
     public static function thumbnail($path, $thumbnailKey) {
-
+	
 	$path = self::relative($path);
-	$path = str_replace("upload", 'thumbnails', $path);
+	$path = str_replace('upload', 'thumbnails', $path);
 
 	$info = pathinfo($path);
-
+	
 	$path = str_replace($info['filename'], $thumbnailKey . $info['filename'], $path);
 	$path = str_replace('\\', '/', $path);
 	return $path;
@@ -255,7 +269,8 @@ class SystemHelper {
     public static function getTranslationFiles() {
 	$files = array();
 	
-	if ($handle = opendir(self::WEBCMS_PATH . 'AdminModule/static/translations')) {
+	$handle = opendir(self::WEBCMS_PATH . 'AdminModule/static/translations');
+	if ($handle) {
 	    while (false !== ($entry = readdir($handle))) {
 		if($entry != '.' && $entry != '..'){
 		    $files[$entry] = $entry;
@@ -265,5 +280,4 @@ class SystemHelper {
 	
 	return $files;
     }
-
 }

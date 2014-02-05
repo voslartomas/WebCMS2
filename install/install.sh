@@ -71,6 +71,9 @@ while [ "$task" != "q" ]; do
 		rm -f ./app/bootstrap.php
 		cp ./libs/webcms2/webcms2/install/bootstrap ./app/bootstrap.php
 			
+		# clear cache
+		php www/index.php --ansi orm:clear-cache:metadata
+			
 		# generate DB schema
 		php www/index.php --ansi orm:schema-tool:update --force
 

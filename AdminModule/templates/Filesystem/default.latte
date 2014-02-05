@@ -2,8 +2,6 @@
 
 <h1>{_'Filesystem'}</h1>
 
-{*<a class="btn btn-success jq_newDir" n:href="makeBackup!">{_'Create backup'}</a>*}
-
 <script>
 	$(function(){
 		$(".jq_newDir").click(function(e){
@@ -188,7 +186,7 @@
 	{foreach $files as $path => $file}
 		<tr class="file">
 			<td class="name">
-				{if $file->getExtension() == 'png' || $file->getExtension() == 'jpg'}
+				{if strtolower($file->getExtension()) == 'png' || strtolower($file->getExtension()) == 'jpg' || strtolower($file->getExtension()) == 'jpeg'}
 					<img style="width: 80px;" src="{$basePath}{$file->getPathname()|thumbnail:'system'}" />
 				{/if}
 				{$file->getBasename()} <br />
@@ -196,7 +194,6 @@
 				{if strpos($file->getPath(), 'exports') !== FALSE}
 					{$baseUri}/upload/exports/{$file->getBasename()}
 				{/if}
-				
 			</td>
 			<td class="time">{$file->getATime()|date:'%d.%m.%Y %H:%M:%S'}</td>
 			<td class="size">{$file->getSize()|bytes}</td>

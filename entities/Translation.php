@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as orm;
 /**
  * Entity class Translation.
  * @orm\Entity
+ * @orm\Table(uniqueConstraints={@orm\UniqueConstraint(name="hash_idx", columns={"hash"})})
  * @author Tomáš Voslař <tomas.voslar at webcook.cz>
  */
 class Translation extends \AdminModule\Doctrine\Entity {
