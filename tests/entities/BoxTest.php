@@ -11,7 +11,7 @@ class BoxTest extends PHPUnit_Framework_TestCase {
         $pageTo = new \AdminModule\Page;
         $pageTo->setTitle('Test page to');
         
-        $this->box = new AdminModule\Box;
+        $this->box = new \AdminModule\Box;
         $this->box->setBox('Box1');
         $this->box->setFunction('function');
         $this->box->setModuleName('Module');
