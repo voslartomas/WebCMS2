@@ -71,6 +71,11 @@ class Settings {
 		$setting = new \AdminModule\Setting;
 		$setting->setKey($key);
 		$setting->setSection($section);
+		
+		if($type === null){
+		    $type = 'text';
+		}
+		
 		$setting->setType($type);
 		$setting->setValue('');
 		$setting->setLanguage($this->language);
