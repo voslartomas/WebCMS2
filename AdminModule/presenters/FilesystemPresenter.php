@@ -25,7 +25,7 @@ class FilesystemPresenter extends \AdminModule\BasePresenter {
     protected function startup() {
         parent::startup();
 
-        $thumbnails = $this->em->getRepository('AdminModule\Thumbnail')->findAll();
+        $thumbnails = $this->em->getRepository('WebCMS\Entity\Thumbnail')->findAll();
 
         $this->thumbnailCreator = new \WebCMS\ThumbnailCreator($this->settings, $thumbnails);
     }
@@ -94,7 +94,7 @@ class FilesystemPresenter extends \AdminModule\BasePresenter {
 
                     $image = \Nette\Image::fromFile($pathToRemove);
 
-                    $thumbs = $this->em->getRepository('AdminModule\Thumbnail')->findAll();
+                    $thumbs = $this->em->getRepository('WebCMS\Entity\Thumbnail')->findAll();
                     foreach ($thumbs as $t) {
                         $file = pathinfo($pathToRemove);
                         $filename = $file['filename'] . '.' . $file['extension'];

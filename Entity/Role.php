@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @author Tomáš Voslař <tomas.voslar at webcook.cz>
  */
-class Role extends Doctrine\Entity{
+class Role extends Entity{
 	/**
 	 * @ORM\Column(unique=true)
 	 * @var string

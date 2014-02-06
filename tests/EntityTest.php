@@ -18,11 +18,7 @@ abstract class EntityTestCase extends \PHPUnit_Framework_TestCase{
 	    while(false !== ($file = readdir($handle))){
 		if(strstr($file, '.php')){
 		    list($class) = explode('.', $file);
-		    if($class === 'Entity'){
-			$metadata[] = $this->em->getClassMetadata($namespace . '\\Doctrine\\' . $class);
-		    }else{
-			$metadata[] = $this->em->getClassMetadata($namespace . '\\' . $class);
-		    }
+		    $metadata[] = $this->em->getClassMetadata($namespace . '\\' . $class);
 		}
 	    }
 	}
@@ -38,15 +34,14 @@ abstract class EntityTestCase extends \PHPUnit_Framework_TestCase{
 	$this->em = $container->getService('doctrine.entityManager');
 	
 	$tool = new \Doctrine\ORM\Tools\SchemaTool($this->em);
-	$tool->dropSchema($this->getClassesMetadata(__DIR__ . '/../entities', 'AdminModule'));
-	$tool->createSchema($this->getClassesMetadata(__DIR__ . '/../entities', 'AdminModule'));
+	$tool->createSchema($this->getClassesMetadata(__DIR__ . '/../entities', 'WebCMS\\Entity'));
 	
     }
     
     public function tearDown() {
 	parent::tearDown();
 	
-	
+	$tool->dropSchema($this->getClassesMetadata(__DIR__ . '/../entities', 'WebCMS\\Entity'));
     }
 }
     

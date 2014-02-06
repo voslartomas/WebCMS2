@@ -108,7 +108,7 @@ class UpdatePresenter extends \AdminModule\BasePresenter {
 
 	if (!$this->isRegistered($name)) {
 
-	    $exists = $this->em->getRepository('AdminModule\Module')->findOneBy(array(
+	    $exists = $this->em->getRepository('WebCMS\Entity\Module')->findOneBy(array(
 		'name' => $module->getName()
 	    ));
 
@@ -143,7 +143,7 @@ class UpdatePresenter extends \AdminModule\BasePresenter {
 
     public function actionUnregister($name) {
 	$module = $this->createObject($name);
-	$module = $this->em->getRepository('AdminModule\Module')->findOneBy(array(
+	$module = $this->em->getRepository('WebCMS\Entity\Module')->findOneBy(array(
 	    'name' => $module->getName()
 	));
 
@@ -156,7 +156,7 @@ class UpdatePresenter extends \AdminModule\BasePresenter {
     }
 
     private function isRegistered($name) {
-	$exists = $this->em->getRepository('AdminModule\Module')->findOneBy(array(
+	$exists = $this->em->getRepository('WebCMS\Entity\Module')->findOneBy(array(
 	    'name' => $name
 	));
 

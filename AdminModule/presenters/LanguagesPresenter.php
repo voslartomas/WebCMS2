@@ -9,7 +9,7 @@ use Nette\Application\UI;
  * @author Tomáš Voslař <tomas.voslar at webcook.cz>
  * @package WebCMS2
  */
-class LanguagesPresenter extends \AdminModule\BasePresenter {
+class LanguagesPresenter extends BasePresenter {
 
     /* @var Language */
     private $lang;

@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @author Tomáš Voslař <tomas.voslar at webcook.cz>
  */
-class Permission extends Doctrine\Entity {
+class Permission extends Entity {
 
     /**
      * @ORM\Column

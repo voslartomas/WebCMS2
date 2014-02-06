@@ -87,13 +87,13 @@ class SettingsPresenter extends \AdminModule\BasePresenter {
 
     public function actionAddThumbnail($id) {
 	if ($id)
-	    $this->thumbnail = $this->em->find("AdminModule\Thumbnail", $id);
+	    $this->thumbnail = $this->em->find("WebCMS\Entity\Thumbnail", $id);
 	else
 	    $this->thumbnail = new Thumbnail();
     }
 
     public function actionDeleteThumbnail($id) {
-	$this->thumbnail = $this->em->find("AdminModule\Thumbnail", $id);
+	$this->thumbnail = $this->em->find("WebCMS\Entity\Thumbnail", $id);
 	$this->em->remove($this->thumbnail);
 	$this->em->flush();
 
