@@ -87,7 +87,7 @@ class Translation extends \ArrayObject {
     }
 
     public function addTranslation($key, $value = "") {
-	$translation = new WebCMS\Entity\Translation();
+	$translation = new \WebCMS\Entity\Translation();
 	if ($key) {
 	    $translation->setKey($key);
 	    $translation->setTranslation($value);
