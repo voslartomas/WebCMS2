@@ -7,7 +7,7 @@ require __DIR__ . '/bootstrap.php';
 /**
  * @backupGlobals disabled
  */
-abstract class EntityTestCase extends \PHPUnit_Framework_TestCase {
+abstract class EntityTestCase extends \PHPUnit_Framework_TestCase{
     
     protected $em;
     

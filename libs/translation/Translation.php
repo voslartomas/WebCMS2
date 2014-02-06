@@ -1,116 +1,115 @@
 <?php
 
-    namespace WebCMS;
+namespace WebCMS;
 
 use AdminModule,
     Nette;
 
+/**
+ * 
+ */
+class Translation extends \ArrayObject {
+
+    private $translations = null;
+    private $em;
+    private $language;
+    private $backend;
+
+    const CACHE_NAMESPACE = 'frontendTranslations';
+
     /**
-     * 
+     * A constructor
+     * Prevents direct creation of object
      */
-    class Translation extends \ArrayObject {
+    public function __construct($em, $language, $backend, $cacheStorage = null) {
 
-	private $translations = null;
-	private $em;
-	private $language;
-	private $backend;
+	$this->translations = new TranslationArray($this);
 
-	const CACHE_NAMESPACE = 'frontendTranslations';
+	/* $cacheKey = self::CACHE_NAMESPACE . $language->getId();
 
-	/**
-	 * A constructor
-	 * Prevents direct creation of object
-	 */
-	public function __construct($em, $language, $backend, $cacheStorage = null) {
+	  // cache translations for frontend
+	  if ($cacheStorage != null && $backend == false) {
+	  $cache = new \Nette\Caching\Cache($cacheStorage);
 
-	    $this->translations = new TranslationArray($this);
+	  if (!$translations = $cache->load($cacheKey)) {
 
-	    /*$cacheKey = self::CACHE_NAMESPACE . $language->getId();
+	  $translations = $this->loadFromDb($em, $language, $backend);
 
-	    // cache translations for frontend
-	    if ($cacheStorage != null && $backend == false) {
-		$cache = new \Nette\Caching\Cache($cacheStorage);
+	  foreach ($translations as $t) {
+	  $this->translations[$t->getKey()] = $t->getTranslation();
+	  }
 
-		if (!$translations = $cache->load($cacheKey)) {
+	  $cache->save($cacheKey, $this->translations->getData(), array(
+	  \Nette\Caching\Cache::TAGS => array($cacheKey),
+	  ));
+	  } else {
 
-		    $translations = $this->loadFromDb($em, $language, $backend);
+	  $this->translations->setData($translations);
+	  }
+	  } else { */
+	$translations = $this->loadFromDb($em, $language, $backend);
 
-		    foreach ($translations as $t) {
-			$this->translations[$t->getKey()] = $t->getTranslation();
-		    }
-
-		    $cache->save($cacheKey, $this->translations->getData(), array(
-			\Nette\Caching\Cache::TAGS => array($cacheKey),
-		    ));
-		} else {
-
-		    $this->translations->setData($translations);
-		}
-	    } else {*/
-		$translations = $this->loadFromDb($em, $language, $backend);
-
-		foreach ($translations as $t) {
-		    $this->translations[$t->getKey()] = $t->getTranslation();
-		}
-	    //}
-
-	    $this->em = $em;
-	    $this->language = $language;
-	    $this->backend = $backend;
+	foreach ($translations as $t) {
+	    $this->translations[$t->getKey()] = $t->getTranslation();
 	}
+	//}
 
-	private function loadFromDb($em, $language, $backend) {
-	    return $em->getRepository('AdminModule\Translation')->findBy(array(
-		    'language' => $language,
-		    'backend' => $backend
-	    ));
-	}
+	$this->em = $em;
+	$this->language = $language;
+	$this->backend = $backend;
+    }
 
-	public function getTranslations() {
-	    return $this->translations;
-	}
+    private function loadFromDb($em, $language, $backend) {
+	return $em->getRepository('AdminModule\Translation')->findBy(array(
+		'language' => $language,
+		'backend' => $backend
+	));
+    }
 
-	public function getTranslationByKey($key) {
+    public function getTranslations() {
+	return $this->translations;
+    }
 
-	    $translations = $this->getTranslations()->getData();
+    public function getTranslationByKey($key) {
 
-	    foreach ($translations as $k => $value) {
-		if ($k == $key){
-		    return $value;
-		}
-	    }
+	$translations = $this->getTranslations()->getData();
 
-	    // save translation if not exists
-	    $this->addTranslation($key, $key);
-
-	    return $key;
-	}
-
-	public function addTranslation($key, $value = "") {
-	    $translation = new AdminModule\Translation();
-	    if ($key) {
-		$translation->setKey($key);
-		$translation->setTranslation($value);
-		$translation->setLanguage($this->language);
-		$translation->setBackend($this->backend);
-		$translation->setHash();
-		
-		$this->em->persist($translation);
-		$this->em->flush();
+	foreach ($translations as $k => $value) {
+	    if ($k == $key) {
+		return $value;
 	    }
 	}
 
-	public function hashTranslations() {
-	    $translations = $this->em->getRepository('AdminModule\Translation')->findBy(array(
-		'hash' => ''
-	    ));
+	// save translation if not exists
+	$this->addTranslation($key, $key);
 
-	    foreach ($translations as $tr) {
-		$tr->setHash();
-	    }
+	return $key;
+    }
 
+    public function addTranslation($key, $value = "") {
+	$translation = new AdminModule\Translation();
+	if ($key) {
+	    $translation->setKey($key);
+	    $translation->setTranslation($value);
+	    $translation->setLanguage($this->language);
+	    $translation->setBackend($this->backend);
+	    $translation->setHash();
+
+	    $this->em->persist($translation);
 	    $this->em->flush();
 	}
-
     }
-    
+
+    public function hashTranslations() {
+	$translations = $this->em->getRepository('AdminModule\Translation')->findBy(array(
+	    'hash' => ''
+	));
+
+	foreach ($translations as $tr) {
+	    $tr->setHash();
+	}
+
+	$this->em->flush();
+    }
+
+}

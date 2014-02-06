@@ -15,10 +15,10 @@ class TranslationArray extends \ArrayObject {
 	return $this->data;
     }
 
-    public function setData($data){
+    public function setData($data) {
 	$this->data = $data;
     }
-    
+
     public function offsetGet($name) {
 
 	if (!array_key_exists($name, $this->data)) {
@@ -42,5 +42,3 @@ class TranslationArray extends \ArrayObject {
     }
 
 }
-
-?>

@@ -1,6 +1,6 @@
 <?php
 
-namespace AdminModule;
+namespace WebCMS\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 

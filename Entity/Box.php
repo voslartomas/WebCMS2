@@ -1,15 +1,14 @@
 <?php
 
-namespace AdminModule;
+namespace WebCMS\Entity;
 
 use Doctrine\ORM\Mapping as orm;
 
 /**
- * Description of Box
  * @orm\Entity
  * @author Tomáš Voslař <tomas.voslar at webcook.cz>
  */
-class Box extends \AdminModule\Doctrine\Entity{
+class Box extends Entity{
 	
 	/**
 	 * @orm\ManyToOne(targetEntity="Page")
