@@ -27,8 +27,8 @@ class HomepagePresenter extends \AdminModule\BasePresenter{
 		}
 		
 		// favourite links
-		$user = $this->em->getRepository('AdminModule\User')->find($this->getUser()->getId());
-		$favourites = $this->em->getRepository('AdminModule\Favourites')->findBy(array(
+		$user = $this->em->getRepository('WebCMS\Entity\User')->find($this->getUser()->getId());
+		$favourites = $this->em->getRepository('WebCMS\Entity\Favourites')->findBy(array(
 			'user' => $user
 		));
 		

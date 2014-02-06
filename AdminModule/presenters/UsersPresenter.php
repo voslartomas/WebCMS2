@@ -32,7 +32,7 @@ class UsersPresenter extends \AdminModule\BasePresenter{
 	
 	protected function createComponentUserForm(){
 		
-		$roles = $this->em->getRepository("AdminModule\Role")->findAll();
+		$roles = $this->em->getRepository("WebCMS\Entity\Role")->findAll();
 		$tmp = array();
 		foreach($roles as $r){
 			$tmp[$r->getId()] = $r->getName();
@@ -74,12 +74,12 @@ class UsersPresenter extends \AdminModule\BasePresenter{
 	}
 	
 	public function actionUpdateUser($id){
-		if($id) $this->user = $this->em->find("AdminModule\User", $id);
+		if($id) $this->user = $this->em->find("WebCMS\Entity\User", $id);
 		else $this->user = new User();
 	}
 	
 	public function actionDeleteUser($id){
-		$this->user = $this->em->find("AdminModule\User", $id);
+		$this->user = $this->em->find("WebCMS\Entity\User", $id);
 		$this->em->remove($this->user);
 		$this->em->flush();
 		
@@ -110,7 +110,7 @@ class UsersPresenter extends \AdminModule\BasePresenter{
 	public function userFormSubmitted(UI\Form $form){
 		$values = $form->getValues();
 		
-		$role = $this->em->find("AdminModule\Role", $values->role);
+		$role = $this->em->find("WebCMS\Entity\Role", $values->role);
 		$password = $this->getContext()->authenticator->calculateHash($values->password);
 		
 		$this->user->setName($values->name);
@@ -155,12 +155,12 @@ class UsersPresenter extends \AdminModule\BasePresenter{
 	}
 	
 	public function actionUpdateRole($id){
-		if($id) $this->role = $this->em->find("AdminModule\Role", $id);
+		if($id) $this->role = $this->em->find("WebCMS\Entity\Role", $id);
 		else $this->role = new Role();
 	}
 	
 	public function actionDeleteRole($id){
-		$this->role = $this->em->find("AdminModule\Role", $id);
+		$this->role = $this->em->find("WebCMS\Entity\Role", $id);
 		$this->em->remove($this->role);
 		$this->em->flush();
 		
