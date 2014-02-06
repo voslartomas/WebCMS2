@@ -2,7 +2,7 @@ common:
 	parameters:
 		database:
 			driver: pdo_sqlite
-			dsn: "sqlite:%tempDir%/test.sqlite"
+			dsn: "sqlite::memory:"
 			charset: utf8
 			collation: utf8_general_ci
 
