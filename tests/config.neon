@@ -1,0 +1,45 @@
+common:
+	parameters:
+		database:
+			driver: pdo_sqlite
+			dsn: "sqlite:%tempDir%/test.sqlite"
+			charset: utf8
+			collation: utf8_general_ci
+
+		cacheNamespace: 'webcms2'
+	php:
+		date.timezone: Europe/Prague
+		session.save_path: "%tempDir%/sessions"
+	nette:
+		session:
+			autoStart: smart
+
+	doctrine:
+		connection: %database%
+		console: false
+		entityDirs: { %tempDir%/../entities }
+		
+	migrations:
+		connection: @doctrine.connection
+		
+	services:
+		database: @doctrine.entityManager
+		
+		authenticator: Authenticator( @database::getRepository('AdminModule\User') )
+		
+	gedmo: 
+		orm:
+			em: @doctrine.entityManager
+			tree: true
+			sluggable: true
+			timestampable: true
+			
+production < common:
+	services: 
+		cacheStorage:
+			class: \Nette\Caching\Storages\MemcachedStorage('localhost', 11211, %cacheNamespace%)
+
+development < common:
+	services:
+		cacheStorage: 
+				class: \Nette\Caching\Storages\DevNullStorage
