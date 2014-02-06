@@ -30,7 +30,7 @@
 		"phpunit/phpunit": "3.9.*@dev"
     },
     "autoload": {
-        "classmap": ["AdminModule/presenters/", "FrontendModule/presenters/", "libs", "AdminModule/model", "Entity"]
+        "classmap": ["AdminModule/presenters/", "FrontendModule/presenters/", "libs", "AdminModule/model", "Entity", "tests"]
     },
     "extra": {
         "branch-alias": {
