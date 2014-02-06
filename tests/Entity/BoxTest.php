@@ -14,14 +14,14 @@ class BoxTest extends \WebCMS\Tests\EntityTestCase {
 	$this->em->persist($this->box);
 	$this->em->flush();
 	
-	$boxes = $this->em->getRepository('AdminModule\Box')->findAll();
+	$boxes = $this->em->getRepository('WebCMS\Entity\Box')->findAll();
 	
 	$this->assertEquals(1, count($boxes));
 	$this->assertEquals('box1', $boxes[0]->getBox());
     }
     
     private function setPage($text = 'test'){
-	$page = new \AdminModule\Page;
+	$page = new \WebCMS\Entity\Page;
 	$page->setTitle($text);
 	$page->setPresenter($text);
 	$page->setPath($text);
@@ -39,7 +39,7 @@ class BoxTest extends \WebCMS\Tests\EntityTestCase {
 	$this->em->persist($pageFrom);
 	$this->em->persist($pageTo);
 	
-	$this->box = new AdminModule\Box;
+	$this->box = new WebCMS\Entity\Box;
 	$this->box->setBox('box1');
 	$this->box->setFunction('function');
 	$this->box->setPresenter('presenter');

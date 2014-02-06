@@ -60,7 +60,7 @@ class Translation extends \ArrayObject {
     }
 
     private function loadFromDb($em, $language, $backend) {
-	return $em->getRepository('AdminModule\Translation')->findBy(array(
+	return $em->getRepository('WebCMS\Entity\Translation')->findBy(array(
 		'language' => $language,
 		'backend' => $backend
 	));
@@ -87,7 +87,7 @@ class Translation extends \ArrayObject {
     }
 
     public function addTranslation($key, $value = "") {
-	$translation = new AdminModule\Translation();
+	$translation = new WebCMS\Entity\Translation();
 	if ($key) {
 	    $translation->setKey($key);
 	    $translation->setTranslation($value);
@@ -101,7 +101,7 @@ class Translation extends \ArrayObject {
     }
 
     public function hashTranslations() {
-	$translations = $this->em->getRepository('AdminModule\Translation')->findBy(array(
+	$translations = $this->em->getRepository('WebCMS\Entity\Translation')->findBy(array(
 	    'hash' => ''
 	));
 

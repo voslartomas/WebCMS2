@@ -15,7 +15,7 @@ class Settings {
     /* \Doctrine\ORM\EntityManager */
     private $em;
 
-    /* \AdminModule\Language */
+    /* \WebCMS\Entity\Language */
     private $language;
 
     const SECTION_BASIC = 'basic';
@@ -66,7 +66,7 @@ class Settings {
      * @param String $section
      */
     private function save($key, $section, $type = null, $options = array(), $language = true) {
-	$setting = new \AdminModule\Setting;
+	$setting = new \WebCMS\Entity\Setting;
 	$setting->setKey($key);
 	$setting->setSection($section);
 

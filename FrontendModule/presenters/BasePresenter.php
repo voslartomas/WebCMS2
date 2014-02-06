@@ -75,7 +75,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
         // set default seo settings
         if (is_object($this->actualPage)) {
             $this->template->breadcrumb = $this->getBreadcrumbs();
-            $this->template->sidebar = $this->getStructure($this, $top, $this->em->getRepository('AdminModule\Page'), FALSE, $this->settings->get('Sidebar class', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue(), FALSE, FALSE, NULL, $this->settings->get('Sidebar class', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue());
+            $this->template->sidebar = $this->getStructure($this, $top, $this->em->getRepository('WebCMS\Entity\Page'), FALSE, $this->settings->get('Sidebar class', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue(), FALSE, FALSE, NULL, $this->settings->get('Sidebar class', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue());
         }
 
         $this->template->abbr = $this->abbr;
@@ -86,7 +86,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
         $this->template->actualPage = $this->actualPage;
         $this->template->user = $this->getUser();
         $this->template->activePresenter = $this->getPresenter()->getName();
-        $this->template->languages = $this->em->getRepository('AdminModule\Language')->findAll();
+        $this->template->languages = $this->em->getRepository('WebCMS\Entity\Language')->findAll();
     }
 
     private function setDefaultSeo() {
@@ -131,16 +131,16 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
 
         // set language
         if (is_numeric($this->getParam('language')))
-            $this->language = $this->em->find('AdminModule\Language', $this->getParam('language'));
+            $this->language = $this->em->find('WebCMS\Entity\Language', $this->getParam('language'));
         else
-            $this->language = $this->em->getRepository('AdminModule\Language')->findOneBy(array(
+            $this->language = $this->em->getRepository('WebCMS\Entity\Language')->findOneBy(array(
                 'defaultFrontend' => TRUE
             ));
 
         $this->abbr = $this->language->getDefaultFrontend() ? '' : $this->language->getAbbr() . '/';
 
         // load languages
-        $this->languages = $this->em->getRepository('AdminModule\Language')->findAll();
+        $this->languages = $this->em->getRepository('WebCMS\Entity\Language')->findAll();
 
         setlocale(LC_ALL, $this->language->getLocale());
         \WebCMS\PriceFormatter::setLocale($this->language->getLocale());
@@ -164,7 +164,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
 
         $id = $this->getParam('id');
         if ($id) {
-            $this->actualPage = $this->em->find('AdminModule\Page', $id);
+            $this->actualPage = $this->em->find('WebCMS\Entity\Page', $id);
 
             if ($this->actualPage->getRedirect() != NULL) {
                 $this->redirectUrl($this->presenter->getHttpRequest()->url->baseUrl . $this->actualPage->getRedirect());
@@ -199,7 +199,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
     }
 
     private function getSettings() {
-        $query = $this->em->createQuery('SELECT s FROM AdminModule\Setting s WHERE s.language >= ' . $this->language->getId() . ' OR s.language IS NULL');
+        $query = $this->em->createQuery('SELECT s FROM WebCMS\Entity\Setting s WHERE s.language >= ' . $this->language->getId() . ' OR s.language IS NULL');
         $tmp = $query->getResult();
 
         $settings = array();
@@ -266,7 +266,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
     }
 
     private function changeLanguage($idLanguage) {
-        $home = $this->em->getRepository('AdminModule\Page')->findOneBy(array(
+        $home = $this->em->getRepository('WebCMS\Entity\Page')->findOneBy(array(
             'language' => $idLanguage,
             'default' => TRUE
         ));
@@ -310,7 +310,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
             $finalBoxes[$key] = NULL;
         }
 
-        $assocBoxes = $this->em->getRepository('AdminModule\Box')->findBy(array(
+        $assocBoxes = $this->em->getRepository('WebCMS\Entity\Box')->findBy(array(
             'pageTo' => $this->actualPage
         ));
 
@@ -333,7 +333,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
      * @return type
      */
     private function getStructures($direct = TRUE, $rootClass = 'nav navbar-nav', $dropDown = FALSE) {
-        $repo = $this->em->getRepository('AdminModule\Page');
+        $repo = $this->em->getRepository('WebCMS\Entity\Page');
 
         $structs = $repo->findBy(array(
             'language' => $this->language,
@@ -431,7 +431,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
 
     public function getBreadcrumbs() {
         // bredcrumb
-        $default = $this->em->getRepository('AdminModule\Page')->findOneBy(array(
+        $default = $this->em->getRepository('WebCMS\Entity\Page')->findOneBy(array(
             'default' => TRUE,
             'language' => $this->language
         ));
@@ -442,7 +442,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
             $default = array($default);
 
         // system breadcrumbs
-        $system = $default + $this->em->getRepository('AdminModule\Page')->getPath($this->actualPage);
+        $system = $default + $this->em->getRepository('WebCMS\Entity\Page')->getPath($this->actualPage);
         $finalSystem = array();
         foreach ($system as $item) {
             if ($item->getParent()) {

@@ -21,7 +21,7 @@ class PageRepository extends NestedTreeRepository {
 	    }
 	}
 
-	$tree = $qb->select('l')->from("AdminModule\Page", 'l')->getQuery()->getResult();
+	$tree = $qb->select('l')->from("WebCMS\Entity\Page", 'l')->getQuery()->getResult();
 
 	$array = array();
 	foreach ($tree as $node) {

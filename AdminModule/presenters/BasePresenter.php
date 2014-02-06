@@ -76,7 +76,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		$this->template->version = \WebCMS\SystemHelper::getVersion();
 		$this->template->activePresenter = $this->getPresenter()->getName();
 		$this->template->settings = $this->settings;
-		$this->template->languages = $this->em->getRepository('AdminModule\Language')->findAll();
+		$this->template->languages = $this->em->getRepository('WebCMS\Entity\Language')->findAll();
 	}
 	
 	/* Startup method. */
@@ -91,17 +91,17 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 
 		// changing language
 		if($this->getParameter('language_id_change')){
-			$this->state->language = $this->em->find('AdminModule\Language', $this->getParameter('language_id_change'));
+			$this->state->language = $this->em->find('WebCMS\Entity\Language', $this->getParameter('language_id_change'));
 			$this->redirect(':Admin:Homepage:default');
 		}
 		
 		if(!isset($this->state->language)){
-			$this->state->language = $this->em->getRepository('AdminModule\Language')->findOneBy(array(
+			$this->state->language = $this->em->getRepository('WebCMS\Entity\Language')->findOneBy(array(
 				'defaultBackend' => 1
 			));
 		}
 		
-		$language = $this->em->find('AdminModule\Language', $this->state->language->getId());
+		$language = $this->em->find('WebCMS\Entity\Language', $this->state->language->getId());
 		// check whether is language still in db
 		if(!$language){
 			unset($this->state->language);
@@ -109,12 +109,12 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		}
 		
 		// reload entity from db
-		$this->state->language = $this->em->find('AdminModule\Language', $this->state->language->getId());
+		$this->state->language = $this->em->find('WebCMS\Entity\Language', $this->state->language->getId());
 		
 		\WebCMS\PriceFormatter::setLocale($this->state->language->getLocale());
 		
 		// translations
-		$default = $this->em->getRepository('AdminModule\Language')->findOneBy(array(
+		$default = $this->em->getRepository('WebCMS\Entity\Language')->findOneBy(array(
 				'defaultBackend' => 1
 		));
 		
@@ -139,7 +139,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		$this->priceFormatter = new \WebCMS\PriceFormatter($this->state->language->getLocale());
 		
 		$id = $this->getParam('idPage');
-		if($id) $this->actualPage = $this->em->find('AdminModule\Page', $id);
+		if($id) $this->actualPage = $this->em->find('WebCMS\Entity\Page', $id);
 		
 		$this->checkPermission();
 		
@@ -165,7 +165,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 	}
 	
 	private function getSettings(){
-		$query = $this->em->createQuery('SELECT s FROM AdminModule\Setting s WHERE s.language >= ' . $this->state->language->getId() . ' OR s.language IS NULL');
+		$query = $this->em->createQuery('SELECT s FROM WebCMS\Entity\Setting s WHERE s.language >= ' . $this->state->language->getId() . ' OR s.language IS NULL');
 		$tmp = $query->getResult();	
 		
 		$settings = array();
@@ -208,7 +208,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		$values = $form->getValues();
 		
 		foreach($values as $key => $v){
-			$setting = $this->em->find('AdminModule\Setting', $key);
+			$setting = $this->em->find('WebCMS\Entity\Setting', $key);
 			$setting->setValue($v);
 		}
 		
@@ -314,7 +314,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		$res = \WebCMS\SystemHelper::getResources();
 		
 		// pages resources
-		$pages = $this->em->getRepository('AdminModule\Page')->findAll();
+		$pages = $this->em->getRepository('WebCMS\Entity\Page')->findAll();
 		
 		foreach($pages as $page){
 			if($page->getParent() != NULL){
@@ -426,7 +426,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		$this->actualPage->setMetaKeywords($values->metaKeywords);
 		$this->actualPage->setMetaDescription($values->metaDescription);
 		
-		$path = $this->em->getRepository('AdminModule\Page')->getPath($this->actualPage);
+		$path = $this->em->getRepository('WebCMS\Entity\Page')->getPath($this->actualPage);
 		$final = array();
 		foreach($path as $p){
 			if($p->getParent() != NULL) $final[] = $p->getSlug();
@@ -464,7 +464,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		$parameters = $this->getContext()->container->getParameters();
 		$boxes = $parameters['boxes'];
 		
-		$pages = $this->em->getRepository('AdminModule\Page')->findBy(array(
+		$pages = $this->em->getRepository('WebCMS\Entity\Page')->findBy(array(
 			'language' => $this->state->language
 		)); 
 		
@@ -490,7 +490,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		}
 		
 		// set defaults
-		$boxes = $this->em->getRepository('AdminModule\Box')->findBy(array(
+		$boxes = $this->em->getRepository('WebCMS\Entity\Box')->findBy(array(
 			'pageTo' => $this->actualPage
 		)); 
 		
@@ -510,7 +510,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 		$values = $form->getValues();
 		
 		// delete old asscociations
-		$q = $this->em->createQuery('delete from AdminModule\Box m where m.pageTo = ' . $this->actualPage->getId());
+		$q = $this->em->createQuery('delete from WebCMS\Entity\Box m where m.pageTo = ' . $this->actualPage->getId());
 		$numDeleted = $q->execute();
 		
 		// persist new associations
@@ -518,7 +518,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter{
 			if($value){
 				$params = explode('-', $value);
 
-				$pageFrom = $this->em->find('AdminModule\Page', $params[0]);
+				$pageFrom = $this->em->find('WebCMS\Entity\Page', $params[0]);
 
 				$box = new Box();
 				$box->setPageFrom($pageFrom);

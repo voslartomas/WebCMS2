@@ -10,10 +10,10 @@ class SystemRouter extends \Nette\Application\Routers\Route {
     /* @var \Doctrine\ORM\EntityManager */
     private $em;
 
-    /* @var \AdminModule\Language */
+    /* @var \WebCMS\Entity\Language */
     private $language;
 
-    /* @var \AdminModule\Page */
+    /* @var \WebCMS\Entity\Page */
     private $page;
 
     public function __construct($em) {
@@ -41,7 +41,7 @@ class SystemRouter extends \Nette\Application\Routers\Route {
 	    if ($paramCount > -1)
 		$lastParam = $path[$paramCount];
 
-	    $pageRepo = $this->em->getRepository('AdminModule\Page');
+	    $pageRepo = $this->em->getRepository('WebCMS\Entity\Page');
 	    $pages = $pageRepo->findBy(array(
 		'slug' => $lastParam
 	    ));

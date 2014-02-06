@@ -96,7 +96,7 @@ abstract class Module implements IModule {
         return $this->translatable;
     }
     
-    public function search(\Doctrine\ORM\EntityManager $entityManager, $phrase, \AdminModule\Language $language){
+    public function search(\Doctrine\ORM\EntityManager $entityManager, $phrase, \WebCMS\Entity\Language $language){
         if(!$this->isSearchable()){
             return false;
         }

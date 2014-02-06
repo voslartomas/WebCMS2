@@ -207,7 +207,7 @@ class UpdatePresenter extends \AdminModule\BasePresenter {
 
 	$nuc = $this->settings->get('needUpdateCount', 'system', 'text');
 
-	$setting = $this->em->find('AdminModule\Setting', $nuc->getId());
+	$setting = $this->em->find('WebCMS\Entity\Setting', $nuc->getId());
 	$setting->setValue($needUpdateCount);
 
 	if ($needUpdateCount > 0) {

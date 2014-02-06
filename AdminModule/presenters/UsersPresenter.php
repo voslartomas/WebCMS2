@@ -90,7 +90,7 @@ class UsersPresenter extends \AdminModule\BasePresenter{
 	}
 	
 	public function actionDeleteLanguage($id){
-		$this->language = $this->em->find("AdminModule\Language", $id);
+		$this->language = $this->em->find("WebCMS\Entity\Language", $id);
 		$this->em->remove($this->language);
 		$this->em->flush();
 		
@@ -181,7 +181,7 @@ class UsersPresenter extends \AdminModule\BasePresenter{
 		
 		$resources = \WebCMS\SystemHelper::getResources();
 		
-		$pages = $this->em->getRepository('AdminModule\Page')->findAll();
+		$pages = $this->em->getRepository('WebCMS\Entity\Page')->findAll();
 		
 		foreach($pages as $page){
 			
@@ -268,7 +268,7 @@ class UsersPresenter extends \AdminModule\BasePresenter{
 				$permission = new Permission();
 				
 				$pageId = filter_var($key, FILTER_SANITIZE_NUMBER_INT);
-				$page = $this->em->getRepository('AdminModule\Page')->find($pageId);
+				$page = $this->em->getRepository('WebCMS\Entity\Page')->find($pageId);
 				
 				$resource = 'admin:' . str_replace('resadmin', '', $key);
 				$permission->setResource($resource);

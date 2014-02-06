@@ -24,7 +24,7 @@ use Nette\Application\UI;
 
 	protected function createComponentPageForm() {
 
-	    $repository = $this->em->getRepository('AdminModule\Page');
+	    $repository = $this->em->getRepository('WebCMS\Entity\Page');
 	    $hierarchy = $repository->getTreeForSelect(array(
 		array('by' => 'root', 'dir' => 'ASC'),
 		array('by' => 'lft', 'dir' => 'ASC')
@@ -72,11 +72,11 @@ use Nette\Application\UI;
 	public function pageFormSubmitted(UI\Form $form) {
 	    $values = $form->getValues();
 
-	    $repo = $this->em->getRepository('AdminModule\Page');
+	    $repo = $this->em->getRepository('WebCMS\Entity\Page');
 
 	    $tmpBoxes = array();
 	    if ($values->parent) {
-		$parent = $this->em->find("AdminModule\Page", $values->parent);
+		$parent = $this->em->find("WebCMS\Entity\Page", $values->parent);
 
 		// copy boxes
 		$tmpBoxes = $parent->getBoxes();
@@ -172,7 +172,7 @@ use Nette\Application\UI;
 
 	protected function createComponentPagesGrid($name) {
 
-	    $parents = $this->em->getRepository('AdminModule\Page')->findBy(array(
+	    $parents = $this->em->getRepository('WebCMS\Entity\Page')->findBy(array(
 		'parent' => NULL,
 		'language' => $this->state->language->getId()
 	    ));
@@ -220,13 +220,13 @@ use Nette\Application\UI;
 
 	public function actionUpdatePage($id) {
 	    if ($id)
-		$this->page = $this->em->find("AdminModule\Page", $id);
+		$this->page = $this->em->find("WebCMS\Entity\Page", $id);
 	    else
 		$this->page = new Page();
 	}
 
 	public function actionDeletePage($id) {
-	    $this->page = $this->em->find("AdminModule\Page", $id);
+	    $this->page = $this->em->find("WebCMS\Entity\Page", $id);
 	    $this->em->remove($this->page);
 	    $this->em->flush();
 
@@ -237,10 +237,10 @@ use Nette\Application\UI;
 	}
 
 	public function actionMoveUp($id) {
-	    $this->page = $this->em->find("AdminModule\Page", $id);
+	    $this->page = $this->em->find("WebCMS\Entity\Page", $id);
 
 	    if ($this->page->getParent()) {
-		$repository = $this->em->getRepository('AdminModule\Page');
+		$repository = $this->em->getRepository('WebCMS\Entity\Page');
 		$repository->moveUp($this->page);
 
 		$this->flashMessage('Page has been moved up.', 'success');
@@ -253,10 +253,10 @@ use Nette\Application\UI;
 	}
 
 	public function actionMoveDown($id) {
-	    $this->page = $this->em->find("AdminModule\Page", $id);
+	    $this->page = $this->em->find("WebCMS\Entity\Page", $id);
 
 	    if ($this->page->getParent()) {
-		$repository = $this->em->getRepository('AdminModule\Page');
+		$repository = $this->em->getRepository('WebCMS\Entity\Page');
 		$repository->moveDown($this->page);
 
 		$this->flashMessage('Page has been moved down.', 'success');

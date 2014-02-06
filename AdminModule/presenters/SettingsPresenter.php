@@ -218,7 +218,7 @@ class SettingsPresenter extends \AdminModule\BasePresenter {
 	$parameters = $this->getContext()->container->getParameters();
 
 	// fetch all pages
-	$pages = $this->em->getRepository('AdminModule\Page')->findBy(array(
+	$pages = $this->em->getRepository('WebCMS\Entity\Page')->findBy(array(
 	    'language' => $this->state->language
 	));
 
@@ -247,10 +247,10 @@ class SettingsPresenter extends \AdminModule\BasePresenter {
 
 	$parsed = explode('-', $name);
 	
-	$pageTo = $this->em->getRepository('AdminModule\Page')->find($parsed[0]);
+	$pageTo = $this->em->getRepository('WebCMS\Entity\Page')->find($parsed[0]);
 	$box = $parsed[1];
 	
-	$exists = $this->em->getRepository('AdminModule\Box')->findOneBy(array(
+	$exists = $this->em->getRepository('WebCMS\Entity\Box')->findOneBy(array(
 	    'pageTo' => $pageTo,
 	    'box' => $box
 	));
@@ -265,7 +265,7 @@ class SettingsPresenter extends \AdminModule\BasePresenter {
 	
 	if (count($parsed) > 3) {
 	    
-	    $pageFrom = $this->em->getRepository('AdminModule\Page')->find($parsed[0]);
+	    $pageFrom = $this->em->getRepository('WebCMS\Entity\Page')->find($parsed[0]);
 	    $moduleName = $parsed[1];
 	    $presenter = $parsed[2];
 	    $function = $parsed[3];
@@ -299,7 +299,7 @@ class SettingsPresenter extends \AdminModule\BasePresenter {
 	$this->reloadContent();
 
 	// fetch all pages
-	$pages = $this->em->getRepository('AdminModule\Page')->findBy(array(
+	$pages = $this->em->getRepository('WebCMS\Entity\Page')->findBy(array(
 	    'language' => $this->state->language
 	));
 
@@ -319,7 +319,7 @@ class SettingsPresenter extends \AdminModule\BasePresenter {
     }
 
     public function actionUpdateMeta($idPage, $type, $value) {
-	$page = $this->em->getRepository('AdminModule\Page')->find($idPage);
+	$page = $this->em->getRepository('WebCMS\Entity\Page')->find($idPage);
 
 	if ($type === 'title') {
 	    $page->setMetaTitle($value);
@@ -330,7 +330,7 @@ class SettingsPresenter extends \AdminModule\BasePresenter {
 	} elseif ($type === 'slug') {
 	    $page->setSlug($value);
 
-	    $path = $this->em->getRepository('AdminModule\Page')->getPath($page);
+	    $path = $this->em->getRepository('WebCMS\Entity\Page')->getPath($page);
 	    $final = array();
 	    foreach ($path as $p) {
 		if ($p->getParent() != NULL)
