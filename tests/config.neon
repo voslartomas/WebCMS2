@@ -17,7 +17,7 @@ common:
 	doctrine:
 		connection: %database%
 		console: false
-		entityDirs: { %tempDir%/../entities }
+		entityDirs: { ./Entity }
 		
 	migrations:
 		connection: @doctrine.connection
@@ -35,10 +35,6 @@ common:
 			timestampable: true
 			
 production < common:
-	services: 
-		cacheStorage:
-			class: \Nette\Caching\Storages\MemcachedStorage('localhost', 11211, %cacheNamespace%)
-
 development < common:
 	services:
 		cacheStorage: 

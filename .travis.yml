@@ -11,4 +11,4 @@ before_script:
   # Install
   - composer install --no-interaction
   
-  - phpunit
+  - phpunit --bootstrap tests/bootstrap.php tests

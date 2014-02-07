@@ -1,9 +1,7 @@
 <?php
 
 namespace WebCMS\Tests;
-    
-require __DIR__ . '/bootstrap.php';
-    
+        
 /**
  * @backupGlobals disabled
  */
@@ -32,16 +30,17 @@ abstract class EntityTestCase extends \PHPUnit_Framework_TestCase{
 	global $container;
 	
 	$this->em = $container->getService('doctrine.entityManager');
-	
+
 	$tool = new \Doctrine\ORM\Tools\SchemaTool($this->em);
-	$tool->createSchema($this->getClassesMetadata(__DIR__ . '/../entities', 'WebCMS\\Entity'));
+	$tool->createSchema($this->getClassesMetadata(__DIR__ . '/../Entity', 'WebCMS\\Entity'));
 	
     }
     
     public function tearDown() {
 	parent::tearDown();
 	
-	$tool->dropSchema($this->getClassesMetadata(__DIR__ . '/../entities', 'WebCMS\\Entity'));
+	$tool = new \Doctrine\ORM\Tools\SchemaTool($this->em);	
+	$tool->dropSchema($this->getClassesMetadata(__DIR__ . '/../Entity', 'WebCMS\\Entity'));
     }
 }
     

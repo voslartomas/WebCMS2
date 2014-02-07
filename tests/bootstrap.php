@@ -1,7 +1,7 @@
 <?php
     
 // Load Nette Framework
-require __DIR__ . '/../../../autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 // Configure application
 $configurator = new Nette\Config\Configurator;
