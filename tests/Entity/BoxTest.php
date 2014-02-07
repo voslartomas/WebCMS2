@@ -2,7 +2,7 @@
     
 class BoxTest extends \WebCMS\Tests\EntityTestCase {
     
-    protected $box;
+    protected $box; 
     
     public function testCreateBox() {
         
@@ -15,6 +15,11 @@ class BoxTest extends \WebCMS\Tests\EntityTestCase {
 	
 	$this->assertEquals(1, count($boxes));
 	$this->assertEquals('box1', $boxes[0]->getBox());
+	$this->assertEquals('function', $boxes[0]->getFunction());
+	$this->assertEquals('presenter', $boxes[0]->getPresenter());
+	$this->assertEquals('Module', $boxes[0]->getModuleName());
+	$this->assertInstanceOf('WebCMS\Entity\Page', $boxes[0]->getPageFrom());
+	$this->assertInstanceOf('WebCMS\Entity\Page', $boxes[0]->getPageTo());
     }
     
     private function setPage($text = 'test'){
