@@ -1,8 +1,5 @@
 <?php
     
-/**
- * @backupGlobals disabled
- */
 class BoxTest extends \WebCMS\Tests\EntityTestCase {
     
     protected $box;

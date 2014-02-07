@@ -2,9 +2,6 @@
 
 namespace WebCMS\Tests;
         
-/**
- * @backupGlobals disabled
- */
 abstract class EntityTestCase extends \PHPUnit_Framework_TestCase{
     
     protected $em;
