@@ -5,6 +5,8 @@
     "keywords": ["cms","nette-based", "doctrine2"],
     "homepage": "http://www.webcook.cz/WebCMS2",
     "license": "MIT",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "authors": [
         {
             "name": "Tomáš Voslař",
