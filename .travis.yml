@@ -16,3 +16,6 @@ before_script:
   
 script:
   - phpunit --bootstrap tests/bootstrap.php tests
+  
+after_script:
+  - rmdir -rf tests/temp
