@@ -7,8 +7,11 @@ php:
 before_script:
   # Update Composer
   - composer self-update
-
+  
+  - mkdir tests/temp
+  - mkdir tests/temp/log
+  
   # Install
-  - composer install --no-interaction
+  - composer install
   
   - phpunit --bootstrap tests/bootstrap.php tests
