@@ -1,6 +1,6 @@
 <?php
 
-namespace WebCMS;
+namespace WebCMS\Translation;
 
 class TranslationArray extends \ArrayObject {
 

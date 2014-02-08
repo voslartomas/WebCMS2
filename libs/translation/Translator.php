@@ -1,6 +1,6 @@
 <?php
 
-namespace WebCMS;
+namespace WebCMS\Translation;
 
 /**
  * @author Tomáš Voslař <tomas.voslar at webcook.cz>
