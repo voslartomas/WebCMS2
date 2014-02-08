@@ -4,11 +4,12 @@ class BreadcrumbsItemTest extends \WebCMS\Tests\EntityTestCase {
     
     public function testBox() {
         
-	$breadcrumbsItem = new \WebCMS\Entity\BreadcrumbsItem;
-	$breadcrumbsItem->setId(1);
-	$breadcrumbsItem->setModuleName('Module');
-	$breadcrumbsItem->setPath('Path');
-	$breadcrumbsItem->setPresenter('Presenter');
-	$breadcrumbsItem->setTitle('Title');
+	$breadcrumbsItem = new \WebCMS\Entity\BreadcrumbsItem(1, 'Module', 'Presenter', 'Title', 'path');
+	
+	$this->assertEquals(1, $breadcrumbsItem->getId());
+	$this->assertEquals('Module', $breadcrumbsItem->getModuleName());
+	$this->assertEquals('Presenter', $breadcrumbsItem->getPresenter());
+	$this->assertEquals('Title', $breadcrumbsItem->getTitle());
+	$this->assertEquals('path', $breadcrumbsItem->getPath());
     }
 }

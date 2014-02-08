@@ -8,6 +8,10 @@ abstract class EntityTestCase extends \PHPUnit_Framework_TestCase{
     
     protected $em;
     
+    protected $exceptions = array(
+	'BreadcrumbsItem.php'
+    );
+    
     public function setUp() {
 	parent::setUp();
 	
@@ -33,14 +37,24 @@ abstract class EntityTestCase extends \PHPUnit_Framework_TestCase{
 	
 	if($handle = opendir($path)){
 	    while(false !== ($file = readdir($handle))){
-		if(strstr($file, '.php')){
+		if(strstr($file, '.php') && $this->isEntity($file)){
 		    list($class) = explode('.', $file);
 		    $metadata[] = $this->em->getClassMetadata($namespace . '\\' . $class);
 		}
 	    }
 	}
-	
+
 	return $metadata;
+    }
+    
+    private function isEntity($path){
+	foreach($this->exceptions as $exception){
+	    if(strpos($exception, $path) !== false){
+		return false;
+	    }
+	}
+	
+	return true;
     }
 }
     
