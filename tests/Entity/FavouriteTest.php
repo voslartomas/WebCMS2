@@ -17,6 +17,15 @@ class FavouriteTest extends \WebCMS\Tests\EntityTestCase {
 	$this->assertEquals('favourite', $favourites[0]->getTitle());
 	$this->assertEquals('http://link.com', $favourites[0]->getLink());
 	$this->assertInstanceOf('WebCMS\Entity\User', $favourites[0]->getUser());
+	
+	$this->em->remove($favourites[0]->getUser());
+	$this->em->remove($favourites[0]);
+	
+	$this->em->flush();
+	
+	$favourites = $this->em->getRepository('WebCMS\Entity\Favourites')->findAll();
+	
+	$this->assertCount(0, $favourites);
     }
     
     private function initFavourite(){

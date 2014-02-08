@@ -21,6 +21,15 @@ class LanguageTest extends \WebCMS\Tests\EntityTestCase {
 	$this->assertEquals('Czech', $languages[0]->getName());
 	$this->assertEquals(1, count($languages[0]->getTranslations()));
 	$this->assertEquals('test', $languages[0]->getTranslations()[0]->getKey());
+	
+	$this->em->remove($languages[0]->getTranslations()[0]);
+	$this->em->remove($languages[0]);
+	
+	$this->em->flush();
+	
+	$languages = $this->em->getRepository('WebCMS\Entity\Language')->findAll();
+	
+	$this->assertCount(0, $languages);
     }
     
     private function initLanguage(){

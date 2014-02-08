@@ -54,7 +54,7 @@ class Translation extends Entity {
     }
 
     public function setHash() {
-	$this->hash = sha1($this->getKey() . $this->getLanguage()->getId() . $this->getBackend());
+	$this->hash = sha1($this->getKey() . $this->getLanguage()->getAbbr() . $this->getBackend());
     }
 
     public function getKey() {
