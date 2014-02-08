@@ -20,7 +20,7 @@ class UpdatePresenter extends \AdminModule\BasePresenter {
     public function renderDefault() {
 	$this->reloadContent();
 
-	$packages = \WebCMS\SystemHelper::getPackages();
+	$packages = \WebCMS\Helpers\SystemHelper::getPackages();
 
 	foreach ($packages as &$package) {
 	    if ($package['module']) {
@@ -170,7 +170,7 @@ class UpdatePresenter extends \AdminModule\BasePresenter {
     public function handleCheckUpdates() {
 	$client = new \Packagist\Api\Client();
 
-	$packages = \WebCMS\SystemHelper::getPackages();
+	$packages = \WebCMS\Helpers\SystemHelper::getPackages();
 
 	$needUpdateCount = 0;
 	foreach ($packages as &$package) {
@@ -278,7 +278,7 @@ class UpdatePresenter extends \AdminModule\BasePresenter {
     }
 
     private function getModulesToInstall() {
-	$packages = \WebCMS\SystemHelper::getPackages();
+	$packages = \WebCMS\Helpers\SystemHelper::getPackages();
 
 	$client = new \Packagist\Api\Client();
 	$apiResult = $client->search('webcms2/*');

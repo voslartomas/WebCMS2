@@ -19,10 +19,10 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
     /** @var Doctrine\ORM\EntityManager */
     protected $em;
 
-    /* @var \WebCMS\Translation */
+    /* @var \WebCMS\Translation\Translation */
     public $translation;
 
-    /* @var \WebCMS\Translator */
+    /* @var \WebCMS\Translation\Translator */
     public $translator;
 
     /* @var Nette\Http\SessionSection */
@@ -37,7 +37,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
     /* @var Page */
     public $actualPage;
 
-    /* @var \WebCMS\PriceFormatter */
+    /* @var \WebCMS\Helpers\PriceFormatter */
     public $priceFormatter;
 
     /* Method is executed before render. */
@@ -63,14 +63,14 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
 	    $this->flashMessage('Please fill in correct info email. Settings -> Basic settings.', 'warning');
 	}
 
-	$this->template->registerHelperLoader('\WebCMS\SystemHelper::loader');
+	$this->template->registerHelperLoader('\WebCMS\Helpers\SystemHelper::loader');
 	$this->template->actualPage = $this->actualPage;
 	if (!$this->isAjax())
 	    $this->template->structures = $this->getStructures(); // TODO add function for AJAX and normal request it is not necessary to load everything
 	$this->template->user = $this->getUser();
 	$this->template->setTranslator($this->translator);
 	$this->template->language = $this->state->language;
-	$this->template->version = \WebCMS\SystemHelper::getVersion();
+	$this->template->version = \WebCMS\Helpers\SystemHelper::getVersion();
 	$this->template->activePresenter = $this->getPresenter()->getName();
 	$this->template->settings = $this->settings;
 	$this->template->languages = $this->em->getRepository('WebCMS\Entity\Language')->findAll();
@@ -108,29 +108,29 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
 	// reload entity from db
 	$this->state->language = $this->em->find('WebCMS\Entity\Language', $this->state->language->getId());
 
-	\WebCMS\PriceFormatter::setLocale($this->state->language->getLocale());
+	\WebCMS\Helpers\PriceFormatter::setLocale($this->state->language->getLocale());
 
 	// translations
 	$default = $this->em->getRepository('WebCMS\Entity\Language')->findOneBy(array(
 	    'defaultBackend' => 1
 	));
 
-	$translation = new \WebCMS\Translation($this->em, $default, 1);
+	$translation = new \WebCMS\Translation\Translation($this->em, $default, 1);
 	$this->translation = $translation->getTranslations();
-	$this->translator = new \WebCMS\Translator($this->translation);
+	$this->translator = new \WebCMS\Translation\Translator($this->translation);
 
 	// system settings
 	$this->settings = new \WebCMS\Settings($this->em, $this->state->language);
 	$this->settings->setSettings($this->getSettings());
 
 	// system helper sets variables
-	\WebCMS\SystemHelper::setVariables(array(
+	\WebCMS\Helpers\SystemHelper::setVariables(array(
 	    'baseUrl' => $this->presenter->getHttpRequest()->url->baseUrl,
 	    'infoEmail' => $this->settings->get('Info email', 'basic')->getValue()
 	));
 
 	// price formatting
-	$this->priceFormatter = new \WebCMS\PriceFormatter($this->state->language->getLocale());
+	$this->priceFormatter = new \WebCMS\Helpers\PriceFormatter($this->state->language->getLocale());
 
 	$id = $this->getParam('idPage');
 	if ($id)
@@ -310,7 +310,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
 	}
 
 	// resources definition
-	$res = \WebCMS\SystemHelper::getResources();
+	$res = \WebCMS\Helpers\SystemHelper::getResources();
 
 	// pages resources
 	$pages = $this->em->getRepository('WebCMS\Entity\Page')->findAll();
@@ -358,7 +358,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
 	$check = false;
 
 	if (substr_count(lcfirst($this->name), ':') == 2)
-	    $resource = \WebCMS\SystemHelper::strlReplace(':', '', lcfirst($this->name) . $this->getParam('idPage'));
+	    $resource = \WebCMS\Helpers\SystemHelper::strlReplace(':', '', lcfirst($this->name) . $this->getParam('idPage'));
 	else
 	    $resource = lcfirst($this->name);
 

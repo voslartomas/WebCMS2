@@ -179,7 +179,7 @@ class UsersPresenter extends \AdminModule\BasePresenter{
 	
 	protected function createComponentRoleForm(){
 		
-		$resources = \WebCMS\SystemHelper::getResources();
+		$resources = \WebCMS\Helpers\SystemHelper::getResources();
 		
 		$pages = $this->em->getRepository('WebCMS\Entity\Page')->findAll();
 		

@@ -51,7 +51,7 @@ class Setting extends Entity {
 	if ($raw)
 	    return $this->value;
 	else {
-	    return \WebCMS\SystemHelper::replaceStatic($this->value, $fromPush, $toPush);
+	    return \WebCMS\Helpers\SystemHelper::replaceStatic($this->value, $fromPush, $toPush);
 	}
     }
 

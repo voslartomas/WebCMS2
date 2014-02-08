@@ -113,8 +113,8 @@ class FilesystemPresenter extends \AdminModule\BasePresenter {
         }
 
         if (is_dir($pathToRemove)) {
-            \WebCMS\SystemHelper::rrmdir($pathToRemove);
-            \WebCMS\SystemHelper::rrmdir(str_replace('upload', 'thumbnails', $pathToRemove));
+            \WebCMS\Helpers\SystemHelper::rrmdir($pathToRemove);
+            \WebCMS\Helpers\SystemHelper::rrmdir(str_replace('upload', 'thumbnails', $pathToRemove));
         }
 
         $this->flashMessage('File has been removed.', 'success');
@@ -152,7 +152,7 @@ class FilesystemPresenter extends \AdminModule\BasePresenter {
         $template->files = $finder->findFiles('*')->in($this->path);
         $template->directories = $finder->findDirectories('*')->in($this->path);
         $template->setTranslator($this->translator);
-        $template->registerHelperLoader('\WebCMS\SystemHelper::loader');
+        $template->registerHelperLoader('\WebCMS\Helpers\SystemHelper::loader');
         $template->backLink = strpos($this->createBackLink($this->path), self::DESTINATION_BASE) === false ? realpath(self::DESTINATION_BASE) : $this->createBackLink($this->path);
 
         $template->render();
@@ -164,7 +164,7 @@ class FilesystemPresenter extends \AdminModule\BasePresenter {
 
         set_time_limit(0);
 
-        \WebCMS\SystemHelper::rrmdir('thumbnails', true);
+        \WebCMS\Helpers\SystemHelper::rrmdir('thumbnails', true);
 
         $timeStart = time();
 

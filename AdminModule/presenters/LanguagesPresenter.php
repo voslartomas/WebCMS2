@@ -38,7 +38,7 @@ class LanguagesPresenter extends BasePresenter {
     protected function createComponentLanguageForm() {
 
 	$locales = \WebCMS\Locales::getSystemLocales();
-	$translationFiles = \WebCMS\SystemHelper::getTranslationFiles();
+	$translationFiles = \WebCMS\Helpers\SystemHelper::getTranslationFiles();
 	$files = array('Pick a file');
 	
 	foreach($translationFiles as $f){
@@ -82,7 +82,7 @@ class LanguagesPresenter extends BasePresenter {
 	      ->getQuery()
 	      ->execute();
 	      $this->em->flush(); */
-	    $file = \WebCMS\SystemHelper::WEBCMS_PATH . 'AdminModule/static/translations/' . $values->import;
+	    $file = \WebCMS\Helpers\SystemHelper::WEBCMS_PATH . 'AdminModule/static/translations/' . $values->import;
 
 	    $content = file_get_contents($file);
 	    $this->importLanguage($content, $this->lang);
@@ -351,7 +351,7 @@ class LanguagesPresenter extends BasePresenter {
     
     private function cleanCache() {
 	$this->context->cacheStorage->clean(array(
-	    \Nette\Caching\Cache::TAGS => array(\WebCMS\Translation::CACHE_NAMESPACE . $this->state->language->getId())
+	    \Nette\Caching\Cache::TAGS => array(\WebCMS\Translation\Translation::CACHE_NAMESPACE . $this->state->language->getId())
 	));
     }
 
@@ -365,7 +365,7 @@ class LanguagesPresenter extends BasePresenter {
 	$form = $this->createForm();
 
 	$langs = $this->getAllLanguages();
-	$packages = \WebCMS\SystemHelper::getPackages();
+	$packages = \WebCMS\Helpers\SystemHelper::getPackages();
 
 	$form->addGroup('Copy structures');
 
@@ -549,7 +549,7 @@ class LanguagesPresenter extends BasePresenter {
     public function createComponentTranslatorForm() {
 	$form = $this->createForm();
 
-	$packages = \WebCMS\SystemHelper::getPackages();
+	$packages = \WebCMS\Helpers\SystemHelper::getPackages();
 
 	if ($this->translatorService instanceof \Webcook\Translator\ITranslator) {
 

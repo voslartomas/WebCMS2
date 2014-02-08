@@ -127,7 +127,7 @@ class SettingsPresenter extends \AdminModule\BasePresenter {
 	$form->addCheckbox('crop', 'Crop?');
 	$form->addCheckbox('watermark', 'Watermark?');
 
-	if (\WebCMS\SystemHelper::isSuperAdmin($this->user))
+	if (\WebCMS\Helpers\SystemHelper::isSuperAdmin($this->user))
 	    $form->addCheckbox('system', 'System?');
 	else
 	    $form->addHidden('system', 'System?');
@@ -148,7 +148,7 @@ class SettingsPresenter extends \AdminModule\BasePresenter {
 	else
 	    $thumb = $this->thumbnail;
 
-	if (!\WebCMS\SystemHelper::isSuperAdmin($this->user) && $thumb->getSystem()) {
+	if (!\WebCMS\Helpers\SystemHelper::isSuperAdmin($this->user) && $thumb->getSystem()) {
 	    $this->flashMessage('You do not have a permission to do this operation.', 'danger');
 	    $this->redirect('Settings:pictures', array('panel' => 'thumbnails'));
 	}

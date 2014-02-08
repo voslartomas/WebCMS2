@@ -17,10 +17,10 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
     /** @var Doctrine\ORM\EntityManager */
     protected $em;
 
-    /* @var \WebCMS\Translation */
+    /* @var \WebCMS\Translation\Translation */
     public $translation;
 
-    /* @var \WebCMS\Translator */
+    /* @var \WebCMS\Translation\Translator */
     public $translator;
 
     /* @var Nette\Http\SessionSection */
@@ -59,7 +59,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
             $this->invalidateControl('flashMessages');
         }
 
-        $this->template->registerHelperLoader('\WebCMS\SystemHelper::loader');
+        $this->template->registerHelperLoader('\WebCMS\Helpers\SystemHelper::loader');
 
         // get top page for sidebar menu
         if (is_object($this->actualPage)) {
@@ -143,12 +143,12 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
         $this->languages = $this->em->getRepository('WebCMS\Entity\Language')->findAll();
 
         setlocale(LC_ALL, $this->language->getLocale());
-        \WebCMS\PriceFormatter::setLocale($this->language->getLocale());
+        \WebCMS\Helpers\PriceFormatter::setLocale($this->language->getLocale());
 
         // translations
-        $translation = new \WebCMS\Translation($this->em, $this->language, 0, $this->getContext()->getService('cacheStorage'));
+        $translation = new \WebCMS\Translation\Translation($this->em, $this->language, 0, $this->getContext()->getService('cacheStorage'));
         $this->translation = $translation->getTranslations();
-        $this->translator = new \WebCMS\Translator($this->translation);
+        $this->translator = new \WebCMS\Translation\Translator($this->translation);
 	
 	$translation->hashTranslations();
 	
@@ -157,7 +157,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
         $this->settings->setSettings($this->getSettings());
 
         // system helper sets variables
-        \WebCMS\SystemHelper::setVariables(array(
+        \WebCMS\Helpers\SystemHelper::setVariables(array(
             'baseUrl' => $this->presenter->getHttpRequest()->url->baseUrl,
             'infoEmail' => $this->settings->get('Info email', 'basic')->getValue()
         ));
@@ -193,7 +193,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
         $template = parent::createTemplate($class);
 
         $template->setTranslator($this->translator);
-        $template->registerHelperLoader('\WebCMS\SystemHelper::loader');
+        $template->registerHelperLoader('\WebCMS\Helpers\SystemHelper::loader');
 
         return $template;
     }
@@ -446,7 +446,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
         $finalSystem = array();
         foreach ($system as $item) {
             if ($item->getParent()) {
-                $finalSystem[] = new \WebCMS\BreadcrumbsItem($item->getId(), $item->getModuleName(), $item->getPresenter(), $item->getTitle(), $item->getPath()
+                $finalSystem[] = new \WebCMS\Entity\BreadcrumbsItem($item->getId(), $item->getModuleName(), $item->getPresenter(), $item->getTitle(), $item->getPath()
                 );
             }
         }
@@ -464,7 +464,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
      */
     public function addToBreadcrumbs($id, $moduleName, $presenter, $title, $path) {
 
-        $this->breadcrumbs[] = new \WebCMS\BreadcrumbsItem($id, $moduleName, $presenter, $title, $path);
+        $this->breadcrumbs[] = new \WebCMS\Entity\BreadcrumbsItem($id, $moduleName, $presenter, $title, $path);
     }
 
     public function selfRedirect($path = '') {
