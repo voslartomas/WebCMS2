@@ -139,7 +139,7 @@ class PagesPresenter extends \AdminModule\BasePresenter {
 	    foreach ($roles as $r) {
 		$module = $this->createObject($this->page->getModuleName());
 		foreach ($module->getPresenters() as $presenter) {
-		    $permission = new Permission;
+		    $permission = new \WebCMS\Entity\Permission;
 
 		    $resource = 'admin:' . $this->page->getModuleName() . $presenter['name'] . $this->page->getId();
 		    $permission->setResource($resource);

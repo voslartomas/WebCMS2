@@ -304,11 +304,13 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
     private function setUpBoxes() {
         $parameters = $this->context->getParameters();
         $boxes = $parameters['boxes'];
-
+	
         $finalBoxes = array();
-        foreach ($boxes as $key => $box) {
-            $finalBoxes[$key] = NULL;
-        }
+        if(is_array($boxes)){
+	    foreach ($boxes as $key => $box) {
+		$finalBoxes[$key] = NULL;
+	    }
+	}
 
         $assocBoxes = $this->em->getRepository('WebCMS\Entity\Box')->findBy(array(
             'pageTo' => $this->actualPage

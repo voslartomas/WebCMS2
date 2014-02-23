@@ -115,7 +115,7 @@ class UpdatePresenter extends \AdminModule\BasePresenter {
 	    if (is_object($exists)) {
 		$exists->setActive(TRUE);
 	    } else {
-		$mod = new Module;
+		$mod = new \WebCMS\Entity\Module;
 		$mod->setName($module->getName());
 		$mod->setPresenters($module->getPresenters());
 		$mod->setActive(TRUE);
