@@ -454,10 +454,14 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
 	$parameters = $this->getContext()->container->getParameters();
 	$boxes = $parameters['boxes'];
 
+	/*
 	foreach ($boxes as &$box) {
 	    //$box['component'] = $id . '-' . $box['presenter'] . '-' . $box['function'];
+	}*/
+	if(!is_array($boxes)){
+	    $boxes = array();
 	}
-
+	
 	$this->template->actualPage = $this->actualPage;
 	$this->template->boxes = $boxes;
 	$this->template->idPage = $idPage;
@@ -488,10 +492,12 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
 	    0 => $this->translation['Box is not linked.']
 	    ) + $boxesAssoc;
 
-	foreach ($boxes as $name => $active) {
-	    $form->addSelect($name, $name, $boxesAssoc)
-		->setTranslator(NULL)
-		->setAttribute('class', 'form-control');
+	if(!empty($boxes)){
+	    foreach ($boxes as $name => $active) {
+		$form->addSelect($name, $name, $boxesAssoc)
+		    ->setTranslator(NULL)
+		    ->setAttribute('class', 'form-control');
+	    }
 	}
 
 	// set defaults
@@ -500,9 +506,11 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
 	));
 
 	$defaults = array();
-	foreach ($boxes as $box) {
-	    if (is_object($box->getPageFrom()))
-		$defaults[$box->getBox()] = $box->getPageFrom()->getId() . '-' . $box->getModuleName() . '-' . $box->getPresenter() . '-' . $box->getFunction();
+	if(!empty($boxes)){
+	    foreach ($boxes as $box) {
+		if (is_object($box->getPageFrom()))
+		    $defaults[$box->getBox()] = $box->getPageFrom()->getId() . '-' . $box->getModuleName() . '-' . $box->getPresenter() . '-' . $box->getFunction();
+	    }
 	}
 
 	$form->setDefaults($defaults);

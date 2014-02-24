@@ -15,7 +15,7 @@ class FilesystemPresenter extends \AdminModule\BasePresenter {
 
     private $path;
 
-    /* @var \WebCMS\ThumbnailCreator */
+    /* @var \WebCMS\Helpers\ThumbnailCreator */
     private $thumbnailCreator;
 
     protected function beforeRender() {
@@ -27,7 +27,7 @@ class FilesystemPresenter extends \AdminModule\BasePresenter {
 
         $thumbnails = $this->em->getRepository('WebCMS\Entity\Thumbnail')->findAll();
 
-        $this->thumbnailCreator = new \WebCMS\ThumbnailCreator($this->settings, $thumbnails);
+        $this->thumbnailCreator = new \WebCMS\Helpers\ThumbnailCreator($this->settings, $thumbnails);
     }
 
     public function actionDefault($path) {
