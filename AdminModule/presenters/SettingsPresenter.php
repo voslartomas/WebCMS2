@@ -89,7 +89,7 @@ class SettingsPresenter extends \AdminModule\BasePresenter {
 	if ($id)
 	    $this->thumbnail = $this->em->find("WebCMS\Entity\Thumbnail", $id);
 	else
-	    $this->thumbnail = new Thumbnail();
+	    $this->thumbnail = new \WebCMS\Entity\Thumbnail();
     }
 
     public function actionDeleteThumbnail($id) {
@@ -144,7 +144,7 @@ class SettingsPresenter extends \AdminModule\BasePresenter {
 	$values = $form->getValues();
 
 	if (!$this->thumbnail->getId())
-	    $thumb = new Thumbnail;
+	    $thumb = new \WebCMS\Entity\Thumbnail;
 	else
 	    $thumb = $this->thumbnail;
 
@@ -258,7 +258,7 @@ class SettingsPresenter extends \AdminModule\BasePresenter {
 	if (is_object($exists)) {
 	    $boxAssign = $exists;
 	} else {
-	    $boxAssign = new Box();
+	    $boxAssign = new \WebCMS\Entity\Box();
 	}
 	
 	$parsed = explode('-', $value);
