@@ -194,36 +194,48 @@ class LanguagesPresenter extends BasePresenter {
 
 	$translations = array();
 	foreach ($data['translations'] as $translation) {
-	    $t = new Translation();
+	    $t = new \WebCMS\Entity\Translation();
 	    $t->setLanguage($language);
 	    $t->setKey($translation['key']);
 	    $t->setTranslation($translation['translation']);
 	    $t->setBackend($translation['backend']);
 	    $t->setHash();
 	    
-	    $exists = $this->translationExists($t);
+	    $exists = $this->translationExists($t);	    
 	    if (!$exists) {
 		$this->em->persist($t);
 		$translations[] = $t;
 	    } else {
+		$exists->setHash();
 		$exists->setTranslation($translation['translation']);
 	    }
 	}
 
 	$this->em->persist($language);
 	$this->em->flush();
+	
+	// reload actual translations
+	/*$default = $this->em->getRepository('WebCMS\Entity\Language')->findOneBy(array(
+	    'defaultBackend' => 1
+	));
+	
+	$translation = new \WebCMS\Translation\Translation($this->em, $default, 1);
+	$this->translation = $translation->getTranslations();
+	var_dump($this->translation['Language has been added.']);
+	die();
+	$this->translator = new \WebCMS\Translation\Translator($this->translation);*/
     }
 
     private function translationExists($translation) {
 	$exists = $this->em->getRepository('WebCMS\Entity\Translation')->findOneBy(array(
-	    'language' => $translation->getLanguage(),
-	    'key' => $translation->getKey()
+	    'hash' => $translation->getHash()
 	));
 
-	if (is_object($exists))
+	if (is_object($exists)){
 	    return $exists;
-	else
+	}else{
 	    return FALSE;
+	}
     }
 
     public function actionUpdateLanguage($id) {
@@ -231,7 +243,7 @@ class LanguagesPresenter extends BasePresenter {
 	if ($id)
 	    $this->lang = $this->em->find("WebCMS\Entity\Language", $id);
 	else
-	    $this->lang = new Language();
+	    $this->lang = new \WebCMS\Entity\Language();
     }
 
     public function actionDeleteLanguage($id) {
@@ -424,7 +436,7 @@ class LanguagesPresenter extends BasePresenter {
 	    ), array('lft' => 'asc'));
 
 	foreach ($pages as $page) {
-	    $new = new Page;
+	    $new = new \WebCMS\Entity\Page;
 	    $new->setLanguage($languageTo);
 	    $new->setTitle($page->getTitle());
 	    $new->setPresenter($page->getPresenter());
@@ -462,7 +474,7 @@ class LanguagesPresenter extends BasePresenter {
 	    ));
 
 	    foreach ($boxes as $box) {
-		$newBox = new Box();
+		$newBox = new \WebCMS\Entity\Box();
 		$newBox->setBox($box->getBox());
 		$newBox->setFunction($box->getFunction());
 		$newBox->setModuleName($box->getModuleName());
