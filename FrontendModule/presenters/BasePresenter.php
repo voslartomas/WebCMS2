@@ -81,11 +81,12 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
         $this->template->abbr = $this->abbr;
         $this->template->settings = $this->settings;
         // !params load from settings
-        $this->template->structures = $this->getStructures(!$this->settings->get('Navbar dropdown', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue(), $this->settings->get('Navbar class', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue(), $this->settings->get('Navbar dropdown', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue());
+        $this->template->structures = $this->getStructures(!$this->settings->get('Navbar dropdown', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue(), $this->settings->get('Navbar class', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue(), $this->settings->get('Navbar dropdown', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue(), $this->settings->get('Navbar id', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue());
         $this->template->setTranslator($this->translator);
         $this->template->actualPage = $this->actualPage;
         $this->template->user = $this->getUser();
         $this->template->activePresenter = $this->getPresenter()->getName();
+	$this->template->language = $this->language;
         $this->template->languages = $this->em->getRepository('WebCMS\Entity\Language')->findAll();
     }
 
@@ -276,7 +277,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
             $abbr = $home->getLanguage()->getDefaultFrontend() ? '' : $home->getLanguage()->getAbbr() . '/';
 
             $this->redirectUrl(
-                    $abbr . $home->getPath()
+                    $this->getHttpRequest()->url->baseUrl .  $abbr . $home->getPath()
             );
         } else {
             $this->flashMessage('No default page for selected language.', 'error');
@@ -334,7 +335,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
      * Load all system structures.
      * @return type
      */
-    private function getStructures($direct = TRUE, $rootClass = 'nav navbar-nav', $dropDown = FALSE) {
+    private function getStructures($direct = TRUE, $rootClass = 'nav navbar-nav', $dropDown = FALSE, $rootId = '') {
         $repo = $this->em->getRepository('WebCMS\Entity\Page');
 
         $structs = $repo->findBy(array(
@@ -344,7 +345,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
 
         $structures = array();
         foreach ($structs as $s) {
-            $structures[$s->getTitle()] = $this->getStructure($this, $s, $repo, $direct, $rootClass, $dropDown);
+            $structures[$s->getTitle()] = $this->getStructure($this, $s, $repo, $direct, $rootClass, $dropDown, TRUE, NULL, '', null, $rootId);
         }
 
         return $structures;
@@ -360,12 +361,12 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
      * @param type $dropDown
      * @return type
      */
-    protected function getStructure($context, $node = NULL, $repo, $direct = TRUE, $rootClass = 'nav navbar-nav', $dropDown = FALSE, $system = TRUE, $fromPage = NULL, $sideClass = 'nav navbar', $moduleNameAbstract = null) {
+    protected function getStructure($context, $node = NULL, $repo, $direct = TRUE, $rootClass = 'nav navbar-nav', $dropDown = FALSE, $system = TRUE, $fromPage = NULL, $sideClass = 'nav navbar', $moduleNameAbstract = null, $rootId = '') {
 
         return $repo->childrenHierarchy($node, $direct, array(
                     'decorate' => true,
                     'html' => true,
-                    'rootOpen' => function($nodes) use($rootClass, $dropDown, $sideClass) {
+                    'rootOpen' => function($nodes) use($rootClass, $dropDown, $sideClass, $rootId) {
 
                 $drop = $nodes[0]['level'] == 2 ? TRUE : FALSE;
                 $class = $nodes[0]['level'] < 2 ? $rootClass : $sideClass;
@@ -373,7 +374,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
                 if ($drop && $dropDown)
                     $class .= ' dropdown-menu';
 
-                return '<ul class="' . $class . '">';
+                return '<ul class="' . $class . '" id="' . $rootId . '">';
             },
                     'rootClose' => '</ul>',
                     'childOpen' => function($node) use($dropDown, $context) {
@@ -426,7 +427,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
                 if (!empty($node['class']))
                     $class .= ' ' . $node['class'];
 
-                return '<a ' . $params . ' class="' . $class . '" href="' . $link . '">' . $node['title'] . $span . '</a>';
+                return '<a ' . $params . ' class="' . $class . '" href="' . $link . '"><span>' . $node['title'] . $span . '</span></a>';
             }
         ));
     }
