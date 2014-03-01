@@ -215,15 +215,14 @@ class LanguagesPresenter extends BasePresenter {
 	$this->em->flush();
 	
 	// reload actual translations
-	/*$default = $this->em->getRepository('WebCMS\Entity\Language')->findOneBy(array(
+	$default = $this->em->getRepository('WebCMS\Entity\Language')->findOneBy(array(
 	    'defaultBackend' => 1
 	));
 	
 	$translation = new \WebCMS\Translation\Translation($this->em, $default, 1);
 	$this->translation = $translation->getTranslations();
-	var_dump($this->translation['Language has been added.']);
-	die();
-	$this->translator = new \WebCMS\Translation\Translator($this->translation);*/
+	
+	$this->translator = new \WebCMS\Translation\Translator($this->translation);
     }
 
     private function translationExists($translation) {
