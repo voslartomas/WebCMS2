@@ -534,7 +534,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
 
 		$pageFrom = $this->em->find('WebCMS\Entity\Page', $params[0]);
 
-		$box = new Box();
+		$box = new \WebCMS\Entity\Box();
 		$box->setPageFrom($pageFrom);
 		$box->setPageTo($this->actualPage);
 		$box->setModuleName($params[1]);
@@ -556,7 +556,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
     public function handleAddToFavourite($link, $title) {
 	$user = $this->em->getRepository('WebCMS\Entity\User')->find($this->getUser()->getId());
 
-	$fav = new Favourites();
+	$fav = new \WebCMS\Entity\Favourites();
 	$fav->setLink($link);
 	$fav->setUser($user);
 	$fav->setTitle($title);
