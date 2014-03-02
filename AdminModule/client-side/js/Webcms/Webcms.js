@@ -135,6 +135,21 @@ Webcms.prototype = {
 		$("#languageChanger").live('change', function() {
 			$(this).parent().submit();
 		});
+		
+		$(".navbar-brand").live('mouseover', function(){
+			$(".sidebar .well").show('fast', 'swing');
+		});
+		
+		$(".container").mouseover(function(){
+			
+			if($(".sidebar .well").css('display') === 'block'){
+				setTimeout("self.hideSidebar()", 500);
+			}
+		});
+	},
+	
+	hideSidebar : function(){
+		$(".sidebar .well").hide('fast', 'swing');
 	},
 	initTextEditors: function() {
 
