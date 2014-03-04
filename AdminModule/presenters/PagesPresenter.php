@@ -163,6 +163,8 @@ class PagesPresenter extends \AdminModule\BasePresenter {
 
 	$this->em->flush();
 
+	$this->generateSitemap();
+	
 	$this->flashMessage('Page has been added.', 'success');
 
 	if (!$this->isAjax())
@@ -275,6 +277,31 @@ class PagesPresenter extends \AdminModule\BasePresenter {
 
     public function renderDefault() {
 	$this->reloadContent();
+    }
+
+    public function generateSitemap() {
+	$sitemapXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n";
+	
+	$repository = $this->em->getRepository('WebCMS\Entity\Page');
+	$pages = $repository->findAll();
+	
+	foreach($pages as $page){
+	    if($page->getParent() !== null){
+		$sitemapXml .= "<url>\n\t<loc>" . $this->getSitemapLink($page) . "</loc>\n</url>\n";
+	    }
+	}
+	
+	$sitemapXml .= '</urlset>';
+	
+	file_put_contents('../sitemap.xml', $sitemapXml);
+    }
+    
+    private function getSitemapLink($page){
+	$url = $this->context->httpRequest->url->baseUrl;
+	$url .= !$page->getLanguage()->getDefaultFrontend() ? $page->getLanguage()->getAbbr() . '/' : '';
+	$url .= $page->getPath();
+	
+	return  $url;
     }
 
 }
