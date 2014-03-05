@@ -373,8 +373,13 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
 
                 if ($drop && $dropDown)
                     $class .= ' dropdown-menu';
-
-                return '<ul class="' . $class . '" id="' . $rootId . '">';
+		
+		$htmlId = '';
+		if(!empty($rootId)){
+			$htmlId = ' id = "' . $rootId . '"';
+		}
+		
+                return '<ul class="' . $class . '"' . $htmlId . '>';
             },
                     'rootClose' => '</ul>',
                     'childOpen' => function($node) use($dropDown, $context) {
