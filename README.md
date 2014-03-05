@@ -23,7 +23,7 @@ Download [https://github.com/nette/sandbox](Nette sandbox), default vendor direc
 Add this line into your composer.json file.
 
 ```
-"webcms2\webcms2" : "@dev"
+"webcms2\webcms2" : "0.*"
 ```
 
 This command will download all required packages, create DB schema, make all necessary directories and change mode for required files.
