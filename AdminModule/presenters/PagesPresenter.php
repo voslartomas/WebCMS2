@@ -293,7 +293,7 @@ class PagesPresenter extends \AdminModule\BasePresenter {
 	
 	$sitemapXml .= '</urlset>';
 	
-	file_put_contents('../sitemap.xml', $sitemapXml);
+	file_put_contents('./sitemap.xml', $sitemapXml);
     }
     
     private function getSitemapLink($page){
