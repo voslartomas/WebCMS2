@@ -1,11 +1,11 @@
 <?php
 
-class UsersPresenterTest extends \WebCMS\Tests\PresenterTestCase {
+class LoginPresenterTest extends \WebCMS\Tests\PresenterTestCase {
     
     protected $presenter = NULL;
 
     protected function setUp() {
-        $this->presenter = new \AdminModule\UsersPresenter($this->container);
+        $this->presenter = new \AdminModule\LoginPresenter($this->container);
     }
 
     /**
