@@ -17,5 +17,11 @@ if(file_exists(__DIR__ . '/../vendor/autoload.php')){
     $configurator->enableDebugger(__DIR__ . '/temp/log');
     $configurator->setTempDirectory(__DIR__ . '/temp');
 
+    $container->router[] =  new Nette\Application\Routers\Route('admin/<presenter>/<action>[/<id>]', array(
+            'module' => 'Admin',
+            'presenter' => 'Homepage',
+            'action' => 'default'
+    ));
+    
     $container = $configurator->createContainer();
 }
