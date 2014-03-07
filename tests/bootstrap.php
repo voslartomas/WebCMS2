@@ -21,9 +21,6 @@ if(file_exists(__DIR__ . '/../vendor/autoload.php')){
 
     $container = $configurator->createContainer();
     
-    $container->user = new \Nette\Security\User(new \WebCMS\Tests\DummyUserStorage(), $container);
-    $container->user->login();
-    
     // Setup router
     $container->router[] =  new \Nette\Application\Routers\Route('', array(
             'module' => 'Frontend',

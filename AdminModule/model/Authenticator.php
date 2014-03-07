@@ -16,7 +16,7 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
 	public function __construct(\Doctrine\ORM\EntityRepository $users){
 		$this->users = $users;
 	}
-
+	
 	/**
 	 * Performs an authentication
 	 * @param  array
