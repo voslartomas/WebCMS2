@@ -13,6 +13,8 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator {
     /** @var \Doctrine\ORM\EntityRepository */
     private $users;
 
+    private $salt = '*feijfččí489*';
+    
     public function __construct(\Doctrine\ORM\EntityRepository $users) {
 	$this->users = $users;
     }
@@ -53,7 +55,7 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator {
      * @return string
      */
     public function calculateHash($password) {
-	return md5($password . str_repeat('*feijfččí489*', 10));
+	return md5($password . str_repeat($this->salt, 10));
     }
 
 }
