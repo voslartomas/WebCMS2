@@ -11,9 +11,11 @@ before_script:
   
   - mkdir tests/temp
   - mkdir tests/temp/log
+  - mkdir upload
   
   # Install
   - composer install
   
 script:
-  - phpunit --no-globals-backup --bootstrap tests/bootstrap.php tests
+  - phpunit --no-globals-backup --bootstrap tests/bootstrap.php tests/AdminModule
+  - phpunit --no-globals-backup --bootstrap tests/bootstrap.php tests/Entity

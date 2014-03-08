@@ -10,8 +10,8 @@ use Nette\Application\UI;
  * @package WebCMS2
  */
 class LanguagesPresenter extends BasePresenter {
-
     /* @var Language */
+
     private $lang;
 
     /* @var \Webcook\Translator\ServiceFactory */
@@ -40,11 +40,11 @@ class LanguagesPresenter extends BasePresenter {
 	$locales = \WebCMS\Locales::getSystemLocales();
 	$translationFiles = \WebCMS\Helpers\SystemHelper::getTranslationFiles();
 	$files = array('Pick a file');
-	
-	foreach($translationFiles as $f){
+
+	foreach ($translationFiles as $f) {
 	    $files[$f] = $f;
 	}
-	
+
 	$form = $this->createForm();
 	$form->addText('name', 'Name')->setAttribute('class', 'form-control');
 	$form->addText('abbr', 'Abbreviation')->setAttribute('class', 'form-control');
@@ -75,13 +75,6 @@ class LanguagesPresenter extends BasePresenter {
 	$this->em->flush();
 
 	if ($values->import) {
-	    /*$qb = $this->em->createQueryBuilder();
-	     $qb->delete('WebCMS\Entity\Translation', 'l')
-	      ->where('l.language = ?1')
-	      ->setParameter(1, $this->lang)
-	      ->getQuery()
-	      ->execute();
-	      $this->em->flush(); */
 	    $file = \WebCMS\Helpers\SystemHelper::WEBCMS_PATH . 'AdminModule/static/translations/' . $values->import;
 
 	    $content = file_get_contents($file);
@@ -119,7 +112,7 @@ class LanguagesPresenter extends BasePresenter {
 	    $this->invalidateControl('header');
 	}
     }
-    
+
     protected function createComponentGrid($name) {
 
 	$grid = $this->createGrid($this, $name, "Language");
@@ -200,8 +193,8 @@ class LanguagesPresenter extends BasePresenter {
 	    $t->setTranslation($translation['translation']);
 	    $t->setBackend($translation['backend']);
 	    $t->setHash();
-	    
-	    $exists = $this->translationExists($t);	    
+
+	    $exists = $this->translationExists($t);
 	    if (!$exists) {
 		$this->em->persist($t);
 		$translations[] = $t;
@@ -213,15 +206,15 @@ class LanguagesPresenter extends BasePresenter {
 
 	$this->em->persist($language);
 	$this->em->flush();
-	
+
 	// reload actual translations
 	$default = $this->em->getRepository('WebCMS\Entity\Language')->findOneBy(array(
 	    'defaultBackend' => 1
 	));
-	
+
 	$translation = new \WebCMS\Translation\Translation($this->em, $default, 1);
 	$this->translation = $translation->getTranslations();
-	
+
 	$this->translator = new \WebCMS\Translation\Translator($this->translation);
     }
 
@@ -230,9 +223,9 @@ class LanguagesPresenter extends BasePresenter {
 	    'hash' => $translation->getHash()
 	));
 
-	if (is_object($exists)){
+	if (is_object($exists)) {
 	    return $exists;
-	}else{
+	} else {
 	    return FALSE;
 	}
     }
@@ -301,7 +294,7 @@ class LanguagesPresenter extends BasePresenter {
 	    '1' => 'Yes',
 	    NULL => 'No'
 	))->setFilterSelect($backend);
-	
+
 	$grid->addColumnText('translated', 'Translated')->setReplacement(array(
 	    '1' => 'Yes',
 	    NULL => 'No'
@@ -336,7 +329,7 @@ class LanguagesPresenter extends BasePresenter {
 
 	$translation = $this->em->find('WebCMS\Entity\Translation', trim($idTranslation));
 	$translation->setTranslation(trim($value));
-	
+
 	$this->em->persist($translation);
 	$this->em->flush();
 
@@ -349,17 +342,17 @@ class LanguagesPresenter extends BasePresenter {
 	if (!$this->isAjax())
 	    $this->redirect('Languages:Translates');
     }
-    
-    public function handleRegenerateTranslations(){
+
+    public function handleRegenerateTranslations() {
 	$translations = $this->em->getRepository('WebCMS\Entity\Translation')->findAll();
-	
-	foreach($translations as $t){
+
+	foreach ($translations as $t) {
 	    $t->setTranslation($t->getTranslation());
 	}
-	
+
 	$this->em->flush();
     }
-    
+
     private function cleanCache() {
 	$this->context->cacheStorage->clean(array(
 	    \Nette\Caching\Cache::TAGS => array(\WebCMS\Translation\Translation::CACHE_NAMESPACE . $this->state->language->getId())
@@ -619,13 +612,14 @@ class LanguagesPresenter extends BasePresenter {
 	    $t = $this->translatorService->translate($page->getTitle(), $from, $to);
 	    $page->setTitle($t->getTranslation());
 	    $page->setSlug(\Nette\Utils\Strings::webalize($page->getTitle()));
-	    
+
 	    $this->em->flush();
-	    
+
 	    $path = $this->em->getRepository('WebCMS\Entity\Page')->getPath($page);
 	    $final = array();
-	    foreach($path as $p){
-		    if($p->getParent() != NULL) $final[] = $p->getSlug();
+	    foreach ($path as $p) {
+		if ($p->getParent() != NULL)
+		    $final[] = $p->getSlug();
 	    }
 
 	    $page->setPath(implode('/', $final));
@@ -640,18 +634,18 @@ class LanguagesPresenter extends BasePresenter {
 		}
 	    }
 	}
-	
+
 	// translate all static texts
 	$translations = $this->em->getRepository('WebCMS\Entity\Translation')->findBy(array(
 	    'language' => $language
 	));
-	
-	foreach($translations as $translation){
+
+	foreach ($translations as $translation) {
 	    $t = $this->translatorService->translate($translation->getTranslation(), $from, $to);
 	    $translation->setTranslation($t->getTranslation());
 	    $translation->setHash();
 	}
-	
+
 	$this->em->flush();
 
 	$this->flashMessage('Translation of language finished.', 'success');
@@ -661,4 +655,3 @@ class LanguagesPresenter extends BasePresenter {
     }
 
 }
-    

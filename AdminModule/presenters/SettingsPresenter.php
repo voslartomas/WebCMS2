@@ -87,10 +87,11 @@ class SettingsPresenter extends \AdminModule\BasePresenter {
     }
 
     public function actionAddThumbnail($id) {
-	if ($id)
+	if ($id){
 	    $this->thumbnail = $this->em->find("WebCMS\Entity\Thumbnail", $id);
-	else
+	}else {
 	    $this->thumbnail = new \WebCMS\Entity\Thumbnail();
+	}
     }
 
     public function actionDeleteThumbnail($id) {
@@ -144,10 +145,11 @@ class SettingsPresenter extends \AdminModule\BasePresenter {
     public function thumbnailFormSubmitted(\Nette\Forms\Form $form) {
 	$values = $form->getValues();
 
-	if (!$this->thumbnail->getId())
+	if (!$this->thumbnail->getId()){
 	    $thumb = new \WebCMS\Entity\Thumbnail;
-	else
+	}else {
 	    $thumb = $this->thumbnail;
+	}
 
 	if (!\WebCMS\Helpers\SystemHelper::isSuperAdmin($this->user) && $thumb->getSystem()) {
 	    $this->flashMessage('You do not have a permission to do this operation.', 'danger');
@@ -167,8 +169,9 @@ class SettingsPresenter extends \AdminModule\BasePresenter {
 
 	$this->flashMessage('Thumbnail setting was added.', 'success');
 
-	if (!$this->isAjax())
+	if (!$this->isAjax()){
 	    $this->redirect('Settings:pictures', array('panel' => 'thumbnails'));
+	}
     }
 
     protected function createComponentThumbnailGrid($name) {

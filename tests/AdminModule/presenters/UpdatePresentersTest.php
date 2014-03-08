@@ -1,11 +1,11 @@
 <?php
     
-class UsersPresenterTest extends \WebCMS\Tests\PresenterTestCase {
+class UpdatePresenterTest extends \WebCMS\Tests\PresenterTestCase {
     
     public function setUp() {
 	parent::setUp();
 	
-	$this->createPresenter('Admin:Users');
+	$this->createPresenter('Admin:Update');
     }
     
     public function testDefault() {
@@ -17,27 +17,34 @@ class UsersPresenterTest extends \WebCMS\Tests\PresenterTestCase {
 	$this->getResponse($response);
     }
     
-    public function testUpdateUserDialog(){
+    public function testClearCache(){
 	
-	$response = $this->makeRequest('updateUser');
+	$response = $this->makeRequest('clearCache');
+	
+        $this->assertInstanceOf('Nette\Application\Responses\RedirectResponse', $response);
+    }
+    
+    public function testAddModuleDialog(){
+	
+	$response = $this->makeRequest('addModule');
 	
         $this->assertInstanceOf('Nette\Application\Responses\TextResponse', $response);
 	
 	$this->getResponse($response);
     }
     
-    public function testRoles(){
+    public function testFunctions(){
 	
-	$response = $this->makeRequest('roles');
+	$response = $this->makeRequest('functions');
 	
         $this->assertInstanceOf('Nette\Application\Responses\TextResponse', $response);
 	
 	$this->getResponse($response);
     }
     
-    public function testUpdateRoleDialog(){
+    public function testCreateModuleDialog(){
 	
-	$response = $this->makeRequest('updateRole');
+	$response = $this->makeRequest('createModule');
 	
         $this->assertInstanceOf('Nette\Application\Responses\TextResponse', $response);
 	

@@ -12,8 +12,7 @@ use Nette\Mail;
  */
 class UsersPresenter extends \AdminModule\BasePresenter {
     /* @var User */
-
-    private $user;
+    private $userEntity;
 
     /* @var Role */
     private $role;
@@ -44,17 +43,17 @@ class UsersPresenter extends \AdminModule\BasePresenter {
 	}
 
 	$form = $this->createForm();
-	$form->addText('username', 'Username')->setAttribute('class', 'form-control');
+	$form->addText('userEntityname', 'Username')->setAttribute('class', 'form-control');
 	$form->addSelect('role', 'Role')->setTranslator(NULL)->setItems($roles)->setAttribute('class', 'form-control');
 	$form->addText('name', 'Name')->setAttribute('class', 'form-control');
 	$form->addText('email', 'Email')->setAttribute('class', 'form-control');
 	$form->addPassword('password', 'Password')->setAttribute('class', 'form-control');
 	$form->addSubmit('save', 'Save')->setAttribute('class', 'btn btn-success');
 
-	$form->onSuccess[] = callback($this, 'userFormSubmitted');
+	$form->onSuccess[] = callback($this, 'userEntityFormSubmitted');
 
-	if ($this->user)
-	    $form->setDefaults($this->user->toArray());
+	if ($this->userEntity)
+	    $form->setDefaults($this->userEntity->toArray());
 
 	return $form;
     }
@@ -65,7 +64,7 @@ class UsersPresenter extends \AdminModule\BasePresenter {
 	    'id <> 1'
 	));
 
-	$grid->addColumnText('username', 'Name')->setSortable();
+	$grid->addColumnText('userEntityname', 'Name')->setSortable();
 
 	$grid->addActionHref("updateUser", 'Edit')->getElementPrototype()->addAttributes(array('class' => array('btn', 'btn-primary', 'ajax'), 'data-toggle' => 'modal', 'data-target' => '#myModal', 'data-remote' => 'false'));
 	$grid->addActionHref("deleteUser", 'Delete')->getElementPrototype()->addAttributes(array('class' => array('btn', 'btn-danger'), 'data-confirm' => 'Are you sure you want to delete the item?'));
@@ -74,15 +73,16 @@ class UsersPresenter extends \AdminModule\BasePresenter {
     }
 
     public function actionUpdateUser($id) {
-	if ($id)
-	    $this->user = $this->em->find("WebCMS\Entity\User", $id);
-	else
-	    $this->user = new \WebCMS\Entity\User();
+	if ($id){
+	    $this->userEntity = $this->em->find("WebCMS\Entity\User", $id);
+	}else{
+	    $this->userEntity = new \WebCMS\Entity\User();
+	}
     }
 
     public function actionDeleteUser($id) {
-	$this->user = $this->em->find("WebCMS\Entity\User", $id);
-	$this->em->remove($this->user);
+	$this->userEntity = $this->em->find("WebCMS\Entity\User", $id);
+	$this->em->remove($this->userEntity);
 	$this->em->flush();
 
 	$this->flashMessage('User has been removed.', 'success');
@@ -91,56 +91,45 @@ class UsersPresenter extends \AdminModule\BasePresenter {
 	    $this->redirect('Users:default');
     }
 
-    public function actionDeleteLanguage($id) {
-	$this->language = $this->em->find("WebCMS\Entity\Language", $id);
-	$this->em->remove($this->language);
-	$this->em->flush();
-
-	$this->flashMessage('Language has been removed.', 'success');
-
-	if (!$this->isAjax())
-	    $this->redirect('Languages:default');
-    }
-
     public function renderUpdateUser($id) {
 
 	$this->reloadModalContent();
 
-	$this->template->user = $this->user;
+	$this->template->userEntity = $this->userEntity;
     }
 
-    public function userFormSubmitted(UI\Form $form) {
+    public function userEntityFormSubmitted(UI\Form $form) {
 	$values = $form->getValues();
 
 	$role = $this->em->find("WebCMS\Entity\Role", $values->role);
 	$password = $this->getContext()->authenticator->calculateHash($values->password);
 
-	$this->user->setName($values->name);
-	$this->user->setEmail($values->email);
+	$this->userEntity->setName($values->name);
+	$this->userEntity->setEmail($values->email);
 	if (!empty($values->password)) {
-	    $this->user->setPassword($password);
+	    $this->userEntity->setPassword($password);
 
 	    // send mail with new password
 	    $email = new Mail\Message;
 	    $email->setFrom($this->settings->get('Info email', \WebCMS\Settings::SECTION_BASIC)->getValue());
-	    $email->addTo($this->user->getEmail());
+	    $email->addTo($this->userEntity->getEmail());
 	    $email->setSubject($this->settings->get('User new password subject', \WebCMS\Settings::SECTION_EMAIL)->getValue(FALSE));
 	    $email->setHtmlBody($this->settings->get('User new password', \WebCMS\Settings::SECTION_EMAIL)->getValue(FALSE, array(
 		    '[PASSWORD]',
 		    '[LOGIN]'
 		    ), array(
 		    $values->password,
-		    $values->username
+		    $values->userEntityname
 	    )));
 	    $email->send();
 
 	    $this->flashMessage('Info email with new password has been sent.', 'success');
 	}
 
-	$this->user->setUsername($values->username);
-	$this->user->setRole($role);
+	$this->userEntity->setUsername($values->userEntityname);
+	$this->userEntity->setRole($role);
 
-	$this->em->persist($this->user);
+	$this->em->persist($this->userEntity);
 	$this->em->flush();
 
 	$this->flashMessage('User has been updated.', 'success');

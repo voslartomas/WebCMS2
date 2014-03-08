@@ -177,7 +177,7 @@
 				</a>
 			</td>
 			<td class="time">{$file->getATime()|date:'%d.%m.%Y %H:%M:%S'}</td>
-			<td class="size">{$file->getRealPath()|dirSize|bytes}</td>
+			
 			<td class="action">
 				<a n:href="deleteFile! pathToRemove => $file->getPathname()" class="btn btn-danger">{_'Delete'}</a>
 			</td>
