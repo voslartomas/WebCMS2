@@ -4,9 +4,7 @@ namespace WebCMS\Tests;
 
 use \Mockery as m;
         
-abstract class EntityTestCase extends \PHPUnit_Framework_TestCase{
-    
-    protected $em;
+abstract class EntityTestCase extends BasicTestCase {
     
     protected $exceptions = array(
 	'BreadcrumbsItem.php'
@@ -15,18 +13,12 @@ abstract class EntityTestCase extends \PHPUnit_Framework_TestCase{
     public function setUp() {
 	parent::setUp();
 	
-	global $container;
-	
-	$this->em = $container->getService('doctrine.entityManager');
-
 	$tool = new \Doctrine\ORM\Tools\SchemaTool($this->em);
 	$tool->createSchema($this->getClassesMetadata(__DIR__ . '/../Entity', 'WebCMS\\Entity'));
     }
     
     public function tearDown() {
 	parent::tearDown();
-	
-	m::close();
 	
 	$this->em->clear();
 	
@@ -59,4 +51,3 @@ abstract class EntityTestCase extends \PHPUnit_Framework_TestCase{
 	return true;
     }
 }
-    

@@ -3,6 +3,7 @@
 namespace WebCMS;
 
 /**
+ * TODO refactor
  * @author Tomáš Voslař <tomas.voslar at webcook.cz>
  */
 class SystemRouter extends \Nette\Application\Routers\Route {

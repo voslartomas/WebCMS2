@@ -10,8 +10,6 @@ abstract class PresenterTestCase extends EntityTestCase{
     
     protected $presenterName;
     
-    protected $container;
-    
     protected $language;
     
     protected $role;
@@ -20,10 +18,6 @@ abstract class PresenterTestCase extends EntityTestCase{
     
     public function setUp() {
 	parent::setUp();
-	
-	global $container;
-        
-        $this->container = $container;
 	
 	// init system minimal
 	$this->language = new \WebCMS\Entity\Language;
@@ -52,7 +46,7 @@ abstract class PresenterTestCase extends EntityTestCase{
 	$this->em->flush();
 	
 	// login
-	$user = new \Nette\Security\User($container->getService('nette.userStorage'), $this->container);
+	$user = new \Nette\Security\User($this->container->getService('nette.userStorage'), $this->container);
 	$user->login('test', 'test');
     }
     

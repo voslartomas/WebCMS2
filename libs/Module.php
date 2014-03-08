@@ -18,27 +18,27 @@ abstract class Module implements IModule {
     protected $searchable = false;
 
     public function getName() {
-        return $this->name;
+	return $this->name;
     }
 
     public function setName($name) {
-        $this->name = $name;
+	$this->name = $name;
     }
 
     public function getAuthor() {
-        return $this->author;
+	return $this->author;
     }
 
     public function setAuthor($author) {
-        $this->author = $author;
+	$this->author = $author;
     }
 
     public function getPresenters() {
-        return $this->presenters;
+	return $this->presenters;
     }
 
     public function setPresenters($presenters) {
-        $this->presenters = $presenters;
+	$this->presenters = $presenters;
     }
 
     /**
@@ -49,60 +49,61 @@ abstract class Module implements IModule {
      */
     public function addBox($name, $presenter, $function, $moduleName = NULL) {
 
-        if (!$moduleName)
-            $moduleName = $presenter;
+	if (!$moduleName)
+	    $moduleName = $presenter;
 
-        $this->boxes[] = array(
-            'key' => \Nette\Utils\Strings::webalize($name),
-            'name' => $name,
-            'presenter' => $presenter,
-            'module' => $moduleName,
-            'function' => $function
-        );
+	$this->boxes[] = array(
+	    'key' => \Nette\Utils\Strings::webalize($name),
+	    'name' => $name,
+	    'presenter' => $presenter,
+	    'module' => $moduleName,
+	    'function' => $function
+	);
     }
 
     public function getBoxes() {
-        return $this->boxes;
+	return $this->boxes;
     }
 
     public function getPresenterSettings($presenter) {
-        $presenters = $this->getPresenters();
+	$presenters = $this->getPresenters();
 
-        foreach ($presenters as $p) {
-            if ($p['name'] === $presenter)
-                return $p;
-        }
+	foreach ($presenters as $p) {
+	    if ($p['name'] === $presenter)
+		return $p;
+	}
 
-        return FALSE;
+	return FALSE;
     }
 
     public function cloneData($entityManager, $oldLanguge, $newLanguage, $transformTable) {
-        if (!$this->isCloneable()) {
-            return false;
-        }
+	if (!$this->isCloneable()) {
+	    return false;
+	}
     }
 
     public function isCloneable() {
-        return $this->cloneable;
+	return $this->cloneable;
     }
 
     public function translateData($entityManager, $language, $from, $to, \Webcook\Translator\ITranslator $translator) {
-        if (!$this->isTranslatable()) {
-            return false;
-        }
+	if (!$this->isTranslatable()) {
+	    return false;
+	}
     }
 
     public function isTranslatable() {
-        return $this->translatable;
+	return $this->translatable;
     }
-    
-    public function search(\Doctrine\ORM\EntityManager $entityManager, $phrase, \WebCMS\Entity\Language $language){
-        if(!$this->isSearchable()){
-            return false;
-        }
+
+    public function search(\Doctrine\ORM\EntityManager $entityManager, $phrase, \WebCMS\Entity\Language $language) {
+	if (!$this->isSearchable()) {
+	    return false;
+	}
     }
-    
+
     public function isSearchable() {
-        return $this->searchable;
+	return $this->searchable;
     }
+
 }

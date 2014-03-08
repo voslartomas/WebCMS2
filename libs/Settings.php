@@ -100,5 +100,4 @@ class Settings {
     public function setLanguage($language) {
 	$this->language = $language;
     }
-
 }
