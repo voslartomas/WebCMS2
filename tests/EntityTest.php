@@ -28,8 +28,10 @@ abstract class EntityTestCase extends \PHPUnit_Framework_TestCase{
 	
 	m::close();
 	
+	$this->em->clear();
+	
 	$tool = new \Doctrine\ORM\Tools\SchemaTool($this->em);	
-	$tool->dropSchema($this->getClassesMetadata(__DIR__ . '/../Entity', 'WebCMS\\Entity'));
+	$tool->dropDatabase();
     }
     
     private function getClassesMetadata($path, $namespace){

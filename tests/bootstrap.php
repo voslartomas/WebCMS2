@@ -6,6 +6,9 @@ if(file_exists(__DIR__ . '/../vendor/autoload.php')){
 
     require_once __DIR__ . '/DummyUserStorage.php';
     
+    \Nette\Diagnostics\Debugger::enable(false);
+    \Nette\Diagnostics\Debugger::$strictMode = true;
+    
     // Configure application
     $configurator = new Nette\Config\Configurator;
 
@@ -20,6 +23,9 @@ if(file_exists(__DIR__ . '/../vendor/autoload.php')){
     $configurator->setTempDirectory(__DIR__ . '/temp');
 
     $container = $configurator->createContainer();
+    
+    $container->removeService('nette.userStorage');
+    $container->addService('nette.userStorage', new \WebCMS\Tests\DummyUserStorage());
     
     // Setup router
     $container->router[] =  new \Nette\Application\Routers\Route('', array(
@@ -39,4 +45,6 @@ if(file_exists(__DIR__ . '/../vendor/autoload.php')){
             'presenter' => 'Homepage',
             'action' => 'default'
     ));
+    
+    Nette\Environment::getSession()->start();
 }

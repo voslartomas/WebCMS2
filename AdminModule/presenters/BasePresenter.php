@@ -142,7 +142,9 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
 	// Create the logger
 	$logger = new Logger('History');
 	// Now add some handlers
-	$logger->pushHandler(new StreamHandler('../log/webcms.log', Logger::DEBUG));
+	$parameters = $this->getContext()->getParameters();
+	
+	$logger->pushHandler(new StreamHandler($parameters['tempDir'] . '/log/webcms.log', Logger::DEBUG));
 
 	$data = array(
 	    'user' => $this->getUser()->getIdentity() ? $this->getUser()->getIdentity()->getData()['username'] : 'unknown',
