@@ -17,7 +17,7 @@ if(file_exists(__DIR__ . '/../vendor/autoload.php')){
 
     $configurator->addConfig(__DIR__ . '/config.neon');
 
-    $configurator->enableDebugger(__DIR__ . '/temp/log');
+    $configurator->enableDebugger(__DIR__ . '/log');
     $configurator->setTempDirectory(__DIR__ . '/temp');
 
     $container = $configurator->createContainer();

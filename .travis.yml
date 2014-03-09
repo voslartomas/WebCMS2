@@ -10,7 +10,7 @@ before_script:
   - composer self-update
   
   - mkdir tests/temp
-  - mkdir log
+  - mkdir tests/log
   - mkdir upload
   
   # Install
