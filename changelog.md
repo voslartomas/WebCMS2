@@ -1,5 +1,12 @@
 CHANGE LOG
 --
+v0.4.0
+- generating of sitemap.xml
+- batch operations in box settings
+- updated importing of translations
+- implemented searching
+- refactoring
+- implemented tests for entities, presenters and rest of the files
 
 v0.3.11
 - new package for connection with doctrine
