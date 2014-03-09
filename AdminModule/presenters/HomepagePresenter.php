@@ -18,7 +18,7 @@ class HomepagePresenter extends \AdminModule\BasePresenter {
 
 	$parameters = $this->getContext()->getParameters();
 	
-	$logFile = $parameters['tempDir'] . '/log/webcms.log';
+	$logFile = $parameters['tempDir'] . '/../log/webcms.log';
 	$reader = new LogReader($logFile, 2);
 
 	$logs = array();

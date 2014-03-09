@@ -1,5 +1,7 @@
 <?php
 
+namespace WebCMS\Tests;
+
 use \Mockery as m;
 
 class ModuleTest extends \WebCMS\Tests\BasicTestCase {

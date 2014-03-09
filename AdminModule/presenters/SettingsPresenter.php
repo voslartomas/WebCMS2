@@ -117,8 +117,6 @@ class SettingsPresenter extends \AdminModule\BasePresenter {
 	$form = $this->createForm();
 
 	$form->addText('key', 'Key');
-	$form->addText('x', 'Width');
-	$form->addText('y', 'Height');
 	$form->addSelect('resize', 'Resize type', array(
 	    \Nette\Image::EXACT => 'Exact',
 	    \Nette\Image::FILL => 'Fill',
@@ -126,6 +124,17 @@ class SettingsPresenter extends \AdminModule\BasePresenter {
 	    \Nette\Image::SHRINK_ONLY => 'Shrink',
 	    \Nette\Image::STRETCH => 'Stretch'
 	));
+	
+	$form->addText('x', 'Width')
+	    ->setRequired('You must fill in widh')
+	    ->addConditionOn($form['resize'], \Nette\Forms\Form::EQUAL,\Nette\Image::EXACT)
+	    ->addRule(\Nette\Forms\Form::PATTERN, 'Width must be greater than 0','^[1-9][0-9]*$');
+	
+	$form->addText('y', 'Height')
+	    ->setRequired('You must fill in height')
+	    ->addConditionOn($form['resize'], \Nette\Forms\Form::EQUAL,\Nette\Image::EXACT)
+	    ->addRule(\Nette\Forms\Form::PATTERN, 'Height must be greater than 0','^[1-9][0-9]*$');
+	
 	$form->addCheckbox('crop', 'Crop?');
 	$form->addCheckbox('watermark', 'Watermark?');
 
