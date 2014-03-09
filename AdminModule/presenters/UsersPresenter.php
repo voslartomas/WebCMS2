@@ -18,7 +18,7 @@ class UsersPresenter extends \AdminModule\BasePresenter {
     private $role;
 
     protected function beforeRender() {
-	//parent::beforeRender();
+	parent::beforeRender();
     }
 
     protected function startup() {
