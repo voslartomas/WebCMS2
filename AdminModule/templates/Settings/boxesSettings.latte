@@ -8,30 +8,39 @@
 <table class="table table-bordered table-hover">
 	<tr>
 		<th>{_'Page name'}</th>
-		{foreach $boxes as $key => $box}
-			<th>
-				{$key}
-			</th>
-		{/foreach}
+		{if !empty($boxes)}
+			{foreach $boxes as $name => $box}
+				<th>
+					{$name} <select class="jq_box_batch form-control">
+													{foreach $boxesAssoc as $key => $ba}
+															<option value="{$key}">{$ba}</option>
+													{/foreach}
+											</select>
+											<a class="btn btn-success jq_assign_boxes" data-boxId="{$name}">{_'Assing to all'}</a>
+				</th>
+			{/foreach}
+		{/if}
 	</tr>
 	{foreach $pages as $page}
 		{if $page->getParent() != NULL}
 			<tr>
 				<td>{$page->getTitle()}</td>
-				{foreach $boxes as $name => $box}
-					{if $temp = $page->getBox($name)}
-						{var $selected = $temp->getPageFrom()->getId() . '-' . $temp->getModuleName() . '-' . $temp->getPresenter() . '-' . $temp->getFunction()}
-					{else}
-						{var $selected = 0}
-					{/if}
-					<td>
-						<select name="{$page->getId()}-{$name}" class="jq_box form-control">
-							{foreach $boxesAssoc as $key => $ba}
-								<option value="{$key}" {if $key === $selected}selected{/if}>{$ba}</option>
-							{/foreach}
-						</select>
-					</td>
-				{/foreach}
+				{if !empty($boxes)}
+					{foreach $boxes as $name => $box}
+						{if $temp = $page->getBox($name)}
+							{var $selected = $temp->getPageFrom()->getId() . '-' . $temp->getModuleName() . '-' . $temp->getPresenter() . '-' . $temp->getFunction()}
+						{else}
+							{var $selected = 0}
+						{/if}
+						<td>
+							<select name="{$page->getId()}-{$name}" class="jq_box form-control">
+								{foreach $boxesAssoc as $key => $ba}
+									<option value="{$key}" {if $key === $selected}selected{/if}>{$ba}</option>
+								{/foreach}
+							</select>
+						</td>
+					{/foreach}
+				{/if}
 			</tr>
 		{/if}
 	{/foreach}
@@ -39,6 +48,17 @@
 
 
 <script>
+    
+        $('.jq_assign_boxes').click(function(){
+            var toAssign = $(this).parent().find('.jq_box_batch').val();
+            var boxId = $(this).data('boxid');
+            
+            $("select[name*=" + boxId + "]").each(function(){
+                 $(this).val(toAssign);
+                 $(this).change();
+            });
+        });
+    
 	$('.jq_box').live('change', function(){
 		var name = $(this).attr('name');
 		var value = $(this).val();

@@ -5,6 +5,8 @@ WebCMS2
 [![Latest Stable Version](https://poser.pugx.org/webcms2/webcms2/v/stable.png)](https://github.com/ufik/WebCMS2/releases)
 [![Latest Unstable Version](https://poser.pugx.org/webcms2/webcms2/v/unstable.png)](https://packagist.org/packages/webcms2/webcms2)
 [![License](https://poser.pugx.org/webcms2/webcms2/license.png)](https://packagist.org/packages/webcms2/webcms2)
+[![Travis](https://travis-ci.org/ufik/WebCMS2.png)](https://travis-ci.org/ufik/WebCMS2.png)
+
 
 Content management system based on Nette Framework with Doctrine2 ORM library.
 
@@ -21,7 +23,7 @@ Download [https://github.com/nette/sandbox](Nette sandbox), default vendor direc
 Add this line into your composer.json file.
 
 ```
-"webcms2\webcms2" : "@dev"
+"webcms2\webcms2" : "0.*"
 ```
 
 This command will download all required packages, create DB schema, make all necessary directories and change mode for required files.

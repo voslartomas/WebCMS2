@@ -15,12 +15,10 @@ h1 {
 
 .content {
 	max-width: 100% !important;
-	margin-left: 224px !important;
 }
 
 .footer {
 	max-width: 100% !important;
-	margin-left: 224px !important;
 }
 
 a[href^="error:"] {
@@ -48,7 +46,6 @@ a[href^="error:"] {
 
 footer {
 	margin-top: 10px;
-	widht: 100%;
 }
 
 .k-state-active{
@@ -77,14 +74,21 @@ footer {
 	display: none;
 }
 
+.sidebar .well {
+	display: none;
+	padding: 0;
+	background-color: #222222;
+	border: none;
+	border-radius: 0;
+	color: #999999;
+}
+
 .sidebar {
-	top: 60px;
-	width: 16em !important;
+	top: 0px;
+	height: 100%;
 	overflow: auto;
 	position: fixed !important;
-	height: 100%;
-	background-color: white;
-	z-index: 1001;
+	z-index: 10001;
 }
 
 .sidebar ul {
@@ -93,7 +97,7 @@ footer {
 
 .sidebar ul li {
 	list-style-type: none;
-	padding-left: 5px;
+	padding-left: 2px;
 }
 
 .sidebar.hid {

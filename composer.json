@@ -5,6 +5,8 @@
     "keywords": ["cms","nette-based", "doctrine2"],
     "homepage": "http://www.webcook.cz/WebCMS2",
     "license": "MIT",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "authors": [
         {
             "name": "Tomáš Voslař",
@@ -26,14 +28,15 @@
 		"nitra/php-min": "0.0.*",
 		"knplabs/packagist-api": "1.*@dev",
 		"ddtraceweb/monolog-parser": "@dev",
-        "webcook/translator" : "@dev"
+		"webcook/translator" : "0.*@dev",
+		"phpunit/phpunit": "4.*@dev"
     },
     "autoload": {
-        "classmap": ["/"]
+        "classmap": ["AdminModule/presenters/", "FrontendModule/presenters/", "libs", "AdminModule/model", "Entity", "tests"]
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "0.3.x-dev"
+            "dev-master": "0.4.x-dev"
         }
     }
 }

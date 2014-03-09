@@ -17,10 +17,10 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
     /** @var Doctrine\ORM\EntityManager */
     protected $em;
 
-    /* @var \WebCMS\Translation */
+    /* @var \WebCMS\Translation\Translation */
     public $translation;
 
-    /* @var \WebCMS\Translator */
+    /* @var \WebCMS\Translation\Translator */
     public $translator;
 
     /* @var Nette\Http\SessionSection */
@@ -59,7 +59,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
             $this->invalidateControl('flashMessages');
         }
 
-        $this->template->registerHelperLoader('\WebCMS\SystemHelper::loader');
+        $this->template->registerHelperLoader('\WebCMS\Helpers\SystemHelper::loader');
 
         // get top page for sidebar menu
         if (is_object($this->actualPage)) {
@@ -75,18 +75,19 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
         // set default seo settings
         if (is_object($this->actualPage)) {
             $this->template->breadcrumb = $this->getBreadcrumbs();
-            $this->template->sidebar = $this->getStructure($this, $top, $this->em->getRepository('AdminModule\Page'), FALSE, $this->settings->get('Sidebar class', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue(), FALSE, FALSE, NULL, $this->settings->get('Sidebar class', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue());
+            $this->template->sidebar = $this->getStructure($this, $top, $this->em->getRepository('WebCMS\Entity\Page'), FALSE, $this->settings->get('Sidebar class', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue(), FALSE, FALSE, NULL, $this->settings->get('Sidebar class', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue());
         }
 
         $this->template->abbr = $this->abbr;
         $this->template->settings = $this->settings;
         // !params load from settings
-        $this->template->structures = $this->getStructures(!$this->settings->get('Navbar dropdown', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue(), $this->settings->get('Navbar class', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue(), $this->settings->get('Navbar dropdown', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue());
+        $this->template->structures = $this->getStructures(!$this->settings->get('Navbar dropdown', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue(), $this->settings->get('Navbar class', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue(), $this->settings->get('Navbar dropdown', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue(), $this->settings->get('Navbar id', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue());
         $this->template->setTranslator($this->translator);
         $this->template->actualPage = $this->actualPage;
         $this->template->user = $this->getUser();
         $this->template->activePresenter = $this->getPresenter()->getName();
-        $this->template->languages = $this->em->getRepository('AdminModule\Language')->findAll();
+	$this->template->language = $this->language;
+        $this->template->languages = $this->em->getRepository('WebCMS\Entity\Language')->findAll();
     }
 
     private function setDefaultSeo() {
@@ -131,24 +132,24 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
 
         // set language
         if (is_numeric($this->getParam('language')))
-            $this->language = $this->em->find('AdminModule\Language', $this->getParam('language'));
+            $this->language = $this->em->find('WebCMS\Entity\Language', $this->getParam('language'));
         else
-            $this->language = $this->em->getRepository('AdminModule\Language')->findOneBy(array(
+            $this->language = $this->em->getRepository('WebCMS\Entity\Language')->findOneBy(array(
                 'defaultFrontend' => TRUE
             ));
 
         $this->abbr = $this->language->getDefaultFrontend() ? '' : $this->language->getAbbr() . '/';
 
         // load languages
-        $this->languages = $this->em->getRepository('AdminModule\Language')->findAll();
+        $this->languages = $this->em->getRepository('WebCMS\Entity\Language')->findAll();
 
         setlocale(LC_ALL, $this->language->getLocale());
-        \WebCMS\PriceFormatter::setLocale($this->language->getLocale());
+        \WebCMS\Helpers\PriceFormatter::setLocale($this->language->getLocale());
 
         // translations
-        $translation = new \WebCMS\Translation($this->em, $this->language, 0, $this->getContext()->getService('cacheStorage'));
+        $translation = new \WebCMS\Translation\Translation($this->em, $this->language, 0, $this->getContext()->getService('cacheStorage'));
         $this->translation = $translation->getTranslations();
-        $this->translator = new \WebCMS\Translator($this->translation);
+        $this->translator = new \WebCMS\Translation\Translator($this->translation);
 	
 	$translation->hashTranslations();
 	
@@ -157,14 +158,14 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
         $this->settings->setSettings($this->getSettings());
 
         // system helper sets variables
-        \WebCMS\SystemHelper::setVariables(array(
+        \WebCMS\Helpers\SystemHelper::setVariables(array(
             'baseUrl' => $this->presenter->getHttpRequest()->url->baseUrl,
             'infoEmail' => $this->settings->get('Info email', 'basic')->getValue()
         ));
 
         $id = $this->getParam('id');
         if ($id) {
-            $this->actualPage = $this->em->find('AdminModule\Page', $id);
+            $this->actualPage = $this->em->find('WebCMS\Entity\Page', $id);
 
             if ($this->actualPage->getRedirect() != NULL) {
                 $this->redirectUrl($this->presenter->getHttpRequest()->url->baseUrl . $this->actualPage->getRedirect());
@@ -193,13 +194,13 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
         $template = parent::createTemplate($class);
 
         $template->setTranslator($this->translator);
-        $template->registerHelperLoader('\WebCMS\SystemHelper::loader');
+        $template->registerHelperLoader('\WebCMS\Helpers\SystemHelper::loader');
 
         return $template;
     }
 
     private function getSettings() {
-        $query = $this->em->createQuery('SELECT s FROM AdminModule\Setting s WHERE s.language >= ' . $this->language->getId() . ' OR s.language IS NULL');
+        $query = $this->em->createQuery('SELECT s FROM WebCMS\Entity\Setting s WHERE s.language >= ' . $this->language->getId() . ' OR s.language IS NULL');
         $tmp = $query->getResult();
 
         $settings = array();
@@ -266,7 +267,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
     }
 
     private function changeLanguage($idLanguage) {
-        $home = $this->em->getRepository('AdminModule\Page')->findOneBy(array(
+        $home = $this->em->getRepository('WebCMS\Entity\Page')->findOneBy(array(
             'language' => $idLanguage,
             'default' => TRUE
         ));
@@ -276,7 +277,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
             $abbr = $home->getLanguage()->getDefaultFrontend() ? '' : $home->getLanguage()->getAbbr() . '/';
 
             $this->redirectUrl(
-                    $abbr . $home->getPath()
+                    $this->getHttpRequest()->url->baseUrl .  $abbr . $home->getPath()
             );
         } else {
             $this->flashMessage('No default page for selected language.', 'error');
@@ -304,13 +305,15 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
     private function setUpBoxes() {
         $parameters = $this->context->getParameters();
         $boxes = $parameters['boxes'];
-
+	
         $finalBoxes = array();
-        foreach ($boxes as $key => $box) {
-            $finalBoxes[$key] = NULL;
-        }
+        if(is_array($boxes)){
+	    foreach ($boxes as $key => $box) {
+		$finalBoxes[$key] = NULL;
+	    }
+	}
 
-        $assocBoxes = $this->em->getRepository('AdminModule\Box')->findBy(array(
+        $assocBoxes = $this->em->getRepository('WebCMS\Entity\Box')->findBy(array(
             'pageTo' => $this->actualPage
         ));
 
@@ -332,8 +335,8 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
      * Load all system structures.
      * @return type
      */
-    private function getStructures($direct = TRUE, $rootClass = 'nav navbar-nav', $dropDown = FALSE) {
-        $repo = $this->em->getRepository('AdminModule\Page');
+    private function getStructures($direct = TRUE, $rootClass = 'nav navbar-nav', $dropDown = FALSE, $rootId = '') {
+        $repo = $this->em->getRepository('WebCMS\Entity\Page');
 
         $structs = $repo->findBy(array(
             'language' => $this->language,
@@ -342,7 +345,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
 
         $structures = array();
         foreach ($structs as $s) {
-            $structures[$s->getTitle()] = $this->getStructure($this, $s, $repo, $direct, $rootClass, $dropDown);
+            $structures[$s->getTitle()] = $this->getStructure($this, $s, $repo, $direct, $rootClass, $dropDown, TRUE, NULL, '', null, $rootId);
         }
 
         return $structures;
@@ -358,20 +361,25 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
      * @param type $dropDown
      * @return type
      */
-    protected function getStructure($context, $node = NULL, $repo, $direct = TRUE, $rootClass = 'nav navbar-nav', $dropDown = FALSE, $system = TRUE, $fromPage = NULL, $sideClass = 'nav navbar') {
+    protected function getStructure($context, $node = NULL, $repo, $direct = TRUE, $rootClass = 'nav navbar-nav', $dropDown = FALSE, $system = TRUE, $fromPage = NULL, $sideClass = 'nav navbar', $moduleNameAbstract = null, $rootId = '') {
 
         return $repo->childrenHierarchy($node, $direct, array(
                     'decorate' => true,
                     'html' => true,
-                    'rootOpen' => function($nodes) use($rootClass, $dropDown, $sideClass) {
+                    'rootOpen' => function($nodes) use($rootClass, $dropDown, $sideClass, $rootId) {
 
                 $drop = $nodes[0]['level'] == 2 ? TRUE : FALSE;
                 $class = $nodes[0]['level'] < 2 ? $rootClass : $sideClass;
 
                 if ($drop && $dropDown)
                     $class .= ' dropdown-menu';
-
-                return '<ul class="' . $class . '">';
+		
+		$htmlId = '';
+		if(!empty($rootId)){
+			$htmlId = ' id = "' . $rootId . '"';
+		}
+		
+                return '<ul class="' . $class . '"' . $htmlId . '>';
             },
                     'rootClose' => '</ul>',
                     'childOpen' => function($node) use($dropDown, $context) {
@@ -402,14 +410,14 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
                 return '<li class="' . $class . '">';
             },
                     'childClose' => '</li>',
-                    'nodeDecorator' => function($node) use($dropDown, $system, $context, $fromPage) {
+                    'nodeDecorator' => function($node) use($dropDown, $system, $context, $fromPage, $moduleNameAbstract) {
                 $hasChildrens = count($node['__children']) > 0 ? TRUE : FALSE;
                 $params = '';
                 $class = '';
 
-                $moduleName = array_key_exists('moduleName', $node) ? $node['moduleName'] : 'Eshop';
+                $moduleName = array_key_exists('moduleName', $node) ? $node['moduleName'] : $moduleNameAbstract;
                 $presenter = array_key_exists('presenter', $node) ? $node['presenter'] : 'Categories';
-                $path = $moduleName === 'Eshop' && !$system ? (is_object($fromPage) ? $fromPage->getPath() . '/' : '') . $node['path'] : $node['path'];
+                $path = $moduleName === $moduleNameAbstract && !$system ? (is_object($fromPage) ? $fromPage->getPath() . '/' : '') . $node['path'] : $node['path'];
 
                 $link = $context->link(':Frontend:' . $moduleName . ':' . $presenter . ':default', array('id' => $node['id'], 'path' => $path, 'abbr' => $context->abbr));
 
@@ -424,14 +432,14 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
                 if (!empty($node['class']))
                     $class .= ' ' . $node['class'];
 
-                return '<a ' . $params . ' class="' . $class . '" href="' . $link . '">' . $node['title'] . $span . '</a>';
+                return '<a ' . $params . ' class="' . $class . '" href="' . $link . '"><span>' . $node['title'] . $span . '</span></a>';
             }
         ));
     }
 
     public function getBreadcrumbs() {
         // bredcrumb
-        $default = $this->em->getRepository('AdminModule\Page')->findOneBy(array(
+        $default = $this->em->getRepository('WebCMS\Entity\Page')->findOneBy(array(
             'default' => TRUE,
             'language' => $this->language
         ));
@@ -442,11 +450,11 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
             $default = array($default);
 
         // system breadcrumbs
-        $system = $default + $this->em->getRepository('AdminModule\Page')->getPath($this->actualPage);
+        $system = $default + $this->em->getRepository('WebCMS\Entity\Page')->getPath($this->actualPage);
         $finalSystem = array();
         foreach ($system as $item) {
             if ($item->getParent()) {
-                $finalSystem[] = new \WebCMS\BreadcrumbsItem($item->getId(), $item->getModuleName(), $item->getPresenter(), $item->getTitle(), $item->getPath()
+                $finalSystem[] = new \WebCMS\Entity\BreadcrumbsItem($item->getId(), $item->getModuleName(), $item->getPresenter(), $item->getTitle(), $item->getPath()
                 );
             }
         }
@@ -464,7 +472,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
      */
     public function addToBreadcrumbs($id, $moduleName, $presenter, $title, $path) {
 
-        $this->breadcrumbs[] = new \WebCMS\BreadcrumbsItem($id, $moduleName, $presenter, $title, $path);
+        $this->breadcrumbs[] = new \WebCMS\Entity\BreadcrumbsItem($id, $moduleName, $presenter, $title, $path);
     }
 
     public function selfRedirect($path = '') {
@@ -474,7 +482,16 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
             'abbr' => $this->abbr,
         ));
     }
+    
+    protected function createObject($name){
+        $expl = explode('-', $name);
 
+        $objectName = ucfirst($expl[0]);
+        $objectName = "\\WebCMS\\$objectName" . "Module\\" . $objectName;
+
+        return new $objectName;
+    }
+    
     /* @deprecated */
 
     public function flashMessageTranslated($message, $type = 'info') {

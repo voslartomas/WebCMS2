@@ -1,11 +1,10 @@
 <?php
 
-namespace WebCMS;
+namespace WebCMS\Helpers;
 
 class SystemHelper {
 
     const WEBCMS_PATH = '../libs/webcms2/webcms2/';
-
     const VERSION_FILE = '../libs/webcms2/webcms2/AdminModule/version';
 
     private static $baseUrl;
@@ -55,7 +54,7 @@ class SystemHelper {
 		    $parsed[0],
 		    $version,
 		    $versionHash
-				), '', $parsed));
+			), '', $parsed));
 
 		$packages[$parsed[0]] = array(
 		    'vendor' => $vendor,
@@ -167,12 +166,13 @@ class SystemHelper {
 		}
 	    }
 	    reset($objects);
-	    if(!$inside){
+
+	    if (!$inside) {
 		rmdir($dir);
 	    }
 	}
     }
-    
+
     /**
      * Create relative path from an absolute path.
      * @param string $path absolute path
@@ -180,25 +180,25 @@ class SystemHelper {
     public static function relative($path) {
 	// windows fix :/
 	$path = str_replace('\\', '/', $path);
-	
+
 	// standard working directory
-	if(strpos($path, WWW_DIR) !== false){
+	if (strpos($path, WWW_DIR) !== false) {
 	    return str_replace(WWW_DIR, '', $path);
 	}
-	
+
 	// symlink
 	$pos = strpos($path, 'upload/');
-	
+
 	return substr($path, $pos - 1);
     }
 
     public static function thumbnail($path, $thumbnailKey) {
-	
+
 	$path = self::relative($path);
 	$path = str_replace('upload', 'thumbnails', $path);
 
 	$info = pathinfo($path);
-	
+
 	$path = str_replace($info['filename'], $thumbnailKey . $info['filename'], $path);
 	$path = str_replace('\\', '/', $path);
 	return $path;
@@ -253,7 +253,7 @@ class SystemHelper {
 	// if it's a positive number return it
 	// otherwise return the 2's complement
 	return ($binary{0} == "0" ? bindec($binary) :
-			-(pow(2, 31) - bindec(substr($binary, 1))));
+		-(pow(2, 31) - bindec(substr($binary, 1))));
     }
 
     public static function dirSize($directory) {
@@ -267,16 +267,17 @@ class SystemHelper {
 
     public static function getTranslationFiles() {
 	$files = array();
-	
+
 	$handle = opendir(self::WEBCMS_PATH . 'AdminModule/static/translations');
 	if ($handle) {
 	    while (false !== ($entry = readdir($handle))) {
-		if($entry != '.' && $entry != '..'){
+		if ($entry != '.' && $entry != '..') {
 		    $files[$entry] = $entry;
 		}
 	    }
 	}
-	
+
 	return $files;
     }
+
 }

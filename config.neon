@@ -9,7 +9,7 @@ common:
 	doctrine:
 		connection: %database%
 		console: true
-		entityDirs: { %appDir%, %appDir%/../libs/webcms2 }
+		entityDirs: { %appDir%/../libs/webcms2 }
 		
 	migrations:
 		connection: @doctrine.connection
@@ -17,7 +17,7 @@ common:
 	services:
 		database: @doctrine.entityManager
 		
-		authenticator: Authenticator( @database::getRepository('AdminModule\User') )
+		authenticator: Authenticator( @database::getRepository('WebCMS\Entity\User') )
 		
 	gedmo: 
 		orm:

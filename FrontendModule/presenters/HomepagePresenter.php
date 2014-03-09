@@ -16,7 +16,7 @@ class HomepagePresenter extends \FrontendModule\BasePresenter{
 	protected function startup(){		
 		parent::startup();
 		
-		$page = $this->em->getRepository('AdminModule\Page')->findOneBy(array(
+		$page = $this->em->getRepository('WebCMS\Entity\Page')->findOneBy(array(
 			'default' => 1,
 			'language' => $this->language
 		));
