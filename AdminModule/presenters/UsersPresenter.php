@@ -43,7 +43,7 @@ class UsersPresenter extends \AdminModule\BasePresenter {
 	}
 
 	$form = $this->createForm();
-	$form->addText('userEntityname', 'Username')->setAttribute('class', 'form-control');
+	$form->addText('username', 'Username')->setAttribute('class', 'form-control');
 	$form->addSelect('role', 'Role')->setTranslator(NULL)->setItems($roles)->setAttribute('class', 'form-control');
 	$form->addText('name', 'Name')->setAttribute('class', 'form-control');
 	$form->addText('email', 'Email')->setAttribute('class', 'form-control');
