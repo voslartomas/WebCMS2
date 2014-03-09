@@ -1,5 +1,7 @@
 <?php
 
+namespace WebCMS\Tests;
+
 class TranslationTest extends \WebCMS\Tests\PresenterTestCase{
     
     public function testTranslation(){
