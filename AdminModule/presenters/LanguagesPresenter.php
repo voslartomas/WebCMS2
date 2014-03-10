@@ -196,8 +196,10 @@ class LanguagesPresenter extends BasePresenter {
 
 	    $exists = $this->translationExists($t);
 	    if (!$exists) {
-		$this->em->persist($t);
-		$translations[] = $t;
+	    	if(!array_key_exists($t->getHash(), $translations)){
+			$this->em->persist($t);
+			$translations[$t->getHash()] = $t;
+	    	}
 	    } else {
 		$exists->setHash();
 		$exists->setTranslation($translation['translation']);
