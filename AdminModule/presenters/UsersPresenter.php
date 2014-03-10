@@ -64,7 +64,7 @@ class UsersPresenter extends \AdminModule\BasePresenter {
 	    'id <> 1'
 	));
 
-	$grid->addColumnText('userEntityname', 'Name')->setSortable();
+	$grid->addColumnText('username', 'Name')->setSortable();
 
 	$grid->addActionHref("updateUser", 'Edit')->getElementPrototype()->addAttributes(array('class' => array('btn', 'btn-primary', 'ajax'), 'data-toggle' => 'modal', 'data-target' => '#myModal', 'data-remote' => 'false'));
 	$grid->addActionHref("deleteUser", 'Delete')->getElementPrototype()->addAttributes(array('class' => array('btn', 'btn-danger'), 'data-confirm' => 'Are you sure you want to delete the item?'));
@@ -119,14 +119,14 @@ class UsersPresenter extends \AdminModule\BasePresenter {
 		    '[LOGIN]'
 		    ), array(
 		    $values->password,
-		    $values->userEntityname
+		    $values->username
 	    )));
 	    $email->send();
 
 	    $this->flashMessage('Info email with new password has been sent.', 'success');
 	}
 
-	$this->userEntity->setUsername($values->userEntityname);
+	$this->userEntity->setUsername($values->username);
 	$this->userEntity->setRole($role);
 
 	$this->em->persist($this->userEntity);
