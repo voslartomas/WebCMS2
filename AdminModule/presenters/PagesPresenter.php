@@ -53,7 +53,7 @@ class PagesPresenter extends \AdminModule\BasePresenter {
 	$form->addSelect('module', 'Module')->setTranslator(NULL)->setItems($modulesToSelect)->setAttribute('class', 'form-control');
 	$form->addSelect('parent', 'Parent')->setTranslator(NULL)->setItems($hierarchy)->setAttribute('class', 'form-control');
 	$form->addCheckbox('default', 'Default')->setAttribute('class', 'form-control');
-	$form->addCheckbox('visible', 'Show')->setAttribute('class', 'form-control')->setDefaultValue(1);
+	$form->addCheckbox('visible', 'Show')->setAttribute('class', 'form-control');
 
 	$form->addSubmit('save', 'Save')->setAttribute('class', 'btn btn-success');
 
