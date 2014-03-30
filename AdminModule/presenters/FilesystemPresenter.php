@@ -31,15 +31,20 @@ class FilesystemPresenter extends \AdminModule\BasePresenter {
     }
 
     public function actionDefault($path) {
-	if (!empty($path))
+	if (!empty($path)){
 	    $this->path = $path . '/';
-	else
+	}else{
 	    $this->path = realpath(self::DESTINATION_BASE) . '/';
+	}
     }
 
     public function renderDefault($path, $dialog, $multiple) {
+	
 	$finder = new \Nette\Utils\Finder();
-	$files = $finder->findFiles('*')->in($this->path);
+	
+	$files = $finder->findFiles('*')
+			->exclude('.htaccess')
+			->in($this->path);
 	$directories = $finder->findDirectories('*')->in($this->path);
 
 	if (empty($dialog))
