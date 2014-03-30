@@ -1,5 +1,9 @@
 CHANGE LOG
 --
+v0.4.2
+- Security fixes.
+- Pages form fix.
+
 v0.4.0
 - generating of sitemap.xml
 - batch operations in box settings
