@@ -1,5 +1,8 @@
 CHANGE LOG
 --
+v0.4.3
+- Fixed loading of fe libraries.
+
 v0.4.2
 - Security fixes.
 - Pages form fix.
