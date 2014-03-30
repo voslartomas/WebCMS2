@@ -11,13 +11,11 @@ function denyAccess {
 
 	touch ./temp/.htaccess
 	touch ./log/.htaccess
-	touch ./libs/.htaccess
 	
 	mkdir ./www/upload/backups
 
 	echo $'Order Allow,Deny\nDeny from all' > ./temp/.htaccess
 	echo $'Order Allow,Deny\nDeny from all' > ./log/.htaccess
-	echo $'Order Allow,Deny\nDeny from all' > ./libs/.htaccess
 	echo $'Order Allow,Deny\nDeny from all' > ./www/upload/backups/.htaccess
 }
 
