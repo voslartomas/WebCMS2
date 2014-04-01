@@ -1,5 +1,9 @@
 CHANGE LOG
 --
+v0.5.0
+- Added bower
+- Removed js and css libraries
+
 v0.4.2
 - Security fixes.
 - Pages form fix.
