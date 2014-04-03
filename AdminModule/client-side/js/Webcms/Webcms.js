@@ -140,7 +140,7 @@ Webcms.prototype = {
 			$(".sidebar .well").show('fast', 'swing');
 		});
 		
-		$(".container").mouseover(function(){
+		$(".content").mouseover(function(){
 			
 			if($(".sidebar .well").css('display') === 'block'){
 				setTimeout("self.hideSidebar()", 500);
