@@ -17,7 +17,6 @@
     "grido": "~1.0.6",
     "jquery": "~2.1.0",
     "kendo-ui": "~2014.1.318",
-    "nette-forms-o5": "~0.0.5",
     "nette.ajax.js": "~1.2.2",
 	"bootbox": "latest"
   },
