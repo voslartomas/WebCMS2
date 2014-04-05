@@ -330,4 +330,20 @@ class UpdatePresenter extends \AdminModule\BasePresenter {
 	$this->redirect('default');
     }
     
+    // render log tab
+    public function renderLog(){
+	$this->reloadContent();
+	
+	$this->template->updateLog = $this->getLog('../log/auto-update.log');
+	$this->template->errorLog = $this->getLog('../log/error.log');
+    }
+    
+    private function getLog($path){
+	
+	if(file_exists($path)){
+	    return nl2br(file_get_contents($path));
+	}
+	
+	return '';
+    }
 }

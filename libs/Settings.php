@@ -39,10 +39,21 @@ class Settings {
 	// system settings
 	if (array_key_exists($section, $this->settings)) {
 	    if (array_key_exists($key, $this->settings[$section])) {
-		return $this->settings[$section][$key];
+		
+		$settings = $this->settings[$section][$key];
+		
+		if($settings->getType() === null && $type !== null){
+		    
+		    $settings->setType($type);
+		    $this->em->flush();
+		    
+		    $settings = $s;
+		}
+		
+		return $settings;
 	    }
 	}
-
+	
 	return $this->save($key, $section, $type, $options, $language);
     }
 
@@ -69,11 +80,6 @@ class Settings {
 	$setting = new \WebCMS\Entity\Setting;
 	$setting->setKey($key);
 	$setting->setSection($section);
-
-	if ($type === null) {
-	    $type = 'text';
-	}
-
 	$setting->setType($type);
 	$setting->setValue('');
 
@@ -85,7 +91,9 @@ class Settings {
 
 	$this->em->persist($setting);
 	$this->em->flush();
-
+	
+	$this->settings[$section][$key] = $setting;
+	
 	return $setting;
     }
 
