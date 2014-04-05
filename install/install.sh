@@ -81,8 +81,12 @@ while [ "$task" != "q" ]; do
 
 		parseVersion
 
-		#call bower install
+		# bower install for admin
 		cd ./libs/webcms2/webcms2
+		bower install
+		
+		# bower install for front
+		cd ../../../
 		bower install
 
 		vypis="Installation has been executed. Choose another command or type 'q' to quit."
@@ -109,8 +113,12 @@ while [ "$task" != "q" ]; do
 
 		parseVersion
 
-		#call bower update
+		# bower update for admin
 		cd ./libs/webcms2/webcms2
+		bower update
+
+		# bower udpate  for front
+		cd ../../../
 		bower update
 
 		vypis="System has been updated."
