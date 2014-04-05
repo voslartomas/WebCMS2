@@ -46,8 +46,6 @@ class Settings {
 		    
 		    $settings->setType($type);
 		    $this->em->flush();
-		    
-		    $settings = $s;
 		}
 		
 		return $settings;
