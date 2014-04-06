@@ -147,11 +147,6 @@ Webcms.prototype = {
 				setTimeout("self.hideSidebar()", 500);
 			}
 		});
-			
-
-		
-
-		
 	},
 	
 	hideSidebar : function(){
@@ -293,7 +288,7 @@ Webcmstour.prototype = {
 			});
 			
 			
-			tour.addSteps(selfwt.getSteps());
+			//tour.addSteps(selfwt.getSteps());
 
 			// Initialize the tour
 			tour.init();

@@ -32,6 +32,11 @@ class ErrorPresenter extends \FrontendModule\BasePresenter {
 
 	    $this->template->actualPage = $errorPage;
 	    $this->template->errorCode = $code;
+	    $this->template->seoTitle = '404';
+	    $this->template->seoDescription = '';
+	    $this->template->seoKeywords = '';
+	    $this->template->breadcrumb = NULL;
+	    
 	    $this->setLayout('layout');
 	    // log to access.log
 	    Debugger::log("HTTP code $code: {$exception->getMessage()} in {$exception->getFile()}:{$exception->getLine()}", 'access');
