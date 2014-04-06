@@ -72,12 +72,6 @@ Webcms.prototype = {
 
 		//ajax loader animation
 		$(document).ajaxStart(function() {
-			
-			//destroy tour if initiated
-			if(!webcmstour.getTour().ended()){
-				webcmstour.getTour().end();
-			}
-			
 			if (longRun) {
 				$('.spinner-wrapper').show();
 			} else {
@@ -85,7 +79,7 @@ Webcms.prototype = {
 			}
 		}).ajaxStop(function() {
 			self.afterReload();
-
+			
 			$('.context-menu').remove();
 			$('#loader').removeClass("active");
 			$('.spinner-wrapper').hide();
@@ -238,14 +232,17 @@ function Webcmstour() {
 
 	this.steps = [];
 	this.tutorialTrigger = "#tutorial";
-	this.tour = {};
 
 	this.init();
 }
 ;
 
 Webcmstour.prototype = {
-	selffs: null,
+	
+	bootTour : null,
+	
+	selfwt: null,
+	
 	init: function() {
 		
 		selfwt = this;
@@ -258,21 +255,15 @@ Webcmstour.prototype = {
 	getSteps: function() {
 		return this.steps;
 	},
-	setTour: function(tour) {
-		this.tour = tour;
-	},
-	getTour: function() {
-		return this.tour;
-	},
 	__registerListeners: function() {
 		
-
 		$.getJSON( basePath + "/../libs/webcms2/webcms2/AdminModule/client-side/src/tourSteps.json", function( data ) {
 			$.each( data, function( key, val ) {
 				$.each(val, function (key2, val2){
 					var stepObj = {};
 					
-					stepObj.path = basePath + val2.path;
+					stepObj.path = val2.path;
+					stepObj.backdrop = false;
 					stepObj.element = val2.element;
 					stepObj.title = val2.title;
 					stepObj.content = val2.content;
@@ -282,17 +273,11 @@ Webcmstour.prototype = {
 				});
 			});
 		
-		
 			// Instance the tour
-			selfwt.tour = new Tour({
-				onStart: function() {
-					$(selfwt.tutorialTrigger).addClass("disabled", true);
-				},
-				onEnd: function() {
-					$(selfwt.tutorialTrigger).removeClass("disabled", true);
-				},
-				steps: [],
+			selfwt.bootTour = new Tour({
+				basePath: basePath + '/admin',
 				debug: true,
+				backdrop: false,
 				template: "<div class='popover tour'>\n\
 								<div class='arrow'></div>\n\
 								<h3 class='popover-title'></h3>\n\
@@ -303,26 +288,33 @@ Webcmstour.prototype = {
 									<button class='btn btn-default' data-role='end'>Vypnout nápovědu</button>\n\
 								</div>\n\
 							</div>",
+
+
+				/* Zrejme nutne predem implementovat History push state, pro zmenu adresy
+				 * redirect : function(path){
+					$.nette.ajax(path);
+				}*/
 			});
-			
-			
-			selfwt.tour.addSteps(selfwt.getSteps());
+
+			selfwt.bootTour.addSteps(selfwt.getSteps());
 
 			// Initialize the tour
-			selfwt.tour.init();
+			selfwt.bootTour.init();
 
 			// Start the tour
-			selfwt.tour.start();
-			
-			$(selfwt.tutorialTrigger).on("click", function() {
-				selfwt.tour.restart();
-				return document.location.href = basePath + '/admin';
-			});
-			
+			selfwt.bootTour.start();
 
+			$(selfwt.tutorialTrigger).on("click", function() {
+				selfwt.bootTour.restart();
+			});
+		
 		});
 	}
+	
+	
 };
+
+var webcmstour;
 
 $(function() {
 	webcmstour = new Webcmstour();

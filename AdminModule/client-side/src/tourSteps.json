@@ -1,27 +1,129 @@
 {
 	"steps": [
-		
 		{
-			"path": "/admin",
-			"element": ".system-menu",
-			"title": "Tutoriál na cmsko největších borečků",
-			"content": "Nářez co?",
+			"path": "/",
+			"element": "#tBrand",
+			"title": "Homepage",
+			"content": "On this page you can see log of user actions as well as manage your favourite links (Every user has it's own links.).",
 			"placement": "bottom"
 		},
-		
 		{
-			"path": "/admin",
-			"element": ".navbar-right",
-			"title": "Sekce nesekce",
-			"content": "Nějaká klikátka, hej?",
+			"path": "/pages",
+			"element": "#tPages",
+			"title": "Structures and pages",
+			"content": "Section for managing structures and pages of the system.",
 			"placement": "bottom"
 		},
-		
 		{
-			"path": "/admin/pages",
-			"element": "#pagesGrid",
-			"title": "Sekce Stránky",
-			"content": "Nejlepčejší grid",
+			"path": "/users",
+			"element": "#tUsers",
+			"title": "Users and roles",
+			"content": "Section for managing users.",
+			"placement": "top"
+		},
+		{
+			"path": "/users/roles",
+			"element": "#tRoles",
+			"title": "Roles",
+			"content": "There you can define user roles.",
+			"placement": "top"
+		},
+		{
+			"path": "/languages",
+			"element": "#tLanguages",
+			"title": "Languages",
+			"content": "There you can manage system languages.",
+			"placement": "top"
+		},
+		{
+			"path": "/languages/translates",
+			"element": "#tTranslates",
+			"title": "Translations",
+			"content": "There you can translate static texts.",
+			"placement": "top"
+		},
+		{
+			"path": "/languages/cloning",
+			"element": "#tCloning",
+			"title": "Cloning of languages",
+			"content": "There you can you can create new language from another one.",
+			"placement": "top"
+		},
+		{
+			"path": "/languages/translator",
+			"element": "#tTranslator",
+			"title": "Translator",
+			"content": "Translator is used for automatic translations of text.",
+			"placement": "top"
+		},
+		{
+			"path": "/settings",
+			"element": "#tSettings",
+			"title": "Basic settings",
+			"content": "There you can manage basic system settings.",
+			"placement": "top"
+		},
+		{
+			"path": "/settings/pictures",
+			"element": "#tPictures",
+			"title": "Pictures settings",
+			"content": "There you can manage settings of the pictures.",
+			"placement": "top"
+		},
+		{
+			"path": "/settings/emails",
+			"element": "#tEmails",
+			"title": "Emails settings",
+			"content": "There you can manages emails settings.",
+			"placement": "top"
+		},
+		{
+			"path": "/settings/boxes-settings",
+			"element": "#tBoxes",
+			"title": "Boxes settings",
+			"content": "There you can manage boxes settings.",
+			"placement": "top"
+		},
+		{
+			"path": "/settings/seo-settings",
+			"element": "#tSeo",
+			"title": "Seo settings",
+			"content": "There you can manage SEO settings.",
+			"placement": "top"
+		},
+		{
+			"path": "/settings/api",
+			"element": "#tApi",
+			"title": "API settings",
+			"content": "There you can api.",
+			"placement": "top"
+		},
+		{
+			"path": "/settings/project",
+			"element": "#tProject",
+			"title": "Project settings",
+			"content": "There you can manage project specific settings.",
+			"placement": "top"
+		},
+		{
+			"path": "/filesystem",
+			"element": "#tFilesystem",
+			"title": "Filesystem",
+			"content": "Filesystem stores your files.",
+			"placement": "bottom"
+		},
+		{
+			"path": "/update",
+			"element": "#tUpdate",
+			"title": "Modules",
+			"content": "There you manage your modules.",
+			"placement": "top"
+		},
+		{
+			"path": "/update/functions",
+			"element": "#tFunctions",
+			"title": "System functions",
+			"content": ".",
 			"placement": "top"
 		}
 		
