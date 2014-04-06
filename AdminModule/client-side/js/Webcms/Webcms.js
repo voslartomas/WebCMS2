@@ -147,11 +147,6 @@ Webcms.prototype = {
 				setTimeout("self.hideSidebar()", 500);
 			}
 		});
-			
-
-		
-
-		
 	},
 	
 	hideSidebar : function(){
@@ -278,7 +273,30 @@ Webcmstour.prototype = {
 			// Instance the tour
 			var tour = new Tour({
 
-				steps: [],
+				steps: [
+						{
+							"element": ".system-menu",
+							"title": "Title of my step1",
+							"content": "Content of my step",
+							"placement": "bottom"
+						},
+
+						{
+							"element": ".navbar-right",
+							"title": "Title of my step2",
+							"content": "Po tomhle redirect na pages",
+							"placement": "bottom"
+						},
+
+						{
+							"path": basePath + "/admin/pages",
+							"element": "#pagesGrid",
+							"title": "Title of my step3",
+							"content": "Content of my step",
+							"placement": "top"
+						}
+
+					],
 				template: "<div class='popover tour'>\n\
 								<div class='arrow'></div>\n\
 								<h3 class='popover-title'></h3>\n\
@@ -292,7 +310,7 @@ Webcmstour.prototype = {
 			});
 			
 			
-			tour.addSteps(selfwt.getSteps());
+			//tour.addSteps(selfwt.getSteps());
 
 			// Initialize the tour
 			tour.init();

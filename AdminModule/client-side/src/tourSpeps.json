@@ -2,6 +2,7 @@
 	"steps": [
 		
 		{
+			"path": "/admin",
 			"element": ".system-menu",
 			"title": "Title of my step1",
 			"content": "Content of my step",
@@ -9,6 +10,7 @@
 		},
 		
 		{
+			"path": "/admin",
 			"element": ".navbar-right",
 			"title": "Title of my step2",
 			"content": "Po tomhle redirect na pages",
@@ -16,7 +18,7 @@
 		},
 		
 		{
-			"path": "admin/pages",
+			"path": "/admin",
 			"element": "#pagesGrid",
 			"title": "Title of my step3",
 			"content": "Content of my step",
