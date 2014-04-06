@@ -389,7 +389,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
                 $class = '';
 		   
 		if(!array_key_exists('fullPath', $param)){
-		    $param['fullPath'] = '';
+		    $param['fullPath'] = '/';
 		}
 		
                 if (array_key_exists('redirect', $node)) {
