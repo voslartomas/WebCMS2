@@ -1,0 +1,27 @@
+{
+	"steps": [
+		
+		{
+			"element": ".system-menu",
+			"title": "Title of my step1",
+			"content": "Content of my step",
+			"placement": "bottom"
+		},
+		
+		{
+			"element": ".navbar-right",
+			"title": "Title of my step2",
+			"content": "Po tomhle redirect na pages",
+			"placement": "bottom"
+		},
+		
+		{
+			"path": "admin/pages",
+			"element": "#pagesGrid",
+			"title": "Title of my step3",
+			"content": "Content of my step",
+			"placement": "top"
+		}
+		
+	]
+}

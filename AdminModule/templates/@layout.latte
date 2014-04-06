@@ -27,6 +27,7 @@
 		<link rel="stylesheet" media="screen" href="{$basePath}/admin-client/kendo-ui/styles/kendo.default.min.css" type="text/css">
 		
 		<link rel="stylesheet" media="screen" href="{$basePath}/admin-client/bootstrap/dist/css/bootstrap.min.css" type="text/css">
+		<link rel="stylesheet" media="screen" href="{$basePath}/admin-client/bootstrap-tour/build/css/bootstrap-tour.min.css" type="text/css">
 		
 		<link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/client-admin/css/screen.css" type="text/css">
 		<link rel="stylesheet" media="print" href="{$basePath}/client-admin/css/print.css" type="text/css">
@@ -100,6 +101,9 @@
 							</select>
 						</form>
 					{/if}
+					<button type="button" class="btn btn-primary" id="tutorial">
+						{_'Show tutorial'}
+					</button>
 					<button type="button" class="btn btn-primary btn-ms dropdown-toggle" data-toggle="dropdown">
 						{$user->getIdentity()->getData()['username']} <span class="caret"></span>
 					</button>
@@ -190,6 +194,7 @@
 		<script type="text/javascript" src="{$basePath}/admin-client/ckeditor/ckeditor.js"></script>
 		<script type="text/javascript" src="{$basePath}/admin-client/ckeditor/adapters/jquery.js"></script>
 		<script type="text/javascript" src="{$basePath}/admin-client/bootstrap/dist/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="{$basePath}/admin-client/bootstrap-tour/build/js/bootstrap-tour.min.js"></script>
 		<script type="text/javascript" src="{$basePath}/admin-client/bootbox/bootbox.js"></script>
 		<script type="text/javascript" src="{$basePath}/admin-client/grido/client-side/grido.js"></script>
 		<script type="text/javascript" src="{$basePath}/admin-client/nette.ajax.js/nette.ajax.js"></script>
