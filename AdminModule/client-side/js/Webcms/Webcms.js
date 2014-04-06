@@ -72,6 +72,12 @@ Webcms.prototype = {
 
 		//ajax loader animation
 		$(document).ajaxStart(function() {
+			
+			//destroy tour if initiated
+			if(!webcmstour.getTour().ended()){
+				webcmstour.getTour().end();
+			}
+			
 			if (longRun) {
 				$('.spinner-wrapper').show();
 			} else {
@@ -232,6 +238,7 @@ function Webcmstour() {
 
 	this.steps = [];
 	this.tutorialTrigger = "#tutorial";
+	this.tour = {};
 
 	this.init();
 }
@@ -251,10 +258,16 @@ Webcmstour.prototype = {
 	getSteps: function() {
 		return this.steps;
 	},
+	setTour: function(tour) {
+		this.tour = tour;
+	},
+	getTour: function() {
+		return this.tour;
+	},
 	__registerListeners: function() {
 		
 
-		$.getJSON( basePath + "/../libs/webcms2/webcms2/AdminModule/client-side/src/tourSpeps.json", function( data ) {
+		$.getJSON( basePath + "/../libs/webcms2/webcms2/AdminModule/client-side/src/tourSteps.json", function( data ) {
 			$.each( data, function( key, val ) {
 				$.each(val, function (key2, val2){
 					var stepObj = {};
@@ -271,8 +284,13 @@ Webcmstour.prototype = {
 		
 		
 			// Instance the tour
-			var tour = new Tour({
-
+			selfwt.tour = new Tour({
+				onStart: function() {
+					$(selfwt.tutorialTrigger).addClass("disabled", true);
+				},
+				onEnd: function() {
+					$(selfwt.tutorialTrigger).removeClass("disabled", true);
+				},
 				steps: [],
 				debug: true,
 				template: "<div class='popover tour'>\n\
@@ -288,16 +306,17 @@ Webcmstour.prototype = {
 			});
 			
 			
-			//tour.addSteps(selfwt.getSteps());
+			selfwt.tour.addSteps(selfwt.getSteps());
 
 			// Initialize the tour
-			tour.init();
+			selfwt.tour.init();
 
 			// Start the tour
-			tour.start();
+			selfwt.tour.start();
 			
 			$(selfwt.tutorialTrigger).on("click", function() {
-				tour.restart();
+				selfwt.tour.restart();
+				return document.location.href = basePath + '/admin';
 			});
 			
 
