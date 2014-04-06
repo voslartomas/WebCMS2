@@ -387,7 +387,11 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
                 $param = $context->getRequest()->getParameters();
                 $active = $context->getParam('id') == $node['id'] ? TRUE : FALSE;
                 $class = '';
-
+		   
+		if(!array_key_exists('fullPath', $param)){
+		    $param['fullPath'] = '/defPath';
+		}
+		
                 if (array_key_exists('redirect', $node)) {
                     if ($param['fullPath'] == $node['redirect']) {
                         $active = TRUE;

@@ -27,6 +27,8 @@ class ErrorPresenter extends \FrontendModule\BasePresenter {
 
 	    $errorPage = new \WebCMS\Entity\Page;
 	    $errorPage->setTitle('404');
+	
+	$this->actualPage = $errorPage;
 
 	    $this->template->actualPage = $errorPage;
 	    $this->template->errorCode = $code;

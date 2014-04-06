@@ -1,11 +1,13 @@
-<ol class="breadcrumb">
-  {foreach $breadcrumb as $item}
-		<li>
-			{if $id != $item->getId() || $iterator->counter !== count($breadcrumb)}
-				<a n:href="':Frontend:'.$item->getModuleName().':'.$item->getPresenter().':default' path => $item->getPath(), abbr => $abbr">{$item->getTitle()}</a>
-			{else}
-				{$item->getTitle()}
-			{/if}
-		</li>
-  {/foreach}
-</ol>
+{if is_array($breadcrumb)}
+	<ol class="breadcrumb">
+	  {foreach $breadcrumb as $item}
+			<li>
+				{if $id != $item->getId() || $iterator->counter !== count($breadcrumb)}
+					<a n:href="':Frontend:'.$item->getModuleName().':'.$item->getPresenter().':default' path => $item->getPath(), abbr => $abbr">{$item->getTitle()}</a>
+				{else}
+					{$item->getTitle()}
+				{/if}
+			</li>
+	  {/foreach}
+	</ol>
+{/if}
