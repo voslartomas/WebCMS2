@@ -264,7 +264,7 @@ Webcmstour.prototype = {
 				$.each(val, function (key2, val2){
 					var stepObj = {};
 					
-					stepObj.path = val2.path;
+					stepObj.path = basePath + val2.path;
 					stepObj.element = val2.element;
 					stepObj.title = val2.title;
 					stepObj.content = val2.content;
@@ -279,6 +279,7 @@ Webcmstour.prototype = {
 			var tour = new Tour({
 
 				steps: [],
+				debug: true,
 				template: "<div class='popover tour'>\n\
 								<div class='arrow'></div>\n\
 								<h3 class='popover-title'></h3>\n\
