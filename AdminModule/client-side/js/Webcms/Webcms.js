@@ -83,7 +83,8 @@ Webcms.prototype = {
 			$('.context-menu').remove();
 			$('#loader').removeClass("active");
 			$('.spinner-wrapper').hide();
-		});
+		});		
+		
 
 		self.afterReload();
 		self.__registerListeners();
@@ -146,6 +147,11 @@ Webcms.prototype = {
 				setTimeout("self.hideSidebar()", 500);
 			}
 		});
+			
+
+		
+
+		
 	},
 	
 	hideSidebar : function(){
@@ -226,7 +232,85 @@ Filesystem.prototype = {
 	}
 };
 
+/* WebCMS tour */
+function Webcmstour() {
+
+	this.steps = [];
+	this.tutorialTrigger = "#tutorial";
+
+	this.init();
+}
+;
+
+Webcmstour.prototype = {
+	selffs: null,
+	init: function() {
+		
+		selfwt = this;
+
+		this.__registerListeners();
+	},
+	setSteps: function(steps) {
+		this.steps = steps;
+	},
+	getSteps: function() {
+		return this.steps;
+	},
+	__registerListeners: function() {
+		
+
+		$.getJSON( basePath + "/../libs/webcms2/webcms2/AdminModule/client-side/src/tourSpeps.json", function( data ) {
+			$.each( data, function( key, val ) {
+				$.each(val, function (key2, val2){
+					var stepObj = {};
+					
+					stepObj.path = val2.path;
+					stepObj.element = val2.element;
+					stepObj.title = val2.title;
+					stepObj.content = val2.content;
+					stepObj.placement = val2.placement;
+					
+					selfwt.steps.push(stepObj);
+				});
+			});
+		
+		
+			// Instance the tour
+			var tour = new Tour({
+
+				steps: [],
+				template: "<div class='popover tour'>\n\
+								<div class='arrow'></div>\n\
+								<h3 class='popover-title'></h3>\n\
+								<div class='popover-content'></div>\n\
+								<div class='popover-navigation'> \n\
+									<button class='btn btn-default' data-role='prev'>« Předchozí</button>\n\
+									<button class='btn btn-default' data-role='next'>Další »</button>\n\
+									<button class='btn btn-default' data-role='end'>Vypnout nápovědu</button>\n\
+								</div>\n\
+							</div>",
+			});
+			
+			
+			tour.addSteps(selfwt.getSteps());
+
+			// Initialize the tour
+			tour.init();
+
+			// Start the tour
+			tour.start();
+			
+			$(selfwt.tutorialTrigger).on("click", function() {
+				tour.restart();
+			});
+			
+
+		});
+	}
+};
+
 $(function() {
+	webcmstour = new Webcmstour();
 	webcms = new Webcms();
 	filesystem = new Filesystem();
 });
