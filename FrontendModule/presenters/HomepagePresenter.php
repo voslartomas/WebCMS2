@@ -21,8 +21,13 @@ class HomepagePresenter extends \FrontendModule\BasePresenter{
 			'language' => $this->language
 		));
 		
+		$root = $this->settings->get('Root domain', \WebCMS\Settings::SECTION_BASIC);
 		$abbr = $page->getLanguage()->getDefaultFrontend() ? '' : $page->getLanguage()->getAbbr() . '/';
 		
-		$this->redirect(':Frontend:' . $page->getModuleName() . ':' . $page->getPresenter() . ':default', array('id' => $page->getId(), 'path' => $page->getPath(), 'abbr' => $abbr));
+		if($root->getValue()){
+		    $this->forward(':Frontend:' . $page->getModuleName() . ':' . $page->getPresenter() . ':default', array('id' => $page->getId(), 'path' => $page->getPath(), 'abbr' => $abbr));
+		}else{
+		    $this->redirect(':Frontend:' . $page->getModuleName() . ':' . $page->getPresenter() . ':default', array('id' => $page->getId(), 'path' => $page->getPath(), 'abbr' => $abbr));
+		}
 	}
 }
