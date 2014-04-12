@@ -1,3 +1,10 @@
-{block modalContent}
+{block content}
+
+	<h1>{_'Pages'}</h1>
+
+	{include 'tabs.latte' active => 'pages'}
+
+	<br />
+
 	{control pageForm}
 {/block}

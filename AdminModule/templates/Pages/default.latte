@@ -2,8 +2,11 @@
 
 <h1>{_'Pages'}</h1>
 
+{include 'tabs.latte' active => 'pages'}
 
-<a class="btn btn-primary ajax" n:href="Pages:updatePage" data-remote="false" data-target="#myModal" data-toggle="modal" >{_'Add page'}</a>
+<br />
+
+<a class="btn btn-primary ajax" n:href="Pages:updatePage">{_'Add page'}</a>
 
 <br /><br />
 

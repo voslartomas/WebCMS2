@@ -16,7 +16,7 @@ Nette.addEvent = function (element, on, callback) {
 		return callback.apply(element, arguments);
 	};
 	
-	$('form.ajax :submit').die('click');
+	$('form.ajax :submit').off('click');
 };
 
 
@@ -107,7 +107,7 @@ Nette.validateForm = function(sender) {
 		}
 	}
 
-	$('form.ajax :submit').die('click');
+	$('form.ajax :submit').off('click');
 
 	return true;
 };

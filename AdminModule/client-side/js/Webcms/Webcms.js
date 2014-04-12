@@ -41,7 +41,7 @@ Webcms.prototype = {
 		});
 
 		var longRun = false;
-		$(".ajax").live('click', function() {
+		$(document).on('click', ".ajax", function() {
 			if ($(this).hasClass('longRun')) {
 				longRun = true;
 			} else {
@@ -50,12 +50,12 @@ Webcms.prototype = {
 		});
 
 		$.nette.init(function(ajaxHandler) {
-			$('a.ajax:not(.no-ajax)').live('click', ajaxHandler);
-			$('form.ajax :submit').live('click', ajaxHandler);
+			$(document).on('click', 'a.ajax:not(.no-ajax)', ajaxHandler);
+			$(document).on('click', 'form.ajax :submit', ajaxHandler);
 		});
 
 		// links context menu
-		$('a').live('contextmenu', function(e) {
+		$(document).on('contextmenu', 'a', function(e) {
 			e.preventDefault();
 
 			$('.context-menu').remove();
@@ -66,7 +66,7 @@ Webcms.prototype = {
 			}
 		});
 
-		$(document).live('click', function() {
+		$(document).on('click', function() {
 			$('.context-menu').remove();
 		});
 
@@ -113,7 +113,7 @@ Webcms.prototype = {
 	/* Global systems listeners registering. */
 	__registerListeners: function() {
 		// register bootbox confirm window for all danger buttons
-		$(".btn-danger").live("click", function(e) {
+		$(document).on("click", ".btn-danger", function(e) {
 			e.preventDefault();
 			var anchor = this;
 			var title = $(this).data("confirm");
@@ -127,17 +127,17 @@ Webcms.prototype = {
 			});
 		});
 
-		$(".jq_head a.ajax").live('click', function() {
+		$(document).on('click', ".jq_head a.ajax", function() {
 			$(".jq_head a.ajax").parent().removeClass('active');
 
 			$(this).parent().addClass('active');
 		});
 
-		$("#languageChanger").live('change', function() {
+		$(document).on('change', "#languageChanger", function() {
 			$(this).parent().submit();
 		});
 		
-		$(".navbar-brand").live('mouseover', function(){
+		$(document).on('mouseover', ".navbar-brand",function(){
 			$(".sidebar .well").show('fast', 'swing');
 		});
 		
@@ -169,8 +169,7 @@ function Filesystem() {
 	this.path = new String();
 
 	this.init();
-}
-;
+};
 
 Filesystem.prototype = {
 	selffs: null,
@@ -188,17 +187,17 @@ Filesystem.prototype = {
 	},
 	__registerListeners: function() {
 
-		$('.filesDialog').live('click', function(e) {
+		$(document).on('click', '.filesDialog', function(e) {
 			e.preventDefault();
 
-			$('.jq_file').die();
+			$(document).off('click', '.jq_file');
 
 			var options = {
 				container: $(this).data('container'),
 				containerId: $(this).data('container-id')
 			};
 
-			$('.jq_filesAdd').live('click', function(e) {
+			$('.jq_filesAdd').on('click', function(e) {
 				e.preventDefault();
 
 				// 
@@ -219,7 +218,7 @@ Filesystem.prototype = {
 			});
 		});
 
-		$(".jq_fileDelete").live('click', function(e) {
+		$(".jq_fileDelete").on('click', function(e) {
 			e.preventDefault();
 
 			$(this).closest('.jq_fileBox').remove();
@@ -305,6 +304,7 @@ Webcmstour.prototype = {
 			selfwt.bootTour.start();
 
 			$(selfwt.tutorialTrigger).on("click", function() {
+				
 				selfwt.bootTour.restart();
 			});
 		

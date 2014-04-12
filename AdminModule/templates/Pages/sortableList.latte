@@ -1,0 +1,16 @@
+<ul class="sortablePages">
+	{foreach $tree as $node}
+			{if array_key_exists('id', $node)}
+				<li class="list-group-item sortable{$node['level']}" data-level="{$node['level']}" data-id="{$node['id']}">
+					<span class="glyphicon glyphicon-align-justify handler"></span>
+			{else}
+				<li class="list-group-item">
+			{/if}
+				{$node['title']}
+				
+				{if !empty($node['__children'])}
+					{include sortableList.latte tree => $node['__children']}
+				{/if}
+			</li>
+	{/foreach}
+</ul>
