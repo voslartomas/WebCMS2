@@ -570,6 +570,16 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
 	$this->flashMessage('Link has been added to favourites.', 'success');
     }
 
+    public function handleGetTranslations(){
+	
+	$payload = array();
+	foreach($_GET['keys'] as $key => $value){
+	    $payload[$key] = $this->translator->translate($key);
+	}
+	
+	$this->sendResponse(new \Nette\Application\Responses\JsonResponse($payload));
+    }
+    
     public function handleRemoveFromFavourite($idFav) {
 	$fav = $this->em->getRepository('WebCMS\Entity\Favourites')->find($idFav);
 
