@@ -16,6 +16,5 @@
     "webcms2": "latest"
   },
   "resolutions": {
-    "jquery": "~2.1.0"
   }
 }
