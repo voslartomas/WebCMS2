@@ -32,8 +32,8 @@
 		<link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/admin-client/webcms2/css/screen.css" type="text/css">
 		<link rel="stylesheet" media="print" href="{$basePath}/admin-client/webcms2/css/print.css" type="text/css">
 		
+		<script type="text/javascript" src="{$basePath}/admin-client/jquery/dist/jquery.min.js"></script>
 		<link rel="shortcut icon" href="{$basePath}/favicon.ico" type="image/x-icon">
-		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
 	{/block}
 </head>
 
@@ -108,7 +108,7 @@
 				  <ul class="dropdown-menu" role="menu">
 					<li><a n:href=":Admin:users:updateUser id =>  $user->getIdentity()->id" class="ajax" data-remote="false" data-target="#myModal" data-toggle="modal">{_'Account settings'}</a></li>
 					<li>
-						<a href="#" id="tutorial">
+						<a n:href=":Admin:Homepage:" class="ajax" id="tutorial">
 							{_'Show tutorial'}
 						</a>
 					</li>
@@ -192,7 +192,6 @@
 	</div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-		<script type="text/javascript" src="{$basePath}/admin-client/jquery/dist/jquery.min.js"></script>
 		<script type="text/javascript" src="{$basePath}/admin-client/ckeditor/ckeditor.js"></script>
 		<script type="text/javascript" src="{$basePath}/admin-client/ckeditor/adapters/jquery.js"></script>
 		<script type="text/javascript" src="{$basePath}/admin-client/kendo-ui/js/kendo.web.min.js"></script>
@@ -201,6 +200,7 @@
 		<script type="text/javascript" src="{$basePath}/admin-client/bootbox/bootbox.js"></script>
 		<script type="text/javascript" src="{$basePath}/admin-client/grido/client-side/grido.js"></script>
 		<script type="text/javascript" src="{$basePath}/admin-client/nette.ajax.js/nette.ajax.js"></script>
+		<script type="text/javascript" src="{$basePath}/admin-client/history.nette.ajax.js/client-side/history.ajax.js"></script>
 		<script type="text/javascript" src="{$basePath}/admin-client/webcms2/js/netteForms.js"></script>
 		<script type="text/javascript" src="{$basePath}/admin-client/webcms2/js/Webcms/Webcms.main.js"></script>
 		<script type="text/javascript" src="{$basePath}/admin-client/webcms2/js/Webcms/Webcms.filesystem.js"></script>
