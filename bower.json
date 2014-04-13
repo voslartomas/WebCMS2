@@ -13,7 +13,7 @@
   "license": "MIT",
   "homepage": "http://www.webcook.cz",
   "dependencies": {
-    "webcms2": "~0.1.3"
+    "webcms2": "~1.0.0"
   },
   "resolutions": {
     "jquery": "~2.1.0"
