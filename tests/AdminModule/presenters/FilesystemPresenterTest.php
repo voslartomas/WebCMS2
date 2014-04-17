@@ -50,7 +50,7 @@ class FilesystemPresenterTest extends \WebCMS\Tests\PresenterTestCase {
 	$response = $this->makeRequest('default', 'GET', array(
 	    'action' => 'default',
             'do' => 'deleteFile',
-	    'pathToRemove' => 'upload/test-directory'
+	    'pathToRemove' => 'test-directory'
 	));
 	
 	$this->assertInstanceOf('Nette\Application\Responses\RedirectResponse', $response);
