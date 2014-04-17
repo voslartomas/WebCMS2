@@ -37,7 +37,6 @@ class FilesystemPresenterTest extends \WebCMS\Tests\PresenterTestCase {
 	
 	$this->assertInstanceOf('Nette\Application\Responses\TextResponse', $response);
 	$this->assertEquals(TRUE, file_exists('upload/test-directory/'));
-	$this->assertEquals(TRUE, file_exists('thumbnails/test-directory/'));
     }
     
     public function testRemove(){
