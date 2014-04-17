@@ -64,7 +64,7 @@ class FilesystemPresenterTest extends \WebCMS\Tests\PresenterTestCase {
 	
 	$response = $this->makeRequest('downloadFile', 'GET', array(
 	    'action' => 'downloadFile',
-	    'path' => 'upload/test.txt'
+	    'path' => 'test.txt'
 	));
 	
 	$this->assertInstanceOf('Nette\Application\Responses\FileResponse', $response);
