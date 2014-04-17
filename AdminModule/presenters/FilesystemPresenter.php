@@ -69,7 +69,6 @@ class FilesystemPresenter extends \AdminModule\BasePresenter {
 
     public function handleMakeDirectory($name) {
 	@mkdir($this->path . \Nette\Utils\Strings::webalize($name));
-	@mkdir(str_replace("upload", "thumbnails", $this->path) . \Nette\Utils\Strings::webalize($name));
 
 	$this->flashMessage('Directory has been created.', 'success');
     }
@@ -80,6 +79,7 @@ class FilesystemPresenter extends \AdminModule\BasePresenter {
 	$file->move($this->path . '' . $file->getSanitizedName());
 
 	if ($file->isImage()) {
+	    // $this->path contains symlinked path, that is not the right way @see handleRegenerateThumbnails() function for the fix
 	    $this->thumbnailCreator->createThumbnails($file->getSanitizedName(), $this->path);
 	}
 
@@ -103,7 +103,8 @@ class FilesystemPresenter extends \AdminModule\BasePresenter {
 		    foreach ($thumbs as $t) {
 			$file = pathinfo($pathToRemove);
 			$filename = $file['filename'] . '.' . $file['extension'];
-
+			
+			// $this->path contains symlinked path, that is not the right way @see handleRegenerateThumbnails() function for the fix
 			$toRemove = str_replace('upload', 'thumbnails', $pathToRemove);
 			$toRemove = str_replace($filename, $t->getKey() . $filename, $toRemove);
 
@@ -119,6 +120,7 @@ class FilesystemPresenter extends \AdminModule\BasePresenter {
 
 	if (is_dir($pathToRemove)) {
 	    \WebCMS\Helpers\SystemHelper::rrmdir($pathToRemove);
+	    // $pathToRemove contains symlinked path, that is not the right way @see handleRegenerateThumbnails() function for the fix
 	    \WebCMS\Helpers\SystemHelper::rrmdir(str_replace('upload', 'thumbnails', $pathToRemove));
 	}
 
