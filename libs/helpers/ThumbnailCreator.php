@@ -62,8 +62,9 @@ class ThumbnailCreator {
 		}
 
 		$key = $conf->getKey();
-		if (!empty($key))
+		if (!empty($key)){
 		    $tmpImage->save($thumbnails . $conf->getKey() . $filename, 90);
+		}
 	    }
 	}
     }

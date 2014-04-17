@@ -172,14 +172,14 @@
 	{foreach $directories as $path => $file}
 		<tr>
 			<td class="name">
-				<a class="ajax dir" data-path="{$file->getRealpath()}" n:href="default path => $file->getRealpath()">
+				<a class="ajax dir" data-path="{$fsPath}{$file->getBasename()}" n:href="default path => $fsPath . $file->getBasename()">
 					{$file->getBasename()}
 				</a>
 			</td>
 			<td class="time">{$file->getATime()|date:'%d.%m.%Y %H:%M:%S'}</td>
 			<td class="size">{$file->getRealPath()|dirSize|bytes}</td>
 			<td class="action">
-				<a n:href="deleteFile! pathToRemove => $file->getPathname()" class="btn btn-danger">{_'Delete'}</a>
+				<a n:href="deleteFile! pathToRemove => $fsPath . $file->getBasename()" class="btn btn-danger">{_'Delete'}</a>
 			</td>
 		</tr>
 	{/foreach}
@@ -198,8 +198,8 @@
 			<td class="time">{$file->getATime()|date:'%d.%m.%Y %H:%M:%S'}</td>
 			<td class="size">{$file->getSize()|bytes}</td>
 			<td class="action">
-				<a n:href="downloadFile path => $file->getPathname()" class="btn btn-primary">{_'Download'}</a>
-				<a n:href="deleteFile! pathToRemove => $file->getPathname()" class="btn btn-danger">{_'Delete'}</a>
+				<a n:href="downloadFile path => $fsPath . $file->getBasename()" class="btn btn-primary">{_'Download'}</a>
+				<a n:href="deleteFile! pathToRemove => $fsPath . $file->getBasename()" class="btn btn-danger">{_'Delete'}</a>
 			</td>
 		</tr>
 	{/foreach}

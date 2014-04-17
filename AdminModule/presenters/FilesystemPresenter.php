@@ -11,7 +11,7 @@ use Nette\Utils\Finder;
  */
 class FilesystemPresenter extends \AdminModule\BasePresenter {
 
-    const DESTINATION_BASE = 'upload/';
+    const DESTINATION_BASE = './upload/';
 
     private $path;
 
@@ -32,9 +32,9 @@ class FilesystemPresenter extends \AdminModule\BasePresenter {
 
     public function actionDefault($path) {
 	if (!empty($path)){
-	    $this->path = $path . '/';
+	    $this->path = self::DESTINATION_BASE . $path . '/';
 	}else{
-	    $this->path = realpath(self::DESTINATION_BASE) . '/';
+	    $this->path = self::DESTINATION_BASE;
 	}
     }
 
@@ -44,15 +44,18 @@ class FilesystemPresenter extends \AdminModule\BasePresenter {
 	
 	$files = $finder->findFiles('*')
 			->exclude('.htaccess')
-			->in($this->path);
-	$directories = $finder->findDirectories('*')->in($this->path);
+			->in(realpath($this->path));
+	$directories = $finder->findDirectories('*')->in(realpath($this->path));
 
 	if (empty($dialog))
 	    $this->reloadContent();
 	else
 	    $this->reloadModalContent();
 
-	$this->template->backLink = strpos($this->createBackLink($this->path), self::DESTINATION_BASE) === false ? realpath(self::DESTINATION_BASE) : $this->createBackLink($this->path);
+	$this->path = str_replace(self::DESTINATION_BASE, '', $path) . '/';
+	
+	$this->template->fsPath = $this->path;
+	$this->template->backLink = $this->createBackLink($this->path);
 	$this->template->files = $files;
 	$this->template->directories = $directories;
 	$this->template->multiple = $multiple;
@@ -76,11 +79,14 @@ class FilesystemPresenter extends \AdminModule\BasePresenter {
     public function handleUploadFile($path) {
 	$file = new \Nette\Http\FileUpload($_FILES['files']);
 
-	$file->move($this->path . '' . $file->getSanitizedName());
+	$filePath = $this->path . '' . $file->getSanitizedName();
+	$file->move($filePath);
 
+	$f = new \SplFileInfo($filePath);
+	$f->getBasename();
+	
 	if ($file->isImage()) {
-	    // $this->path contains symlinked path, that is not the right way @see handleRegenerateThumbnails() function for the fix
-	    $this->thumbnailCreator->createThumbnails($file->getSanitizedName(), $this->path);
+	    $this->thumbnailCreator->createThumbnails($f->getBasename(), str_replace($f->getBasename(), '', $filePath));
 	}
 
 	$this->reloadContent();
@@ -90,8 +96,10 @@ class FilesystemPresenter extends \AdminModule\BasePresenter {
     }
 
     public function handleDeleteFile($pathToRemove) {
+	
+	$pathToRemove = self::DESTINATION_BASE . $pathToRemove;
 	if (is_file($pathToRemove)) {
-
+	    
 	    // delete all thumbnails if this file is image
 	    try {
 
@@ -121,6 +129,7 @@ class FilesystemPresenter extends \AdminModule\BasePresenter {
 	if (is_dir($pathToRemove)) {
 	    \WebCMS\Helpers\SystemHelper::rrmdir($pathToRemove);
 	    // $pathToRemove contains symlinked path, that is not the right way @see handleRegenerateThumbnails() function for the fix
+	    
 	    \WebCMS\Helpers\SystemHelper::rrmdir(str_replace('upload', 'thumbnails', $pathToRemove));
 	}
 
@@ -137,8 +146,9 @@ class FilesystemPresenter extends \AdminModule\BasePresenter {
 
 	$finfo = finfo_open(FILEINFO_MIME_TYPE); // return mime type ala mimetype extension
 
+	$path = self::DESTINATION_BASE . $path;
 	$mimeType = finfo_file($finfo, $path);
-
+	
 	$this->sendResponse(new \Nette\Application\Responses\FileResponse($path, $filename, $mimeType));
     }
 
@@ -174,7 +184,7 @@ class FilesystemPresenter extends \AdminModule\BasePresenter {
 	\WebCMS\Helpers\SystemHelper::rrmdir('thumbnails', true);
 
 	$timeStart = time();
-
+	    
 	foreach (Finder::findFiles('*.jpg', '*.jpeg', '*.png', '*.gif')->from('upload') as $key => $file) {
 	    if (file_exists($key) && @getimagesize($key)) {
 		$this->thumbnailCreator->createThumbnails($file->getBasename(), str_replace($file->getBasename(), '', $key));
