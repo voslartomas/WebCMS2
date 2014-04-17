@@ -128,8 +128,6 @@ class FilesystemPresenter extends \AdminModule\BasePresenter {
 
 	if (is_dir($pathToRemove)) {
 	    \WebCMS\Helpers\SystemHelper::rrmdir($pathToRemove);
-	    // $pathToRemove contains symlinked path, that is not the right way @see handleRegenerateThumbnails() function for the fix
-	    
 	    \WebCMS\Helpers\SystemHelper::rrmdir(str_replace('upload', 'thumbnails', $pathToRemove));
 	}
 
