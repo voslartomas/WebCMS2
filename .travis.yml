@@ -12,6 +12,7 @@ before_script:
   - mkdir tests/temp
   - mkdir tests/log
   - mkdir upload
+  - mkdir thumbnails
   
   # Install
   - composer install
