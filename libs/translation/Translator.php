@@ -17,10 +17,10 @@ class Translator implements \Nette\Localization\ITranslator {
     /**
      * Translates given message.
      * @param type $message
-     * @param type $count
+     * @param type $parameters
      */
-    public function translate($message, $count = NULL) {
-	return $this->translations[$message];
+    public function translate($message, $parameters = array()) {
+	return vsprintf($this->translations[$message], $parameters);
     }
 
 }
