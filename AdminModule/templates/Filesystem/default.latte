@@ -176,7 +176,7 @@
 					{$file->getBasename()}
 				</a>
 			</td>
-			<td class="time">{$file->getCTime()|date:'%d.%m.%Y %H:%M:%S'}</td>
+			<td class="time">{$file->getMTime()|date:'%d.%m.%Y %H:%M:%S'}</td>
 			<td class="size">{$file->getRealPath()|dirSize|bytes}</td>
 			<td class="action">
 				<a n:href="deleteFile! pathToRemove => $fsPath . $file->getBasename()" class="btn btn-danger">{_'Delete'}</a>
@@ -195,7 +195,7 @@
 					{$baseUri}/upload/exports/{$file->getBasename()}
 				{/if}
 			</td>
-			<td class="time">{$file->getCTime()|date:'%d.%m.%Y %H:%M:%S'}</td>
+			<td class="time">{$file->getMTime()|date:'%d.%m.%Y %H:%M:%S'}</td>
 			<td class="size">{$file->getSize()|bytes}</td>
 			<td class="action">
 				<a n:href="downloadFile path => $fsPath . $file->getBasename()" class="btn btn-primary">{_'Download'}</a>
@@ -214,7 +214,7 @@
 
 	{foreach $directories as $path => $file}
 		<div class="directory">
-			<span class="time">{$file->getCTime()|date:'%d.%m.%Y %H:%M:%S'}</span>
+			<span class="time">{$file->getMTime()|date:'%d.%m.%Y %H:%M:%S'}</span>
 			<span class="name">
 				<a class="ajax" n:href="default path => $file->getRealpath(), dialog => true, multiple => $multiple">
 					{$file->getBasename()}
