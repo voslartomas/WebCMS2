@@ -216,7 +216,7 @@
 		<div class="directory">
 			<span class="time">{$file->getMTime()|date:'%d.%m.%Y %H:%M:%S'}</span>
 			<span class="name">
-				<a class="ajax" n:href="default path => $file->getRealpath(), dialog => true, multiple => $multiple">
+				<a class="ajax" n:href="default path => $fsPath . $file->getBasename(), dialog => true, multiple => $multiple">
 					{$file->getBasename()}
 				</a>
 			</span>
