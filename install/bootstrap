@@ -15,7 +15,7 @@ $configurator = new Nette\Config\Configurator;
 
 // detects environment via virtual server name
 if(PHP_SAPI === 'cli'){
-	if(php_uname('n') === 'vm7050'){
+	if(php_uname('n') === 'vm7050' || php_uname('n') === 'web1'){
 		$environment = 'production';
 	}else{
 		$environment = 'development';
