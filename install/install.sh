@@ -12,7 +12,9 @@ function denyAccess {
 	touch ./temp/.htaccess
 	touch ./log/.htaccess
 	
-	mkdir ./www/upload/backups
+	if [! -d ./www/upload/backups]
+		mkdir ./www/upload/backups
+	fi
 
 	echo $'Order Allow,Deny\nDeny from all' > ./temp/.htaccess
 	echo $'Order Allow,Deny\nDeny from all' > ./log/.htaccess
@@ -52,8 +54,10 @@ while [ "$task" != "q" ]; do
 		cp ./libs/webcms2/webcms2/install/Form.php ./libs/nette/nette/Nette/Application/UI/Form.php
 
 		# activate basic module
-		mkdir ./app/templates/page-module
-		cp -r ./libs/webcms2/page-module/Frontend/templatesDefault/* ./app/templates/page-module/
+		if [! -d ./app/templates/page-module ]
+			mkdir ./app/templates/page-module
+			cp -r ./libs/webcms2/page-module/Frontend/templatesDefault/* ./app/templates/page-module/
+		fi
 
 		# copy new boostrap
 		rm -f ./app/bootstrap.php
