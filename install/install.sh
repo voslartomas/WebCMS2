@@ -12,7 +12,7 @@ function denyAccess {
 	touch ./temp/.htaccess
 	touch ./log/.htaccess
 	
-	if [! -d ./www/upload/backups]
+	if [! -d ./www/upload/backups]; then
 		mkdir ./www/upload/backups
 	fi
 
@@ -54,7 +54,7 @@ while [ "$task" != "q" ]; do
 		cp ./libs/webcms2/webcms2/install/Form.php ./libs/nette/nette/Nette/Application/UI/Form.php
 
 		# activate basic module
-		if [! -d ./app/templates/page-module ]
+		if [! -d ./app/templates/page-module ]; then
 			mkdir ./app/templates/page-module
 			cp -r ./libs/webcms2/page-module/Frontend/templatesDefault/* ./app/templates/page-module/
 		fi
