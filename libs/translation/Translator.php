@@ -5,13 +5,14 @@ namespace WebCMS\Translation;
 /**
  * @author Tomáš Voslař <tomas.voslar at webcook.cz>
  */
-class Translator implements \Nette\Localization\ITranslator {
-    
+class Translator implements \Nette\Localization\ITranslator 
+{    
     /* @var TranslationArray */
     private $translations;
 
-    public function __construct($translations) {
-	$this->translations = $translations;
+    public function __construct($translations) 
+    {
+	   $this->translations = $translations;
     }
 
     /**
@@ -19,8 +20,13 @@ class Translator implements \Nette\Localization\ITranslator {
      * @param type $message
      * @param type $parameters
      */
-    public function translate($message, $parameters = array()) {
-	return vsprintf($this->translations[$message], $parameters);
+    public function translate($message, $parameters = array()) 
+    {
+	   if (count($parameters) === 0) {
+            return $this->translations[$message];
+       } else {
+            return vsprintf($this->translations[$message], $parameters); 
+       }
     }
 
 }
