@@ -1,0 +1,21 @@
+{
+  "name": "webcms2_AdminLibraries",
+  "version": "1.0.0",
+  "authors": [
+    "Jakub Sanda <sanda@webcook.cz>",
+    "Tomas Voslar <tomas.voslar@webcook.cz>"
+  ],
+  "description": "Admin libraries for WebCMS2",
+  "keywords": [
+    "webcms2",
+    "admin"
+  ],
+  "license": "MIT",
+  "homepage": "http://www.webcook.cz",
+  "dependencies": {
+    "webcms2": "~1.0.0"
+  },
+  "resolutions": {
+    "jquery": "~2.1.0"
+  }
+}

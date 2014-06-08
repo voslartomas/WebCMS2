@@ -1,5 +1,11 @@
 CHANGE LOG
 --
+
+v0.5.0
+- Implemented push history
+- Added bower
+- Removed js and css libraries
+
 v0.4.3
 - Fixed loading of fe libraries.
 

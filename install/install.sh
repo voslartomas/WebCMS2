@@ -45,6 +45,10 @@ while [ "$task" != "q" ]; do
 		# creates dirs
 		mkdir ./www/upload
 		mkdir ./www/thumbnails
+		mkdir ./www/admin-client
+		mkdir ./www/client
+		mkdir ./www/css
+		mkdir ./www/js
 		mkdir ./log
 		mkdir ./temp
 		mkdir ./temp/sessions
@@ -81,6 +85,14 @@ while [ "$task" != "q" ]; do
 
 		parseVersion
 
+		# bower install for admin
+		cd ./libs/webcms2/webcms2
+		bower install
+		
+		# bower install for front
+		cd ../../../
+		bower install
+
 		vypis="Installation has been executed. Choose another command or type 'q' to quit."
 	
 	elif [ "$task" == "2" ]; then
@@ -104,6 +116,14 @@ while [ "$task" != "q" ]; do
 		denyAccess
 
 		parseVersion
+
+		# bower update for admin
+		cd ./libs/webcms2/webcms2
+		bower update
+
+		# bower udpate  for front
+		cd ../../../
+		bower update
 
 		vypis="System has been updated."
 

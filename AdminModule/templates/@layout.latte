@@ -20,14 +20,20 @@
 	<title>WebCMS - {_'Administration'}</title>
 	{block head}
 		{* TODO vytvorit hlavni soubory pro js a css, include pouze techto dvou *}
-		<link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/client-admin/css/screen.css" type="text/css">
-		<link rel="stylesheet" media="print" href="{$basePath}/client-admin/css/print.css" type="text/css">
-		<link rel="stylesheet" media="screen" href="{$basePath}/client-admin/grido/grido.css" type="text/css">
-		<link rel="stylesheet" media="screen" href="{$basePath}/client-admin/kendoui/kendo.common.css" type="text/css">
-		<link rel="stylesheet" media="screen" href="{$basePath}/client-admin/kendoui/kendo.default.css" type="text/css">
-		<link rel="stylesheet" media="screen" href="{$basePath}/client-admin/bootstrap/css/bootstrap.css" type="text/css">
+		
+		<link rel="stylesheet" media="screen" href="{$basePath}/admin-client/grido/client-side/grido.css" type="text/css">
+		
+		<link rel="stylesheet" media="screen" href="{$basePath}/admin-client/kendo-ui/styles/kendo.common.min.css" type="text/css">
+		<link rel="stylesheet" media="screen" href="{$basePath}/admin-client/kendo-ui/styles/kendo.bootstrap.min.css" type="text/css">
+		
+		<link rel="stylesheet" media="screen" href="{$basePath}/admin-client/bootstrap/dist/css/bootstrap.min.css" type="text/css">
+		<link rel="stylesheet" media="screen" href="{$basePath}/admin-client/bootstrap-tour/build/css/bootstrap-tour.min.css" type="text/css">
+		
+		<link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/admin-client/webcms2/css/screen.css" type="text/css">
+		<link rel="stylesheet" media="print" href="{$basePath}/admin-client/webcms2/css/print.css" type="text/css">
+		
+		<script type="text/javascript" src="{$basePath}/admin-client/jquery/dist/jquery.min.js"></script>
 		<link rel="shortcut icon" href="{$basePath}/favicon.ico" type="image/x-icon">
-		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
 	{/block}
 </head>
 
@@ -38,8 +44,8 @@
 	</script>
 	
 	<div class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container system-menu jq_head">
-		<div class="navbar-header">
+      <div class="container-fluid system-menu jq_head">
+		<div class="navbar-header" id="tBrand">
 		  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
@@ -53,7 +59,7 @@
 				<ul class="nav navbar-nav">
 					{if $template->checkPermissions($user, 'admin:Pages')}  
 						<li {if $activePresenter == "Admin:Pages"}class="active"{/if}>
-							<a class="ajax" n:href=":Admin:Pages:">{_'Pages'}</a>
+							<a class="ajax" id="tPages" n:href=":Admin:Pages:">{_'Pages'}</a>
 						</li>
 					{/if}
 					{if $template->checkPermissions($user, 'admin:Users')}
@@ -63,22 +69,22 @@
 					{/if}
 					{if $template->checkPermissions($user, 'admin:Languages')}
 					  <li {if $activePresenter == "Admin:Languages"}class="active"{/if}>
-						  <a class="ajax" n:href=":Admin:Languages:">{_'Languages and translations'}</a>
+						  <a class="ajax" id="tLanguages" n:href=":Admin:Languages:">{_'Languages and translations'}</a>
 					  </li>
 					{/if}
 					{if $template->checkPermissions($user, 'admin:Settings')}
 					  <li {if $activePresenter == "Admin:Settings"}class="active"{/if}>
-						  <a class="ajax" n:href=":Admin:Settings:">{_'Settings'}</a>
+						  <a class="ajax" id="tSettings" n:href=":Admin:Settings:">{_'Settings'}</a>
 					  </li>
 					{/if}
 					{if $template->checkPermissions($user, 'admin:Filesystem')}
 					  <li {if $activePresenter == "Admin:Filesystem"}class="active"{/if}>
-						  <a class="ajax" n:href=":Admin:Filesystem:">{_'Filesystem'}</a>
+						  <a class="ajax" id="tFilesystem" n:href=":Admin:Filesystem:">{_'Filesystem'}</a>
 					  </li>
 					{/if}
 					{if $template->checkPermissions($user, 'admin:Update')}
 					  <li {if $activePresenter == "Admin:Update"}class="active"{/if}>
-						  <a class="ajax" n:href=":Admin:Update:">{_'System'} <span class="badge">{$settings->get('needUpdateCount', 'system', 'text')->getValue()}</span></a>
+						  <a class="ajax" id="tUpdate" n:href=":Admin:Update:">{_'System'} {if $settings->get('needUpdateCount', 'system', 'text')->getValue() != 0}<span class="badge">{$settings->get('needUpdateCount', 'system', 'text')->getValue()}</span>{/if}</a>
 					  </li>
 					{/if}
 				  </ul>
@@ -95,11 +101,17 @@
 							</select>
 						</form>
 					{/if}
+					
 					<button type="button" class="btn btn-primary btn-ms dropdown-toggle" data-toggle="dropdown">
 						{$user->getIdentity()->getData()['username']} <span class="caret"></span>
 					</button>
 				  <ul class="dropdown-menu" role="menu">
 					<li><a n:href=":Admin:users:updateUser id =>  $user->getIdentity()->id" class="ajax" data-remote="false" data-target="#myModal" data-toggle="modal">{_'Account settings'}</a></li>
+					<li>
+						<a n:href=":Admin:Homepage:" class="ajax" id="tutorial">
+							{_'Show tutorial'}
+						</a>
+					</li>
 					<li>
 						<a n:href=":Frontend:Homepage:" onclick="$(this).attr('target', '_blank');">{_'Go to frontend'}</a>  
 					</li>
@@ -133,7 +145,7 @@
 		</div>
 	</div>
 	 
-	<div class="container content">
+	<div class="container-fluid content">
 		
 		<div class="container flash-messages">
 			{snippet flashMessages}
@@ -180,15 +192,19 @@
 	</div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-	
-		<script type="text/javascript" src="{$basePath}/client-admin/kendoui/kendo.web.min.js"></script>
-		<script type="text/javascript" src="{$basePath}/client-admin/ckeditor/ckeditor.js"></script>
-		<script src="{$basePath}/client-admin/ckeditor/adapters/jquery.js"></script>
-		<script type="text/javascript" src="{$basePath}/client-admin/bootstrap/js/bootstrap.js"></script>
-		<script type="text/javascript" src="{$basePath}/client-admin/plugins/bootbox.min.js"></script>
-		<script type="text/javascript" src="{$basePath}/client-admin/grido/grido.js"></script>
-		<script type="text/javascript" src="{$basePath}/client-admin/plugins/nette.ajax.js"></script>
-		<script type="text/javascript" src="{$basePath}/client-admin/js/netteForms.js"></script>
-		<script type="text/javascript" src="{$basePath}/client-admin/js/Webcms/Webcms.js"></script>
+		<script type="text/javascript" src="{$basePath}/admin-client/ckeditor/ckeditor.js"></script>
+		<script type="text/javascript" src="{$basePath}/admin-client/ckeditor/adapters/jquery.js"></script>
+		<script type="text/javascript" src="{$basePath}/admin-client/kendo-ui/js/kendo.web.min.js"></script>
+		<script type="text/javascript" src="{$basePath}/admin-client/bootstrap/dist/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="{$basePath}/admin-client/bootstrap-tour/build/js/bootstrap-tour.min.js"></script>
+		<script type="text/javascript" src="{$basePath}/admin-client/bootbox/bootbox.js"></script>
+		<script type="text/javascript" src="{$basePath}/admin-client/grido/client-side/grido.js"></script>
+		<script type="text/javascript" src="{$basePath}/admin-client/nette.ajax.js/nette.ajax.js"></script>
+		<script type="text/javascript" src="{$basePath}/admin-client/history.nette.ajax.js/client-side/history.ajax.js"></script>
+		<script type="text/javascript" src="{$basePath}/admin-client/webcms2/js/netteForms.js"></script>
+		<script type="text/javascript" src="{$basePath}/admin-client/webcms2/js/Webcms/Webcms.main.js"></script>
+		<script type="text/javascript" src="{$basePath}/admin-client/webcms2/js/Webcms/Webcms.filesystem.js"></script>
+		<script type="text/javascript" src="{$basePath}/admin-client/webcms2/js/Webcms/Webcms.translator.js"></script>
+		<script type="text/javascript" src="{$basePath}/admin-client/webcms2/js/Webcms/Webcms.tour.js"></script>
 </body>
 </html>

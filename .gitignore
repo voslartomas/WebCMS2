@@ -3,3 +3,4 @@ AdminModule/version
 tests/temp
 vendor
 composer.lock
+tests/log

@@ -91,7 +91,7 @@ class Translation extends Entity {
     }
 
     public function getTranslated() {
-	return $this->key !== $this->translation;
+	return md5($this->key) !== md5($this->translation);
     }
 
 }

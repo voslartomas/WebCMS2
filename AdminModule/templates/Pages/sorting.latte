@@ -1,0 +1,51 @@
+{block content}
+
+<h1>{_'Pages'}</h1>
+
+{include 'tabs.latte' active => 'sorting'}
+
+<br />
+
+{include sortableList.latte tree => $tree}
+
+<style>
+	.hint td {
+		border: 2px solid #336699;
+	}
+	
+	.handler {
+		margin-right: 5px;
+		cursor: move;
+	}
+</style>
+	
+<script>
+	$(function(){
+		
+		$(".sortablePages").each(function(){
+
+
+			var filter = '.sortable' + $(this).find('li:first').data('level'); 
+			$(this).kendoSortable({
+				
+				filter: filter,
+				handler: '.handler',
+				
+				hint:function(element) {
+					return element.clone().addClass("").text('');
+				},
+				placeholder:function(element) {
+					return element.clone().addClass("hint");
+				},
+				
+				change: function(element){
+					var itemId = element.item.data('id');
+					
+					$.nette.ajax(basePath + '/admin/pages/move/' + itemId + '?oldPosition=' + element.oldIndex + '&newPosition=' + element.newIndex);
+				}
+			});
+			});
+	});		
+</script>
+
+{/block}

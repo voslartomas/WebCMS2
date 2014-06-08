@@ -14,12 +14,16 @@ class PagesPresenter extends \AdminModule\BasePresenter {
 
     private $page;
 
+    private $repository;
+    
     protected function beforeRender() {
 	parent::beforeRender();
     }
 
     protected function startup() {
 	parent::startup();
+	
+	$this->repository = $this->em->getRepository('WebCMS\Entity\Page');
     }
 
     protected function createComponentPageForm() {
@@ -36,7 +40,7 @@ class PagesPresenter extends \AdminModule\BasePresenter {
 
 	// loads modules
 	$modules = $this->em->getRepository('WebCMS\Entity\Module')->findAll();
-	$modulesToSelect = array();
+	$modulesToSelect = array(NULL => 'No module');
 	foreach ($modules as $module) {
 	    $objectModule = $this->createObject($module->getName());
 
@@ -52,8 +56,8 @@ class PagesPresenter extends \AdminModule\BasePresenter {
 	$form->addText('class', 'Menu item class')->setAttribute('class', 'form-control');
 	$form->addSelect('module', 'Module')->setTranslator(NULL)->setItems($modulesToSelect)->setAttribute('class', 'form-control');
 	$form->addSelect('parent', 'Parent')->setTranslator(NULL)->setItems($hierarchy)->setAttribute('class', 'form-control');
-	$form->addCheckbox('default', 'Default')->setAttribute('class', 'form-control');
-	$form->addCheckbox('visible', 'Show')->setAttribute('class', 'form-control');
+	$form->addCheckbox('default', 'Default');
+	$form->addCheckbox('visible', 'Show');
 
 	$form->addSubmit('save', 'Save')->setAttribute('class', 'btn btn-success');
 
@@ -112,6 +116,8 @@ class PagesPresenter extends \AdminModule\BasePresenter {
 
 	if ($module) {
 	    $this->page->setModuleName($module->getName());
+	}else{
+	    $this->page->setModuleName('');
 	}
 
 	if (!$this->page->getId()) {
@@ -180,6 +186,7 @@ class PagesPresenter extends \AdminModule\BasePresenter {
 	));
 
 	$prnts = array('' => $this->translation['Pick structure']);
+	
 	foreach ($parents as $p) {
 	    $prnts[$p->getId()] = $p->getTitle();
 	}
@@ -191,17 +198,19 @@ class PagesPresenter extends \AdminModule\BasePresenter {
 	    'language = ' . $this->state->language->getId()
 	    )
 	);
-
+	
 	$grid->addColumnText('title', 'Name')->setCustomRender(function($item) {
 	    return str_repeat("-", $item->getLevel()) . $item->getTitle();
 	});
 
 	$grid->addColumnText('root', 'Structure')->setCustomRender(function($item) {
-	    return '-';
+	    return $item->getParent() ? $item->getParent() : '-';
 	});
 
 	$grid->addFilterSelect('root', 'Structure')->getControl()->setTranslator(NULL)->setItems($prnts);
-
+	
+	$grid->addColumnText('moduleName', 'Module');
+	
 	$grid->addColumnText('visible', 'Visible')->setReplacement(array(
 	    '1' => 'Yes',
 	    NULL => 'No'
@@ -212,9 +221,9 @@ class PagesPresenter extends \AdminModule\BasePresenter {
 	    NULL => 'No'
 	));
 
-	$grid->addActionHref("moveUp", "Move up");
-	$grid->addActionHref("moveDown", "Move down");
-	$grid->addActionHref("updatePage", 'Edit')->getElementPrototype()->addAttributes(array('class' => array('btn', 'btn-primary', 'ajax'), 'data-toggle' => 'modal', 'data-target' => '#myModal', 'data-remote' => 'false'));
+	//$grid->addActionHref("moveUp", "Move up");
+	//$grid->addActionHref("moveDown", "Move down");
+	$grid->addActionHref("updatePage", 'Edit')->getElementPrototype()->addAttributes(array('class' => array('btn', 'btn-primary', 'ajax')));
 	$grid->addActionHref("deletePage", 'Delete')->getElementPrototype()->addAttributes(array('class' => array('btn', 'btn-danger'), 'data-confirm' => 'Are you sure you want to delete this item?'));
 
 	return $grid;
@@ -238,40 +247,8 @@ class PagesPresenter extends \AdminModule\BasePresenter {
 	    $this->redirect('Pages:default');
     }
 
-    public function actionMoveUp($id) {
-	$this->page = $this->em->find("WebCMS\Entity\Page", $id);
-
-	if ($this->page->getParent()) {
-	    $repository = $this->em->getRepository('WebCMS\Entity\Page');
-	    $repository->moveUp($this->page);
-
-	    $this->flashMessage('Page has been moved up.', 'success');
-	} else {
-	    $this->flashMessage('Page has not been moved up, because it is root page.', 'warning');
-	}
-
-	if (!$this->isAjax())
-	    $this->redirect('Pages:default');
-    }
-
-    public function actionMoveDown($id) {
-	$this->page = $this->em->find("WebCMS\Entity\Page", $id);
-
-	if ($this->page->getParent()) {
-	    $repository = $this->em->getRepository('WebCMS\Entity\Page');
-	    $repository->moveDown($this->page);
-
-	    $this->flashMessage('Page has been moved down.', 'success');
-	} else {
-	    $this->flashMessage('Page has not been moved up, because it is root page.', 'warning');
-	}
-
-	if (!$this->isAjax())
-	    $this->redirect('Pages:default');
-    }
-
     public function renderUpdatePage($id) {
-	$this->reloadModalContent();
+	$this->reloadContent();
 
 	$this->template->page = $this->page;
     }
@@ -305,4 +282,72 @@ class PagesPresenter extends \AdminModule\BasePresenter {
 	return $url;
     }
 
+    // Sorting
+    
+    public function renderSorting($id){
+	$this->reloadContent();
+	
+	$roots = $this->repository->findBy(array(
+	    'parent' => NULL,
+	    'language' => $this->state->language->getId()
+	));
+	
+	$tree = array();
+	foreach($roots as $r){
+	    $tmp = array();
+	    $tmp['title'] = $r->getTitle();
+	    $tmp['__children'] = $this->repository->childrenHierarchy($r);
+	
+	    $tree[] = $tmp;
+	}
+	
+	$this->template->tree = $tree;
+    }
+    
+    public function actionMove($id, $oldPosition, $newPosition){
+	
+	$step = $newPosition - $oldPosition;
+	
+	if($step > 0){
+	    $this->actionMoveDown($id, $step);
+	}else{
+	    $this->actionMoveUp($id, $step * -1);
+	}
+	
+	$this->forward('Pages:sorting');
+    }
+    
+    public function actionMoveUp($id, $step = 1) {
+	$this->page = $this->em->find("WebCMS\Entity\Page", $id);
+
+	if ($this->page->getParent()) {
+	    $repository = $this->em->getRepository('WebCMS\Entity\Page');
+	    $repository->moveUp($this->page, $step);
+
+	    $this->flashMessage('Page has been moved up.', 'success');
+	} else {
+	    $this->flashMessage('Page has not been moved up, because it is root page.', 'warning');
+	}
+
+	if (!$this->isAjax()){
+	    $this->redirect('Pages:default');
+	}
+    }
+
+    public function actionMoveDown($id, $step = 1) {
+	$this->page = $this->em->find("WebCMS\Entity\Page", $id);
+
+	if ($this->page->getParent()) {
+	    $repository = $this->em->getRepository('WebCMS\Entity\Page');
+	    $repository->moveDown($this->page, $step);
+
+	    $this->flashMessage('Page has been moved down.', 'success');
+	} else {
+	    $this->flashMessage('Page has not been moved up, because it is root page.', 'warning');
+	}
+
+	if (!$this->isAjax()){
+	    $this->redirect('Pages:default');
+	}
+    }
 }

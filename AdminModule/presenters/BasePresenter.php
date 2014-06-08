@@ -259,7 +259,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
 	    $grid->setModel($qb->select('l')->from("WebCMS\Entity\\$entity", 'l'));
 	else
 	    $grid->setModel($qb->select('l')->from($entity, 'l'));
-	//$grid->setRememberState();
+	$grid->setRememberState(TRUE);
 	$grid->setDefaultPerPage(10);
 	$grid->setTranslator($this->translator);
 	$grid->setFilterRenderType(\Grido\Components\Filters\Filter::RENDER_INNER);
@@ -570,6 +570,16 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
 	$this->flashMessage('Link has been added to favourites.', 'success');
     }
 
+    public function handleGetTranslations(){
+	
+	$payload = array();
+	foreach($_GET['keys'] as $key => $value){
+	    $payload[$key] = $this->translator->translate($key);
+	}
+	
+	$this->sendResponse(new \Nette\Application\Responses\JsonResponse($payload));
+    }
+    
     public function handleRemoveFromFavourite($idFav) {
 	$fav = $this->em->getRepository('WebCMS\Entity\Favourites')->find($idFav);
 

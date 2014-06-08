@@ -44,18 +44,12 @@ class UpdatePresenter extends \AdminModule\BasePresenter {
 
 	$successMessage = $this->getMessageFromFile('.' . $installLog);
 
-	if ($this->user->isInRole('superadmin')) {
-	    $this->flashMessage($successMessage, 'success');
-	}
-
-	if (strpos($successMessage, 'System has been updated.') !== FALSE) {
+	if(strpos($successMessage, 'System has been updated.') !== FALSE) {
 	    $this->flashMessage('System has been udpated.', 'success');
 	}
 
 	$errorMessage = $this->getMessageFromFile('.' . $installErrorLog);
-	if (!empty($errorMessage) && $this->user->isInRole('superadmin')) {
-	    $this->flashMessage($errorMessage, 'danger');
-	} elseif (!empty($errorMessage)) {
+	if (!empty($errorMessage)) {
 	    $this->flashMessage('Error while updating system. Please contact administrator.', 'danger');
 	}
 
@@ -330,4 +324,22 @@ class UpdatePresenter extends \AdminModule\BasePresenter {
 	$this->redirect('default');
     }
     
+    // render log tab
+    public function renderLog(){
+	$this->reloadContent();
+	
+	$this->template->installLog = $this->getLog('../log/install.log');
+	$this->template->installErrorLog = $this->getLog('../log/install-error.log');
+	$this->template->updateLog = $this->getLog('../log/auto-update.log');
+	$this->template->errorLog = $this->getLog('../log/error.log');
+    }
+    
+    private function getLog($path){
+	
+	if(file_exists($path)){
+	    return nl2br(file_get_contents($path));
+	}
+	
+	return '';
+    }
 }

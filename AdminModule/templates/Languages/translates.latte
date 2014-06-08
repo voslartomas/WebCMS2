@@ -31,12 +31,15 @@
 					"foreColor",
 					"backColor"
 				],
-				encoded : false
+				encoded : false,
+				serialization: {
+					entities: false
+				  }
 			});
 			
 			$(".translation").blur(function(){
 				var id = $(this).parent().parent().find('.grid-cell-id').html();
-				var val = $(this).html();
+				var val = $(this).data("kendoEditor").value();
 			
 				$.post($("#updateTranslationLink").attr("href"), { 'idTranslation' : id, 'value' : val });
 			

@@ -1,4 +1,7 @@
 <ul class="nav nav-tabs" id="myTab">
-  <li {if $active == "modules"}class="active"{/if}><a class="ajax" n:href="Update:default">{_'Modules'}</a></li>
-  <li {if $active == "functions"}class="active"{/if}><a class="ajax" n:href="Update:functions">{_'Functions'}</a></li>
+  <li {if $active == "modules"}class="active"{/if}><a class="ajax" id="tUpdate" n:href="Update:default">{_'Modules'}</a></li>
+  <li {if $active == "functions"}class="active"{/if}><a class="ajax" id="tFunctions" n:href="Update:functions">{_'Functions'}</a></li>
+  {if $template->isSuperAdmin($user)}
+	<li {if $active == "log"}class="active"{/if}><a class="ajax" n:href="Update:log">{_'Log'}</a></li>
+  {/if}
 </ul>

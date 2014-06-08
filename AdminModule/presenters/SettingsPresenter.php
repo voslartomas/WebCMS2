@@ -24,6 +24,7 @@ class SettingsPresenter extends \AdminModule\BasePresenter {
     public function createComponentBasicSettingsForm() {
 
 	$settings = array();
+	$settings[] = $this->settings->get('Root domain', \WebCMS\Settings::SECTION_BASIC, 'checkbox');
 	$settings[] = $this->settings->get('Navbar dropdown', \WebCMS\Settings::SECTION_BASIC, 'checkbox');
 	$settings[] = $this->settings->get('Info email', \WebCMS\Settings::SECTION_BASIC, 'text');
 	$settings[] = $this->settings->get('Navbar class', \WebCMS\Settings::SECTION_BASIC, 'text');

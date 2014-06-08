@@ -19,10 +19,10 @@
         <a n:href=":Admin:Filesystem:default dialog => true, multiple => false" data-container="#pictures" class="btn btn-primary ajax filesDialog" data-remote="false" data-target="#myModal" data-toggle="modal">{_'Add watermark picture'}</a>
 	
         <script>
-               $('.filesDialog').live('click', function(e){
+               $(document).on('click', '.filesDialog', function(e){
                   setTimeout(function(){
-                          $('.jq_filesAdd').die();
-                          $('.jq_filesAdd').live('click', function(){
+                          $(document).off('click', '.jq_filesAdd');
+                          $(document).on('click', '.jq_filesAdd', function(){
                               
                              $('.jq_selected:checked').each(function(){
                                     var data = $(this).data();

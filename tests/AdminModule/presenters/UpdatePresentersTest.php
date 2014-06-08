@@ -41,6 +41,15 @@ class UpdatePresenterTest extends \WebCMS\Tests\PresenterTestCase {
 	
 	$this->getResponse($response);
     }
+
+    public function testLog(){
+	
+	$response = $this->makeRequest('log');
+	
+        $this->assertInstanceOf('Nette\Application\Responses\TextResponse', $response);
+	
+	$this->getResponse($response);
+    }
     
     public function testCreateModuleDialog(){
 	

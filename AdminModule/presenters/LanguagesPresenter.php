@@ -356,9 +356,11 @@ class LanguagesPresenter extends BasePresenter {
     }
 
     private function cleanCache() {
-	$this->context->cacheStorage->clean(array(
+	// caching for translations is not active at the moment
+	
+	/*$this->context->cacheStorage->clean(array(
 	    \Nette\Caching\Cache::TAGS => array(\WebCMS\Translation\Translation::CACHE_NAMESPACE . $this->state->language->getId())
-	));
+	));*/
     }
 
     /* TRANSLATIONS */
