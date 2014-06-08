@@ -48,7 +48,7 @@
 </table>
 	
 <script>
-	$('.jq_meta').live('blur', function(){
+	$(document).on('blur', '.jq_meta', function(){
 		var id = $(this).attr('name');
 		var value = $(this).val();
 		var type = $(this).data('type');

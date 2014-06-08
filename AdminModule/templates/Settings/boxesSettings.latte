@@ -59,7 +59,7 @@
             });
         });
     
-	$('.jq_box').live('change', function(){
+	$(document).on('change', '.jq_box', function(){
 		var name = $(this).attr('name');
 		var value = $(this).val();
 
