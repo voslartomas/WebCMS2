@@ -9,8 +9,8 @@ use Doctrine\ORM\Mapping as orm;
  * @ORM\Entity
  * @author Tomáš Voslař <tomas.voslar at webcook.cz>
  */
-class Setting extends Entity {
-
+class Setting extends Entity
+{
     /**
      * @ORM\Column(name="`key`")
      * @var String
@@ -19,25 +19,25 @@ class Setting extends Entity {
 
     /**
      * @ORM\Column(type="text")
-     * @var String 
+     * @var String
      */
     private $value;
 
     /**
      * @ORM\Column
-     * @var String 
+     * @var String
      */
     private $section;
 
     /**
      * @ORM\Column(nullable=true)
-     * @var String 
+     * @var String
      */
     private $type;
 
     /**
      * @ORM\Column(nullable=true)
-     * @var String 
+     * @var String
      */
     private $options;
 
@@ -47,56 +47,68 @@ class Setting extends Entity {
      */
     private $language;
 
-    public function getValue($raw = TRUE, $fromPush = array(), $toPush = array()) {
-	if ($raw)
-	    return $this->value;
-	else {
-	    return \WebCMS\Helpers\SystemHelper::replaceStatic($this->value, $fromPush, $toPush);
-	}
+    public function getValue($raw = TRUE, $fromPush = array(), $toPush = array())
+    {
+        if ($raw)
+            return $this->value;
+        else {
+            return \WebCMS\Helpers\SystemHelper::replaceStatic($this->value, $fromPush, $toPush);
+        }
     }
 
-    public function setValue($value) {
-	$this->value = $value;
+    public function setValue($value)
+    {
+        $this->value = $value;
     }
 
-    public function getLanguage() {
-	return $this->language;
+    public function getLanguage()
+    {
+        return $this->language;
     }
 
-    public function setLanguage($language) {
-	$this->language = $language;
+    public function setLanguage($language)
+    {
+        $this->language = $language;
     }
 
-    public function getType() {
-	return $this->type;
+    public function getType()
+    {
+        return $this->type;
     }
 
-    public function setType($type) {
-	$this->type = $type;
+    public function setType($type)
+    {
+        $this->type = $type;
     }
 
-    public function getKey() {
-	return $this->key;
+    public function getKey()
+    {
+        return $this->key;
     }
 
-    public function setKey($key) {
-	$this->key = $key;
+    public function setKey($key)
+    {
+        $this->key = $key;
     }
 
-    public function getSection() {
-	return $this->section;
+    public function getSection()
+    {
+        return $this->section;
     }
 
-    public function setSection($section) {
-	$this->section = $section;
+    public function setSection($section)
+    {
+        $this->section = $section;
     }
 
-    public function getOptions() {
-	return unserialize($this->options);
+    public function getOptions()
+    {
+        return unserialize($this->options);
     }
 
-    public function setOptions($options) {
-	$this->options = serialize($options);
+    public function setOptions($options)
+    {
+        $this->options = serialize($options);
     }
 
 }

@@ -8,8 +8,8 @@ use Doctrine\ORM\Mapping as orm;
  * @orm\Entity
  * @author Tomáš Voslař <tomas.voslar at webcook.cz>
  */
-class Thumbnail extends Entity {
-
+class Thumbnail extends Entity
+{
     /**
      * @ORM\Column(name="`key`")
      * @var String
@@ -24,19 +24,19 @@ class Thumbnail extends Entity {
 
     /**
      * @ORM\Column(type="integer")
-     * @var Int 
+     * @var Int
      */
     private $y;
 
     /**
      * @ORM\Column(type="boolean")
-     * @var Boolean 
+     * @var Boolean
      */
     private $watermark;
 
     /**
      * @ORM\Column(type="boolean")
-     * @var Boolean 
+     * @var Boolean
      */
     private $system;
 
@@ -48,64 +48,78 @@ class Thumbnail extends Entity {
 
     /**
      * @ORM\Column(type="boolean")
-     * @var 
+     * @var
      */
     private $crop;
 
-    public function getCrop() {
-	return $this->crop;
+    public function getCrop()
+    {
+        return $this->crop;
     }
 
-    public function setCrop($crop) {
-	$this->crop = $crop;
+    public function setCrop($crop)
+    {
+        $this->crop = $crop;
     }
 
-    public function getResize() {
-	return $this->resize;
+    public function getResize()
+    {
+        return $this->resize;
     }
 
-    public function setResize($resize) {
-	$this->resize = $resize;
+    public function setResize($resize)
+    {
+        $this->resize = $resize;
     }
 
-    public function getKey() {
-	return $this->key;
+    public function getKey()
+    {
+        return $this->key;
     }
 
-    public function setKey($key) {
-	$this->key = $key;
+    public function setKey($key)
+    {
+        $this->key = $key;
     }
 
-    public function getX() {
-	return $this->x == 0 ? NULL : $this->x;
+    public function getX()
+    {
+        return $this->x == 0 ? NULL : $this->x;
     }
 
-    public function setX($x) {
-	$this->x = $x;
+    public function setX($x)
+    {
+        $this->x = $x;
     }
 
-    public function getY() {
-	return $this->y == 0 ? NULL : $this->y;
+    public function getY()
+    {
+        return $this->y == 0 ? NULL : $this->y;
     }
 
-    public function setY($y) {
-	$this->y = $y;
+    public function setY($y)
+    {
+        $this->y = $y;
     }
 
-    public function getWatermark() {
-	return $this->watermark;
+    public function getWatermark()
+    {
+        return $this->watermark;
     }
 
-    public function setWatermark($watermark) {
-	$this->watermark = $watermark;
+    public function setWatermark($watermark)
+    {
+        $this->watermark = $watermark;
     }
 
-    public function getSystem() {
-	return $this->system;
+    public function getSystem()
+    {
+        return $this->system;
     }
 
-    public function setSystem($system) {
-	$this->system = $system;
+    public function setSystem($system)
+    {
+        $this->system = $system;
     }
 
 }

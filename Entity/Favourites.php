@@ -8,8 +8,8 @@ use Doctrine\ORM\Mapping as orm;
  * @orm\Entity
  * @author Tomáš Voslař <tomas.voslar at webcook.cz>
  */
-class Favourites extends Entity {
-
+class Favourites extends Entity
+{
     /**
      * @orm\Column
      */
@@ -18,7 +18,7 @@ class Favourites extends Entity {
     /**
      * @orm\ManyToOne(targetEntity="User")
      * @orm\JoinColumn(onDelete="CASCADE")
-     * @var User 
+     * @var User
      */
     private $user;
 
@@ -27,28 +27,34 @@ class Favourites extends Entity {
      */
     private $title;
 
-    public function getLink() {
-	return $this->link;
+    public function getLink()
+    {
+        return $this->link;
     }
 
-    public function getUser() {
-	return $this->user;
+    public function getUser()
+    {
+        return $this->user;
     }
 
-    public function setLink($link) {
-	$this->link = $link;
+    public function setLink($link)
+    {
+        $this->link = $link;
     }
 
-    public function setUser($user) {
-	$this->user = $user;
+    public function setUser($user)
+    {
+        $this->user = $user;
     }
 
-    public function getTitle() {
-	return $this->title;
+    public function getTitle()
+    {
+        return $this->title;
     }
 
-    public function setTitle($title) {
-	$this->title = $title;
+    public function setTitle($title)
+    {
+        $this->title = $title;
     }
 
 }

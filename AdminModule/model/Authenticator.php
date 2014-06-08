@@ -8,15 +8,16 @@ use Nette\Security as NS;
  * @author     Tomáš Voslař <tomas.voslar at webcook.cz>
  * @package    WebCMS2
  */
-class Authenticator extends Nette\Object implements NS\IAuthenticator {
-
+class Authenticator extends Nette\Object implements NS\IAuthenticator
+{
     /** @var \Doctrine\ORM\EntityRepository */
     private $users;
 
     private $salt = '*feijfččí489*';
-    
-    public function __construct(\Doctrine\ORM\EntityRepository $users) {
-	$this->users = $users;
+
+    public function __construct(\Doctrine\ORM\EntityRepository $users)
+    {
+        $this->users = $users;
     }
 
     /**
@@ -25,28 +26,29 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator {
      * @return Nette\Security\Identity
      * @throws Nette\Security\AuthenticationException
      */
-    public function authenticate(array $credentials) {
-	list($username, $password) = $credentials;
-	$user = $this->users->findOneBy(array('username' => $username));
+    public function authenticate(array $credentials)
+    {
+        list($username, $password) = $credentials;
+        $user = $this->users->findOneBy(array('username' => $username));
 
-	if (!$user) {
-	    throw new NS\AuthenticationException("User not found.", self::IDENTITY_NOT_FOUND);
-	}
+        if (!$user) {
+            throw new NS\AuthenticationException("User not found.", self::IDENTITY_NOT_FOUND);
+        }
 
-	if ($user->password !== $this->calculateHash($password)) {
-	    throw new NS\AuthenticationException("Invalid password.", self::INVALID_CREDENTIAL);
-	}
+        if ($user->password !== $this->calculateHash($password)) {
+            throw new NS\AuthenticationException("Invalid password.", self::INVALID_CREDENTIAL);
+        }
 
-	$permissions = array();
-	foreach ($user->getRole()->getPermissions() as $key => $per) {
-	    $permissions[$per->getResource()] = $per->getRead();
-	}
+        $permissions = array();
+        foreach ($user->getRole()->getPermissions() as $key => $per) {
+            $permissions[$per->getResource()] = $per->getRead();
+        }
 
-	return new NS\Identity($user->id, $user->getRole()->getName(), array(
-	    'username' => $user->username,
-	    'email' => $user->email,
-	    'permissions' => $permissions
-	));
+        return new NS\Identity($user->id, $user->getRole()->getName(), array(
+            'username' => $user->username,
+            'email' => $user->email,
+            'permissions' => $permissions
+        ));
     }
 
     /**
@@ -54,8 +56,9 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator {
      * @param  string
      * @return string
      */
-    public function calculateHash($password) {
-	return md5($password . str_repeat($this->salt, 10));
+    public function calculateHash($password)
+    {
+        return md5($password . str_repeat($this->salt, 10));
     }
 
 }

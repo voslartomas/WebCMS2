@@ -9,8 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @author Tomáš Voslař <tomas.voslar at webcook.cz>
  */
-class Role extends Entity {
-
+class Role extends Entity
+{
     /**
      * @ORM\Column(unique=true)
      * @var string
@@ -28,38 +28,46 @@ class Role extends Entity {
      */
     private $automaticEnable;
 
-    public function __construct() {
-	$this->permissions = new \Doctrine\Common\Collections\ArrayCollection();
+    public function __construct()
+    {
+        $this->permissions = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
-    public function addPermission(Permission $permission) {
-	if (!$this->getPermissions()->contains($permission)) {
-	    $this->permissions->add($permission);
-	}
+    public function addPermission(Permission $permission)
+    {
+        if (!$this->getPermissions()->contains($permission)) {
+            $this->permissions->add($permission);
+        }
     }
 
-    public function getName() {
-	return $this->name;
+    public function getName()
+    {
+        return $this->name;
     }
 
-    public function setName($name) {
-	$this->name = $name;
+    public function setName($name)
+    {
+        $this->name = $name;
     }
 
-    public function getPermissions() {
-	return $this->permissions;
+    public function getPermissions()
+    {
+        return $this->permissions;
     }
 
-    public function setPermissions($permissions) {
-	$this->permissions = $permissions;
+    public function setPermissions($permissions)
+    {
+        $this->permissions = $permissions;
     }
 
-    public function getAutomaticEnable() {
-	return $this->automaticEnable;
+    public function getAutomaticEnable()
+    {
+        return $this->automaticEnable;
     }
 
-    public function setAutomaticEnable($automaticEnable) {
-	$this->automaticEnable = $automaticEnable;
+    public function setAutomaticEnable($automaticEnable)
+    {
+        $this->automaticEnable = $automaticEnable;
     }
 
 }

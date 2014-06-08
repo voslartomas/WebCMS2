@@ -9,8 +9,8 @@ use Nette\Utils\Finder;
  * @author Tomáš Voslař <tomas.voslar at webcook.cz>
  * @package WebCMS2
  */
-class FilesystemPresenter extends \AdminModule\BasePresenter {
-
+class FilesystemPresenter extends \AdminModule\BasePresenter
+{
     const DESTINATION_BASE = './upload/';
 
     private $path;
@@ -18,186 +18,193 @@ class FilesystemPresenter extends \AdminModule\BasePresenter {
     /* @var \WebCMS\Helpers\ThumbnailCreator */
     private $thumbnailCreator;
 
-    protected function beforeRender() {
-	parent::beforeRender();
+    protected function beforeRender()
+    {
+    parent::beforeRender();
     }
 
-    protected function startup() {
-	parent::startup();
+    protected function startup()
+    {
+        parent::startup();
 
-	$thumbnails = $this->em->getRepository('WebCMS\Entity\Thumbnail')->findAll();
+        $thumbnails = $this->em->getRepository('WebCMS\Entity\Thumbnail')->findAll();
 
-	$this->thumbnailCreator = new \WebCMS\Helpers\ThumbnailCreator($this->settings, $thumbnails);
+        $this->thumbnailCreator = new \WebCMS\Helpers\ThumbnailCreator($this->settings, $thumbnails);
     }
 
-    public function actionDefault($path) {
-	if (!empty($path)){
-	    $this->path = self::DESTINATION_BASE . $path . '/';
-	}else{
-	    $this->path = self::DESTINATION_BASE;
-	}
+    public function actionDefault($path)
+    {
+        if (!empty($path)) {
+            $this->path = self::DESTINATION_BASE . $path . '/';
+        } else {
+            $this->path = self::DESTINATION_BASE;
+        }
     }
 
-    public function renderDefault($path, $dialog, $multiple) {
-	
-	$finder = new \Nette\Utils\Finder();
-	
-	$files = $finder->findFiles('*')
-			->exclude('.htaccess')
-			->in(realpath($this->path));
-	$directories = $finder->findDirectories('*')->in(realpath($this->path));
+    public function renderDefault($path, $dialog, $multiple)
+    {
+        $finder = new \Nette\Utils\Finder();
 
-	if (empty($dialog))
-	    $this->reloadContent();
-	else
-	    $this->reloadModalContent();
+        $files = $finder->findFiles('*')
+                ->exclude('.htaccess')
+                ->in(realpath($this->path));
+        $directories = $finder->findDirectories('*')->in(realpath($this->path));
 
-	$this->path = str_replace(self::DESTINATION_BASE, '', $path) . '/';
-	
-	$this->template->fsPath = $this->path;
-	$this->template->backLink = $this->createBackLink($this->path);
-	$this->template->files = $files;
-	$this->template->directories = $directories;
-	$this->template->multiple = $multiple;
+        if (empty($dialog))
+            $this->reloadContent();
+        else
+            $this->reloadModalContent();
+
+        $this->path = str_replace(self::DESTINATION_BASE, '', $path) . '/';
+
+        $this->template->fsPath = $this->path;
+        $this->template->backLink = $this->createBackLink($this->path);
+        $this->template->files = $files;
+        $this->template->directories = $directories;
+        $this->template->multiple = $multiple;
+        }
+
+        private function createBackLink($path)
+        {
+        $exploded = explode('/', $path);
+
+        array_pop($exploded);
+        array_pop($exploded);
+
+        return implode("/", $exploded);
     }
 
-    private function createBackLink($path) {
-	$exploded = explode('/', $path);
+    public function handleMakeDirectory($name)
+    {
+        @mkdir($this->path . \Nette\Utils\Strings::webalize($name));
 
-	array_pop($exploded);
-	array_pop($exploded);
+        $this->flashMessage('Directory has been created.', 'success');
+        }
 
-	return implode("/", $exploded);
+        public function handleUploadFile($path)
+        {
+        $file = new \Nette\Http\FileUpload($_FILES['files']);
+
+        $filePath = $this->path . '' . $file->getSanitizedName();
+        $file->move($filePath);
+
+        $f = new \SplFileInfo($filePath);
+        $f->getBasename();
+
+        if ($file->isImage()) {
+            $this->thumbnailCreator->createThumbnails($f->getBasename(), str_replace($f->getBasename(), '', $filePath));
+        }
+
+        $this->reloadContent();
+        $this->flashMessage($this->translation['File has been uploaded']);
+
+        $this->sendPayload();
     }
 
-    public function handleMakeDirectory($name) {
-	@mkdir($this->path . \Nette\Utils\Strings::webalize($name));
+    public function handleDeleteFile($pathToRemove)
+    {
+        $pathToRemove = self::DESTINATION_BASE . $pathToRemove;
+        if (is_file($pathToRemove)) {
 
-	$this->flashMessage('Directory has been created.', 'success');
+            // delete all thumbnails if this file is image
+            try {
+
+            if (getimagesize($pathToRemove)) {
+
+                $image = \Nette\Image::fromFile($pathToRemove);
+
+                $thumbs = $this->em->getRepository('WebCMS\Entity\Thumbnail')->findAll();
+                foreach ($thumbs as $t) {
+                $file = pathinfo($pathToRemove);
+                $filename = $file['filename'] . '.' . $file['extension'];
+
+                // $this->path contains symlinked path, that is not the right way @see handleRegenerateThumbnails() function for the fix
+                $toRemove = str_replace('upload', 'thumbnails', $pathToRemove);
+                $toRemove = str_replace($filename, $t->getKey() . $filename, $toRemove);
+
+                unlink($toRemove);
+                }
+            }
+            } catch (UnknownImageFileException $exc) {
+            // image is not file, so there is nothing to do
+            }
+
+            unlink($pathToRemove);
+        }
+
+        if (is_dir($pathToRemove)) {
+            \WebCMS\Helpers\SystemHelper::rrmdir($pathToRemove);
+            \WebCMS\Helpers\SystemHelper::rrmdir(str_replace('upload', 'thumbnails', $pathToRemove));
+        }
+
+        $this->flashMessage('File has been removed.', 'success');
+
+        if (!$this->isAjax())
+            $this->redirect('this');
     }
 
-    public function handleUploadFile($path) {
-	$file = new \Nette\Http\FileUpload($_FILES['files']);
+    public function actionDownloadFile($path)
+    {
+        $file = pathinfo($path);
+        $filename = $file['filename'] . '.' . $file['extension'];
 
-	$filePath = $this->path . '' . $file->getSanitizedName();
-	$file->move($filePath);
+        $finfo = finfo_open(FILEINFO_MIME_TYPE); // return mime type ala mimetype extension
 
-	$f = new \SplFileInfo($filePath);
-	$f->getBasename();
-	
-	if ($file->isImage()) {
-	    $this->thumbnailCreator->createThumbnails($f->getBasename(), str_replace($f->getBasename(), '', $filePath));
-	}
+        $path = self::DESTINATION_BASE . $path;
+        $mimeType = finfo_file($finfo, $path);
 
-	$this->reloadContent();
-	$this->flashMessage($this->translation['File has been uploaded']);
+        $this->sendResponse(new \Nette\Application\Responses\FileResponse($path, $filename, $mimeType));
+        }
 
-	$this->sendPayload();
+        public function actionFilesDialog($path)
+        {
+        if (!empty($path))
+            $this->path = $path . '/';
+        else
+            $this->path = realpath(self::DESTINATION_BASE) . '/';
     }
 
-    public function handleDeleteFile($pathToRemove) {
-	
-	$pathToRemove = self::DESTINATION_BASE . $pathToRemove;
-	if (is_file($pathToRemove)) {
-	    
-	    // delete all thumbnails if this file is image
-	    try {
+    public function renderFilesDialog()
+    {
+        $finder = new \Nette\Utils\Finder();
 
-		if (getimagesize($pathToRemove)) {
+        $template = $this->createTemplate();
+        $template->setFile('../libs/webcms2/webcms2/AdminModule/templates/Filesystem/filesDialog.latte');
 
-		    $image = \Nette\Image::fromFile($pathToRemove);
+        $template->files = $finder->findFiles('*')->in($this->path);
+        $template->directories = $finder->findDirectories('*')->in($this->path);
+        $template->setTranslator($this->translator);
+        $template->registerHelperLoader('\WebCMS\Helpers\SystemHelper::loader');
+        $template->backLink = strpos($this->createBackLink($this->path), self::DESTINATION_BASE) === false ? realpath(self::DESTINATION_BASE) : $this->createBackLink($this->path);
 
-		    $thumbs = $this->em->getRepository('WebCMS\Entity\Thumbnail')->findAll();
-		    foreach ($thumbs as $t) {
-			$file = pathinfo($pathToRemove);
-			$filename = $file['filename'] . '.' . $file['extension'];
-			
-			// $this->path contains symlinked path, that is not the right way @see handleRegenerateThumbnails() function for the fix
-			$toRemove = str_replace('upload', 'thumbnails', $pathToRemove);
-			$toRemove = str_replace($filename, $t->getKey() . $filename, $toRemove);
+        $template->render();
 
-			unlink($toRemove);
-		    }
-		}
-	    } catch (UnknownImageFileException $exc) {
-		// image is not file, so there is nothing to do
-	    }
-
-	    unlink($pathToRemove);
-	}
-
-	if (is_dir($pathToRemove)) {
-	    \WebCMS\Helpers\SystemHelper::rrmdir($pathToRemove);
-	    \WebCMS\Helpers\SystemHelper::rrmdir(str_replace('upload', 'thumbnails', $pathToRemove));
-	}
-
-	$this->flashMessage('File has been removed.', 'success');
-
-	if (!$this->isAjax())
-	    $this->redirect('this');
+        $this->terminate();
     }
 
-    public function actionDownloadFile($path) {
+    public function handleRegenerateThumbnails()
+    {
+        set_time_limit(0);
 
-	$file = pathinfo($path);
-	$filename = $file['filename'] . '.' . $file['extension'];
+        \WebCMS\Helpers\SystemHelper::rrmdir('thumbnails', true);
 
-	$finfo = finfo_open(FILEINFO_MIME_TYPE); // return mime type ala mimetype extension
+        $timeStart = time();
 
-	$path = self::DESTINATION_BASE . $path;
-	$mimeType = finfo_file($finfo, $path);
-	
-	$this->sendResponse(new \Nette\Application\Responses\FileResponse($path, $filename, $mimeType));
-    }
+        foreach (Finder::findFiles('*.jpg', '*.jpeg', '*.png', '*.gif')->from('upload') as $key => $file) {
+            if (file_exists($key) && @getimagesize($key)) {
+            $this->thumbnailCreator->createThumbnails($file->getBasename(), str_replace($file->getBasename(), '', $key));
+            }
+        }
 
-    public function actionFilesDialog($path) {
-	if (!empty($path))
-	    $this->path = $path . '/';
-	else
-	    $this->path = realpath(self::DESTINATION_BASE) . '/';
-    }
+        $timeOver = time();
 
-    public function renderFilesDialog() {
+        $seconds = $timeOver - $timeStart;
 
-	$finder = new \Nette\Utils\Finder();
-
-	$template = $this->createTemplate();
-	$template->setFile('../libs/webcms2/webcms2/AdminModule/templates/Filesystem/filesDialog.latte');
-
-	$template->files = $finder->findFiles('*')->in($this->path);
-	$template->directories = $finder->findDirectories('*')->in($this->path);
-	$template->setTranslator($this->translator);
-	$template->registerHelperLoader('\WebCMS\Helpers\SystemHelper::loader');
-	$template->backLink = strpos($this->createBackLink($this->path), self::DESTINATION_BASE) === false ? realpath(self::DESTINATION_BASE) : $this->createBackLink($this->path);
-
-	$template->render();
-
-	$this->terminate();
-    }
-
-    public function handleRegenerateThumbnails() {
-
-	set_time_limit(0);
-
-	\WebCMS\Helpers\SystemHelper::rrmdir('thumbnails', true);
-
-	$timeStart = time();
-	    
-	foreach (Finder::findFiles('*.jpg', '*.jpeg', '*.png', '*.gif')->from('upload') as $key => $file) {
-	    if (file_exists($key) && @getimagesize($key)) {
-		$this->thumbnailCreator->createThumbnails($file->getBasename(), str_replace($file->getBasename(), '', $key));
-	    }
-	}
-
-	$timeOver = time();
-
-	$seconds = $timeOver - $timeStart;
-
-	$hours = floor($seconds / 3600);
-	$mins = floor(($seconds - ($hours * 3600)) / 60);
-	$secs = floor($seconds % 60);
-	// TODO log spent time
-	$this->flashMessage('Thumbnails has been regenerated by recent settings.', 'success');
+        $hours = floor($seconds / 3600);
+        $mins = floor(($seconds - ($hours * 3600)) / 60);
+        $secs = floor($seconds % 60);
+        // TODO log spent time
+        $this->flashMessage('Thumbnails has been regenerated by recent settings.', 'success');
     }
 
 }

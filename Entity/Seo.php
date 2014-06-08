@@ -9,8 +9,8 @@ use Doctrine\ORM\Mapping as orm;
  * @orm\mappedSuperclass
  * @author Tomáš Voslař <tomas.voslar at webcook.cz>
  */
-abstract class Seo extends Entity {
-
+abstract class Seo extends Entity
+{
     /**
      * @orm\Column(type="boolean", nullable=true)
      */
@@ -34,28 +34,34 @@ abstract class Seo extends Entity {
     /* TODO */
     private $url;
 
-    public function getMetaTitle() {
-	return $this->metaTitle;
+    public function getMetaTitle()
+    {
+        return $this->metaTitle;
     }
 
-    public function setMetaTitle($metaTitle) {
-	$this->metaTitle = $metaTitle;
+    public function setMetaTitle($metaTitle)
+    {
+        $this->metaTitle = $metaTitle;
     }
 
-    public function getMetaDescription() {
-	return $this->metaDescription;
+    public function getMetaDescription()
+    {
+        return $this->metaDescription;
     }
 
-    public function setMetaDescription($metaDescription) {
-	$this->metaDescription = $metaDescription;
+    public function setMetaDescription($metaDescription)
+    {
+        $this->metaDescription = $metaDescription;
     }
 
-    public function getMetaKeywords() {
-	return $this->metaKeywords;
+    public function getMetaKeywords()
+    {
+        return $this->metaKeywords;
     }
 
-    public function setMetaKeywords($metaKeywords) {
-	$this->metaKeywords = $metaKeywords;
+    public function setMetaKeywords($metaKeywords)
+    {
+        $this->metaKeywords = $metaKeywords;
     }
 
 }

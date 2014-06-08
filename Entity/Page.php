@@ -11,8 +11,8 @@ use Doctrine\orm\Mapping as orm;
  * @orm\Entity(repositoryClass="PageRepository")
  * @author Tomáš Voslař <tomas.voslar at webcook.cz>
  */
-class Page extends Seo {
-
+class Page extends Seo
+{
     /**
      * @orm\Column(length=64)
      */
@@ -95,7 +95,7 @@ class Page extends Seo {
     private $moduleName;
 
     /**
-     * @orm\Column 
+     * @orm\Column
      */
     private $presenter;
 
@@ -129,166 +129,205 @@ class Page extends Seo {
      */
     private $redirect;
 
-    public function __construct() {
-	$this->children = new ArrayCollection();
+    public function __construct()
+    {
+        $this->children = new ArrayCollection();
     }
 
-    public function getSlug() {
-	return $this->slug;
+    public function getSlug()
+    {
+        return $this->slug;
     }
 
-    public function getId() {
-	return $this->id;
+    public function getId()
+    {
+        return $this->id;
     }
 
-    public function setTitle($title) {
-	$this->title = $title;
+    public function setTitle($title)
+    {
+        $this->title = $title;
     }
 
-    public function getTitle() {
-	return $this->title;
+    public function getTitle()
+    {
+        return $this->title;
     }
 
-    public function setDescription($description) {
-	$this->description = $description;
+    public function setDescription($description)
+    {
+        $this->description = $description;
     }
 
-    public function getDescription() {
-	return $this->description;
+    public function getDescription()
+    {
+        return $this->description;
     }
 
-    public function setParent($parent) {
-	$this->parent = $parent;
+    public function setParent($parent)
+    {
+        $this->parent = $parent;
     }
 
-    public function getParent() {
-	return $this->parent;
+    public function getParent()
+    {
+        return $this->parent;
     }
 
-    public function getRoot() {
-	return $this->root;
+    public function getRoot()
+    {
+        return $this->root;
     }
 
-    public function getLevel() {
-	return $this->level;
+    public function getLevel()
+    {
+        return $this->level;
     }
 
-    public function getChildren() {
-	return $this->children;
+    public function getChildren()
+    {
+        return $this->children;
     }
 
-    public function getLeft() {
-	return $this->lft;
+    public function getLeft()
+    {
+        return $this->lft;
     }
 
-    public function getRight() {
-	return $this->rgt;
+    public function getRight()
+    {
+        return $this->rgt;
     }
 
-    public function getCreated() {
-	return $this->created;
+    public function getCreated()
+    {
+        return $this->created;
     }
 
-    public function getUpdated() {
-	return $this->updated;
+    public function getUpdated()
+    {
+        return $this->updated;
     }
 
-    public function getLanguage() {
-	return $this->language;
+    public function getLanguage()
+    {
+        return $this->language;
     }
 
-    public function setLanguage($language) {
-	$this->language = $language;
+    public function setLanguage($language)
+    {
+        $this->language = $language;
     }
 
-    public function getVisible() {
-	return $this->visible;
+    public function getVisible()
+    {
+        return $this->visible;
     }
 
-    public function setVisible($visible) {
-	$this->visible = $visible;
+    public function setVisible($visible)
+    {
+        $this->visible = $visible;
     }
 
-    public function getDefault() {
-	return $this->default;
+    public function getDefault()
+    {
+        return $this->default;
     }
 
-    public function setDefault($default) {
-	$this->default = $default;
+    public function setDefault($default)
+    {
+        $this->default = $default;
     }
 
-    public function getModule() {
-	return $this->module;
+    public function getModule()
+    {
+        return $this->module;
     }
 
-    public function setModule($module) {
-	$this->module = $module;
+    public function setModule($module)
+    {
+        $this->module = $module;
     }
 
-    public function getPresenter() {
-	return $this->presenter;
+    public function getPresenter()
+    {
+        return $this->presenter;
     }
 
-    public function setPresenter($presenter) {
-	$this->presenter = $presenter;
+    public function setPresenter($presenter)
+    {
+        $this->presenter = $presenter;
     }
 
-    public function getModuleName() {
-	return $this->moduleName;
+    public function getModuleName()
+    {
+        return $this->moduleName;
     }
 
-    public function setModuleName($moduleName) {
-	$this->moduleName = $moduleName;
+    public function setModuleName($moduleName)
+    {
+        $this->moduleName = $moduleName;
     }
 
-    public function getPath() {
-	return $this->path;
+    public function getPath()
+    {
+        return $this->path;
     }
 
-    public function setPath($path) {
-	$this->path = $path;
+    public function setPath($path)
+    {
+        $this->path = $path;
     }
 
-    public function getClass() {
-	return $this->class;
+    public function getClass()
+    {
+        return $this->class;
     }
 
-    public function setClass($class) {
-	$this->class = $class;
+    public function setClass($class)
+    {
+        $this->class = $class;
     }
 
-    public function __toString() {
-	return $this->getTitle();
+    public function __toString()
+    {
+        return $this->getTitle();
     }
 
-    public function getBoxes() {
-	return $this->boxes;
+    public function getBoxes()
+    {
+        return $this->boxes;
     }
 
-    public function setBoxes($boxes) {
-	$this->boxes = $boxes;
+    public function setBoxes($boxes)
+    {
+        $this->boxes = $boxes;
     }
 
-    public function getBox($name) {
-	foreach ($this->boxes as $box) {
-	    if ($box->getBox() === $name) {
-		return $box;
-	    }
-	}
+    public function getBox($name)
+    {
+        foreach ($this->boxes as $box) {
+            if ($box->getBox() === $name) {
+                return $box;
+            }
+        }
 
-	return NULL;
+        return NULL;
     }
 
-    public function setSlug($slug) {
-	$this->slug = $slug;
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
     }
 
-    public function getRedirect() {
-	return $this->redirect;
+    public function getRedirect()
+    {
+        return $this->redirect;
     }
 
-    public function setRedirect($redirect) {
-	$this->redirect = $redirect;
+    public function setRedirect($redirect)
+    {
+        $this->redirect = $redirect;
     }
 
 }

@@ -1,12 +1,12 @@
 <?php
-    
+
 // Load Nette Framework
-if(file_exists(__DIR__ . '/../vendor/autoload.php')){
+if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
     require __DIR__ . '/../vendor/autoload.php';
-    
+
     \Nette\Diagnostics\Debugger::enable(true);
     \Nette\Diagnostics\Debugger::$strictMode = false;
-    
+
     // Configure application
     $configurator = new Nette\Config\Configurator;
 
@@ -21,7 +21,7 @@ if(file_exists(__DIR__ . '/../vendor/autoload.php')){
     $configurator->setTempDirectory(__DIR__ . '/temp');
 
     $container = $configurator->createContainer();
-    
+
     // Setup router
     $container->router[] =  new \Nette\Application\Routers\Route('', array(
             'module' => 'Frontend',
@@ -34,12 +34,12 @@ if(file_exists(__DIR__ . '/../vendor/autoload.php')){
             'presenter' => 'Login',
             'action' => 'default'
     ));
-    
+
     $container->router[] =  new \Nette\Application\Routers\Route('admin/<presenter>/<action>[/<id>]', array(
             'module' => 'Admin',
             'presenter' => 'Homepage',
             'action' => 'default'
     ));
-    
+
     Nette\Environment::getSession()->start();
 }

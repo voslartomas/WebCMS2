@@ -12,8 +12,8 @@ use Nette\Application\UI;
  * @author     Tomáš Voslař <tomas.voslar at webcook.cz>
  * @package    WebCMS2
  */
-abstract class BasePresenter extends Nette\Application\UI\Presenter {
-
+abstract class BasePresenter extends Nette\Application\UI\Presenter
+{
     /** @var Doctrine\ORM\EntityManager */
     protected $em;
 
@@ -46,8 +46,8 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
 
     /* Method is executed before render. */
 
-    protected function beforeRender() {
-
+    protected function beforeRender()
+    {
         if (is_object($this->actualPage)) {
             if ($this->actualPage->getDefault())
                 $this->setLayout("layoutDefault");
@@ -86,12 +86,12 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
         $this->template->actualPage = $this->actualPage;
         $this->template->user = $this->getUser();
         $this->template->activePresenter = $this->getPresenter()->getName();
-	$this->template->language = $this->language;
+        $this->template->language = $this->language;
         $this->template->languages = $this->em->getRepository('WebCMS\Entity\Language')->findAll();
     }
 
-    private function setDefaultSeo() {
-
+    private function setDefaultSeo()
+    {
         $temp = $this->actualPage->getMetaKeywords();
         if (!empty($temp)) {
             $this->template->seoKeywords = $this->actualPage->getMetaKeywords();
@@ -122,7 +122,8 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
 
     /* Startup method. */
 
-    protected function startup() {
+    protected function startup()
+    {
         parent::startup();
 
         // change language
@@ -150,9 +151,9 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
         $translation = new \WebCMS\Translation\Translation($this->em, $this->language, 0, $this->getContext()->getService('cacheStorage'));
         $this->translation = $translation->getTranslations();
         $this->translator = new \WebCMS\Translation\Translator($this->translation);
-	
-	$translation->hashTranslations();
-	
+
+        $translation->hashTranslations();
+
         // system settings
         $this->settings = new \WebCMS\Settings($this->em, $this->language);
         $this->settings->setSettings($this->getSettings());
@@ -175,10 +176,10 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
         if (is_object($this->actualPage)) {
             $this->setDefaultSeo();
         }
-        
+
         if ($this->isAjax()) {
             $this->invalidateControl();
-            
+
             $this->payload->title = $this->template->seoTitle;
             $this->payload->url = $this->link('this', array(
                 'path' => $this->actualPage->getPath(),
@@ -190,7 +191,8 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
         }
     }
 
-    public function createTemplate($class = NULL) {
+    public function createTemplate($class = NULL)
+    {
         $template = parent::createTemplate($class);
 
         $template->setTranslator($this->translator);
@@ -199,7 +201,8 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
         return $template;
     }
 
-    private function getSettings() {
+    private function getSettings()
+    {
         $query = $this->em->createQuery('SELECT s FROM WebCMS\Entity\Setting s WHERE s.language >= ' . $this->language->getId() . ' OR s.language IS NULL');
         $tmp = $query->getResult();
 
@@ -211,7 +214,8 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
         return $settings;
     }
 
-    public function createForm($do = '', $action = 'default', $context = null) {
+    public function createForm($do = '', $action = 'default', $context = null)
+    {
         $form = new UI\Form();
 
         if ($context != null) {
@@ -238,7 +242,8 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
         return $form;
     }
 
-    public function createComponentLanguagesForm() {
+    public function createComponentLanguagesForm()
+    {
         $form = $this->createForm();
 
         $form->getElementPrototype()->action = $this->link('this', array(
@@ -260,13 +265,15 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
         return $form;
     }
 
-    public function languagesFormSubmitted($form) {
+    public function languagesFormSubmitted($form)
+    {
         $values = $form->getValues();
 
         $this->changeLanguage($values->language);
     }
 
-    private function changeLanguage($idLanguage) {
+    private function changeLanguage($idLanguage)
+    {
         $home = $this->em->getRepository('WebCMS\Entity\Page')->findOneBy(array(
             'language' => $idLanguage,
             'default' => TRUE
@@ -286,32 +293,35 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
 
     /**
      * Injects entity manager.
-     * @param \Doctrine\ORM\EntityManager $em
+     * @param  \Doctrine\ORM\EntityManager  $em
      * @return \Backend\BasePresenter
      * @throws \Nette\InvalidStateException
      */
-    public function injectEntityManager(\Doctrine\ORM\EntityManager $em) {
+    public function injectEntityManager(\Doctrine\ORM\EntityManager $em)
+    {
         if ($this->em) {
             throw new \Nette\InvalidStateException('Entity manager has been already set.');
         }
 
         $this->em = $em;
+
         return $this;
     }
 
     /**
      * Set up boxes (call box function and save it into array) and give them to the tempalte.
      */
-    private function setUpBoxes() {
+    private function setUpBoxes()
+    {
         $parameters = $this->context->getParameters();
         $boxes = $parameters['boxes'];
-	
+
         $finalBoxes = array();
-        if(is_array($boxes)){
-	    foreach ($boxes as $key => $box) {
-		$finalBoxes[$key] = NULL;
-	    }
-	}
+        if (is_array($boxes)) {
+            foreach ($boxes as $key => $box) {
+                $finalBoxes[$key] = NULL;
+            }
+        }
 
         $assocBoxes = $this->em->getRepository('WebCMS\Entity\Box')->findBy(array(
             'pageTo' => $this->actualPage
@@ -335,7 +345,8 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
      * Load all system structures.
      * @return type
      */
-    private function getStructures($direct = TRUE, $rootClass = 'nav navbar-nav', $dropDown = FALSE, $rootId = '') {
+    private function getStructures($direct = TRUE, $rootClass = 'nav navbar-nav', $dropDown = FALSE, $rootId = '')
+    {
         $repo = $this->em->getRepository('WebCMS\Entity\Page');
 
         $structs = $repo->findBy(array(
@@ -354,44 +365,44 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
     /**
      * TODO refactor, maybe it will be better in template
      * Get structure by node. In node is set to null whole tree is returned.
-     * @param type $node
-     * @param Repository $repo
-     * @param type $direct
-     * @param type $rootClass
-     * @param type $dropDown
+     * @param  type       $node
+     * @param  Repository $repo
+     * @param  type       $direct
+     * @param  type       $rootClass
+     * @param  type       $dropDown
      * @return type
      */
-    protected function getStructure($context, $node = NULL, $repo, $direct = TRUE, $rootClass = 'nav navbar-nav', $dropDown = FALSE, $system = TRUE, $fromPage = NULL, $sideClass = 'nav navbar', $moduleNameAbstract = null, $rootId = '') {
-
+    protected function getStructure($context, $node = NULL, $repo, $direct = TRUE, $rootClass = 'nav navbar-nav', $dropDown = FALSE, $system = TRUE, $fromPage = NULL, $sideClass = 'nav navbar', $moduleNameAbstract = null, $rootId = '')
+    {
         return $repo->childrenHierarchy($node, $direct, array(
                     'decorate' => true,
                     'html' => true,
-                    'rootOpen' => function($nodes) use($rootClass, $dropDown, $sideClass, $rootId) {
+                    'rootOpen' => function ($nodes) use ($rootClass, $dropDown, $sideClass, $rootId) {
 
                 $drop = $nodes[0]['level'] == 2 ? TRUE : FALSE;
                 $class = $nodes[0]['level'] < 2 ? $rootClass : $sideClass;
 
                 if ($drop && $dropDown)
                     $class .= ' dropdown-menu';
-		
-		$htmlId = '';
-		if(!empty($rootId)){
-			$htmlId = ' id = "' . $rootId . '"';
-		}
-		
+
+        $htmlId = '';
+        if (!empty($rootId)) {
+            $htmlId = ' id = "' . $rootId . '"';
+        }
+
                 return '<ul class="' . $class . '"' . $htmlId . '>';
             },
                     'rootClose' => '</ul>',
-                    'childOpen' => function($node) use($dropDown, $context) {
+                    'childOpen' => function ($node) use ($dropDown, $context) {
                 $hasChildrens = count($node['__children']) > 0 ? TRUE : FALSE;
                 $param = $context->getRequest()->getParameters();
                 $active = $context->getParam('id') == $node['id'] ? TRUE : FALSE;
                 $class = '';
-		   
-		if(!array_key_exists('fullPath', $param)){
-		    $param['fullPath'] = '/defPath';
-		}
-		
+
+        if (!array_key_exists('fullPath', $param)) {
+            $param['fullPath'] = '/defPath';
+        }
+
                 if (array_key_exists('redirect', $node)) {
                     if ($param['fullPath'] == $node['redirect']) {
                         $active = TRUE;
@@ -414,7 +425,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
                 return '<li class="' . $class . '">';
             },
                     'childClose' => '</li>',
-                    'nodeDecorator' => function($node) use($dropDown, $system, $context, $fromPage, $moduleNameAbstract) {
+                    'nodeDecorator' => function ($node) use ($dropDown, $system, $context, $fromPage, $moduleNameAbstract) {
                 $hasChildrens = count($node['__children']) > 0 ? TRUE : FALSE;
                 $params = '';
                 $class = '';
@@ -441,7 +452,8 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
         ));
     }
 
-    public function getBreadcrumbs() {
+    public function getBreadcrumbs()
+    {
         // bredcrumb
         $default = $this->em->getRepository('WebCMS\Entity\Page')->findOneBy(array(
             'default' => TRUE,
@@ -471,23 +483,25 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
     }
 
     /**
-     * 
+     *
      * @param Array $item
      */
-    public function addToBreadcrumbs($id, $moduleName, $presenter, $title, $path) {
-
+    public function addToBreadcrumbs($id, $moduleName, $presenter, $title, $path)
+    {
         $this->breadcrumbs[] = new \WebCMS\Entity\BreadcrumbsItem($id, $moduleName, $presenter, $title, $path);
     }
 
-    public function selfRedirect($path = '') {
+    public function selfRedirect($path = '')
+    {
         $this->redirect('this', array(
             'id' => $this->actualPage->getId(),
             'path' => $this->actualPage->getPath() . $path,
             'abbr' => $this->abbr,
         ));
     }
-    
-    protected function createObject($name){
+
+    protected function createObject($name)
+    {
         $expl = explode('-', $name);
 
         $objectName = ucfirst($expl[0]);
@@ -495,14 +509,16 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
 
         return new $objectName;
     }
-    
+
     /* @deprecated */
 
-    public function flashMessageTranslated($message, $type = 'info') {
+    public function flashMessageTranslated($message, $type = 'info')
+    {
         $this->flashMessage($this->translation[$message], $type);
     }
 
-    public function flashMessage($text, $type = 'info') {
+    public function flashMessage($text, $type = 'info')
+    {
         parent::flashMessage($this->translation[$text], $type);
     }
 

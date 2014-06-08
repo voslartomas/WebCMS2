@@ -12,8 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @property string $password
  * @property string $role
  */
-class User extends Entity {
-
+class User extends Entity
+{
     /**
      * @ORM\Column(unique=true)
      * @var string
@@ -48,68 +48,81 @@ class User extends Entity {
     /**
      * @return string
      */
-    public function getUsername() {
-	return $this->username;
+    public function getUsername()
+    {
+        return $this->username;
     }
 
     /**
      * @return string
      */
-    public function getPassword() {
-	return $this->password;
+    public function getPassword()
+    {
+        return $this->password;
     }
 
     /**
      * @param string
      * @return User
      */
-    public function setPassword($password) {
-	$this->password = $password;
-	return $this;
+    public function setPassword($password)
+    {
+        $this->password = $password;
+
+        return $this;
     }
 
     /**
      * @return string
      */
-    public function getEmail() {
-	return $this->email;
+    public function getEmail()
+    {
+        return $this->email;
     }
 
     /**
      * @param string
      * @return User
      */
-    public function setEmail($email) {
-	$this->email = $email;
-	return $this;
+    public function setEmail($email)
+    {
+        $this->email = $email;
+
+        return $this;
     }
 
     /**
      * @return string
      */
-    public function getRole() {
-	return $this->role;
+    public function getRole()
+    {
+        return $this->role;
     }
 
     /**
      * @param string
      * @return User
      */
-    public function setRole($role) {
-	$this->role = $role;
-	return $this;
+    public function setRole($role)
+    {
+        $this->role = $role;
+
+        return $this;
     }
 
-    public function getName() {
-	return $this->name;
+    public function getName()
+    {
+        return $this->name;
     }
 
-    public function setName($name) {
-	$this->name = $name;
+    public function setName($name)
+    {
+        $this->name = $name;
     }
 
-    public function setUsername($username) {
-	$this->username = $username;
+    public function setUsername($username)
+    {
+        $this->username = $username;
     }
 
 }

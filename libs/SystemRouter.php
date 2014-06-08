@@ -6,8 +6,8 @@ namespace WebCMS;
  * TODO refactor
  * @author Tomáš Voslař <tomas.voslar at webcook.cz>
  */
-class SystemRouter extends \Nette\Application\Routers\Route {
-    
+class SystemRouter extends \Nette\Application\Routers\Route
+{
     /* @var \Doctrine\ORM\EntityManager */
     private $em;
 
@@ -17,165 +17,169 @@ class SystemRouter extends \Nette\Application\Routers\Route {
     /* @var \WebCMS\Entity\Page */
     private $page;
 
-    public function __construct($em) {
-	$this->em = $em;
+    public function __construct($em)
+    {
+        $this->em = $em;
     }
 
-    function match(\Nette\Http\IRequest $httpRequest) {
+    public function match(\Nette\Http\IRequest $httpRequest)
+    {
+        $path = $httpRequest->getUrl()->getPath();
 
-	$path = $httpRequest->getUrl()->getPath();
+        if ($httpRequest->getUrl()->getScriptPath() !== '/')
+            $query = str_replace($httpRequest->getUrl()->getScriptPath(), '', $path);
+        else
+            $query = substr($path, 1, strlen($path));
 
-	if ($httpRequest->getUrl()->getScriptPath() !== '/')
-	    $query = str_replace($httpRequest->getUrl()->getScriptPath(), '', $path);
-	else
-	    $query = substr($path, 1, strlen($path));
+        $path = explode('/', $query);
 
-	$path = explode('/', $query);
+        $paramCount = count($path);
+        $pages = array();
 
-	$paramCount = count($path);
-	$pages = array();
+        // look for matching parameter
+        while (count($pages) == 0 && $paramCount != -1) {
+            // checks whether page exists
+            $paramCount--;
+            if ($paramCount > -1)
+            $lastParam = $path[$paramCount];
 
-	// look for matching parameter
-	while (count($pages) == 0 && $paramCount != -1) {
-	    // checks whether page exists
-	    $paramCount--;
-	    if ($paramCount > -1)
-		$lastParam = $path[$paramCount];
+            $pageRepo = $this->em->getRepository('WebCMS\Entity\Page');
+            $pages = $pageRepo->findBy(array(
+            'slug' => $lastParam
+            ));
 
-	    $pageRepo = $this->em->getRepository('WebCMS\Entity\Page');
-	    $pages = $pageRepo->findBy(array(
-		'slug' => $lastParam
-	    ));
+            if ($paramCount >= 0) {
+            $lastParam = $path[$paramCount];
+            }
+        }
+        // setting of parameters and path
+        $params = count($path) - ($paramCount + 1);
 
-	    if ($paramCount >= 0) {
-		$lastParam = $path[$paramCount];
-	    }
-	}
-	// setting of parameters and path
-	$params = count($path) - ($paramCount + 1);
+        if ($params > 0) {
+            $parameters = array_slice($path, -$params);
+            if (empty($parameters[count($parameters) - 1]))
+            unset($parameters[count($parameters) - 1]);
+        } else {
+            $parameters = array();
+        }
 
-	if ($params > 0) {
-	    $parameters = array_slice($path, -$params);
-	    if (empty($parameters[count($parameters) - 1]))
-		unset($parameters[count($parameters) - 1]);
-	}else {
-	    $parameters = array();
-	}
+        $path = array_slice($path, 0, count($path) - $params);
 
-	$path = array_slice($path, 0, count($path) - $params);
+        // takes the right one
+        $page = NULL;
+        foreach ($pages as $p) {
+            $page = $p;
 
-	// takes the right one
-	$page = NULL;
-	foreach ($pages as $p) {
-	    $page = $p;
+            // abbreviation of language
+            $abbr = $page->getLanguage()->getDefaultFrontend() ? '' : $page->getLanguage()->getAbbr() . '/';
 
-	    // abbreviation of language
-	    $abbr = $page->getLanguage()->getDefaultFrontend() ? '' : $page->getLanguage()->getAbbr() . '/';
+            $paths = $pageRepo->getPath($p);
 
-	    $paths = $pageRepo->getPath($p);
+            // check path
+            $finalPath = '';
+            foreach ($paths as $pat) {
+            if ($pat->getParent() != NULL)
+                $finalPath .= $pat->getSlug() . '/';
+            }
 
-	    // check path
-	    $finalPath = '';
-	    foreach ($paths as $pat) {
-		if ($pat->getParent() != NULL)
-		    $finalPath .= $pat->getSlug() . '/';
-	    }
+            $finalPath = $abbr . $finalPath;
 
-	    $finalPath = $abbr . $finalPath;
+            $moduleObject = $this->createObject($page->getModule()->getName());
+            $presenterSettings = $moduleObject->getPresenterSettings($page->getPresenter());
 
-	    $moduleObject = $this->createObject($page->getModule()->getName());
-	    $presenterSettings = $moduleObject->getPresenterSettings($page->getPresenter());
+            if (implode('/', $path) == substr($finalPath, 0, -1) && (count($parameters) === 0 || $presenterSettings['parameters'])) {
+            $this->page = $page;
 
-	    if (implode('/', $path) == substr($finalPath, 0, -1) && (count($parameters) === 0 || $presenterSettings['parameters'])) {
-		$this->page = $page;
+            $path = $page->getPath();
 
-		$path = $page->getPath();
+            $params = array(
+                'id' => $page->getId(),
+                'language' => $this->page->getLanguage()->getId(),
+                'path' => $path,
+                'fullPath' => $path . '/' . implode('/', $parameters),
+                'parameters' => $parameters,
+                'root' => $page->getRoot(),
+                'lft' => $page->getLeft(),
+                'abbr' => $abbr) + $httpRequest->getQuery();
 
-		$params = array(
-		    'id' => $page->getId(),
-		    'language' => $this->page->getLanguage()->getId(),
-		    'path' => $path,
-		    'fullPath' => $path . '/' . implode('/', $parameters),
-		    'parameters' => $parameters,
-		    'root' => $page->getRoot(),
-		    'lft' => $page->getLeft(),
-		    'abbr' => $abbr) + $httpRequest->getQuery();
+            $presenter = 'Frontend:' . $page->getModule()->getName() . ':' . $page->getPresenter();
 
-		$presenter = 'Frontend:' . $page->getModule()->getName() . ':' . $page->getPresenter();
-		return new \Nette\Application\Request(
-		    $presenter, $httpRequest->getMethod(), $params, $httpRequest->getPost(), $httpRequest->getFiles(), array(\Nette\Application\Request::SECURED => $httpRequest->isSecured())
-		);
-	    }
-	}
+            return new \Nette\Application\Request(
+                $presenter, $httpRequest->getMethod(), $params, $httpRequest->getPost(), $httpRequest->getFiles(), array(\Nette\Application\Request::SECURED => $httpRequest->isSecured())
+            );
+            }
+        }
 
-	return NULL;
+        return NULL;
     }
 
-    function constructUrl(\Nette\Application\Request $appRequest, \Nette\Http\Url $refUrl) {
-	$params = $appRequest->getParameters();
+    public function constructUrl(\Nette\Application\Request $appRequest, \Nette\Http\Url $refUrl)
+    {
+        $params = $appRequest->getParameters();
 
-	$sign = '?';
+        $sign = '?';
 
-	if (array_key_exists('abbr', $params))
-	    $abbr = $params['abbr'];
-	else
-	    $abbr = '';
+        if (array_key_exists('abbr', $params))
+            $abbr = $params['abbr'];
+        else
+            $abbr = '';
 
-	if (array_key_exists('path', $params))
-	    $path = $params['path'];
-	else
-	    $path = '';
+        if (array_key_exists('path', $params))
+            $path = $params['path'];
+        else
+            $path = '';
 
-	if (array_key_exists('do', $params)) {
-	    $do = $sign . 'do=' . $params['do'];
-	    $sign = '&';
-	} else
-	    $do = '';
+        if (array_key_exists('do', $params)) {
+            $do = $sign . 'do=' . $params['do'];
+            $sign = '&';
+        } else
+            $do = '';
 
-	if (array_key_exists('action', $params)) {
+        if (array_key_exists('action', $params)) {
 
-	    $action = $params['action'] != 'default' ? $action = $sign . 'action=' . $params['action'] : '';
-	} else
-	    $action = '';
+            $action = $params['action'] != 'default' ? $action = $sign . 'action=' . $params['action'] : '';
+        } else
+            $action = '';
 
-	if (array_key_exists('parameters', $params)) {
-	    if (count($params['parameters']) > 0) {
-		$path .= '/' . implode('/', $params['parameters']);
-	    }
-	}
-	// TODO refactor
-	unset($params['abbr']);
-	unset($params['path']);
-	unset($params['do']);
-	unset($params['action']);
-	unset($params['parameters']);
-	unset($params['lft']);
-	unset($params['root']);
-	unset($params['id']);
-	unset($params['language']);
-	unset($params['fullPath']);
+        if (array_key_exists('parameters', $params)) {
+            if (count($params['parameters']) > 0) {
+            $path .= '/' . implode('/', $params['parameters']);
+            }
+        }
+        // TODO refactor
+        unset($params['abbr']);
+        unset($params['path']);
+        unset($params['do']);
+        unset($params['action']);
+        unset($params['parameters']);
+        unset($params['lft']);
+        unset($params['root']);
+        unset($params['id']);
+        unset($params['language']);
+        unset($params['fullPath']);
 
-	$path = $refUrl->getScheme() . '://' . $refUrl->getHost() . $refUrl->getPath() . $abbr . $path . $do . $action;
+        $path = $refUrl->getScheme() . '://' . $refUrl->getHost() . $refUrl->getPath() . $abbr . $path . $do . $action;
 
-	$query = '';
-	$index = 0;
-	foreach ($params as $key => $value) {
-	    $e = strpos($path, '?') === FALSE ? '?' : '&';
-	    $query .= $e . $key . '=' . $value;
+        $query = '';
+        $index = 0;
+        foreach ($params as $key => $value) {
+            $e = strpos($path, '?') === FALSE ? '?' : '&';
+            $query .= $e . $key . '=' . $value;
 
-	    $index++;
-	}
+            $index++;
+        }
 
-	return $path . $query;
+        return $path . $query;
     }
 
-    private function createObject($name) {
-	$expl = explode('-', $name);
+    private function createObject($name)
+    {
+        $expl = explode('-', $name);
 
-	$objectName = ucfirst($expl[0]);
-	$objectName = "\\WebCMS\\$objectName" . "Module\\" . $objectName;
+        $objectName = ucfirst($expl[0]);
+        $objectName = "\\WebCMS\\$objectName" . "Module\\" . $objectName;
 
-	return new $objectName;
+        return new $objectName;
     }
 
 }

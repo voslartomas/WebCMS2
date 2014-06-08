@@ -8,8 +8,8 @@ use Doctrine\ORM\Mapping as orm;
  * @orm\Entity
  * @author Tomáš Voslař <tomas.voslar at webcook.cz>
  */
-class Module extends Entity {
-
+class Module extends Entity
+{
     /**
      * @orm\Column
      */
@@ -25,28 +25,34 @@ class Module extends Entity {
      */
     private $active;
 
-    public function getName() {
-	return $this->name;
+    public function getName()
+    {
+        return $this->name;
     }
 
-    public function setName($name) {
-	$this->name = $name;
+    public function setName($name)
+    {
+        $this->name = $name;
     }
 
-    public function getActive() {
-	return $this->active;
+    public function getActive()
+    {
+        return $this->active;
     }
 
-    public function setActive($active) {
-	$this->active = $active;
+    public function setActive($active)
+    {
+        $this->active = $active;
     }
 
-    public function getPresenters() {
-	return unserialize($this->presenters);
+    public function getPresenters()
+    {
+        return unserialize($this->presenters);
     }
 
-    public function setPresenters($presenters) {
-	$this->presenters = serialize($presenters);
+    public function setPresenters($presenters)
+    {
+        $this->presenters = serialize($presenters);
     }
 
 }
