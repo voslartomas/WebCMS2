@@ -447,7 +447,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
                 if (!empty($node['class']))
                     $class .= ' ' . $node['class'];
 
-                return '<a ' . $params . ' class="' . $class . '" href="' . $link . '"><span>' . $node['title'] . $span . '</span></a>';
+                return '<a ' . $params . ' data-seo="' . $path . '" class="' . $class . '" href="' . $link . '"><span>' . $node['title'] . $span . '</span></a>';
             }
         ));
     }
