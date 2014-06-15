@@ -46,12 +46,16 @@ class UsersPresenter extends \AdminModule\BasePresenter
             unset($roles[1]);
         }
 
+        $infoEmail = $this->settings->get('Info email', \WebCMS\Settings::SECTION_BASIC)->getValue();
+        $disableEmail = empty($infoEmail);
+
         $form = $this->createForm();
         $form->addText('username', 'Username')->setAttribute('class', 'form-control');
         $form->addSelect('role', 'Role')->setTranslator(NULL)->setItems($roles)->setAttribute('class', 'form-control');
         $form->addText('name', 'Name')->setAttribute('class', 'form-control');
         $form->addText('email', 'Email')->setAttribute('class', 'form-control');
         $form->addPassword('password', 'Password')->setAttribute('class', 'form-control');
+        $form->addCheckbox('sendInfoEmail', 'Send info email with password')->setDisabled($disableEmail);
         $form->addSubmit('save', 'Save')->setAttribute('class', 'btn btn-success');
 
         $form->onSuccess[] = callback($this, 'userEntityFormSubmitted');
@@ -113,9 +117,8 @@ class UsersPresenter extends \AdminModule\BasePresenter
 
         $this->userEntity->setName($values->name);
         $this->userEntity->setEmail($values->email);
-        if (!empty($values->password)) {
-            $this->userEntity->setPassword($password);
 
+        if ($values->sendInfoEmail) {
             // send mail with new password
             $email = new Mail\Message;
             $email->setFrom($this->settings->get('Info email', \WebCMS\Settings::SECTION_BASIC)->getValue());
@@ -128,9 +131,14 @@ class UsersPresenter extends \AdminModule\BasePresenter
                 $values->password,
                 $values->username
             )));
+
             $email->send();
 
             $this->flashMessage('Info email with new password has been sent.', 'success');
+        }
+
+        if (!empty($values->password)) {
+            $this->userEntity->setPassword($password);
         }
 
         $this->userEntity->setUsername($values->username);
