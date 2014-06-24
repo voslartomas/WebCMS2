@@ -50,7 +50,11 @@ class SystemHelper
                 $vendorPackage = explode('/', $parsed[0]);
 
                 $vendor = $vendorPackage[0];
-                $package = $vendorPackage[1];
+                
+                if (count($vendorPackage) > 1) {
+                    $package = $vendorPackage[1];    
+                }
+                
                 $version = $parsed[1];
                 $versionHash = (strpos($parsed[1], 'dev') !== false ? $parsed[2] : '');
 
