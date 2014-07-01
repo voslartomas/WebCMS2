@@ -383,7 +383,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
                 $class = $nodes[0]['level'] < 2 ? $rootClass : $sideClass;
 
                 if ($drop && $dropDown)
-                    $class .= ' dropdown-menu';
+                    $class .= ' dropdown-menu submenu';
 
         $htmlId = '';
         if (!empty($rootId)) {

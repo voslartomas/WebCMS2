@@ -118,7 +118,7 @@ class UsersPresenter extends \AdminModule\BasePresenter
         $this->userEntity->setName($values->name);
         $this->userEntity->setEmail($values->email);
 
-        if ($values->sendInfoEmail) {
+        if (array_key_exists('sendInfoEmail', $values)) {
             // send mail with new password
             $email = new Mail\Message;
             $email->setFrom($this->settings->get('Info email', \WebCMS\Settings::SECTION_BASIC)->getValue());

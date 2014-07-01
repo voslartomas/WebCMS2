@@ -262,11 +262,13 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
             }
         }
 
-        if (strpos($entity, 'WebCMS') === FALSE)
+        if (strpos($entity, 'WebCMS') === false) {
             $grid->setModel($qb->select('l')->from("WebCMS\Entity\\$entity", 'l'));
-        else
+        } else {
             $grid->setModel($qb->select('l')->from($entity, 'l'));
-        $grid->setRememberState(TRUE);
+        }
+
+        $grid->setRememberState(true);
         $grid->setDefaultPerPage(10);
         $grid->setTranslator($this->translator);
         $grid->setFilterRenderType(\Grido\Components\Filters\Filter::RENDER_INNER);
