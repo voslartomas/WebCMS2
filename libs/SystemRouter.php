@@ -35,35 +35,18 @@ class SystemRouter extends \Nette\Application\Routers\Route
 
         $paramCount = count($path);
         $pages = array();
-
+        $reversePath = array_reverse($path);
         // look for matching parameter
-        while (count($pages) == 0 && $paramCount != -1) {
+        foreach ($reversePath as $lastParam) { 
             // checks whether page exists
-            $paramCount--;
-            if ($paramCount > -1)
-            $lastParam = $path[$paramCount];
-
             $pageRepo = $this->em->getRepository('WebCMS\Entity\Page');
-            $pages = $pageRepo->findBy(array(
+            $tmp = $pageRepo->findBy(array(
             'slug' => $lastParam
             ));
-
-            if ($paramCount >= 0) {
-            $lastParam = $path[$paramCount];
-            }
+	    if (!empty($tmp)) {
+		$pages = array_merge($pages, $tmp);	
+	    }
         }
-        // setting of parameters and path
-        $params = count($path) - ($paramCount + 1);
-
-        if ($params > 0) {
-            $parameters = array_slice($path, -$params);
-            if (empty($parameters[count($parameters) - 1]))
-            unset($parameters[count($parameters) - 1]);
-        } else {
-            $parameters = array();
-        }
-
-        $path = array_slice($path, 0, count($path) - $params);
 
         // takes the right one
         $page = NULL;
@@ -87,16 +70,35 @@ class SystemRouter extends \Nette\Application\Routers\Route
             $moduleObject = $this->createObject($page->getModule()->getName());
             $presenterSettings = $moduleObject->getPresenterSettings($page->getPresenter());
 
-            if (implode('/', $path) == substr($finalPath, 0, -1) && (count($parameters) === 0 || $presenterSettings['parameters'])) {
+$pathI = implode('/', $path);
+$parameters = strstr($pathI, $finalPath);
+$parameters = explode('/', str_replace($finalPath, '',$parameters));
+
+$pathWithoutParameters = str_replace(implode('/', $parameters), '', $pathI);
+$finalPath = substr($finalPath, 0, -1);
+
+$parameters = array_filter($parameters, function($var){
+ if (!empty($var)) { 
+return $var;
+}
+});
+
+            if (($pathWithoutParameters == $finalPath || $finalPath . '/' == $pathWithoutParameters) && (count($parameters) === 0 || $presenterSettings['parameters'])) {
             $this->page = $page;
 
             $path = $page->getPath();
+
+if(count($parameters) > 0) {
+$fullPath = $path . '/' . implode('/', $parameters);
+} else {
+$fullPath = $path;
+}
 
             $params = array(
                 'id' => $page->getId(),
                 'language' => $this->page->getLanguage()->getId(),
                 'path' => $path,
-                'fullPath' => $path . '/' . implode('/', $parameters),
+                'fullPath' => $fullPath . '/',
                 'parameters' => $parameters,
                 'root' => $page->getRoot(),
                 'lft' => $page->getLeft(),
