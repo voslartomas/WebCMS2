@@ -341,6 +341,8 @@ class LanguagesPresenter extends BasePresenter
 
     public function handleUpdateTranslation($idTranslation, $value)
     {
+        $value = strip_tags($value, '<strong><b><i><u>');    
+
         $translation = $this->em->find('WebCMS\Entity\Translation', trim($idTranslation));
         $translation->setTranslation(trim($value));
 
