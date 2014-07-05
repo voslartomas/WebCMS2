@@ -1,250 +1,175 @@
-{block content}
-
-<h1>{_'Filesystem'}</h1>
-
-<script>
-	$(function(){
-		$(".jq_newDir").click(function(e){
-			e.preventDefault();
-			
-			bootbox.prompt({_'Enter name of the new directory:'}, function(text){
-				
-				if(text) 
-					$.nette.ajax({ url : {plink makeDirectory!}, data : { name : text } })
-			});
-		});
-		var path;
-		$(".dir").on('click', function(){
-			filesystem.setPath($(this).data('path'));
-		});
-	});
-</script>
-
-<div id="uploader" class="k-content">
-	<a class="btn btn-primary jq_newDir" n:href="makeDirectory!">{_'Create new directory'}</a>
-	
-	{if $template->isSuperAdmin($user)}
-		<a class="btn btn-primary ajax longRun" n:href="regenerateThumbnails!">{_'Regenerate thumbnails'}</a>
-	{/if}
-	
-	<input type="file" name="files" id="upload" />
-
-	<script id="fileTemplate" type="text/x-kendo-template">
-		<span class='k-progress'></span>
-		<div class='file-wrapper'>
-			<span class='file-icon #=addExtensionClass(files[0].extension)#'></span>
-			<h4 class='file-heading file-name-heading'>{_'Name'}: #=name#</h4>
-			<h4 class='file-heading file-size-heading'>{_'Size'}: #=size# {_'bytes'}</h4>
-			<button type='button' class='k-upload-action'></button>
-		</div>
-	</script>
+{if array_key_exists('CKEditorFuncNum', $_GET)}
+	<link rel="stylesheet" media="screen" href="{$basePath}/admin-client/bootstrap/dist/css/bootstrap.min.css" type="text/css">
+	<script type="text/javascript" src="{$basePath}/admin-client/jquery/dist/jquery.min.js"></script>
+	{include filesDialog.latte, from => $_GET['CKEditor'], funcNum => $_GET['CKEditorFuncNum'], lang => $_GET['langCode']}
 
 	<script>
-		
-		var directory = '';
-		
-		function onComplete(){
-			
-			$.nette.ajax({ url : {plink default}, data : { path : filesystem.getPath() } })
-		}
-		
-		$(document).ready(function () {
-			$("#upload").kendoUpload({
-				multiple: true,
-				async: {
-					saveUrl: {plink uploadFile!},
-					removeUrl: {plink removeFile!},
-					autoUpload: false
-				},
-				template: kendo.template($('#fileTemplate').html()),
-				localization : {
-					'cancel' : {_'Cancel'},
-					'dropFilesHere' : {_'Drop files Here'},
-					'remove' : {_'Remove'},
-					'retry' : {_'Retry'},
-					'select' : {_'Select files...'},
-					'statusFailed' : {_'Upload failed.'},
-					'statusUploaded' : {_'Upload has been successful.'},
-					'statusUploading' : {_'Files are beeing uploaded.'},
-					'uploadSelectedFiles' : {_'Upload files'}
-				},
-				complete: onComplete,
+		$(".jq_filesAdd").on('click', function(){
+			var funcNum = {$_GET['CKEditorFuncNum']};
+
+    		$('.jq_selected:checked').each(function() {
+				var data = $(this).data();
+				var path = data.path.substr(1, data.path.length);
+
+				window.opener.CKEDITOR.tools.callFunction( funcNum, path);
+				window.close();
+			});
+
+		});
+	</script>
+{else}
+	{block content}
+
+	<h1>{_'Filesystem'}</h1>
+
+	<script>
+		$(function(){
+			$(".jq_newDir").click(function(e){
+				e.preventDefault();
+				
+				bootbox.prompt({_'Enter name of the new directory:'}, function(text){
+					
+					if(text) 
+						$.nette.ajax({ url : {plink makeDirectory!}, data : { name : text } })
+				});
+			});
+			var path;
+			$(".dir").on('click', function(){
+				filesystem.setPath($(this).data('path'));
 			});
 		});
-
-		function addExtensionClass(extension) {
-			switch (extension) {
-				case '.jpg':
-				case '.img':
-				case '.png':
-				case '.gif':
-					return "img-file";
-				case '.odt':
-				case '.doc':
-				case '.docx':
-					return "doc-file";
-				case '.xls':
-				case '.xlsx':
-					return "xls-file";
-				case '.pdf':
-					return "pdf-file";
-				case '.zip':
-				case '.rar':
-					return "zip-file";
-				default:
-					return "default-file";
-			}
-		}
 	</script>
-	
-	<style scoped>
-		.file-icon
-		{
-			display: inline-block;
-			float: left;
-			width: 48px;
-			height: 48px;
-			margin-left: 10px;
-			margin-top: 13.5px;
-		}
 
-		.img-file { background-image: url(../../content/web/upload/jpg.png) }
-		.doc-file { background-image: url(../../content/web/upload/doc.png) }
-		.pdf-file { background-image: url(../../content/web/upload/pdf.png) }
-		.xls-file { background-image: url(../../content/web/upload/xls.png) }
-		.zip-file { background-image: url(../../content/web/upload/zip.png) }
-		.default-file { background-image: url(../../content/web/upload/default.png) }
+	<div id="uploader" class="k-content">
+		<a class="btn btn-primary jq_newDir" n:href="makeDirectory!">{_'Create new directory'}</a>
+		
+		{if $template->isSuperAdmin($user)}
+			<a class="btn btn-primary ajax longRun" n:href="regenerateThumbnails!">{_'Regenerate thumbnails'}</a>
+		{/if}
+		
+		<input type="file" name="files" id="upload" />
 
-		#example .file-heading
-		{
-			font-family: Arial;
-			font-size: 1.1em;
-			display: inline-block;
-			float: left;
-			width: 450px;
-			margin: 0 0 0 20px;
-			height: 25px;
-			-ms-text-overflow: ellipsis;
-			-o-text-overflow: ellipsis;
-			text-overflow: ellipsis;
-			overflow:hidden;
-			white-space:nowrap;
-		}
+		<script id="fileTemplate" type="text/x-kendo-template">
+			<span class='k-progress'></span>
+			<div class='file-wrapper'>
+				<span class='file-icon #=addExtensionClass(files[0].extension)#'></span>
+				<h4 class='file-heading file-name-heading'>{_'Name'}: #=name#</h4>
+				<h4 class='file-heading file-size-heading'>{_'Size'}: #=size# {_'bytes'}</h4>
+				<button type='button' class='k-upload-action'></button>
+			</div>
+		</script>
 
-			#example .file-name-heading
-			{
-				font-weight: bold;
-			}
-
-			 #example .file-size-heading
-			{
-				font-weight: normal;
-				font-style: italic;
-			}
-
-		li.k-file .file-wrapper .k-upload-action
-		{
-			position: absolute;
-			top: 0;
-			right: 0;
-		}
-
-		li.k-file div.file-wrapper
-		{
-			position: relative;
-			height: 75px;
-		}
-	</style>
-	
-</div>
-	
-<a class="btn btn-primary ajax" n:href="default path => $backLink">{_'Back'}</a>
-
-<table class="table table-bordered table-hover">
-	<thead>
-		<tr>
-			<th>{_'Name'}</th>
-			<th>{_'Date'}</th>
-			<th>{_'Size'}</th>
-			<th>{_'Actions'}</th>
-		</tr>
-	</thead>
-	{foreach $directories as $path => $file}
-		<tr>
-			<td class="name">
-				<a class="ajax dir" data-path="{$fsPath}{$file->getBasename()}" n:href="default path => $fsPath . $file->getBasename()">
-					{$file->getBasename()}
-				</a>
-			</td>
-			<td class="time">{$file->getMTime()|date:'%d.%m.%Y %H:%M:%S'}</td>
-			<td class="size">{$file->getRealPath()|dirSize|bytes}</td>
-			<td class="action">
-				<a n:href="deleteFile! pathToRemove => $fsPath . $file->getBasename()" class="btn btn-danger">{_'Delete'}</a>
-			</td>
-		</tr>
-	{/foreach}
-	{foreach $files as $path => $file}
-		<tr class="file">
-			<td class="name">
-				{if strtolower($file->getExtension()) == 'png' || strtolower($file->getExtension()) == 'jpg' || strtolower($file->getExtension()) == 'jpeg'}
-					<img style="width: 80px;" src="{$basePath}{$file->getPathname()|thumbnail:'system'}" />
-				{/if}
-				{$file->getBasename()} <br />
+		<script>
+			
+			var directory = '';
+			
+			function onComplete(){
 				
-				{if strpos($file->getPath(), 'exports') !== FALSE}
-					{$baseUri}/upload/exports/{$file->getBasename()}
-				{/if}
-			</td>
-			<td class="time">{$file->getMTime()|date:'%d.%m.%Y %H:%M:%S'}</td>
-			<td class="size">{$file->getSize()|bytes}</td>
-			<td class="action">
-				<a n:href="downloadFile path => $fsPath . $file->getBasename()" class="btn btn-primary">{_'Download'}</a>
-				<a n:href="deleteFile! pathToRemove => $fsPath . $file->getBasename()" class="btn btn-danger">{_'Delete'}</a>
-			</td>
-		</tr>
-	{/foreach}
-</table>
+				$.nette.ajax({ url : {plink default}, data : { path : filesystem.getPath() } })
+			}
+			
+			$(document).ready(function () {
+				$("#upload").kendoUpload({
+					multiple: true,
+					async: {
+						saveUrl: {plink uploadFile!},
+						removeUrl: {plink removeFile!},
+						autoUpload: false
+					},
+					template: kendo.template($('#fileTemplate').html()),
+					localization : {
+						'cancel' : {_'Cancel'},
+						'dropFilesHere' : {_'Drop files Here'},
+						'remove' : {_'Remove'},
+						'retry' : {_'Retry'},
+						'select' : {_'Select files...'},
+						'statusFailed' : {_'Upload failed.'},
+						'statusUploaded' : {_'Upload has been successful.'},
+						'statusUploading' : {_'Files are beeing uploaded.'},
+						'uploadSelectedFiles' : {_'Upload files'}
+					},
+					complete: onComplete,
+				});
+			});
 
+			function addExtensionClass(extension) {
+				switch (extension) {
+					case '.jpg':
+					case '.img':
+					case '.png':
+					case '.gif':
+						return "img-file";
+					case '.odt':
+					case '.doc':
+					case '.docx':
+						return "doc-file";
+					case '.xls':
+					case '.xlsx':
+						return "xls-file";
+					case '.pdf':
+						return "pdf-file";
+					case '.zip':
+					case '.rar':
+						return "zip-file";
+					default:
+						return "default-file";
+				}
+			}
+		</script>
+		
+	</div>
+		
+	<a class="btn btn-primary ajax" n:href="default path => $backLink">{_'Back'}</a>
 
-{/block}
-
-{block modalContent}
-
-	<a class="btn btn-primary ajax" n:href="default path => $backLink, dialog => true, multiple => $multiple">{_'Back'}</a>
-
-	{foreach $directories as $path => $file}
-		<div class="directory">
-			<span class="time">{$file->getMTime()|date:'%d.%m.%Y %H:%M:%S'}</span>
-			<span class="name">
-				<a class="ajax" n:href="default path => $fsPath . $file->getBasename(), dialog => true, multiple => $multiple">
-					{$file->getBasename()}
-				</a>
-			</span>
-			<span class="size">{$file->getSize()|bytes}</span>
-		</div>
-
-		<br class="clearfix" />
-	{/foreach}
-	{foreach $files as $path => $file}
-		<div class="file ">
-                        <span>
-                                <img src="{$basePath}{$path|thumbnail:'system'}" style="width: 80px;" />
-                        </span>
-			<span>
-				{if $multiple}
-						<input id="{$file->getPathname()}" type="checkbox" class="checkbox-inline jq_selected" name="files" value="{$file->getPathname()}" data-path="{$path|relative}" data-thumbnail="{$basePath}{$path|thumbnail:'system'}" />
-					{else}
-						<input id="{$file->getPathname()}" type="radio" class="checkbox-inline jq_selected" name="files" value="{$file->getPathname()}" data-path="{$path|relative}" data-thumbnail="{$basePath}{$path|thumbnail:'system'}" />
+	<table class="table table-bordered table-hover">
+		<thead>
+			<tr>
+				<th>{_'Name'}</th>
+				<th>{_'Date'}</th>
+				<th>{_'Size'}</th>
+				<th>{_'Actions'}</th>
+			</tr>
+		</thead>
+		{foreach $directories as $path => $file}
+			<tr>
+				<td class="name">
+					<a class="ajax dir" data-path="{$fsPath}{$file->getBasename()}" n:href="default path => $fsPath . $file->getBasename()">
+						{$file->getBasename()}
+					</a>
+				</td>
+				<td class="time">{$file->getMTime()|date:'%d.%m.%Y %H:%M:%S'}</td>
+				<td class="size">{$file->getRealPath()|dirSize|bytes}</td>
+				<td class="action">
+					<a n:href="deleteFile! pathToRemove => $fsPath . $file->getBasename()" class="btn btn-danger">{_'Delete'}</a>
+				</td>
+			</tr>
+		{/foreach}
+		{foreach $files as $path => $file}
+			<tr class="file">
+				<td class="name">
+					{if strtolower($file->getExtension()) == 'png' || strtolower($file->getExtension()) == 'jpg' || strtolower($file->getExtension()) == 'jpeg'}
+						<img style="width: 80px;" src="{$basePath}{$file->getPathname()|thumbnail:'system'}" />
 					{/if}
-			</span>
-			<label for="{$file->getPathname()}">
-				{$file->getBasename()}
-			</label>
-			<span class="size">{$file->getSize()|bytes}</span>
-		</div>
-		
-		<br class="clearfix" />
-	{/foreach}
-		
-	<a href="#" class="btn btn-primary jq_filesAdd" data-dismiss="modal">{_'Add selected files'}</a>
-{/block}
+					{$file->getBasename()} <br />
+					
+					{if strpos($file->getPath(), 'exports') !== FALSE}
+						{$baseUri}/upload/exports/{$file->getBasename()}
+					{/if}
+				</td>
+				<td class="time">{$file->getMTime()|date:'%d.%m.%Y %H:%M:%S'}</td>
+				<td class="size">{$file->getSize()|bytes}</td>
+				<td class="action">
+					<a n:href="downloadFile path => $fsPath . $file->getBasename()" class="btn btn-primary">{_'Download'}</a>
+					<a n:href="deleteFile! pathToRemove => $fsPath . $file->getBasename()" class="btn btn-danger">{_'Delete'}</a>
+				</td>
+			</tr>
+		{/foreach}
+	</table>
+
+
+	{/block}
+
+	{block modalContent}
+		{include filesDialog.latte, from => null, funcNum => null, lang => null}
+	{/block}
+{/if}

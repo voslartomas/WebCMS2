@@ -1,0 +1,37 @@
+<a class="btn btn-primary ajax" n:href="default path => $backLink, dialog => true, multiple => $multiple, CKEditorFuncNum => $funcNum, CKEditor => $from, langCode => $lang">{_'Back'}</a>
+
+{foreach $directories as $path => $file}
+	<div class="directory">
+		<span class="time">{$file->getMTime()|date:'%d.%m.%Y %H:%M:%S'}</span>
+		<span class="name">
+			<a class="ajax" n:href="default path => $fsPath . $file->getBasename(), dialog => true, multiple => $multiple, CKEditorFuncNum => $funcNum, CKEditor => $from, langCode => $lang">
+				{$file->getBasename()}
+			</a>
+		</span>
+		<span class="size">{$file->getSize()|bytes}</span>
+	</div>
+
+	<br class="clearfix" />
+{/foreach}
+{foreach $files as $path => $file}
+	<div class="file ">
+                    <span>
+                            <img src="{$basePath}{$path|thumbnail:'system'}" style="width: 80px;" />
+                    </span>
+		<span>
+			{if $multiple}
+					<input id="{$file->getPathname()}" type="checkbox" class="checkbox-inline jq_selected" name="files" value="{$file->getPathname()}" data-path="{$path|relative}" data-thumbnail="{$basePath}{$path|thumbnail:'system'}" />
+				{else}
+					<input id="{$file->getPathname()}" type="radio" class="checkbox-inline jq_selected" name="files" value="{$file->getPathname()}" data-path="{$path|relative}" data-thumbnail="{$basePath}{$path|thumbnail:'system'}" />
+				{/if}
+		</span>
+		<label for="{$file->getPathname()}">
+			{$file->getBasename()}
+		</label>
+		<span class="size">{$file->getSize()|bytes}</span>
+	</div>
+	
+	<br class="clearfix" />
+{/foreach}
+	
+<a href="#" class="btn btn-primary jq_filesAdd" data-dismiss="modal">{_'Add selected files'}</a>
