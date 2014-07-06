@@ -12,7 +12,7 @@ class LoginPresenter extends BasePresenter
         parent::beforeRender();
 
         if ($this->getUser()->isLoggedIn()) {
-            $this->redirect('Homepage:');
+            $this->forward('Homepage:');
         }
     }
 
@@ -56,7 +56,7 @@ class LoginPresenter extends BasePresenter
             $this->getUser()->setExpiration('+ 20 minutes', TRUE);
             }
             $this->getUser()->login($values->username, $values->password);
-            $this->redirect('Homepage:');
+            $this->forward('Homepage:');
         } catch (NS\AuthenticationException $e) {
             $this->flashMessage($this->translation[$e->getMessage()], 'danger');
             $form->addError($e->getMessage());
@@ -67,7 +67,7 @@ class LoginPresenter extends BasePresenter
     {
         $this->getUser()->logout();
         $this->flashMessage($this->translation['You have been signed out.']);
-        $this->redirect('Login:');
+        $this->forward('Login:');
     }
 
 }

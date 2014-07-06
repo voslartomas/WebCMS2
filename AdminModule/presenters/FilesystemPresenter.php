@@ -139,8 +139,7 @@ class FilesystemPresenter extends \AdminModule\BasePresenter
 
         $this->flashMessage('File has been removed.', 'success');
 
-        if (!$this->isAjax())
-            $this->redirect('this');
+        $this->forward('this');
     }
 
     public function actionDownloadFile($path)

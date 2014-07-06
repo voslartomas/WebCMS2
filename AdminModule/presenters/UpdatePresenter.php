@@ -58,9 +58,9 @@ class UpdatePresenter extends \AdminModule\BasePresenter
 
         $this->handleCheckUpdates();
 
-        if (!$this->isAjax())
-            $this->redirect('Update:');
-        else {
+        if (!$this->isAjax()) {
+            $this->forward('Update:');
+        } else {
             $this->invalidateControl('footer');
         }
     }
@@ -131,8 +131,7 @@ class UpdatePresenter extends \AdminModule\BasePresenter
             $this->flashMessage('Module is already registered.', 'danger');
         }
 
-        if (!$this->isAjax())
-            $this->redirect('default');
+        $this->forward('default');
     }
 
     private function copyTemplates($name)
@@ -153,8 +152,7 @@ class UpdatePresenter extends \AdminModule\BasePresenter
         $this->em->flush();
 
         $this->flashMessage('Module has been unregistered from system.', 'success');
-        if (!$this->isAjax())
-            $this->redirect('default');
+        $this->forward('default');
     }
 
     private function isRegistered($name)
@@ -243,7 +241,7 @@ class UpdatePresenter extends \AdminModule\BasePresenter
         exec("cd ../;composer dumpautoload");
         exec("./libs/webcms2/webcms2/install/install.sh 3");
 
-        $this->redirect('default');
+        $this->forward('default');
     }
 
     public function actionAddModule()
@@ -282,7 +280,7 @@ class UpdatePresenter extends \AdminModule\BasePresenter
         exec("cd ../;composer require $module $version > $installLog 2> $installErrorLog");
         exec("../libs/webcms2/webcms2/install/install.sh 3; >");
 
-        $this->redirect('default');
+        $this->forward('default');
     }
 
     private function getModulesToInstall()
@@ -340,7 +338,7 @@ class UpdatePresenter extends \AdminModule\BasePresenter
         exec("cd ../libs/webcms2/webcms2/install;./module.sh create $name $nameBig '$author' '$email' '$description' > ../../../../log/install.log 2> ../../../../log/install-error.log");
 
         $this->flashMessage('Module has been created.', 'success');
-        $this->redirect('default');
+        $this->forward('default');
     }
 
     // render log tab

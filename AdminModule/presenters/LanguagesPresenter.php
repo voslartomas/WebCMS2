@@ -111,7 +111,7 @@ class LanguagesPresenter extends BasePresenter
         $this->flashMessage('Language has been added.', 'success');
 
         if (!$this->isAjax())
-            $this->redirect('Languages:default');
+        $this->forward('Languages:default');
         else {
             $this->invalidateControl('header');
         }
@@ -255,8 +255,7 @@ class LanguagesPresenter extends BasePresenter
 
         $this->flashMessage('Language has been removed.', 'success');
 
-        if (!$this->isAjax())
-            $this->redirect('Languages:default');
+        $this->forward('Languages:default');
     }
 
     public function renderUpdateLanguage($id)
@@ -335,8 +334,7 @@ class LanguagesPresenter extends BasePresenter
 
         $this->cleanCache();
 
-        if (!$this->isAjax())
-            $this->redirect('Languages:Translates');
+        $this->forward('Languages:Translates');
     }
 
     public function handleUpdateTranslation($idTranslation, $value)
@@ -355,8 +353,7 @@ class LanguagesPresenter extends BasePresenter
 
         $this->cleanCache();
 
-        if (!$this->isAjax())
-            $this->redirect('Languages:Translates');
+        $this->forward('Languages:Translates');
     }
 
     public function handleRegenerateTranslations()
@@ -515,7 +512,7 @@ class LanguagesPresenter extends BasePresenter
 
         $this->flashMessage('Cloning has been successfuly done.', 'success');
         if (!$this->isAjax()) {
-            $this->redirect('Languages:cloning');
+            $this->forward('Languages:cloning');
         }
     }
 
@@ -678,7 +675,7 @@ class LanguagesPresenter extends BasePresenter
 
         $this->flashMessage('Translation of language finished.', 'success');
         if (!$this->isAjax()) {
-            $this->redirect('Languages:translator');
+            $this->forward('Languages:translator');
         }
     }
 

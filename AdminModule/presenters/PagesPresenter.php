@@ -177,8 +177,7 @@ class PagesPresenter extends \AdminModule\BasePresenter
 
         $this->flashMessage('Page has been added.', 'success');
 
-        if (!$this->isAjax())
-            $this->redirect('Pages:default');
+        $this->forward('Pages:default');
     }
 
     protected function createComponentPagesGrid($name)
@@ -248,8 +247,7 @@ class PagesPresenter extends \AdminModule\BasePresenter
 
         $this->flashMessage('Page has been removed.', 'success');
 
-        if (!$this->isAjax())
-            $this->redirect('Pages:default');
+        $this->forward('Pages:default');
     }
 
     public function renderUpdatePage($id)
@@ -341,7 +339,7 @@ class PagesPresenter extends \AdminModule\BasePresenter
         }
 
         if (!$this->isAjax()) {
-            $this->redirect('Pages:default');
+            $this->forward('Pages:default');
         }
     }
 
@@ -359,7 +357,7 @@ class PagesPresenter extends \AdminModule\BasePresenter
         }
 
         if (!$this->isAjax()) {
-            $this->redirect('Pages:default');
+            $this->forward('Pages:default');
         }
     }
 }

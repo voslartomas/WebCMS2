@@ -81,7 +81,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         parent::startup();
 
         if (!$this->getUser()->isLoggedIn() && $this->presenter->getName() !== "Admin:Login") {
-            $this->redirect(':Admin:Login:');
+            $this->forward(':Admin:Login:');
         }
 
         $this->state = $this->getSession('admin');
@@ -89,7 +89,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         // changing language
         if ($this->getParameter('language_id_change')) {
             $this->state->language = $this->em->find('WebCMS\Entity\Language', $this->getParameter('language_id_change'));
-            $this->redirect(':Admin:Homepage:default');
+            $this->forward(':Admin:Homepage:default');
         }
 
         if (!isset($this->state->language)) {
@@ -102,7 +102,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         // check whether is language still in db
         if (!$language) {
             unset($this->state->language);
-            $this->redirect('Homepage:default');
+            $this->forward('Homepage:default');
         }
 
         // reload entity from db
@@ -215,7 +215,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         $this->em->flush();
 
         $this->flashMessage('Settings has been saved.', 'success');
-        $this->redirect('this');
+        $this->forward('this');
     }
 
     /* Invalidate ajax content. */
@@ -461,7 +461,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         $this->em->flush();
 
         $this->flashMessage('Seo settings has been saved.', 'success');
-        $this->redirect('this');
+        $this->forward('this');
     }
 
     /* BOXES SETTINGS */
@@ -570,8 +570,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         $this->em->flush();
 
         $this->flashMessage('Boxes settings has been saved.', 'success');
-        if (!$this->isAjax())
-            $this->redirect('this');
+        $this->forward('this');
     }
 
     public function handleAddToFavourite($link, $title)

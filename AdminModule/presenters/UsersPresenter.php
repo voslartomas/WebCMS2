@@ -97,8 +97,7 @@ class UsersPresenter extends \AdminModule\BasePresenter
 
         $this->flashMessage('User has been removed.', 'success');
 
-        if (!$this->isAjax())
-            $this->redirect('Users:default');
+        $this->forward('Users:default');
     }
 
     public function renderUpdateUser($id)
@@ -118,7 +117,7 @@ class UsersPresenter extends \AdminModule\BasePresenter
         $this->userEntity->setName($values->name);
         $this->userEntity->setEmail($values->email);
 
-        if (array_key_exists('sendInfoEmail', $values)) {
+        if (array_key_exists('sendInfoEmail', $values) && $values->sendInfoEmail) {
             // send mail with new password
             $email = new Mail\Message;
             $email->setFrom($this->settings->get('Info email', \WebCMS\Settings::SECTION_BASIC)->getValue());
@@ -149,8 +148,7 @@ class UsersPresenter extends \AdminModule\BasePresenter
 
         $this->flashMessage('User has been updated.', 'success');
 
-        if (!$this->isAjax())
-            $this->redirect('Users:default');
+        $this->forward('Users:default');
     }
 
     /* ROLES */
@@ -176,8 +174,7 @@ class UsersPresenter extends \AdminModule\BasePresenter
 
         $this->flashMessage('Role has been removed.', 'success');
 
-        if (!$this->isAjax())
-            $this->redirect('Users:roles');
+        $this->forward('Users:roles');
     }
 
     public function renderUpdateRole($id)
@@ -259,6 +256,11 @@ class UsersPresenter extends \AdminModule\BasePresenter
     {
         $values = $form->getValues();
 
+        if (empty($values->name)) {
+            $this->flashMessage('Please fill in at least the name.', 'danger');
+            $this->forward('this');
+        }
+
         $this->role->setName($values->name);
         $this->role->setAutomaticEnable($values->automaticEnable);
 
@@ -296,8 +298,7 @@ class UsersPresenter extends \AdminModule\BasePresenter
 
         $this->em->flush(); // persist all changes
 
-        if (!$this->isAjax())
-            $this->redirect('Users:roles');
+        $this->forward('Users:roles');
     }
 
 }
