@@ -41,7 +41,6 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
     public $priceFormatter;
 
     /* Method is executed before render. */
-
     protected function beforeRender()
     {
         $this->setLayout("layout");
@@ -284,7 +283,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
     {
         $form = new Nette\Application\UI\Form();
 
-        $form->getElementPrototype(); //->addAttributes(array('class' => 'ajax'));
+        $form->getElementPrototype()->addAttributes(array('class' => 'ajax'));
         $form->setTranslator($this->translator);
         $form->setRenderer(new BootstrapRenderer);
 

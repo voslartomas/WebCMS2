@@ -142,8 +142,8 @@ class UpdatePresenter extends \AdminModule\BasePresenter
         exec('cp -r ../libs/webcms2/' . $name . '/Frontend/templatesDefault/* ../app/templates/' . $name);
         }
 
-        public function actionUnregister($name)
-        {
+    public function actionUnregister($name)
+    {
         $module = $this->createObject($name);
         $module = $this->em->getRepository('WebCMS\Entity\Module')->findOneBy(array(
             'name' => $module->getName()
