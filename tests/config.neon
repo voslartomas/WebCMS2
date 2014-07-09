@@ -19,8 +19,6 @@ common:
 		console: false
 		entityDirs: { ./Entity }
 		
-	migrations:
-		connection: @doctrine.connection
 		
 	services:
 		database: @doctrine.entityManager
