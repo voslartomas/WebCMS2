@@ -21,7 +21,7 @@
 		"webcook/doctrine": "1.*@dev",
 		"nella/console": "@dev",
 		"nella/gedmo": "@dev",
-		"doctrine/migrations": "~1.0",
+		"doctrine/migrations": "@dev",
 		"kdyby/bootstrap-form-renderer": "2.0.*",
 		"monolog/monolog" : "1.6.0",
 		"knplabs/packagist-api": "1.*@dev",
