@@ -6,6 +6,7 @@ WebCMS2
 [![Latest Unstable Version](https://poser.pugx.org/webcms2/webcms2/v/unstable.png)](https://packagist.org/packages/webcms2/webcms2)
 [![License](https://poser.pugx.org/webcms2/webcms2/license.png)](https://packagist.org/packages/webcms2/webcms2)
 [![Travis](https://travis-ci.org/ufik/WebCMS2.png)](https://travis-ci.org/ufik/WebCMS2.png)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ufik/WebCMS2/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/ufik/WebCMS2/?branch=master)
 
 
 Content management system based on Nette Framework with Doctrine2 ORM library.
