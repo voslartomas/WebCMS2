@@ -13,9 +13,6 @@ common:
 		console: true
 		entityDirs: { %appDir%/../libs/webcms2 }
 		
-	migrations:
-		connection: @doctrine.connection
-		
 	services:
 		database: @doctrine.entityManager
 		
