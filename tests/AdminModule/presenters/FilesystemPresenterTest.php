@@ -54,7 +54,7 @@ class FilesystemPresenterTest extends \WebCMS\Tests\PresenterTestCase
             'pathToRemove' => '/test-directory'
         ));
 
-        $this->assertInstanceOf('Nette\Application\Responses\RedirectResponse', $response);
+        $this->assertInstanceOf('Nette\Application\Responses\ForwardResponse', $response);
         $this->assertEquals(FALSE, file_exists('upload/test-directory/'));
         $this->assertEquals(FALSE, file_exists('thumbnails/test-directory/'));
     }

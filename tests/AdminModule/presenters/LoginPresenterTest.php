@@ -24,7 +24,7 @@ class LoginPresenterTest extends \WebCMS\Tests\PresenterTestCase
     {
         $response = $this->makeRequest();
 
-        $this->assertInstanceOf('Nette\Application\Responses\RedirectResponse', $response);
+        $this->assertInstanceOf('Nette\Application\Responses\ForwardResponse', $response);
     }
 
     public function testLogin()
@@ -41,7 +41,7 @@ class LoginPresenterTest extends \WebCMS\Tests\PresenterTestCase
             'send' => 'Log in'
         ));
 
-        $this->assertInstanceOf('Nette\Application\Responses\RedirectResponse', $response);
+        $this->assertInstanceOf('Nette\Application\Responses\ForwardResponse', $response);
     }
 
     public function testBadLogin()
