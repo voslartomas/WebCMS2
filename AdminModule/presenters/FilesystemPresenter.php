@@ -64,6 +64,9 @@ class FilesystemPresenter extends \AdminModule\BasePresenter
         $this->template->multiple = $multiple;
         }
 
+        /**
+         * @param string $path
+         */
         private function createBackLink($path)
         {
         $exploded = explode('/', $path);

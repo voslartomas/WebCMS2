@@ -15,6 +15,7 @@ class Translation extends \ArrayObject
     /**
      * A constructor
      * Prevents direct creation of object
+     * @param integer $backend
      */
     public function __construct($em, $language, $backend)
     {

@@ -13,7 +13,7 @@ class SystemHelper
     /**
      * Helper loader.
      * @param  type $helper
-     * @return type
+     * @return \PHPUnit_Framework_Constraint_Callback|null
      */
     public static function loader($helper)
     {
@@ -150,6 +150,11 @@ class SystemHelper
         );
     }
 
+    /**
+     * @param string $search
+     * @param string $replace
+     * @param string $subject
+     */
     public static function strlReplace($search, $replace, $subject)
     {
         $pos = strrpos($subject, $search);
@@ -259,6 +264,10 @@ class SystemHelper
     }
 
     // Perform a 32bit left shift
+
+    /**
+     * @param integer $steps
+     */
     public static function leftShift32($number, $steps)
     {
         // convert to binary (string)

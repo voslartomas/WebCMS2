@@ -241,6 +241,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
      * @param  Nette\Application\UI\Presenter $presenter
      * @param  String                         $name
      * @param  String                         $entity
+     * @param string[] $where
      * @return \Grido\Grid
      */
     public function createGrid(Nette\Application\UI\Presenter $presenter, $name, $entity, $order = NULL, $where = NULL)
@@ -277,7 +278,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 
     /**
      * Creates form and rewrite renderer for bootstrap.
-     * @return type
+     * @return UI\Form
      */
     public function createForm()
     {
@@ -293,7 +294,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
     /**
      * Injects entity manager.
      * @param  \Doctrine\ORM\EntityManager  $em
-     * @return \Backend\BasePresenter
+     * @return BasePresenter
      * @throws \Nette\InvalidStateException
      */
     public function injectEntityManager(\Doctrine\ORM\EntityManager $em)

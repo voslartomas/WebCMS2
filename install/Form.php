@@ -38,7 +38,7 @@ class Form extends Nette\Forms\Form implements ISignalReceiver
     /**
      * Returns the presenter where this component belongs to.
      * @param  bool   throw exception if presenter doesn't exist?
-     * @return Presenter|NULL
+     * @return Nette\ComponentModel\IComponent
      */
     public function getPresenter($need = TRUE)
     {

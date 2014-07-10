@@ -56,6 +56,9 @@ class Setting extends Entity
         }
     }
 
+    /**
+     * @param string $value
+     */
     public function setValue($value)
     {
         $this->value = $value;
@@ -86,6 +89,9 @@ class Setting extends Entity
         return $this->key;
     }
 
+    /**
+     * @param string $key
+     */
     public function setKey($key)
     {
         $this->key = $key;
@@ -96,6 +102,9 @@ class Setting extends Entity
         return $this->section;
     }
 
+    /**
+     * @param string $section
+     */
     public function setSection($section)
     {
         $this->section = $section;
