@@ -294,7 +294,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
     /**
      * Injects entity manager.
      * @param  \Doctrine\ORM\EntityManager  $em
-     * @return \Backend\BasePresenter
+     * @return BasePresenter
      * @throws \Nette\InvalidStateException
      */
     public function injectEntityManager(\Doctrine\ORM\EntityManager $em)
@@ -370,6 +370,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
      * @param  type       $direct
      * @param  type       $rootClass
      * @param  type       $dropDown
+     * @param BasePresenter $context
      * @return type
      */
     protected function getStructure($context, $node = NULL, $repo, $direct = TRUE, $rootClass = 'nav navbar-nav', $dropDown = FALSE, $system = TRUE, $fromPage = NULL, $sideClass = 'nav navbar', $moduleNameAbstract = null, $rootId = '')
@@ -484,7 +485,6 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 
     /**
      *
-     * @param Array $item
      */
     public function addToBreadcrumbs($id, $moduleName, $presenter, $title, $path)
     {

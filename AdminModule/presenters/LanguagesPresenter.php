@@ -183,6 +183,9 @@ class LanguagesPresenter extends BasePresenter
         $this->terminate();
     }
 
+    /**
+     * @param string $fileData
+     */
     public function importLanguage($fileData, $language)
     {
         $data = json_decode($fileData, TRUE);
@@ -226,6 +229,9 @@ class LanguagesPresenter extends BasePresenter
         $this->translator = new \WebCMS\Translation\Translator($this->translation);
     }
 
+    /**
+     * @param \WebCMS\Entity\Translation $translation
+     */
     private function translationExists($translation)
     {
         $exists = $this->em->getRepository('WebCMS\Entity\Translation')->findOneBy(array(

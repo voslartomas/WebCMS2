@@ -65,6 +65,9 @@ class UpdatePresenter extends \AdminModule\BasePresenter
         }
     }
 
+    /**
+     * @param string $file
+     */
     private function getMessageFromFile($file)
     {
         if (file_exists($file)) {
@@ -352,6 +355,9 @@ class UpdatePresenter extends \AdminModule\BasePresenter
         $this->template->errorLog = $this->getLog('../log/error.log');
     }
 
+    /**
+     * @param string $path
+     */
     private function getLog($path)
     {
         if (file_exists($path)) {

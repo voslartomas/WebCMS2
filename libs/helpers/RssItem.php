@@ -35,7 +35,7 @@ class RssItem
     /**
      * Gets the [$title description].
      *
-     * @return [type]
+     * @return string|null
      */
     public function getTitle()
     {
@@ -59,7 +59,7 @@ class RssItem
     /**
      * Gets the [$link description].
      *
-     * @return [type]
+     * @return string|null
      */
     public function getLink()
     {
@@ -107,7 +107,7 @@ class RssItem
     /**
      * Gets the [$publishDate description].
      *
-     * @return [type]
+     * @return string|null
      */
     public function getPublishDate()
     {

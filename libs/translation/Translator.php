@@ -10,6 +10,9 @@ class Translator implements \Nette\Localization\ITranslator
     /* @var TranslationArray */
     private $translations;
 
+    /**
+     * @param TranslationArray $translations
+     */
     public function __construct($translations)
     {
        $this->translations = $translations;

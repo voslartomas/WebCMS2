@@ -12,6 +12,9 @@ class ThumbnailCreator
     private $settings;
     private $thumbnails;
 
+    /**
+     * @param \WebCMS\Settings $settings
+     */
     public function __construct($settings, $thumbnails)
     {
         $this->settings = $settings;
@@ -21,8 +24,7 @@ class ThumbnailCreator
     /**
      *
      * @param string $filename
-     * @param string $path
-     * @param string $thumbnail
+     * @param string $filepath
      */
     public function createThumbnails($filename, $filepath)
     {
@@ -73,7 +75,7 @@ class ThumbnailCreator
     /**
      *
      * @param  \Nette\Image $image
-     * @return type
+     * @return \Nette\Image
      */
     public function applyWatermark($image)
     {

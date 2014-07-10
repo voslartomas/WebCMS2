@@ -40,6 +40,9 @@ class Module extends Entity
         return $this->active;
     }
 
+    /**
+     * @param boolean $active
+     */
     public function setActive($active)
     {
         $this->active = $active;

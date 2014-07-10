@@ -7,6 +7,9 @@ class TranslationArray extends \ArrayObject
     private $translation;
     protected $data = array();
 
+    /**
+     * @param Translation $translation
+     */
     public function __construct($translation)
     {
         $this->translation = $translation;

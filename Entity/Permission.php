@@ -45,6 +45,9 @@ class Permission extends Entity
         return $this->resource;
     }
 
+    /**
+     * @param string $resource
+     */
     public function setResource($resource)
     {
         $this->resource = $resource;

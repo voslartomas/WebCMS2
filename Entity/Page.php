@@ -274,6 +274,9 @@ class Page extends Seo
         return $this->path;
     }
 
+    /**
+     * @param string $path
+     */
     public function setPath($path)
     {
         $this->path = $path;
