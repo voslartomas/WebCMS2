@@ -12,7 +12,6 @@ if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
 
     \Nella\Console\Config\Extension::register($configurator);
     \Nella\Doctrine\Config\Extension::register($configurator);
-    \Nella\Doctrine\Config\MigrationsExtension::register($configurator);
     \Nella\Doctrine\Config\GedmoExtension::register($configurator);
 
     $configurator->addConfig(__DIR__ . '/config.neon');
