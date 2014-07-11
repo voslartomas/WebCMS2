@@ -8,12 +8,20 @@ abstract class EntityTestCase extends BasicTestCase
         'BreadcrumbsItem.php'
     );
 
+    protected $tool;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->tool = new \Doctrine\ORM\Tools\SchemaTool($this->em);
+    }
+
     public function setUp()
     {
         parent::setUp();
 
-        $tool = new \Doctrine\ORM\Tools\SchemaTool($this->em);
-        $tool->createSchema($this->getClassesMetadata(__DIR__ . '/../Entity', 'WebCMS\\Entity'));
+        $this->tool->createSchema($this->getClassesMetadata(__DIR__ . '/../Entity', 'WebCMS\\Entity'));
     }
 
     public function tearDown()
@@ -26,11 +34,7 @@ abstract class EntityTestCase extends BasicTestCase
         $tool->dropDatabase();
     }
 
-    /**
-     * @param string $path
-     * @param string $namespace
-     */
-    private function getClassesMetadata($path, $namespace)
+    protected function getClassesMetadata($path, $namespace)
     {
         $metadata = array();
 
@@ -46,9 +50,6 @@ abstract class EntityTestCase extends BasicTestCase
         return $metadata;
     }
 
-    /**
-     * @param string $path
-     */
     private function isEntity($path)
     {
         foreach ($this->exceptions as $exception) {
