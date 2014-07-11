@@ -62,10 +62,13 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
             $this->flashMessage('Please fill in correct info email. Settings -> Basic settings.', 'warning');
         }
 
+        
+        if (!$this->isAjax()) {
+            $this->template->structures = $this->getStructures(); // TODO add function for AJAX and normal request it is not necessary to load everything
+        }
+        
         $this->template->registerHelperLoader('\WebCMS\Helpers\SystemHelper::loader');
         $this->template->actualPage = $this->actualPage;
-        if (!$this->isAjax())
-            $this->template->structures = $this->getStructures(); // TODO add function for AJAX and normal request it is not necessary to load everything
         $this->template->user = $this->getUser();
         $this->template->setTranslator($this->translator);
         $this->template->language = $this->state->language;
@@ -75,15 +78,11 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         $this->template->languages = $this->em->getRepository('WebCMS\Entity\Language')->findAll();
     }
 
-    /* Startup method. */
-    protected function startup()
+    /**
+     * 
+     */
+    private function processLangauge() 
     {
-        parent::startup();
-
-        if (!$this->getUser()->isLoggedIn() && $this->presenter->getName() !== "Admin:Login") {
-            $this->forward(':Admin:Login:');
-        }
-
         $this->state = $this->getSession('admin');
 
         // changing language
@@ -118,6 +117,18 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         $translation = new \WebCMS\Translation\Translation($this->em, $default, 1);
         $this->translation = $translation->getTranslations();
         $this->translator = new \WebCMS\Translation\Translator($this->translation);
+    }
+
+    /* Startup method. */
+    protected function startup()
+    {
+        parent::startup();
+
+        if (!$this->getUser()->isLoggedIn() && $this->presenter->getName() !== "Admin:Login") {
+            $this->forward(':Admin:Login:');
+        }
+
+        $this->processLanguage();
 
         // system settings
         $this->settings = new \WebCMS\Settings($this->em, $this->state->language);
@@ -133,12 +144,17 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         $this->priceFormatter = new \WebCMS\Helpers\PriceFormatter($this->state->language->getLocale());
 
         $id = $this->getParam('idPage');
-        if ($id)
+        if ($id) {
             $this->actualPage = $this->em->find('WebCMS\Entity\Page', $id);
+        }
 
         $this->checkPermission();
 
-        // logger
+        $this->logAction();
+    }
+
+    private function logAction() 
+    {
         // Create the logger
         $logger = new Logger('History');
         // Now add some handlers
@@ -185,16 +201,17 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         foreach ($settings as $s) {
             $ident = $s->getId();
 
-            if ($s->getType() === 'text' || $s->getType() === null)
-            $form->addText($ident, $s->getKey())->setDefaultValue($s->getValue())->setAttribute('class', 'form-control');
-            elseif ($s->getType() === 'textarea')
+            if ($s->getType() === 'text' || $s->getType() === null) {
+                $form->addText($ident, $s->getKey())->setDefaultValue($s->getValue())->setAttribute('class', 'form-control');
+            } elseif ($s->getType() === 'textarea')
             $form->addTextArea($ident, $s->getKey())->setDefaultValue($s->getValue())->setAttribute('class', 'editor');
-            elseif ($s->getType() === 'radio')
-            $form->addRadioList($ident, $s->getKey(), $s->getOptions())->setDefaultValue($s->getValue());
-            elseif ($s->getType() === 'select')
-            $form->addSelect($ident, $s->getKey(), $s->getOptions())->setDefaultValue($s->getValue());
-            elseif ($s->getType() === 'checkbox')
-            $form->addCheckbox($ident, $s->getKey())->setDefaultValue($s->getValue());
+            elseif ($s->getType() === 'radio') {
+                $form->addRadioList($ident, $s->getKey(), $s->getOptions())->setDefaultValue($s->getValue());
+            } elseif ($s->getType() === 'select') {
+                $form->addSelect($ident, $s->getKey(), $s->getOptions())->setDefaultValue($s->getValue());
+            } elseif ($s->getType() === 'checkbox') {
+                $form->addCheckbox($ident, $s->getKey())->setDefaultValue($s->getValue());
+            }
         }
 
         $form->addSubmit('submit', 'Save settings');
