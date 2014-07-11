@@ -60,6 +60,9 @@ class Language extends Entity
         return $this->defaultBackend;
     }
 
+    /**
+     * @param boolean $defaultBackend
+     */
     public function setDefaultBackend($defaultBackend)
     {
         $this->defaultBackend = $defaultBackend;
@@ -70,6 +73,9 @@ class Language extends Entity
         return $this->defaultFrontend;
     }
 
+    /**
+     * @param boolean $defaultFrontend
+     */
     public function setDefaultFrontend($defaultFrontend)
     {
         $this->defaultFrontend = $defaultFrontend;
@@ -80,6 +86,9 @@ class Language extends Entity
         return $this->name;
     }
 
+    /**
+     * @param string $name
+     */
     public function setName($name)
     {
         $this->name = $name;
@@ -92,6 +101,9 @@ class Language extends Entity
         return $this->abbr;
     }
 
+    /**
+     * @param string $abbr
+     */
     public function setAbbr($abbr)
     {
         $this->abbr = $abbr;
@@ -104,6 +116,9 @@ class Language extends Entity
         return $this->locale;
     }
 
+    /**
+     * @param string $locale
+     */
     public function setLocale($locale)
     {
         $this->locale = $locale;

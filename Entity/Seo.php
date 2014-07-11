@@ -39,6 +39,9 @@ abstract class Seo extends Entity
         return $this->metaTitle;
     }
 
+    /**
+     * @param string $metaTitle
+     */
     public function setMetaTitle($metaTitle)
     {
         $this->metaTitle = $metaTitle;
@@ -49,6 +52,9 @@ abstract class Seo extends Entity
         return $this->metaDescription;
     }
 
+    /**
+     * @param string $metaDescription
+     */
     public function setMetaDescription($metaDescription)
     {
         $this->metaDescription = $metaDescription;
@@ -59,6 +65,9 @@ abstract class Seo extends Entity
         return $this->metaKeywords;
     }
 
+    /**
+     * @param string $metaKeywords
+     */
     public function setMetaKeywords($metaKeywords)
     {
         $this->metaKeywords = $metaKeywords;

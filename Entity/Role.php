@@ -45,6 +45,9 @@ class Role extends Entity
         return $this->name;
     }
 
+    /**
+     * @param string $name
+     */
     public function setName($name)
     {
         $this->name = $name;
@@ -65,6 +68,9 @@ class Role extends Entity
         return $this->automaticEnable;
     }
 
+    /**
+     * @param boolean $automaticEnable
+     */
     public function setAutomaticEnable($automaticEnable)
     {
         $this->automaticEnable = $automaticEnable;
