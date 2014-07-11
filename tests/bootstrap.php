@@ -10,7 +10,7 @@ if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
 
 // Load Nette Framework
 if ($path) {
-    require __DIR__ . '/../vendor/autoload.php';
+    require $path;
 
     \Nette\Diagnostics\Debugger::enable(true);
     \Nette\Diagnostics\Debugger::$strictMode = false;
