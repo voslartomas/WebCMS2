@@ -18,19 +18,19 @@ class Permission extends Entity
 
     /**
      * @ORM\Column(type="boolean", name="`read`")
-     * @var type
+     * @var boolean
      */
     private $read;
 
     /**
      * @ORM\Column(type="boolean", name="`write`", nullable=true)
-     * @var type
+     * @var boolean
      */
     private $write;
 
     /**
      * @ORM\Column(type="boolean", name="`remove`", nullable=true)
-     * @var type
+     * @var boolean
      */
     private $remove;
 
