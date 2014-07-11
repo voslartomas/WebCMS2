@@ -81,7 +81,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
     /**
      * 
      */
-    private function processLangauge() 
+    private function processLanguage() 
     {
         $this->state = $this->getSession('admin');
 
