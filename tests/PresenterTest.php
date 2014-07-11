@@ -56,6 +56,9 @@ abstract class PresenterTestCase extends EntityTestCase
         system('rm -rf tests/temp/cache/* tests/temp/btfj.dat upload/* thumbnails/*');
     }
 
+    /**
+     * @param string $name
+     */
     protected function createPresenter($name)
     {
         $this->presenterName = $name;

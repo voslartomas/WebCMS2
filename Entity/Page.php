@@ -302,6 +302,9 @@ class Page extends Seo
         return $this->boxes;
     }
 
+    /**
+     * @param Box[] $boxes
+     */
     public function setBoxes($boxes)
     {
         $this->boxes = $boxes;
@@ -328,6 +331,9 @@ class Page extends Seo
         return $this->redirect;
     }
 
+    /**
+     * @param boolean $redirect
+     */
     public function setRedirect($redirect)
     {
         $this->redirect = $redirect;

@@ -69,6 +69,9 @@ class Setting extends Entity
         return $this->language;
     }
 
+    /**
+     * @param Language $language
+     */
     public function setLanguage($language)
     {
         $this->language = $language;
@@ -79,6 +82,9 @@ class Setting extends Entity
         return $this->type;
     }
 
+    /**
+     * @param string $type
+     */
     public function setType($type)
     {
         $this->type = $type;

@@ -68,6 +68,9 @@ class Permission extends Entity
         return $this->write;
     }
 
+    /**
+     * @param boolean $write
+     */
     public function setWrite($write)
     {
         $this->write = $write;
@@ -78,6 +81,9 @@ class Permission extends Entity
         return $this->remove;
     }
 
+    /**
+     * @param boolean $remove
+     */
     public function setRemove($remove)
     {
         $this->remove = $remove;
