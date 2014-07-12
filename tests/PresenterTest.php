@@ -90,4 +90,43 @@ abstract class PresenterTestCase extends EntityTestCase
 
         return $this->presenter->run($request);
     }
+
+    protected function createPage($module) 
+    {
+        $this->pageMain = new \WebCMS\Entity\Page;
+        $this->pageMain->setParent(null);
+        $this->pageMain->setLanguage($this->language);
+        $this->pageMain->setModule(null);
+        $this->pageMain->setModuleName('');
+        $this->pageMain->setMetaTitle('meta title');
+        $this->pageMain->setMetaDescription('meta description');
+        $this->pageMain->setMetaKeywords('meta keywords');
+        $this->pageMain->setTitle('Main');
+        $this->pageMain->setPresenter('Presenter');
+        $this->pageMain->setVisible(true);
+        $this->pageMain->setRedirect(false);
+        $this->pageMain->setPath('path/to/page');
+        $this->pageMain->setDefault(true);
+        $this->pageMain->setClass('');
+
+        $this->em->persist($this->pageMain);
+
+        $this->page = new \WebCMS\Entity\Page;
+        $this->page->setParent($this->pageMain);
+        $this->page->setLanguage($this->language);
+        $this->page->setModule(null);
+        $this->page->setModuleName($module);
+        $this->page->setMetaTitle('meta title');
+        $this->page->setMetaDescription('meta description');
+        $this->page->setMetaKeywords('meta keywords');
+        $this->page->setTitle('Home');
+        $this->page->setPresenter('Presenter');
+        $this->page->setVisible(true);
+        $this->page->setRedirect(false);
+        $this->page->setPath('path/to/home');
+        $this->page->setDefault(true);
+        $this->page->setClass('class');
+
+        $this->em->persist($this->page);
+    }
 }

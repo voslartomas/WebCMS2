@@ -45,6 +45,8 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
     {
         $this->setLayout("layout");
 
+        $this->setBasePathModule();
+
         if ($this->isAjax()) {
             $this->invalidateControl('flashMessages');
         }
@@ -630,6 +632,11 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
     public function flashMessage($text, $type = 'info')
     {
         parent::flashMessage($this->translation[$text], $type);
+    }
+
+    public function setBasePathModule()
+    {
+        $this->template->basePathModule = __DIR__ . '/../../';
     }
 
 }
