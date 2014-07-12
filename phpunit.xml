@@ -7,7 +7,10 @@
 
 <filter>
   <whitelist processUncoveredFilesFromWhitelist="true">
-    <directory suffix=".php">src/</directory>
+    <directory suffix=".php">./AdminModule</directory>
+    <directory suffix=".php">./FrontendModule</directory>
+    <directory suffix=".php">./Entity</directory>
+    <directory suffix=".php">./libs</directory>
   </whitelist>
 </filter>
 
