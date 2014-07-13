@@ -40,29 +40,36 @@ abstract class Entity extends \Nette\Object
             $props = array_merge($props, $temp);
         }
 
-        if (strpos($this->getReflection()->getName(), '__CG__') !== FALSE)
+        if (strpos($this->getReflection()->getName(), '__CG__') !== FALSE) {
             $props = $this->getReflection()->getParentClass()->getProperties();
+        }
 
         $array = array();
         foreach ($props as $prop) {
             $getter = 'get' . ucfirst($prop->getName());
 
             if (method_exists($this, $getter)) {
+                $empty = $this->$getter();
+                $empty = is_null($empty) || empty($empty);
 
-            $empty = $this->$getter();
-            $empty = is_null($empty) || empty($empty);
+                if (!is_object($this->$getter())) {
+                    if (($notEmptyValues && !$empty) || !$empty) {
+                        $array[$prop->getName()] = $this->$getter();
+                    }
+                } elseif (is_object($this->$getter())) {
+                    if (method_exists($this->$getter(), 'getId')) {
+                        $array[$prop->getName()] = $this->$getter()->getId();
+                    } elseif ($this->$getter() instanceof \DateTime) {
+                        $array[$prop->getName()] = $this->$getter()->format('d.m.Y');
+                    } elseif ($this->$getter() instanceof \Doctrine\Common\Collections\Collection) {
+                        $tmp = array(); 
+                        foreach($this->$getter() as $item) {
+                            $tmp[] = $item->getId();
+                        }
 
-            if (!is_object($this->$getter())) {
-                if (($notEmptyValues && !$empty) || !$empty) {
-                $array[$prop->getName()] = $this->$getter();
+                        $array[$prop->getName()] = $tmp;
+                    }
                 }
-            } elseif (is_object($this->$getter())) {
-                if (method_exists($this->$getter(), 'getId')) {
-                $array[$prop->getName()] = $this->$getter()->getId();
-                } elseif ($this->$getter() instanceof \DateTime) {
-                $array[$prop->getName()] = $this->$getter()->format('d.m.Y');
-                }
-            }
             }
         }
 
