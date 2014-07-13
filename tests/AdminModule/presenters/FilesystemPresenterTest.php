@@ -32,9 +32,8 @@ class FilesystemPresenterTest extends \WebCMS\Tests\PresenterTestCase
     {
         $response = $this->makeRequest('default', 'GET', array(
             'action' => 'default',
-                'do' => 'makeDirectory',
             'name' => 'test directory'
-        ));
+        ), array(), 'makeDirectory');
 
         $this->assertInstanceOf('Nette\Application\Responses\TextResponse', $response);
         $this->assertEquals(TRUE, file_exists('upload/test-directory/'));
@@ -50,9 +49,8 @@ class FilesystemPresenterTest extends \WebCMS\Tests\PresenterTestCase
 
         $response = $this->makeRequest('default', 'GET', array(
             'action' => 'default',
-                'do' => 'deleteFile',
             'pathToRemove' => '/test-directory'
-        ));
+        ), array(), 'deleteFile');
 
         $this->assertInstanceOf('Nette\Application\Responses\ForwardResponse', $response);
         $this->assertEquals(FALSE, file_exists('upload/test-directory/'));
