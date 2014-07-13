@@ -58,11 +58,6 @@ class Role extends Entity
         return $this->permissions;
     }
 
-    public function setPermissions($permissions)
-    {
-        $this->permissions = $permissions;
-    }
-
     public function getAutomaticEnable()
     {
         return $this->automaticEnable;

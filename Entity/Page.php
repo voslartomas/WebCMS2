@@ -19,11 +19,6 @@ class Page extends Seo
     private $title;
 
     /**
-     * @orm\Column(type="text", nullable=true)
-     */
-    private $description;
-
-    /**
      * @gedmo\Slug(fields={"title"})
      * @orm\Column(length=64, unique=true)
      */
@@ -152,16 +147,6 @@ class Page extends Seo
     public function getTitle()
     {
         return $this->title;
-    }
-
-    public function setDescription($description)
-    {
-        $this->description = $description;
-    }
-
-    public function getDescription()
-    {
-        return $this->description;
     }
 
     public function setParent($parent)

@@ -82,12 +82,12 @@ abstract class PresenterTestCase extends EntityTestCase
         return file_get_contents(__DIR__ . '/temp/cache/presenter.test');
     }
 
-    public function makeRequest($action = 'default', $method = 'GET', $params = array(), $post = array(), $do = '')
+    public function makeRequest($action = 'default', $method = 'GET', $params = array(), $post = array(), $do = '', $files = array())
     {
         $params['action'] = $action;
         $params['do'] = $do;
 
-        $request = new \Nette\Application\Request($this->presenterName, $method, $params, $post);
+        $request = new \Nette\Application\Request($this->presenterName, $method, $params, $post, $files);
             
         return $this->presenter->run($request);
     }
