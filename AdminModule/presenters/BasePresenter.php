@@ -398,7 +398,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         return $resource;
     }
 
-    private function checkRights($acl, $roles, $resource)
+    private function checkRights($acl, $roles)
     {
         $resource = $this->getPageResource();
 
