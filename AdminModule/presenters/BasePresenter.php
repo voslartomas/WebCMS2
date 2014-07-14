@@ -342,6 +342,16 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
             $acl->addRole($r->getName());
         }
 
+        // load resources
+        $resources = $this->initPagesResources();
+
+        // add all resources to acl
+        $acl->addResource('admin:Homepage');
+        $acl->addResource('admin:Login');
+        foreach ($resources as $key => $r) {
+            $acl->addResource($key);
+        }
+
         return $acl;
     }
 
@@ -366,9 +376,8 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         return $resources;
     }
 
-    private function initPermissions()
+    private function initPermissions($identity)
     {
-        $identity = $this->getUser()->getIdentity();
         if (is_object($identity)) {
             $permissions = $identity->data['permissions'];
         } else {
@@ -378,25 +387,45 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         return $permissions;
     }
 
+    private function getPageResource()
+    {
+        if (substr_count(lcfirst($this->name), ':') == 2) {
+            $resource = \WebCMS\Helpers\SystemHelper::strlReplace(':', '', lcfirst($this->name) . $this->getParameter('idPage'));
+        } else {
+            $resource = lcfirst($this->name);
+        }
+
+        return $resource;
+    }
+
+    private function checkRights($acl, $roles, $resource)
+    {
+        $resource = $this->getPageResource();
+
+        $hasRigths = false;
+        foreach ($roles as $role) {
+            $check = $acl->isAllowed($role, $resource, $this->action);
+
+            if ($check) {
+                $hasRigths = true;
+            }
+        }
+
+        return $hasRigths;
+    }
+
     /**
-     * TODO refactoring
+     * Checks user permission.
+     * 
+     * @return void
      */
     private function checkPermission()
     {
         // creates system acl
         $acl = $this->initAcl();
 
-        // load resources
-        $resources = $this->initPagesResources();
-
-        // add all resources to acl
-        $acl->addResource('admin:Homepage');
-        $acl->addResource('admin:Login');
-        foreach ($resources as $key => $r) {
-            $acl->addResource($key);
-        }
-
-        $permissions = $this->initPermissions();
+        $identity = $this->getUser()->getIdentity();
+        $permissions = $this->initPermissions($identity);
         foreach ($permissions as $key => $p) {
             if ($p && $acl->hasResource($key)) {
                 $acl->allow($identity->roles[0], $key, Nette\Security\Permission::ALL);
@@ -412,22 +441,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 
         $roles = $this->getUser()->getRoles();
 
-        if (substr_count(lcfirst($this->name), ':') == 2) {
-            $resource = \WebCMS\Helpers\SystemHelper::strlReplace(':', '', lcfirst($this->name) . $this->getParam('idPage'));
-        } else {
-            $resource = lcfirst($this->name);
-        }
-
-        $hasRigths = false;
-        foreach ($roles as $role) {
-            $check = $acl->isAllowed($role, $resource, $this->action);
-
-            if ($check) {
-                $hasRigths = true;
-            }
-        }
-
-        if (!$hasRigths) {
+        if (!$this->checkRights($acl, $roles)) {
             $this->presenter->flashMessage($this->translation['You do not have a permission to do this operation!'], 'danger');
             $this->redirect(":Admin:Homepage:");
         }
