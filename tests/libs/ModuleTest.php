@@ -24,7 +24,7 @@ class ModuleTest extends \WebCMS\Tests\BasicTestCase
 
         $moduleMock->addBox('name', 'Module', 'function', 'ModuleName');
 
-        $presenter = $moduleMock->getPresenterSettings('Module - the bad one');
+        $moduleMock->getPresenterSettings('Module - the bad one');
         $presenter = $moduleMock->getPresenterSettings('Module');
         
         $this->assertEquals('Test module', $moduleMock->getName());

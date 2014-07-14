@@ -16,7 +16,7 @@ class SettingsTest extends \WebCMS\Tests\EntityTestCase
 
         $settings = new \WebCMS\Settings($this->em, $language);
 
-        $setting = $settings->get('testKey', 'testSection', null, array(
+        $settings->get('testKey', 'testSection', null, array(
             1 => 'first',
             2 => 'second'
         ), TRUE);
