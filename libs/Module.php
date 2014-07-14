@@ -96,7 +96,7 @@ abstract class Module implements IModule
         return $this->cloneable;
     }
 
-    public function translateData($entityManager, $language, $from, $to, \Webcook\Translator\ITranslator $translator)
+    public function translateData($entityManager, $language, $from, $to, \Nette\Localization\ITranslator $translator)
     {
         if (!$this->isTranslatable()) {
             return false;

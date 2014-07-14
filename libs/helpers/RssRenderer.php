@@ -29,25 +29,37 @@ class RssRenderer
 	private $description;
 
 	/**
+	 * Date of last publish of rss.
+	 * 
+	 * @var mixed
+	 */
+	private $publishDate;
+
+	/**
 	 * 
 	 * @param array<RssItem> $items
 	 */
-	public function __construct($items = array())
+	public function __construct($items = array(), $publishDate = null)
 	{
 		$this->items = $items;
+		$this->publishDate = $publishDate;
 	}
 
 	/**
 	 * [render description]
 	 * @return [type]
 	 */
-	public function render()
+	public function render($render = true)
 	{
-		ob_clean();
-		header('Content-Type: application/rss+xml; charset=utf-8');
-		echo $this->createXmlDocument();
-		flush();
-		die();
+		if ($render) {
+			ob_clean();
+			header('Content-Type: application/rss+xml; charset=utf-8');
+			echo $this->createXmlDocument();
+			flush();
+			die();	
+		}
+		
+		return $this->createXmlDocument();
 	}
 
 	/**
@@ -64,12 +76,15 @@ class RssRenderer
   		$version->appendChild($dom->createTextNode('2.0'));
  		$rss->appendChild($version);
   
+ 		$datetime = $this->publishDate ? $this->publishDate : new \DateTime('now');
+ 		$datetime = $datetime->format('M d Y H:i:s');
+
  		$channel = $rss->appendChild($dom->createElement('channel'));
   		$channel->appendChild($dom->createElement('title', $this->title));
   		$channel->appendChild($dom->createElement('link', $this->link));
   		$channel->appendChild($dom->createElement('description', $this->description));
-		$channel->appendChild($dom->createElement('lastBuildDate', date("M d Y H:i:s", time())));
-		$channel->appendChild($dom->createElement('pubDate', date("M d Y H:i:s", time())));
+		$channel->appendChild($dom->createElement('lastBuildDate', $datetime));
+		$channel->appendChild($dom->createElement('pubDate', $datetime));
 
 		foreach ($this->items as $item) {
 			$description = $item->getDescription();

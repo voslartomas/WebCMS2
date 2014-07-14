@@ -28,7 +28,7 @@ interface IModule
      * @param \Webcook\Translator\ITranslator $translator
      * @return false|null
      */
-    public function translateData($entityManager, $language, $from, $to, \Webcook\Translator\ITranslator $translator);
+    public function translateData($entityManager, $language, $from, $to, \Nette\Localization\ITranslator $translator);
 
     /**
      * @param \Doctrine\ORM\EntityManager $entityManager

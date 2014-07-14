@@ -24,8 +24,9 @@ class ModuleTest extends \WebCMS\Tests\BasicTestCase
 
         $moduleMock->addBox('name', 'Module', 'function', 'ModuleName');
 
+        $presenter = $moduleMock->getPresenterSettings('Module - the bad one');
         $presenter = $moduleMock->getPresenterSettings('Module');
-
+        
         $this->assertEquals('Test module', $moduleMock->getName());
         $this->assertEquals('Name Surname', $moduleMock->getAuthor());
         $this->assertCount(2, $moduleMock->getPresenters());
@@ -53,5 +54,10 @@ class ModuleTest extends \WebCMS\Tests\BasicTestCase
         $this->assertFalse($moduleMock->isSearchable());
         $this->assertFalse($moduleMock->isTranslatable());
         $this->assertFalse($moduleMock->isSearchable());
+
+        $moduleMock->isCloneable();
+        $moduleMock->cloneData($this->em, 1, 1, array());
+        $moduleMock->translateData($this->em, 1, 1, array(), $this->getMock('\WebCMS\Translation\Translator'));
+        $moduleMock->search($this->em, 'test', $this->getMock('\WebCMS\Entity\Language'));
     }
 }
