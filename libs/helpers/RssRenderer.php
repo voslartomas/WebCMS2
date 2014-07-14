@@ -100,4 +100,46 @@ class RssRenderer
 
 		return $dom->saveXML();
 	}
+
+    /**
+     * Sets the [$title description].
+     *
+     * @param [type] $title the title
+     *
+     * @return self
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * Sets the [$link description].
+     *
+     * @param [type] $link the link
+     *
+     * @return self
+     */
+    public function setLink($link)
+    {
+        $this->link = $link;
+
+        return $this;
+    }
+
+    /**
+     * Sets the [$description description].
+     *
+     * @param [type] $description the description
+     *
+     * @return self
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
 }

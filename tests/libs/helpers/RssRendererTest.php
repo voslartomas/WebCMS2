@@ -21,15 +21,18 @@ class RssRendererTest extends \WebCMS\Tests\EntityTestCase
         $items = array($rssItem, $rssItem2);
 
         $rssRenderer = new \WebCMS\Helpers\RssRenderer($items, $datetime);
+        $rssRenderer->setTitle('Articles');
+        $rssRenderer->setLink('http://www.domain.tld');
+        $rssRenderer->setDescription('Articles description');
 
         $xml = $rssRenderer->render(false);
 
         $this->assertEquals('<?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0">
   <channel>
-    <title/>
-    <link/>
-    <description/>
+    <title>Articles</title>
+    <link>http://www.domain.tld</link>
+    <description>Articles description</description>
     <lastBuildDate>' . $datetime->format('M d Y H:i:s') . '</lastBuildDate>
     <pubDate>' . $datetime->format('M d Y H:i:s') . '</pubDate>
     <item>
