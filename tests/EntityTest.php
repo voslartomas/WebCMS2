@@ -34,6 +34,10 @@ abstract class EntityTestCase extends BasicTestCase
         $tool->dropDatabase();
     }
 
+    /**
+     * @param string $path
+     * @param string $namespace
+     */
     protected function getClassesMetadata($path, $namespace)
     {
         $metadata = array();
@@ -50,6 +54,9 @@ abstract class EntityTestCase extends BasicTestCase
         return $metadata;
     }
 
+    /**
+     * @param string $path
+     */
     private function isEntity($path)
     {
         foreach ($this->exceptions as $exception) {
