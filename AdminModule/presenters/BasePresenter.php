@@ -11,6 +11,8 @@ use Monolog\Handler\StreamHandler;
 /**
  * Base class for all application presenters.
  * TODO refactoring
+ * @property-read string $name
+ * @property-read string $action
  * @author     Tomáš Voslař <tomas.voslar at webcook.cz>
  * @package    WebCMS2
  */
@@ -327,10 +329,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         return $this;
     }
 
-    /**
-     * TODO refactoring
-     */
-    private function checkPermission()
+    private function initAcl()
     {
         // checking permission of user
         $acl = new Nette\Security\Permission;
@@ -343,64 +342,89 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
             $acl->addRole($r->getName());
         }
 
-        // resources definition
-        $res = \WebCMS\Helpers\SystemHelper::getResources();
+        return $acl;
+    }
+
+    private function initPagesResources()
+    {
+        $resources = \WebCMS\Helpers\SystemHelper::getResources();
 
         // pages resources
         $pages = $this->em->getRepository('WebCMS\Entity\Page')->findAll();
 
         foreach ($pages as $page) {
             if ($page->getParent() != NULL) {
+                $module = $this->createObject($page->getModuleName());
 
-            $module = $this->createObject($page->getModuleName());
-
-            foreach ($module->getPresenters() as $presenter) {
-                $key = 'admin:' . $page->getModuleName() . '' . $presenter['name'] . $page->getId();
-                $res[$key] = $page->getTitle();
-            }
+                foreach ($module->getPresenters() as $presenter) {
+                    $key = 'admin:' . $page->getModuleName() . '' . $presenter['name'] . $page->getId();
+                    $resources[$key] = $page->getTitle();
+                }
             }
         }
 
+        return $resources;
+    }
+
+    private function initPermissions()
+    {
+        $identity = $this->getUser()->getIdentity();
+        if (is_object($identity)) {
+            $permissions = $identity->data['permissions'];
+        } else {
+            $permissions = array();
+        }
+
+        return $permissions;
+    }
+
+    /**
+     * TODO refactoring
+     */
+    private function checkPermission()
+    {
+        // creates system acl
+        $acl = $this->initAcl();
+
+        // load resources
+        $resources = $this->initPagesResources();
+
+        // add all resources to acl
         $acl->addResource('admin:Homepage');
         $acl->addResource('admin:Login');
-        foreach ($res as $key => $r) {
+        foreach ($resources as $key => $r) {
             $acl->addResource($key);
         }
 
-        // resources
-        $identity = $this->getUser()->getIdentity();
-        if (is_object($identity))
-            $permissions = $identity->data['permissions'];
-        else
-            $permissions = array();
-
+        $permissions = $this->initPermissions();
         foreach ($permissions as $key => $p) {
-            if ($p && $acl->hasResource($key))
-            $acl->allow($identity->roles[0], $key, Nette\Security\Permission::ALL);
+            if ($p && $acl->hasResource($key)) {
+                $acl->allow($identity->roles[0], $key, Nette\Security\Permission::ALL);
+            }
         }
 
         // homepage and login page can access everyone
         $acl->allow(Nette\Security\Permission::ALL, 'admin:Homepage', Nette\Security\Permission::ALL);
         $acl->allow(Nette\Security\Permission::ALL, 'admin:Login', Nette\Security\Permission::ALL);
 
-        // superadmin can do everything
+        // superadmin has access to everywhere
         $acl->allow('superadmin', Nette\Security\Permission::ALL, Nette\Security\Permission::ALL);
 
         $roles = $this->getUser()->getRoles();
 
-        $hasRigths = false;
-        $check = false;
-
-        if (substr_count(lcfirst($this->name), ':') == 2)
+        if (substr_count(lcfirst($this->name), ':') == 2) {
             $resource = \WebCMS\Helpers\SystemHelper::strlReplace(':', '', lcfirst($this->name) . $this->getParam('idPage'));
-        else
+        } else {
             $resource = lcfirst($this->name);
+        }
 
+        $hasRigths = false;
         foreach ($roles as $role) {
             $check = $acl->isAllowed($role, $resource, $this->action);
 
-            if ($check)
-            $hasRigths = true;
+            if ($check) {
+                $hasRigths = true;
+            }
         }
 
         if (!$hasRigths) {
