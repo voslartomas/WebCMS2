@@ -93,7 +93,7 @@ class User extends Entity
     }
 
     /**
-     * @return string
+     * @return Role
      */
     public function getRole()
     {
