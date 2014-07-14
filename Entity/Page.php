@@ -306,6 +306,9 @@ class Page extends Seo
         return NULL;
     }
 
+    /**
+     * @param string $slug
+     */
     public function setSlug($slug)
     {
         $this->slug = $slug;
