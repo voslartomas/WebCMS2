@@ -31,7 +31,7 @@
 		"mockery/mockery": "0.*"
     },
     "autoload": {
-        "classmap": ["AdminModule/presenters/", "FrontendModule/presenters/", "libs", "AdminModule/model", "Entity", "tests"]
+        "classmap": ["Common", "AdminModule/presenters/", "FrontendModule/presenters/", "libs", "AdminModule/model", "Entity", "tests"]
     },
     "extra": {
         "branch-alias": {

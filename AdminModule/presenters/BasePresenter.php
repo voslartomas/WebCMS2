@@ -16,7 +16,7 @@ use Monolog\Handler\StreamHandler;
  * @author     Tomáš Voslař <tomas.voslar at webcook.cz>
  * @package    WebCMS2
  */
-abstract class BasePresenter extends Nette\Application\UI\Presenter
+class BasePresenter extends \WebCMS2\Common\BasePresenter
 {
     /** @var Doctrine\ORM\EntityManager */
     protected $em;
