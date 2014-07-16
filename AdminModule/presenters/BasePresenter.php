@@ -181,17 +181,9 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
         }
     }
 
-    private function getSettings()
+    protected function getLanguageId()
     {
-        $query = $this->em->createQuery('SELECT s FROM WebCMS\Entity\Setting s WHERE s.language >= ' . $this->state->language->getId() . ' OR s.language IS NULL');
-        $tmp = $query->getResult();
-
-        $settings = array();
-        foreach ($tmp as $s) {
-            $settings[$s->getSection()][$s->getKey()] = $s;
-        }
-
-        return $settings;
+        return $this->state->language->getId();
     }
 
     protected function createSettingsForm($settings)

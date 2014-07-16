@@ -96,7 +96,7 @@ abstract class Module implements IModule
         return $this->cloneable;
     }
 
-    public function translateData($entityManager, $language, $from, $to, \Nette\Localization\ITranslator $translator)
+    public function translateData($entityManager, $language, $from, $to, $translator)
     {
         if (!$this->isTranslatable()) {
             return false;

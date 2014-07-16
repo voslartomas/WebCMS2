@@ -201,17 +201,9 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
         return $template;
     }
 
-    private function getSettings()
+    protected function getLanguageId()
     {
-        $query = $this->em->createQuery('SELECT s FROM WebCMS\Entity\Setting s WHERE s.language >= ' . $this->language->getId() . ' OR s.language IS NULL');
-        $tmp = $query->getResult();
-
-        $settings = array();
-        foreach ($tmp as $s) {
-            $settings[$s->getSection()][$s->getKey()] = $s;
-        }
-
-        return $settings;
+        return $this->language->getId();
     }
 
     public function createForm($do = '', $action = 'default', $context = null)
@@ -289,23 +281,6 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
         } else {
             $this->flashMessage('No default page for selected language.', 'error');
         }
-    }
-
-    /**
-     * Injects entity manager.
-     * @param  \Doctrine\ORM\EntityManager  $em
-     * @return BasePresenter
-     * @throws \Nette\InvalidStateException
-     */
-    public function injectEntityManager(\Doctrine\ORM\EntityManager $em)
-    {
-        if ($this->em) {
-            throw new \Nette\InvalidStateException('Entity manager has been already set.');
-        }
-
-        $this->em = $em;
-
-        return $this;
     }
 
     /**
