@@ -5,7 +5,7 @@ namespace WebCMS\Translation;
 /**
  * @author Tomáš Voslař <tomas.voslar at webcook.cz>
  */
-class Translator implements \Nette\Localization\ITranslator
+class Translator implements ITranslator
 {
     /* @var TranslationArray */
     private $translations;
