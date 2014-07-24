@@ -54,10 +54,10 @@ class PagesPresenter extends \AdminModule\BasePresenter
         }
 
         $form = $this->createForm();
-        $form->addText('title', 'Name')->setAttribute('class', 'form-control')->required();
+        $form->addText('title', 'Name')->setAttribute('class', 'form-control')->setRequired();
         $form->addText('redirect', 'Redirect')->setAttribute('class', 'form-control');
         $form->addText('class', 'Menu item class')->setAttribute('class', 'form-control');
-        $form->addSelect('module', 'Module')->setTranslator(NULL)->setItems($modulesToSelect)->setAttribute('class', 'form-control')->required();
+        $form->addSelect('module', 'Module')->setTranslator(NULL)->setItems($modulesToSelect)->setAttribute('class', 'form-control')->setRequired();
         $form->addSelect('parent', 'Parent')->setTranslator(NULL)->setItems($hierarchy)->setAttribute('class', 'form-control');
         $form->addCheckbox('default', 'Default');
         $form->addCheckbox('visible', 'Show');
