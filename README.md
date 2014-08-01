@@ -5,7 +5,7 @@ WebCMS2
 [![Latest Stable Version](https://poser.pugx.org/webcms2/webcms2/v/stable.png)](https://github.com/ufik/WebCMS2/releases)
 [![Latest Unstable Version](https://poser.pugx.org/webcms2/webcms2/v/unstable.png)](https://packagist.org/packages/webcms2/webcms2)
 [![License](https://poser.pugx.org/webcms2/webcms2/license.png)](https://packagist.org/packages/webcms2/webcms2)
-[![Travis](https://travis-ci.org/ufik/WebCMS2.png)](https://travis-ci.org/ufik/WebCMS2.png)
+[![Travis](https://travis-ci.org/ufik/WebCMS2.png?branch=0.6)](https://travis-ci.org/ufik/WebCMS2.png?branch=0.6)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ufik/WebCMS2/badges/quality-score.png?b=0.6)](https://scrutinizer-ci.com/g/ufik/WebCMS2/?branch=0.6)
 [![Code Coverage](https://scrutinizer-ci.com/g/ufik/WebCMS2/badges/coverage.png?b=0.6)](https://scrutinizer-ci.com/g/ufik/WebCMS2/?branch=0.6)
 
