@@ -1,9 +1,8 @@
 {block content}
-
-<h1>{_'Emails settings'}</h1>
-
-{include 'tabs.latte' active => 'emails'}
-
+<div class="page-heading">
+	<h1>{_'Emails settings'}</h1>
+	{include 'tabs.latte' active => 'emails'}
+</div>
 <div class="well">
 	{control emailsSettingsForm}
 </div>

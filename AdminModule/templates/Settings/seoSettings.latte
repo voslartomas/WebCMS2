@@ -1,15 +1,13 @@
 {block content}
-
-<h1>{_'Boxes settings'}</h1>
-
-{include 'tabs.latte' active => 'seo'}
-
-<br />
-
+<div class="page-heading">
+	<h1>{_'Boxes settings'}</h1>
+	{include 'tabs.latte' active => 'seo'}
+</div>
+<div class="well">
 <div class="alert alert-info">
 	{_'Default values for meta tags keywords, title and description.'}
 </div>
-	
+
 {control seoBasicForm}
 
 <br />
@@ -46,7 +44,7 @@
 		{/if}
 	{/foreach}
 </table>
-	
+</div><!-- /.well -->
 <script>
 	$(document).on('blur', '.jq_meta', function(){
 		var id = $(this).attr('name');
@@ -56,5 +54,5 @@
 		$.nette.ajax({ url : {link updateMeta}, data : { idPage : id, value : value, type : type} });
 	});
 </script>
-		
+
 {/block}

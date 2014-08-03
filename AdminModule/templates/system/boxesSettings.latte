@@ -1,5 +1,6 @@
+<div class="page-heading">
 <h1>{$actualPage->getTitle()} - {_'Boxes settings'}</h1>
-
+</div>
 {form boxesForm}
 
 <div class="navbar navbar-default">
@@ -9,9 +10,9 @@
 			<span class="navbar-form">{input $key}</span>
 		</div>
 	{/foreach}
-	
+
 	{input submit class => 'btn btn-success'}
-	
+
 </div>
 
 {/form}
