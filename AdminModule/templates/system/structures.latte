@@ -1,7 +1,7 @@
 <ul class="nav bs-sidenav">
 	{foreach $structures as $structure}
 		<li>
-			<span>{$structure->getTitle()}</span>
+			<span class="structure-title">{$structure->getTitle()}</span>
 			{include 'menu.latte' item => $structure}
 		</li>
 	{/foreach}

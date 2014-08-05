@@ -1,6 +1,11 @@
 CHANGE LOG
 --
 
+v0.5.3
+- Fixed system router
+- Fixed issue #17
+- Added RSS helper
+
 v0.5.0
 - Implemented push history
 - Added bower

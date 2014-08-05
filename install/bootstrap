@@ -2,7 +2,7 @@
 
 /**
  * My Application bootstrap file.
- * Rev. 1
+ * Rev. 2
  */
 use Nette\Application\Routers\Route;
 

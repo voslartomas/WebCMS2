@@ -1,9 +1,8 @@
 {block content}
-
-<h1>{_'API settings'}</h1>
-
-{include 'tabs.latte' active => 'api'}
-
+<div class="page-heading">
+	<h1>{_'API settings'}</h1>
+	{include 'tabs.latte' active => 'api'}
+</div>
 <div class="well">
 	{control apiSettingsForm}
 </div>

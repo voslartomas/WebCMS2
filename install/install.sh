@@ -48,6 +48,7 @@ while [ "$task" != "q" ]; do
 		mkdir ./www/admin-client
 		mkdir ./www/client
 		mkdir ./www/css
+		mkdir ./www/less
 		mkdir ./www/js
 		mkdir ./log
 		mkdir ./temp

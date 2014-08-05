@@ -20,29 +20,31 @@
 	<title>WebCMS - {_'Administration'}</title>
 	{block head}
 		{* TODO vytvorit hlavni soubory pro js a css, include pouze techto dvou *}
-		
+
 		<link rel="stylesheet" media="screen" href="{$basePath}/admin-client/grido/client-side/grido.css" type="text/css">
-		
+
 		<link rel="stylesheet" media="screen" href="{$basePath}/admin-client/kendo-ui/styles/kendo.common.min.css" type="text/css">
 		<link rel="stylesheet" media="screen" href="{$basePath}/admin-client/kendo-ui/styles/kendo.bootstrap.min.css" type="text/css">
-		
+
 		<link rel="stylesheet" media="screen" href="{$basePath}/admin-client/bootstrap/dist/css/bootstrap.min.css" type="text/css">
 		<link rel="stylesheet" media="screen" href="{$basePath}/admin-client/bootstrap-tour/build/css/bootstrap-tour.min.css" type="text/css">
-		
+
 		<link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/admin-client/webcms2/css/screen.css" type="text/css">
 		<link rel="stylesheet" media="print" href="{$basePath}/admin-client/webcms2/css/print.css" type="text/css">
-		
+
+		<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700,600&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+
 		<script type="text/javascript" src="{$basePath}/admin-client/jquery/dist/jquery.min.js"></script>
 		<link rel="shortcut icon" href="{$basePath}/favicon.ico" type="image/x-icon">
 	{/block}
 </head>
 
 <body>
-	<script> 
+	<script>
 		var basePath = {$basePath};
-		document.body.className+=' js' 
+		document.body.className+=' js'
 	</script>
-	
+
 	<div class="navbar navbar-inverse navbar-fixed-top">
       <div class="container-fluid system-menu jq_head">
 		<div class="navbar-header" id="tBrand">
@@ -51,46 +53,57 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-		  <a class="navbar-brand ajax" n:href=":Admin:Homepage:">WebCMS</a>
+		  <a class="navbar-brand ajax" n:href=":Admin:Homepage:"></a>
 		</div>
 
 		<div class="navbar-collapse collapse">
 			{snippet header}
 				<ul class="nav navbar-nav">
-					{if $template->checkPermissions($user, 'admin:Pages')}  
+					{if $template->checkPermissions($user, 'admin:Pages')}
 						<li {if $activePresenter == "Admin:Pages"}class="active"{/if}>
 							<a class="ajax" id="tPages" n:href=":Admin:Pages:">{_'Pages'}</a>
 						</li>
-					{/if}
-					{if $template->checkPermissions($user, 'admin:Users')}
-					  <li {if $activePresenter == "Admin:Users"}class="active"{/if}>
-						  <a class="ajax" n:href=":Admin:Users:">{_'Users'}</a>
-					  </li>
-					{/if}
-					{if $template->checkPermissions($user, 'admin:Languages')}
-					  <li {if $activePresenter == "Admin:Languages"}class="active"{/if}>
-						  <a class="ajax" id="tLanguages" n:href=":Admin:Languages:">{_'Languages and translations'}</a>
-					  </li>
-					{/if}
-					{if $template->checkPermissions($user, 'admin:Settings')}
-					  <li {if $activePresenter == "Admin:Settings"}class="active"{/if}>
-						  <a class="ajax" id="tSettings" n:href=":Admin:Settings:">{_'Settings'}</a>
-					  </li>
 					{/if}
 					{if $template->checkPermissions($user, 'admin:Filesystem')}
 					  <li {if $activePresenter == "Admin:Filesystem"}class="active"{/if}>
 						  <a class="ajax" id="tFilesystem" n:href=":Admin:Filesystem:">{_'Filesystem'}</a>
 					  </li>
 					{/if}
-					{if $template->checkPermissions($user, 'admin:Update')}
-					  <li {if $activePresenter == "Admin:Update"}class="active"{/if}>
-						  <a class="ajax" id="tUpdate" n:href=":Admin:Update:">{_'System'} {if $settings->get('needUpdateCount', 'system', 'text')->getValue() != 0}<span class="badge">{$settings->get('needUpdateCount', 'system', 'text')->getValue()}</span>{/if}</a>
-					  </li>
-					{/if}
+
+					  <li class="sub {if $activePresenter == "Admin:Settings"}active{/if}">
+				  		<a class="subopen">{_'Settings'}</a>
+						  <ul>
+					 	 	{if $template->checkPermissions($user, 'admin:Settings')}
+							  <li {if $activePresenter == "Admin:Update"}class="active"{/if}>
+								  <a class="ajax" id="tSettings" n:href=":Admin:Settings:">{_'Settings'}</a>
+							  </li>
+							{/if}
+						  	{if $template->checkPermissions($user, 'admin:Users')}
+							  <li {if $activePresenter == "Admin:Users"}class="active"{/if}>
+								  <a class="ajax" n:href=":Admin:Users:">{_'Users'}</a>
+							  </li>
+							{/if}
+							{if $template->checkPermissions($user, 'admin:Languages')}
+							  <li {if $activePresenter == "Admin:Languages"}class="active"{/if}>
+								  <a class="ajax" id="tLanguages" n:href=":Admin:Languages:">{_'Languages and translations'}</a>
+							  </li>
+							{/if}
+							{if $template->checkPermissions($user, 'admin:Update')}
+							  <li {if $activePresenter == "Admin:Update"}class="active"{/if}>
+								  <a class="ajax" id="tUpdate" n:href=":Admin:Update:">{_'System'} {if $settings->get('needUpdateCount', 'system', 'text')->getValue() != 0}<span class="badge">{$settings->get('needUpdateCount', 'system', 'text')->getValue()}</span>{/if}</a>
+							  </li>
+							{/if}
+						  </ul>
+				  		</li>
+
+
+
+
+
 				  </ul>
-			
+
 			<div class="navbar-form navbar-right">
-				
+
 				<div class="btn-group">
 					{if count($languages) > 1}
 						<form method="get" class="pull-left">
@@ -101,11 +114,11 @@
 							</select>
 						</form>
 					{/if}
-					
-					<button type="button" class="btn btn-primary btn-ms dropdown-toggle" data-toggle="dropdown">
+
+					<button type="button" class="dropdown-toggle" data-toggle="dropdown">
 						{$user->getIdentity()->getData()['username']} <span class="caret"></span>
 					</button>
-				  <ul class="dropdown-menu" role="menu">
+				  <ul class="navbar dropdown-menu" role="menu">
 					<li><a n:href=":Admin:users:updateUser id =>  $user->getIdentity()->id" class="ajax" data-remote="false" data-target="#myModal" data-toggle="modal">{_'Account settings'}</a></li>
 					<li>
 						<a n:href=":Admin:Homepage:" class="ajax" id="tutorial">
@@ -113,21 +126,20 @@
 						</a>
 					</li>
 					<li>
-						<a n:href=":Frontend:Homepage:" onclick="$(this).attr('target', '_blank');">{_'Go to frontend'}</a>  
+						<a n:href=":Frontend:Homepage:" onclick="$(this).attr('target', '_blank');">{_'Go to frontend'}</a>
 					</li>
-					<li class="divider"></li>
 					<li>
-						<a n:href=":Admin:Login:out" class="logout" data-confirm="{_'Are you sure?'}">{_'Sign out'}</a>  
+						<a n:href=":Admin:Login:out" class="logout" data-confirm="{_'Are you sure?'}">{_'Sign out'}</a>
 					</li>
 				  </ul>
 				</div>
-					
+
 			</div>
 			{/snippet}
 		</div>
 	</div>
 	</div>
-			
+
 	<div id="loader">
 		 <div class="progress progress-striped active" style="width: 300px;">
 			<div class="progress-bar"  role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
@@ -135,7 +147,7 @@
 			</div>
 		  </div>
 	</div>
-			
+
 	<div class="spinner-wrapper">
 		<span>{_'This operation can take a long time. Please be patient.'}</span>
 		<div class="spinner">
@@ -144,37 +156,33 @@
 			<div class="bounce3"></div>
 		</div>
 	</div>
-	 
+
+	<aside>
+
+		{include 'system/structures.latte'}
+
+	</aside>
+
 	<div class="container-fluid content">
-		
+
 		<div class="container flash-messages">
 			{snippet flashMessages}
 				<div n:foreach="$flashes as $flash" class="alert alert-{$flash->type} fade in">{$flash->message}<a href="#" class="close" data-dismiss="alert">&times;</a></div>
 			{/snippet}
 		</div>
-		
+
 		{snippet content}
 			{block #content}Výchozí obsah{/block}
 		{/snippet}
-		
+
 	</div>
-	
-	<div class="sidebar sidebar-offcanvas" id="sidebar" role="navigation">
-		
-          <div class="well sidebar-nav">
-			  <a class="navbar-brand ajax" n:href=":Admin:Homepage:">WebCMS</a>
-			  <br style="clear: both;" />
-			  
-            {include 'system/structures.latte'}
-          </div><!--/.well -->
-        </div>
-	
+
 	{snippet footer}
-	<footer class="navbar navbar-default footer">
+	{* <footer class="navbar navbar-default footer">
 		<p class="navbar-text pull-right">WebCMS {_'version'} {$version['version']} {if !empty($version['versionHash'])}{_'revision:'} {$version['versionHash']}{/if}. &copy; Webcook 2009-2014</p>
-	</footer>
+	</footer> *}
 	{/snippet}
-	
+
 	<!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -184,7 +192,7 @@
 	  </div>
 	  <div class="modal-body">
 		 {define modalContent}{/define}
-		  
+
 		{snippet modalContent}
 				{include #modalContent}
 		{/snippet}

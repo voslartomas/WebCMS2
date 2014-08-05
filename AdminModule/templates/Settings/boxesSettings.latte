@@ -1,10 +1,9 @@
 {block content}
-
-<h1>{_'Boxes settings'}</h1>
-
-{include 'tabs.latte' active => 'boxes'}
-
-
+<div class="page-heading">
+	<h1>{_'Boxes settings'}</h1>
+	{include 'tabs.latte' active => 'boxes'}
+</div>
+<div class="well">
 <table class="table table-bordered table-hover">
 	<tr>
 		<th>{_'Page name'}</th>
@@ -48,17 +47,17 @@
 
 
 <script>
-    
+
         $('.jq_assign_boxes').click(function(){
             var toAssign = $(this).parent().find('.jq_box_batch').val();
             var boxId = $(this).data('boxid');
-            
+
             $("select[name*=" + boxId + "]").each(function(){
                  $(this).val(toAssign);
                  $(this).change();
             });
         });
-    
+
 	$(document).on('change', '.jq_box', function(){
 		var name = $(this).attr('name');
 		var value = $(this).val();
@@ -66,5 +65,6 @@
 		$.nette.ajax({ url : {link updateBox!}, data : { name : name, value : value} });
 	});
 </script>
-		
+
+</div><!-- /.well -->
 {/block}

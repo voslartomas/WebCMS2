@@ -1,8 +1,7 @@
 {var $robots = noindex}
 
 {block #content}
-
-<div class="container">
+	<!-- TODO bud odladit - nejde po prihlaseni prepnout do jine nez EN mutace a nebo to zahodit z loginPage
 
 	<div class="navbar-form navbar-right">
 		<form method="get" class="pull-left">
@@ -15,15 +14,33 @@
 		</form>
 	</div>
 
-	{form signInForm class => 'form-signin'}
-			<h2 class="form-signin-heading">{_'User login'}</h2>
-			{input username class => 'form-control'}
-			{input password class => 'form-control'}
-			<label class="checkbox">
-			  {input remember} {label remember /}
-			</label>
-			{input send class => "btn btn-lg btn-primary btn-block"}
-	{/form}
+	-->
+<div class="container">
+	<div class="row">
+		<div class="webcookcms-logo col-md-4 col-md-offset-4">
+			<img src="{$basePath}/admin-client/webcms2/images/webcookcms-logo-login.png" alt="webcookcms-logo-login">
+		</div>
+	</div>
+	<div class="row">
+		<div class="signin-wrap col-md-4 col-md-offset-4">
+		{form signInForm class => 'form-signin'}
+				<!--<h2 class="form-signin-heading">{_'User login'}</h2>-->
+				<div class="input-group">
+					{input username class => 'form-control'}
+					<span class="input-group-addon glyphicon glyphicon-user"></span>
+				</div>
+				<div class="input-group">
+					{input password class => 'form-control'}
+					<span class="input-group-addon glyphicon glyphicon-lock"></span>
+				</div>
+				<label class="checkbox">
+				  {input remember} {label remember /}
+				</label>
+				{input send class => "btn btn-lg btn-primary btn-block"}
+		{/form}
+		<span class="webcookcms-version">WEBCOOK.CMS v. </span>
+		</div>
+	</div>
 </div> <!-- /container -->
 
 {/block}
