@@ -522,4 +522,25 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         parent::flashMessage($this->translation[$text], $type);
     }
 
+    /**
+    * Formats view template file names.
+    * @return array
+    */
+    public function formatTemplateFiles()
+    {
+        $name = $this->getName();
+        $presenter = substr($name, strrpos(':' . $name, ':'));
+        $dir = dirname($this->getReflection()->getFileName());
+        $dir = is_dir("$dir/templates") ? $dir : dirname($dir);
+        $appPath = APP_DIR . "/templates/" . lcfirst($presenter) . "-module/$presenter/$this->view.latte";
+        
+        return array(
+            $appPath,
+            "$dir/templates/$presenter/$this->view.latte",
+            "$dir/templates/$presenter.$this->view.latte",
+            "$dir/templates/$presenter/$this->view.phtml",
+            "$dir/templates/$presenter.$this->view.phtml",
+        );
+    }
+
 }
