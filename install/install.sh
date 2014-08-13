@@ -11,11 +11,13 @@ function denyAccess {
 
 	touch ./temp/.htaccess
 	touch ./log/.htaccess
+	touch ./libs/.htaccess
 	
 	mkdir ./www/upload/backups
 
 	echo $'Order Allow,Deny\nDeny from all' > ./temp/.htaccess
 	echo $'Order Allow,Deny\nDeny from all' > ./log/.htaccess
+	echo $'Order Allow,Deny\nDeny from all' > ./libs/.htaccess
 	echo $'Order Allow,Deny\nDeny from all' > ./www/upload/backups/.htaccess
 }
 
@@ -43,10 +45,6 @@ while [ "$task" != "q" ]; do
 		# creates dirs
 		mkdir ./www/upload
 		mkdir ./www/thumbnails
-		mkdir ./www/admin-client
-		mkdir ./www/client
-		mkdir ./www/css
-		mkdir ./www/js
 		mkdir ./log
 		mkdir ./temp
 		mkdir ./temp/sessions
@@ -81,10 +79,6 @@ while [ "$task" != "q" ]; do
 
 		parseVersion
 
-		#call bower install
-		cd ./libs/webcms2/webcms2
-		bower install
-
 		vypis="Installation has been executed. Choose another command or type 'q' to quit."
 	
 	elif [ "$task" == "2" ]; then
@@ -108,10 +102,6 @@ while [ "$task" != "q" ]; do
 		denyAccess
 
 		parseVersion
-
-		#call bower update
-		cd ./libs/webcms2/webcms2
-		bower update
 
 		vypis="System has been updated."
 

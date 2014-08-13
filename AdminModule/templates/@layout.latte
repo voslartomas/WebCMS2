@@ -20,17 +20,12 @@
 	<title>WebCMS - {_'Administration'}</title>
 	{block head}
 		{* TODO vytvorit hlavni soubory pro js a css, include pouze techto dvou *}
-		
-		<link rel="stylesheet" media="screen" href="{$basePath}/admin-client/grido/client-side/grido.css" type="text/css">
-		
-		<link rel="stylesheet" media="screen" href="{$basePath}/admin-client/kendo-ui/styles/kendo.common.min.css" type="text/css">
-		<link rel="stylesheet" media="screen" href="{$basePath}/admin-client/kendo-ui/styles/kendo.default.min.css" type="text/css">
-		
-		<link rel="stylesheet" media="screen" href="{$basePath}/admin-client/bootstrap/dist/css/bootstrap.min.css" type="text/css">
-		
 		<link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/client-admin/css/screen.css" type="text/css">
 		<link rel="stylesheet" media="print" href="{$basePath}/client-admin/css/print.css" type="text/css">
-		
+		<link rel="stylesheet" media="screen" href="{$basePath}/client-admin/grido/grido.css" type="text/css">
+		<link rel="stylesheet" media="screen" href="{$basePath}/client-admin/kendoui/kendo.common.css" type="text/css">
+		<link rel="stylesheet" media="screen" href="{$basePath}/client-admin/kendoui/kendo.default.css" type="text/css">
+		<link rel="stylesheet" media="screen" href="{$basePath}/client-admin/bootstrap/css/bootstrap.css" type="text/css">
 		<link rel="shortcut icon" href="{$basePath}/favicon.ico" type="image/x-icon">
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
 	{/block}
@@ -43,7 +38,7 @@
 	</script>
 	
 	<div class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container-fluid system-menu jq_head">
+      <div class="container system-menu jq_head">
 		<div class="navbar-header">
 		  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
             <span class="icon-bar"></span>
@@ -138,7 +133,7 @@
 		</div>
 	</div>
 	 
-	<div class="container-fluid content">
+	<div class="container content">
 		
 		<div class="container flash-messages">
 			{snippet flashMessages}
@@ -186,14 +181,14 @@
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 	
-		<script type="text/javascript" src="{$basePath}/admin-client/kendo-ui/js/kendo.web.min.js"></script>
-		<script type="text/javascript" src="{$basePath}/admin-client/ckeditor/ckeditor.js"></script>
-		<script type="text/javascript" src="{$basePath}/admin-client/ckeditor/adapters/jquery.js"></script>
-		<script type="text/javascript" src="{$basePath}/admin-client/bootstrap/dist/js/bootstrap.min.js"></script>
-		<script type="text/javascript" src="{$basePath}/admin-client/bootbox/bootbox.js"></script>
-		<script type="text/javascript" src="{$basePath}/admin-client/grido/client-side/grido.js"></script>
-		<script type="text/javascript" src="{$basePath}/admin-client/nette.ajax.js/nette.ajax.js"></script>
-		<script type="text/javascript" src="{$basePath}/admin-client/nette-forms-o5/netteForms.js"></script>
-		<script type="text/javascript" src="{$basePath}/admin-client/js/Webcms/Webcms.js"></script>
+		<script type="text/javascript" src="{$basePath}/client-admin/kendoui/kendo.web.js"></script>
+		<script type="text/javascript" src="{$basePath}/client-admin/ckeditor/ckeditor.js"></script>
+		<script src="{$basePath}/client-admin/ckeditor/adapters/jquery.js"></script>
+		<script type="text/javascript" src="{$basePath}/client-admin/bootstrap/js/bootstrap.js"></script>
+		<script type="text/javascript" src="{$basePath}/client-admin/plugins/bootbox.min.js"></script>
+		<script type="text/javascript" src="{$basePath}/client-admin/grido/grido.js"></script>
+		<script type="text/javascript" src="{$basePath}/client-admin/plugins/nette.ajax.js"></script>
+		<script type="text/javascript" src="{$basePath}/client-admin/js/netteForms.js"></script>
+		<script type="text/javascript" src="{$basePath}/client-admin/js/Webcms/Webcms.js"></script>
 </body>
 </html>
