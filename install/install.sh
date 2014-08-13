@@ -7,20 +7,6 @@ function parseVersion {
 	composer show --installed > ./libs/webcms2/webcms2/AdminModule/version
 }
 
-function denyAccess {
-
-	touch ./temp/.htaccess
-	touch ./log/.htaccess
-	touch ./libs/.htaccess
-	
-	mkdir ./www/upload/backups
-
-	echo $'Order Allow,Deny\nDeny from all' > ./temp/.htaccess
-	echo $'Order Allow,Deny\nDeny from all' > ./log/.htaccess
-	echo $'Order Allow,Deny\nDeny from all' > ./libs/.htaccess
-	echo $'Order Allow,Deny\nDeny from all' > ./www/upload/backups/.htaccess
-}
-
 while [ "$task" != "q" ]; do
 	
 	if [ "$1" == "" ]; then
@@ -75,8 +61,6 @@ while [ "$task" != "q" ]; do
 		# run initial SQL script
 		php www/index.php --ansi dbal:import ./libs/webcms2/webcms2/install/initial.sql
 
-		denyAccess
-
 		parseVersion
 
 		vypis="Installation has been executed. Choose another command or type 'q' to quit."
@@ -99,8 +83,6 @@ while [ "$task" != "q" ]; do
 		# run initial SQL script
 		php www/index.php --ansi dbal:import ./libs/webcms2/webcms2/install/initial.sql
 		
-		denyAccess
-
 		parseVersion
 
 		vypis="System has been updated."
