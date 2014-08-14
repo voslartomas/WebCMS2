@@ -177,6 +177,11 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
             $this->setDefaultSeo();
         }
 
+        // generate sitemap if doesn't exist yet
+        if (!file_exists('sitemap.xml')) {
+            $this->generateSitemap();
+        }
+
         if ($this->isAjax()) {
             $this->invalidateControl();
 

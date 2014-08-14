@@ -44,4 +44,42 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 
         return $this;
     }
+
+    /**
+     * Generate sitemap.xml file in www (public) directory.
+     * 
+     * @return XML sitemap
+     */
+    public function generateSitemap()
+    {
+        $sitemapXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n";
+
+        $repository = $this->em->getRepository('WebCMS\Entity\Page');
+        $pages = $repository->findAll();
+
+        foreach ($pages as $page) {
+            if ($page->getParent() !== null && $page->getVisible()) {
+                $sitemapXml .= "<url>\n\t<loc>" . $this->getSitemapLink($page) . "</loc>\n</url>\n";
+            }
+        }
+
+        $sitemapXml .= '</urlset>';
+
+        file_put_contents('./sitemap.xml', $sitemapXml);
+    }
+
+    /**
+     * Get single sitemap link url address.
+     * 
+     * @param  \WebCMS2\Entity\Page $page Page entity object.
+     * @return string               Url address of the link.
+     */
+    private function getSitemapLink($page)
+    {
+        $url = $this->context->httpRequest->url->baseUrl;
+        $url .= !$page->getLanguage()->getDefaultFrontend() ? $page->getLanguage()->getAbbr() . '/' : '';
+        $url .= $page->getPath();
+
+        return $url;
+    }
 }
