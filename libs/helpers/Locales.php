@@ -424,7 +424,7 @@ class Locales
                 $country = self::$countryCodes[$ccode];
 
                 if (strlen($language) && strlen($country)) {
-                $locale_data[$l] = "$language - $country - {$parts[1]}";
+                    $locale_data[$l] = "$language - $country - " . (count($parts) >1 ? $parts[1] : '');
                 }
             }
             }
