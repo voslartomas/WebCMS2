@@ -560,10 +560,14 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
     public function formatTemplateFiles()
     {
         $name = $this->getName();
-        $presenter = substr($name, strrpos(':' . $name, ':'));
+
+        $path = explode(':', $name);
+        $module = $path[1];
+        $presenter = $path[2];
         $dir = dirname($this->getReflection()->getFileName());
         $dir = is_dir("$dir/templates") ? $dir : dirname($dir);
-        $appPath = APP_DIR . "/templates/" . lcfirst($presenter) . "-module/$presenter/$this->view.latte";
+        
+        $appPath = APP_DIR . "/templates/" . lcfirst($module) . "-module/$presenter/$this->view.latte";
         
         return array(
             $appPath,
