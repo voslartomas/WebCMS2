@@ -49,20 +49,25 @@ abstract class Entity extends \Nette\Object
 
             if (method_exists($this, $getter)) {
 
-            $empty = $this->$getter();
-            $empty = is_null($empty) || empty($empty);
+                $empty = $this->$getter();
+                $empty = is_null($empty) || empty($empty);
 
-            if (!is_object($this->$getter())) {
-                if (($notEmptyValues && !$empty) || !$empty) {
-                $array[$prop->getName()] = $this->$getter();
-                }
-            } elseif (is_object($this->$getter())) {
-                if (method_exists($this->$getter(), 'getId')) {
-                $array[$prop->getName()] = $this->$getter()->getId();
-                } elseif ($this->$getter() instanceof \DateTime) {
-                $array[$prop->getName()] = $this->$getter()->format('d.m.Y');
-                }
-            }
+                if (!is_object($this->$getter())) {
+                    if (($notEmptyValues && !$empty) || !$empty) {
+                        $array[$prop->getName()] = $this->$getter();
+                    }
+                } elseif (is_object($this->$getter())) {
+                    if (method_exists($this->$getter(), 'getId')) {
+                        $array[$prop->getName()] = $this->$getter()->getId();
+                    } elseif ($this->$getter() instanceof \DateTime) {
+                        $array[$prop->getName()] = $this->$getter()->format('d.m.Y');
+                    } elseif ($this->$getter() instanceof \Doctrine\ORM\PersistentCollection) {
+                        $iterable = $this->$getter();
+                        foreach ($iterable as $item) {
+                            $array[$prop->getName()][] = $item->getId();
+                         }
+                    }
+                } 
             }
         }
 
