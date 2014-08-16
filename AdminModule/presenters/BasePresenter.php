@@ -616,4 +616,27 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         parent::flashMessage($this->translation[$text], $type);
     }
 
+     /**
+      * Formats layout template file names.
+      * @return array
+      */
+     public function formatLayoutTemplateFiles()
+     {
+         $name = $this->getName();
+         $presenter = substr($name, strrpos(':' . $name, ':'));
+         $layout = $this->layout ? $this->layout : 'layout';
+         $dir = dirname($this->getReflection()->getFileName());
+         $dir = is_dir("$dir/templates") ? $dir : dirname($dir);
+         
+         $list = array(
+             APP_DIR . "/../libs/webcms2/webcms2/AdminModule/templates/@$layout.latte",
+         );
+
+         do {
+             $list[] = "$dir/templates/@$layout.latte";
+             $list[] = "$dir/templates/@$layout.phtml";
+             $dir = dirname($dir);
+         } while ($dir && ($name = substr($name, 0, strrpos($name, ':'))));
+         return $list;
+     }
 }
