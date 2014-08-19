@@ -272,7 +272,7 @@ class PagesPresenter extends \AdminModule\BasePresenter
         $pages = $repository->findAll();
 
         foreach ($pages as $page) {
-            if ($page->getParent() !== null && $page->getVisible()) {
+            if ($page->getParent() !== null) {
             $sitemapXml .= "<url>\n\t<loc>" . $this->getSitemapLink($page) . "</loc>\n</url>\n";
             }
         }
