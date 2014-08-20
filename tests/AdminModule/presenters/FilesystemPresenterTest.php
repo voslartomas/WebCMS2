@@ -65,7 +65,7 @@ class FilesystemPresenterTest extends \WebCMS\Tests\PresenterTestCase
         
         $response = $this->makeRequest('default', 'POST', array('path' => 'test-directory'), array(), 'uploadFile',
             array(
-                    'files' => $file
+                    'file' => $file
                 )
             );
 
