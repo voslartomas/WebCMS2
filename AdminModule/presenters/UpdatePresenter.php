@@ -239,7 +239,7 @@ class UpdatePresenter extends \AdminModule\BasePresenter
         $installErrorLog = './log/install-error.log';
 
         putenv("COMPOSER_HOME=/usr/bin/.composer");
-        exec("rm -rf ../app/proxies");
+        exec("rm -rf ../app/proxies/*");
         exec("cd ../;composer update $name -n > $installLog 2> $installErrorLog");
         exec("cd ../;composer dumpautoload");
         exec("./libs/webcms2/webcms2/install/install.sh 3");
