@@ -368,6 +368,9 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
         return $resources;
     }
 
+    /**
+     * @param Nette\Security\IIdentity|null $identity
+     */
     private function initPermissions($identity)
     {
         if (is_object($identity)) {
@@ -390,6 +393,9 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
         return $resource;
     }
 
+    /**
+     * @param Nette\Security\Permission $acl
+     */
     private function checkRights($acl, $roles)
     {
         $resource = $this->getPageResource();
