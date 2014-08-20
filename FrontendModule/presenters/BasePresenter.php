@@ -504,7 +504,7 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
     
     /**
     * Formats view template file names.
-    * @return array
+    * @return string[]
     */
     public function formatTemplateFiles()
     {
