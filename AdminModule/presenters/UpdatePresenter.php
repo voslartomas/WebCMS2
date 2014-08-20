@@ -280,7 +280,8 @@ class UpdatePresenter extends \AdminModule\BasePresenter
 
         $module = $values->module;
         $version = $values->version;
-        exec("cd ../;composer require $module $version > $installLog 2> $installErrorLog");
+        exec("cd ../;composer require $module $version --no-update > $installLog 2> $installErrorLog");
+        exec("cd ../;composer update");
         exec("../libs/webcms2/webcms2/install/install.sh 3; >");
 
         $this->redirect('default');
