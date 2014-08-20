@@ -55,13 +55,13 @@ class FilesystemPresenterTest extends \WebCMS\Tests\PresenterTestCase
 
         $this->createSystemThumbnail();
 
-        $file = new \Nette\Http\FileUpload(array(
+        $file = array(new \Nette\Http\FileUpload(array(
             'name' => 'empty.jpg',
             'tmp_name' => '/tmp/empty.jpg',
             'type' => 'text/plain',
             'size' => 0,
             'error' => 0
-        ));
+        )));
         
         $response = $this->makeRequest('default', 'POST', array('path' => 'test-directory'), array(), 'uploadFile',
             array(
