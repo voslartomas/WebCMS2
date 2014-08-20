@@ -87,22 +87,27 @@ class FilesystemPresenter extends \AdminModule\BasePresenter
     public function handleUploadFile($path)
     {
         $files = $this->getRequest()->getFiles();
-        $file = $files['files'];
+        $files = $files['file'];
 
+        foreach ($files as $file) {
+            $this->uploadSingleFile($file);
+        }
+        
+        $this->reloadContent();
+        $this->flashMessage($this->translation['File has been uploaded']);
+        $this->sendPayload();
+    }
+
+    private function uploadSingleFile($file)
+    {
         $filePath = $this->path . '' . $file->getSanitizedName();
         $file->move($filePath);
 
         $f = new \SplFileInfo($filePath);
-        $f->getBasename();
 
         if ($file->isImage()) {
             $this->thumbnailCreator->createThumbnails($f->getBasename(), str_replace($f->getBasename(), '', $filePath));
         }
-
-        $this->reloadContent();
-        $this->flashMessage($this->translation['File has been uploaded']);
-
-        $this->sendPayload();
     }
 
     public function handleDeleteFile($pathToRemove)
