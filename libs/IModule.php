@@ -30,7 +30,7 @@ interface IModule
      * 
      * @return false|null
      */
-    public function translateData($entityManager, $language, $from, $to, $translator);
+    public function translateData($entityManager, $language, $from, $to, \Webcook\Translator\ITranslator $translator);
 
     /**
      * @param \Doctrine\ORM\EntityManager $entityManager
