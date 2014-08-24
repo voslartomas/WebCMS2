@@ -57,7 +57,7 @@ class ModuleTest extends \WebCMS\Tests\BasicTestCase
 
         $moduleMock->isCloneable();
         $moduleMock->cloneData($this->em, 1, 1, array());
-        $moduleMock->translateData($this->em, 1, 1, array(), $this->getMock('\Webcook\Translator\Translator'));
+        $moduleMock->translateData($this->em, 1, 1, array(), $this->getMock('\Webcook\Translator\ITranslator'));
         $moduleMock->search($this->em, 'test', $this->getMock('\WebCMS\Entity\Language'));
     }
 }
