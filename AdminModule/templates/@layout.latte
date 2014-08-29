@@ -70,9 +70,9 @@
 					  </li>
 					{/if}
 
-					  <li class="sub {if $activePresenter == "Admin:Settings"}active{/if}">
-				  		<a class="subopen">{_'Settings'}</a>
-						  <ul>
+				  	<li class="sub {if $activePresenter == "Admin:Settings"}active{/if}">
+			  			<button type="button" class="dropdown-toggle tabButton" data-toggle="dropdown">{_'Settings'}</button>
+						  <ul aria-labelledby="settings" class="navbar dropdown-menu" role="menu">
 					 	 	{if $template->checkPermissions($user, 'admin:Settings')}
 							  <li {if $activePresenter == "Admin:Update"}class="active"{/if}>
 								  <a class="ajax" id="tSettings" n:href=":Admin:Settings:">{_'Settings'}</a>
@@ -94,7 +94,7 @@
 							  </li>
 							{/if}
 						  </ul>
-				  		</li>
+			  		</li>
 
 
 
