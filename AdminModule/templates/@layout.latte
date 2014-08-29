@@ -71,7 +71,7 @@
 					{/if}
 
 				  	<li class="sub {if $activePresenter == "Admin:Settings"}active{/if}">
-			  			<button type="button" class="dropdown-toggle tabButton" data-toggle="dropdown">{_'Settings'}</button>
+			  			<button type="button" class="dropdown-toggle tabButton" data-toggle="dropdown">{_'Settings'} <span class="caret"></span></button>
 						  <ul aria-labelledby="settings" class="navbar dropdown-menu" role="menu">
 					 	 	{if $template->checkPermissions($user, 'admin:Settings')}
 							  <li {if $activePresenter == "Admin:Update"}class="active"{/if}>
