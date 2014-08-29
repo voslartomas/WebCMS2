@@ -22,25 +22,6 @@
 	<div class="page-heading">
 	<h1>{_'Filesystem'}</h1>
 	</div>
-	<script>
-		var fsPath = {$fsPath};
-		$(function(){
-			$(".jq_newDir").click(function(e){
-				e.preventDefault();
-				
-				bootbox.prompt({_'Enter name of the new directory:'}, function(text){
-					if(text) {
-						$.nette.ajax({ url : {plink makeDirectory!}, data : { name : text } })
-					}
-				});
-			});
-
-			var path;
-			$(".dir").on('click', function(){
-				webcms.filesystem.setPath($(this).data('path'));
-			});
-		});
-	</script>
 	<div class="well">
 	<div id="uploader" class="k-content">
 		<a class="btn btn-primary jq_newDir" n:href="makeDirectory!">{_'Create new directory'}</a>
@@ -59,65 +40,11 @@
 			</div>
 		</div>
 		<br />
-		<form>
+		<form id="filesystemForm">
 			<input type="file" name="file[]" id="upload" multiple />
 			<br />
 			<input type="submit" class="btn btn-primary" value="{_'Upload files'}" />
 		</form>
-
-		<script>
-			var directory = '';
-			function onComplete(){
-				if (!webcms.filesystem.getPath()) {
-					webcms.filesystem.setPath(fsPath);
-				}
-
-				$("#uploadStatus").hide();
-				$.nette.ajax({ url : {plink default}, data : { path : webcms.filesystem.getPath() } });
-			}
-
-			$(function(){
-
-				$(document).on('submit', 'form', function(e){
-					e.preventDefault();
-					$("#uploadStatus").show();
-
-					var formData = new FormData($('form')[0]);
-					$.ajax({
-				        url: {plink uploadFile!},  //Server script to process data
-				        type: 'POST',
-				        xhr: function() {  // Custom XMLHttpRequest
-				            var myXhr = $.ajaxSettings.xhr();
-				            if(myXhr.upload){ // Check if upload property exists
-				                myXhr.upload.addEventListener('progress', progressHandlingFunction, false); // For handling the progress of the upload
-				            }
-				            return myXhr;
-				        },
-				        //Ajax events
-				        success: onComplete,
-				        //error: errorHandler,
-				        // Form data
-				        data: formData,
-				        //Options to tell jQuery not to process data or worry about content-type.
-				        cache: false,
-				        contentType: false,
-				        processData: false
-				    });
-				});
-				
-				function progressHandlingFunction(e){
-				    if(e.lengthComputable){
-				    	var percentage = Math.round((e.loaded / e.totalSize) * 100, 2);
-				    	var totalSize = Math.round(e.totalSize / 1024 / 1024);
-				    	var uploaded = Math.round(e.loaded / 1024 / 1024);
-
-				    	$("#totalSize").html(totalSize + "Mb");
-				    	$("#uploaded").html(uploaded + "Mb");
-				    	$("#progress").css({"width": percentage + "%"});
-				    }
-				}
-			});
-		</script>
 	</div>
 	<br />
 	<a class="btn btn-primary ajax" n:href="default path => $backLink">{_'Back'}</a>

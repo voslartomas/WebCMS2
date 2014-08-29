@@ -214,5 +214,16 @@
 		<script type="text/javascript" src="{$basePath}/admin-client/webcms2/js/Webcms/Webcms.filesystem.js"></script>
 		<script type="text/javascript" src="{$basePath}/admin-client/webcms2/js/Webcms/Webcms.translator.js"></script>
 		<script type="text/javascript" src="{$basePath}/admin-client/webcms2/js/Webcms/Webcms.tour.js"></script>
+		<script>
+			$(function(){
+				webcms.filesystem.setUrl({plink filesystem:default});
+				webcms.filesystem.setUploadUrl({link filesystem:default do => uploadFile});
+				webcms.filesystem.setNewDirectoryTitle({_'Enter name of the new directory:'});
+				webcms.filesystem.setNewDirectoryUrl({plink filesystem:default do => makeDirectory});
+				{if array_key_exists('path', $_GET)} 
+					webcms.filesystem.setPath({$_GET['path']}); 
+				{/if}
+			});
+		</script>
 </body>
 </html>
