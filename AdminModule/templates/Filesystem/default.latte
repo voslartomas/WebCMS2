@@ -19,9 +19,9 @@
 	</script>
 {else}
 	{block content}
-
+	<div class="page-heading">
 	<h1>{_'Filesystem'}</h1>
-
+	</div>
 	<script>
 		var fsPath = {$fsPath};
 		$(function(){
@@ -41,14 +41,14 @@
 			});
 		});
 	</script>
-
+	<div class="well">
 	<div id="uploader" class="k-content">
 		<a class="btn btn-primary jq_newDir" n:href="makeDirectory!">{_'Create new directory'}</a>
 		
 		{if $template->isSuperAdmin($user)}
 			<a class="btn btn-primary ajax longRun" n:href="regenerateThumbnails!">{_'Regenerate thumbnails'}</a>
 		{/if}
-		
+		<br />
 		<div id="uploadStatus" style="display: none;">
 			<span id="totalSize"></span>
 			<span id="uploaded"></span>
@@ -58,9 +58,10 @@
 			  </div>
 			</div>
 		</div>
-
+		<br />
 		<form>
 			<input type="file" name="file[]" id="upload" multiple />
+			<br />
 			<input type="submit" class="btn btn-primary" value="{_'Upload files'}" />
 		</form>
 
@@ -118,7 +119,7 @@
 			});
 		</script>
 	</div>
-		
+	<br />
 	<a class="btn btn-primary ajax" n:href="default path => $backLink">{_'Back'}</a>
 
 	<table class="table table-bordered table-hover">
@@ -165,6 +166,8 @@
 			</tr>
 		{/foreach}
 	</table>
+
+	</div>
 
 
 	{/block}

@@ -1,5 +1,6 @@
 {block content}
 
+<div class="page-heading">
 <h1>{_'Translations'}</h1>
 
 {if $template->isSuperAdmin($user)}
@@ -9,12 +10,14 @@
 
 {include 'tabs.latte' active => 'translates'}
 
+</div>
+
 <a id="updateTranslationLink" n:href="updateTranslation!"></a>
 
-<div class="tab-content">
-	<div class="tab-pane active">
+<div class="well">
+
 		{control translationGrid}
-	</div>
+
 </div>
 
 	<script>
