@@ -639,4 +639,23 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
          } while ($dir && ($name = substr($name, 0, strrpos($name, ':'))));
          return $list;
      }
+
+     /**
+      * Transfer collection into array.
+      * 
+      * @param  [type] $collection [description]
+      * @param  string $title      [description]
+      * 
+      * @return array              [description]
+      */
+     public function collectionToArray($collection, $title = 'title')
+     {
+        $array = array();
+        foreach ($collection as $item) {
+            $getter = 'get' . ucfirst($title);
+            $array[$item->getId()] = $item->$getter();
+        }
+
+        return $array;
+     }
 }
