@@ -59,11 +59,9 @@ class CloningPresenter extends BasePresenter
 
         $languageFrom = $this->em->getRepository('WebCMS\Entity\Language')->find($values->languageFrom);
         $languageTo = $this->em->getRepository('WebCMS\Entity\Language')->find($values->languageTo);
-        $removeData = $values->removeData;
-        unset($values->languageFrom);
-        unset($values->languageTo);
-        unset($values->removeData);
-
+        
+        $values = $this->normalizeValues($values);
+        
         // remove data first
         if ($removeData) {
             $this->removeData();
@@ -86,41 +84,21 @@ class CloningPresenter extends BasePresenter
             $this->em->persist($new);
             $this->em->flush();
 
-            $path = $this->em->getRepository('WebCMS\Entity\Page')->getPath($new);
-            $final = array();
-            foreach ($path as $p) {
-	            if ($p->getParent() != NULL) {
-	                $final[] = $p->getSlug();
-	            }
-            }
-
-            $new->setPath(implode('/', $final));
+            $new = $this->setPagePath($new);
+            
             $this->em->flush();
 
             $transformTable[$page->getId()] = $new;
         }
 
         foreach ($pages as $page) {
-            $boxes = $this->em->getRepository('WebCMS\Entity\Box')->findBy(array(
-            	'pageTo' => $page
-            ));
-
-            foreach ($boxes as $box) {
-            	$this->createNewBox($box);
-            	$this->em->persist($newBox);
-            }
+            $this->pageCreateBoxes($page);
         }
 
         // clone all data
-        foreach ($values as $key => $value) {
-            if ($value) {
-	            $module = $this->createObject(str_replace('_', '-', $key));
-	            if ($module->isCloneable()) {
-	                $module->cloneData($this->em, $languageFrom, $languageTo, $transformTable);
-	            }
-            }
-        }
-
+        $this->cloneData($values, $languageFrom, $languageTo, $transformTable);
+        
+        // persist all changes into database
         $this->em->flush();
 
         $this->flashMessage('Cloning has been successfuly done.', 'success');
@@ -131,6 +109,78 @@ class CloningPresenter extends BasePresenter
 
     /**
      * 
+     * 
+     * @param [type] $new [description]
+     */
+    private function setPagePath($new)
+    {
+    	$path = $this->em->getRepository('WebCMS\Entity\Page')->getPath($new);
+        $final = array();
+        foreach ($path as $p) {
+            if ($p->getParent() != NULL) {
+                $final[] = $p->getSlug();
+            }
+        }
+
+        $new->setPath(implode('/', $final));
+
+        return $new;
+    }
+
+    /**
+     * 
+     * 
+     * @param  [type] $values [description]
+     * @return [type]         [description]
+     */
+    private function normalizeValues($values)
+    {
+    	$removeData = $values->removeData;
+        unset($values->languageFrom);
+        unset($values->languageTo);
+        unset($values->removeData);
+
+        return $values;
+    }
+
+    /**
+     *
+     * 
+     * @return [type] [description]
+     */
+    private function pageCreateBoxes($page)
+    {
+    	$boxes = $this->em->getRepository('WebCMS\Entity\Box')->findBy(array(
+        	'pageTo' => $page
+        ));
+
+        foreach ($boxes as $box) {
+        	$newBox = $this->createNewBox($box);
+        	$this->em->persist($newBox);
+        }
+    }
+
+    /**
+     * 
+     * 
+     * @return [type] [description]
+     */
+    private function cloneData()
+    {
+    	foreach ($values as $key => $value) {
+            if ($value) {
+	            $module = $this->createObject(str_replace('_', '-', $key));
+	            if ($module->isCloneable()) {
+	                $module->cloneData($this->em, $languageFrom, $languageTo, $transformTable);
+	            }
+            }
+        }
+    }
+
+    /**
+     * 
+     * 
+     * @return [type] [description]
      */
     private function removeData()
     {
@@ -146,6 +196,10 @@ class CloningPresenter extends BasePresenter
 
     /**
      * 
+     * 
+     * @param  [type] $languageTo [description]
+     * @param  [type] $page       [description]
+     * @return [type]             [description]
      */
     private function createNewPage($languageTo, $page)
     {
@@ -163,6 +217,12 @@ class CloningPresenter extends BasePresenter
         return $new;
     }
 
+    /**
+     * 
+     * 
+     * @param  [type] $box [description]
+     * @return [type]      [description]
+     */
     private function createNewBox($box)
     {
     	$newBox = new \WebCMS\Entity\Box();
