@@ -144,6 +144,9 @@ class SystemHelper
             'admin:Settings' => 'admin:Settings',
             'admin:Users' => 'admin:Users',
             'admin:Languages' => 'admin:Languages',
+            'admin:Translations' => 'admin:Translations',
+            'admin:Cloning' => 'admin:Cloning',
+            'admin:Translator' => 'admin:Translator',
             'admin:Pages' => 'admin:Pages',
             'admin:Filesystem' => 'admin:Filesystem',
             'admin:Update' => 'admin:Update'

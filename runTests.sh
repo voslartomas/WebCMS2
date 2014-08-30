@@ -12,5 +12,10 @@ if [ "$1" = "coverage" ]; then
     exit 0
 fi
 
+if [ "$1" = "html" ]; then
+    phpunit --coverage-html ./html tests
+    exit
+fi
+
 phpunit tests
 

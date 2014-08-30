@@ -82,4 +82,16 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 
         return $url;
     }
+
+    protected function getAllLanguages()
+    {
+        $languages = $this->em->getRepository('WebCMS\Entity\Language')->findAll();
+
+        $langs = array('' => $this->translation['Pick a language']);
+        foreach ($languages as $l) {
+            $langs[$l->getId()] = $l->getName();
+        }
+
+        return $langs;
+    }
 }

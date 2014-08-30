@@ -152,8 +152,6 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
         $this->translation = $translation->getTranslations();
         $this->translator = new \WebCMS\Translation\Translator($this->translation);
 
-        $translation->hashTranslations();
-
         // system settings
         $this->settings = new \WebCMS\Settings($this->em, $this->language);
         $this->settings->setSettings($this->getSettings());

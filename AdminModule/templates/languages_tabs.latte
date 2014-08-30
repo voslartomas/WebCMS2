@@ -1,0 +1,6 @@
+<ul class="nav nav-tabs" id="myTab">
+  <li {if $active == "languages"}class="active"{/if}><a class="ajax" id="tLanguages" n:href="Languages:default">{_'Languages'}</a></li>
+  <li {if $active == "translates"}class="active"{/if}><a class="ajax" id="tTranslates" n:href="Translations:default">{_'Translations'}</a></li>
+  <li {if $active == "cloning"}class="active"{/if}><a class="ajax" id="tCloning" n:href="Cloning:default">{_'Cloning'}</a></li>
+  <li {if $active == "translator"}class="active"{/if}><a class="ajax" id="tTranslator" n:href="Translator:default">{_'Translator'}</a></li>
+</ul>

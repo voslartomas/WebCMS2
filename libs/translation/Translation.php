@@ -77,19 +77,4 @@ class Translation extends \ArrayObject
             'backend' => $backend
         ));
     }
-
-    // TODO remove in future, also in startUp function basePresenter
-    public function hashTranslations()
-    {
-        $translations = $this->em->getRepository('WebCMS\Entity\Translation')->findBy(array(
-            'hash' => ''
-        ));
-
-        foreach ($translations as $tr) {
-            $tr->setHash();
-        }
-
-        $this->em->flush();
-    }
-
 }
