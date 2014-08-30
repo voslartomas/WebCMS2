@@ -66,14 +66,7 @@ class CloningPresenter extends BasePresenter
 
         // remove data first
         if ($removeData) {
-            $pages = $this->em->getRepository('WebCMS\Entity\Page')->findBy(array(
-            'language' => $languageTo,
-            'parent' => NULL
-            ));
-
-            foreach ($pages as $page) {
-            $this->em->remove($page);
-            }
+            $this->removeData();
         }
 
         // clone page structure
@@ -84,19 +77,10 @@ class CloningPresenter extends BasePresenter
             ), array('lft' => 'asc'));
 
         foreach ($pages as $page) {
-            $new = new \WebCMS\Entity\Page;
-            $new->setLanguage($languageTo);
-            $new->setTitle($page->getTitle());
-            $new->setPresenter($page->getPresenter());
-            $new->setPath('tmp');
-            $new->setVisible($page->getVisible());
-            $new->setDefault($page->getDefault());
-            $new->setClass($page->getClass());
-            $new->setModule($page->getModule());
-            $new->setModuleName($page->getModuleName());
+            $new = $this->createNewPage($languageTo, $page);
 
             if ($page->getParent()) {
-            $new->setParent($transformTable[$page->getParent()->getId()]);
+            	$new->setParent($transformTable[$page->getParent()->getId()]);
             }
 
             $this->em->persist($new);
@@ -105,8 +89,9 @@ class CloningPresenter extends BasePresenter
             $path = $this->em->getRepository('WebCMS\Entity\Page')->getPath($new);
             $final = array();
             foreach ($path as $p) {
-            if ($p->getParent() != NULL)
-                $final[] = $p->getSlug();
+	            if ($p->getParent() != NULL) {
+	                $final[] = $p->getSlug();
+	            }
             }
 
             $new->setPath(implode('/', $final));
@@ -116,31 +101,23 @@ class CloningPresenter extends BasePresenter
         }
 
         foreach ($pages as $page) {
-            // clone boxes settings
             $boxes = $this->em->getRepository('WebCMS\Entity\Box')->findBy(array(
-            'pageTo' => $page
+            	'pageTo' => $page
             ));
 
             foreach ($boxes as $box) {
-            $newBox = new \WebCMS\Entity\Box();
-            $newBox->setBox($box->getBox());
-            $newBox->setFunction($box->getFunction());
-            $newBox->setModuleName($box->getModuleName());
-            $newBox->setPresenter($box->getPresenter());
-            $newBox->setPageFrom($transformTable[$box->getPageFrom()->getId()]);
-            $newBox->setPageTo($transformTable[$box->getPageTo()->getId()]);
-
-            $this->em->persist($newBox);
+            	$this->createNewBox($box);
+            	$this->em->persist($newBox);
             }
         }
 
         // clone all data
         foreach ($values as $key => $value) {
             if ($value) {
-            $module = $this->createObject(str_replace('_', '-', $key));
-            if ($module->isCloneable()) {
-                $module->cloneData($this->em, $languageFrom, $languageTo, $transformTable);
-            }
+	            $module = $this->createObject(str_replace('_', '-', $key));
+	            if ($module->isCloneable()) {
+	                $module->cloneData($this->em, $languageFrom, $languageTo, $transformTable);
+	            }
             }
         }
 
@@ -150,5 +127,52 @@ class CloningPresenter extends BasePresenter
         if (!$this->isAjax()) {
             $this->forward('Languages:cloning');
         }
+    }
+
+    /**
+     * 
+     */
+    private removeData()
+    {
+    	$pages = $this->em->getRepository('WebCMS\Entity\Page')->findBy(array(
+            'language' => $languageTo,
+            'parent' => NULL
+        ));
+
+        foreach ($pages as $page) {
+        	$this->em->remove($page);
+        }
+    }
+
+    /**
+     * 
+     */
+    private createNewPage($languageTo, $page)
+    {
+    	$new = new \WebCMS\Entity\Page;
+        $new->setLanguage($languageTo);
+        $new->setTitle($page->getTitle());
+        $new->setPresenter($page->getPresenter());
+        $new->setPath('tmp');
+        $new->setVisible($page->getVisible());
+        $new->setDefault($page->getDefault());
+        $new->setClass($page->getClass());
+        $new->setModule($page->getModule());
+        $new->setModuleName($page->getModuleName());
+
+        return $new;
+    }
+
+    private createNewBox($box)
+    {
+    	$newBox = new \WebCMS\Entity\Box();
+        $newBox->setBox($box->getBox());
+        $newBox->setFunction($box->getFunction());
+        $newBox->setModuleName($box->getModuleName());
+        $newBox->setPresenter($box->getPresenter());
+        $newBox->setPageFrom($transformTable[$box->getPageFrom()->getId()]);
+        $newBox->setPageTo($transformTable[$box->getPageTo()->getId()]);
+
+        return $newBox;
     }
 }
