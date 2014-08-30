@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Webcms2 admin module package.
+ */
+
 namespace AdminModule;
 
 use Nette;
@@ -10,9 +14,10 @@ use Monolog\Handler\StreamHandler;
 
 /**
  * Base class for all application presenters.
- * TODO refactoring
+ * 
  * @property-read string $name
  * @property-read string $action
+ * 
  * @author     Tomáš Voslař <tomas.voslar at webcook.cz>
  * @package    WebCMS2
  */
@@ -195,23 +200,35 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
         }
 
         foreach ($settings as $s) {
-            $ident = $s->getId();
-
-            if ($s->getType() === 'text' || $s->getType() === null) {
-                $form->addText($ident, $s->getKey())->setDefaultValue($s->getValue())->setAttribute('class', 'form-control');
-            } elseif ($s->getType() === 'textarea')
-            $form->addTextArea($ident, $s->getKey())->setDefaultValue($s->getValue())->setAttribute('class', 'editor');
-            elseif ($s->getType() === 'radio') {
-                $form->addRadioList($ident, $s->getKey(), $s->getOptions())->setDefaultValue($s->getValue());
-            } elseif ($s->getType() === 'select') {
-                $form->addSelect($ident, $s->getKey(), $s->getOptions())->setDefaultValue($s->getValue());
-            } elseif ($s->getType() === 'checkbox') {
-                $form->addCheckbox($ident, $s->getKey())->setDefaultValue($s->getValue());
-            }
+            $form = $this->createFormElement($form, $s);
         }
 
         $form->addSubmit('submit', 'Save settings');
         $form->onSuccess[] = callback($this, 'settingsFormSubmitted');
+
+        return $form;
+    }
+
+    private function createFormElement($form, $setting)
+    {
+        $ident = $setting->getId();
+        switch ($setting->getType()) {
+            case 'textarea':
+                $form->addTextArea($ident, $setting->getKey())->setDefaultValue($setting->getValue())->setAttribute('class', 'editor');    
+                break;
+            case 'radio':
+                $form->addRadioList($ident, $setting->getKey(), $setting->getOptions())->setDefaultValue($setting->getValue());    
+                break;
+            case 'select':
+                $form->addSelect($ident, $setting->getKey(), $setting->getOptions())->setDefaultValue($setting->getValue());
+                break;
+            case 'checkbox':
+                $form->addCheckbox($ident, $setting->getKey())->setDefaultValue($setting->getValue());
+                break;
+            default:
+                $form->addText($ident, $setting->getKey())->setDefaultValue($setting->getValue())->setAttribute('class', 'form-control');
+                break;
+        }
 
         return $form;
     }
