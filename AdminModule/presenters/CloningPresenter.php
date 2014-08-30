@@ -132,7 +132,7 @@ class CloningPresenter extends BasePresenter
     /**
      * 
      */
-    private removeData()
+    private function removeData()
     {
     	$pages = $this->em->getRepository('WebCMS\Entity\Page')->findBy(array(
             'language' => $languageTo,
@@ -147,7 +147,7 @@ class CloningPresenter extends BasePresenter
     /**
      * 
      */
-    private createNewPage($languageTo, $page)
+    private function createNewPage($languageTo, $page)
     {
     	$new = new \WebCMS\Entity\Page;
         $new->setLanguage($languageTo);
@@ -163,7 +163,7 @@ class CloningPresenter extends BasePresenter
         return $new;
     }
 
-    private createNewBox($box)
+    private function createNewBox($box)
     {
     	$newBox = new \WebCMS\Entity\Box();
         $newBox->setBox($box->getBox());
