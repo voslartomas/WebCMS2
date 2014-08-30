@@ -1,18 +1,44 @@
 <?php
 
+/**
+ * Webcms admin module package.
+ */
+
 namespace WebCMS2\Common;
 
+/**
+ * 
+ */
 abstract class BasePresenter extends \Nette\Application\UI\Presenter
 {
+    /**
+     * 
+     * @var [type]
+     */
 	protected $em;
 	
+    /**
+     * 
+     * 
+     * @return [type] [description]
+     */
 	protected abstract function getLanguageId();
 
+    /**
+     * 
+     * 
+     * @return [type] [description]
+     */
 	protected function startUp()
 	{
 		parent::startUp();
 	}
 
+    /**
+     * 
+     * 
+     * @return [type] [description]
+     */
 	protected function getSettings()
     {
         $query = $this->em->createQuery('SELECT s FROM WebCMS\Entity\Setting s WHERE s.language >= ' . $this->getLanguageId() . ' OR s.language IS NULL');
@@ -83,6 +109,11 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
         return $url;
     }
 
+    /**
+     * 
+     * 
+     * @return [type] [description]
+     */
     protected function getAllLanguages()
     {
         $languages = $this->em->getRepository('WebCMS\Entity\Language')->findAll();
@@ -93,5 +124,21 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
         }
 
         return $langs;
+    }
+
+    /**
+     * 
+     * 
+     * @param  [type] $name [description]
+     * @return [type]       [description]
+     */
+    protected function createObject($name)
+    {
+        $expl = explode('-', $name);
+
+        $objectName = ucfirst($expl[0]);
+        $objectName = "\\WebCMS\\$objectName" . "Module\\" . $objectName;
+
+        return new $objectName;
     }
 }

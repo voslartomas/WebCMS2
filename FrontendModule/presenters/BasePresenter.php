@@ -478,16 +478,6 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
         ));
     }
 
-    protected function createObject($name)
-    {
-        $expl = explode('-', $name);
-
-        $objectName = ucfirst($expl[0]);
-        $objectName = "\\WebCMS\\$objectName" . "Module\\" . $objectName;
-
-        return new $objectName;
-    }
-
     /* @deprecated */
 
     public function flashMessageTranslated($message, $type = 'info')

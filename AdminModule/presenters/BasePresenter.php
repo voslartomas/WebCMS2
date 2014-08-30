@@ -462,16 +462,6 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
         }
     }
 
-    protected function createObject($name)
-    {
-        $expl = explode('-', $name);
-
-        $objectName = ucfirst($expl[0]);
-        $objectName = "\\WebCMS\\$objectName" . "Module\\" . $objectName;
-
-        return new $objectName;
-    }
-
     private function getStructures()
     {
         $qb = $this->em->createQueryBuilder();
