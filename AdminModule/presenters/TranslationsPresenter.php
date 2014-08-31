@@ -6,8 +6,6 @@
 
 namespace AdminModule;
 
-use Nette\Application\UI;
-
 /**
  * @author Tomáš Voslař <tomas.voslar at webcook.cz>
  * @package WebCMS2

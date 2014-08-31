@@ -110,7 +110,7 @@ class CloningPresenter extends BasePresenter
     /**
      * 
      * 
-     * @param [type] $new [description]
+     * @param \WebCMS\Entity\Page $new [description]
      */
     private function setPagePath($new)
     {
