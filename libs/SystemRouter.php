@@ -136,6 +136,27 @@ $fullPath = $path;
             $sign = '&';
         } else
             $do = '';
+            
+    	//TODO refactor
+        if (array_key_exists('utm_source', $params)) {
+            $utm = $sign . 'utm_source=' . $params['utm_source'];
+            $sign = '&';
+            if(array_key_exists('utm_medium', $params)){
+                $utm .= $sign . 'utm_medium=' . $params['utm_medium'];
+            }
+            if(array_key_exists('utm_campaign', $params)){
+                $utm .= $sign . 'utm_campaign=' . $params['utm_campaign'];
+            }
+            if(array_key_exists('utm_term', $params)){
+                $utm .= $sign . 'utm_term=' . $params['utm_term'];
+            }
+            if(array_key_exists('utm_content', $params)){
+                $utm .= $sign . 'utm_content=' . $params['utm_content'];
+            }
+            
+            $sign = '?';
+        } else
+            $utm = '';
 
         if (array_key_exists('action', $params)) {
 
@@ -152,6 +173,11 @@ $fullPath = $path;
         unset($params['abbr']);
         unset($params['path']);
         unset($params['do']);
+        unset($params['utm_medium']);
+        unset($params['utm_source']);
+        unset($params['utm_campaign']);
+        unset($params['utm_term']);
+        unset($params['utm_content']);
         unset($params['action']);
         unset($params['parameters']);
         unset($params['lft']);
@@ -160,7 +186,7 @@ $fullPath = $path;
         unset($params['language']);
         unset($params['fullPath']);
 
-        $path = $refUrl->getScheme() . '://' . $refUrl->getHost() . $refUrl->getPath() . $abbr . $path . $do . $action;
+        $path = $refUrl->getScheme() . '://' . $refUrl->getHost() . $refUrl->getPath() . $abbr . $path . $do . $utm . $action;
 
         $query = '';
         $index = 0;
