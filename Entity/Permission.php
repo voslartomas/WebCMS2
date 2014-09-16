@@ -18,19 +18,19 @@ class Permission extends Entity
 
     /**
      * @ORM\Column(type="boolean", name="`read`")
-     * @var type
+     * @var boolean
      */
     private $read;
 
     /**
      * @ORM\Column(type="boolean", name="`write`", nullable=true)
-     * @var type
+     * @var boolean
      */
     private $write;
 
     /**
      * @ORM\Column(type="boolean", name="`remove`", nullable=true)
-     * @var type
+     * @var boolean
      */
     private $remove;
 
@@ -45,6 +45,9 @@ class Permission extends Entity
         return $this->resource;
     }
 
+    /**
+     * @param string $resource
+     */
     public function setResource($resource)
     {
         $this->resource = $resource;
@@ -65,6 +68,9 @@ class Permission extends Entity
         return $this->write;
     }
 
+    /**
+     * @param boolean $write
+     */
     public function setWrite($write)
     {
         $this->write = $write;
@@ -75,6 +81,9 @@ class Permission extends Entity
         return $this->remove;
     }
 
+    /**
+     * @param boolean $remove
+     */
     public function setRemove($remove)
     {
         $this->remove = $remove;

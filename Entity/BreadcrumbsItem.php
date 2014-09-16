@@ -28,6 +28,9 @@ class BreadcrumbsItem
         return $this->id;
     }
 
+    /**
+     * @param integer $id
+     */
     public function setId($id)
     {
         $this->id = $id;
@@ -53,21 +56,33 @@ class BreadcrumbsItem
         return $this->path;
     }
 
+    /**
+     * @param string $moduleName
+     */
     public function setModuleName($moduleName)
     {
         $this->moduleName = $moduleName;
     }
 
+    /**
+     * @param string $presenter
+     */
     public function setPresenter($presenter)
     {
         $this->presenter = $presenter;
     }
 
+    /**
+     * @param string $title
+     */
     public function setTitle($title)
     {
         $this->title = $title;
     }
 
+    /**
+     * @param string $path
+     */
     public function setPath($path)
     {
         $this->path = $path;

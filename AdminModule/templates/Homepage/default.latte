@@ -1,11 +1,13 @@
 {block content}
 
+<div class="page-heading">
 <h1>{_'Homepage title'}</h1>
 
+
 <h2>{_'Log of events'}</h2>
+</div>
 
-
-<div style="height: 200px;overflow: auto;">
+<div class="well" style="height: 300px;overflow: auto;">
 	<table class="table">
 		<tr>
 			<th>{_'Time'}</th>
@@ -26,7 +28,9 @@
 	</table>
 </div>
 
+<div class="page-heading">
 <h2>{_'Favourite links'}</h2>
+</div>
 
 {foreach $links as $l}
 	<a class="ajax btn btn-primary favourite" data-id="{$l->getId()}" href="{$l->getLink()}">{$l->getTitle()}</a>

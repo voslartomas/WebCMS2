@@ -109,19 +109,18 @@ class SettingsPresenter extends \AdminModule\BasePresenter
 
         $this->flashMessage('Thumbnail has been removed.', 'success');
 
-        if (!$this->isAjax())
-            $this->redirect('Settings:pictures', array('panel' => 'thumbnails'));
-        }
+        $this->forward('Settings:pictures', array('panel' => 'thumbnails'));
+    }
 
-        public function renderAddThumbnail($id)
-        {
+    public function renderAddThumbnail($id)
+    {
         $this->reloadModalContent();
 
         $this->template->thumbnail = $this->thumbnail;
-        }
+    }
 
-        public function createComponentThumbnailForm()
-        {
+    public function createComponentThumbnailForm()
+    {
         $form = $this->createForm();
 
         $form->addText('key', 'Key');
@@ -146,10 +145,11 @@ class SettingsPresenter extends \AdminModule\BasePresenter
         $form->addCheckbox('crop', 'Crop?');
         $form->addCheckbox('watermark', 'Watermark?');
 
-        if (\WebCMS\Helpers\SystemHelper::isSuperAdmin($this->user))
+        if (\WebCMS\Helpers\SystemHelper::isSuperAdmin($this->user)){
             $form->addCheckbox('system', 'System?');
-        else
+        } else {
             $form->addHidden('system', 'System?');
+        }
 
         $form->addSubmit('submit', 'Save');
 
@@ -157,10 +157,10 @@ class SettingsPresenter extends \AdminModule\BasePresenter
         $form->setDefaults($this->thumbnail->toArray());
 
         return $form;
-        }
+    }
 
-        public function thumbnailFormSubmitted(\Nette\Forms\Form $form)
-        {
+    public function thumbnailFormSubmitted(\Nette\Forms\Form $form)
+    {
         $values = $form->getValues();
 
         if (!$this->thumbnail->getId()) {
@@ -422,5 +422,4 @@ class SettingsPresenter extends \AdminModule\BasePresenter
 
         return $this->createSettingsForm($settings);
     }
-
 }

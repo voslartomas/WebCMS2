@@ -79,18 +79,43 @@ class PagesPresenter extends \AdminModule\BasePresenter
     {
         $values = $form->getValues();
 
-        $repo = $this->em->getRepository('WebCMS\Entity\Page');
-
         $tmpBoxes = array();
         if ($values->parent) {
             $parent = $this->em->find("WebCMS\Entity\Page", $values->parent);
-
             // copy boxes
             $tmpBoxes = $parent->getBoxes();
         } else {
             $parent = NULL;
         }
 
+        $this->setPageValues($values, $parent);
+        
+        if (!$this->page->getId()) {
+            $this->em->persist($this->page);
+
+            $this->createBoxesFromParent($tmpBoxes);
+
+            $this->em->flush();
+            $this->copyPermissions();
+        }
+
+        // persist and generate path
+        $this->em->flush();
+        $this->generatePath();
+        $this->em->flush();
+        $this->generateSitemap();
+
+        $this->flashMessage('Page has been added.', 'success');
+        $this->forward('Pages:default');
+    }
+
+    /**
+     * 
+     * 
+     * @param [type] $values [description]
+     */
+    private function setPageValues($values, $parent)
+    {
         if ($values->module) {
             $parse = explode('-', $values->module);
             $module = $this->em->find("WebCMS\Entity\Module", $parse[0]);
@@ -108,6 +133,12 @@ class PagesPresenter extends \AdminModule\BasePresenter
             $this->page->setRedirect(NULL);
         }
 
+        if ($module) {
+            $this->page->setModuleName($module->getName());
+        } else {
+            $this->page->setModuleName('');
+        }
+
         $this->page->setVisible($values->visible);
         $this->page->setDefault($values->default);
         $this->page->setParent($parent);
@@ -116,37 +147,58 @@ class PagesPresenter extends \AdminModule\BasePresenter
         $this->page->setPresenter($presenter);
         $this->page->setPath('tmp value');
         $this->page->setClass($values->class);
+    }
 
-        if ($module) {
-            $this->page->setModuleName($module->getName());
-        } else {
-            $this->page->setModuleName('');
+    /**
+     * 
+     * 
+     * @param  [type] $boxes [description]
+     * @return [type]        [description]
+     */
+    private function createBoxesFromParent($boxes)
+    {
+        foreach ($boxes as $box) {
+            $tmp = new Box();
+            $tmp->setBox($box->getBox());
+            $tmp->setFunction($box->getFunction());
+            $tmp->setModuleName($box->getModuleName());
+            $tmp->setPresenter($box->getPresenter());
+            $tmp->setPageFrom($box->getPageFrom());
+            $tmp->setPageTo($this->page);
+
+            $this->em->persist($tmp);
+        }
+    }
+
+    /**
+     * 
+     * 
+     * @return [type] [description]
+     */
+    private function generatePath()
+    {
+        $path = $this->em->getRepository('WebCMS\Entity\Page')->getPath($this->page);
+        $final = array();
+        foreach ($path as $p) {
+            if ($p->getParent() != NULL)
+            $final[] = $p->getSlug();
         }
 
-        if (!$this->page->getId()) {
-            $this->em->persist($this->page);
+        $this->page->setPath(implode('/', $final));
+    }
 
-            // create boxes from parent
-            foreach ($tmpBoxes as $box) {
-                $tmp = new Box();
-                $tmp->setBox($box->getBox());
-                $tmp->setFunction($box->getFunction());
-                $tmp->setModuleName($box->getModuleName());
-                $tmp->setPresenter($box->getPresenter());
-                $tmp->setPageFrom($box->getPageFrom());
-                $tmp->setPageTo($this->page);
-
-                $this->em->persist($tmp);
-            }
-
-            $this->em->flush();
-
-            // sets permissions for users roles
-            $roles = $this->em->getRepository('WebCMS\Entity\Role')->findBy(array(
+    /**
+     * 
+     * 
+     * @return [type] [description]
+     */
+    private function copyPermissions()
+    {
+        $roles = $this->em->getRepository('WebCMS\Entity\Role')->findBy(array(
             'automaticEnable' => true
-            ));
+        ));
 
-            foreach ($roles as $r) {
+        foreach ($roles as $r) {
             $module = $this->createObject($this->page->getModuleName());
             foreach ($module->getPresenters() as $presenter) {
                 $permission = new \WebCMS\Entity\Permission;
@@ -158,27 +210,7 @@ class PagesPresenter extends \AdminModule\BasePresenter
 
                 $r->addPermission($permission);
             }
-            }
         }
-        $this->em->flush();
-        // creates path
-        $path = $repo->getPath($this->page);
-        $final = array();
-        foreach ($path as $p) {
-            if ($p->getParent() != NULL)
-            $final[] = $p->getSlug();
-        }
-
-        $this->page->setPath(implode('/', $final));
-
-        $this->em->flush();
-
-        $this->generateSitemap();
-
-        $this->flashMessage('Page has been added.', 'success');
-
-        if (!$this->isAjax())
-            $this->redirect('Pages:default');
     }
 
     protected function createComponentPagesGrid($name)
@@ -248,8 +280,7 @@ class PagesPresenter extends \AdminModule\BasePresenter
 
         $this->flashMessage('Page has been removed.', 'success');
 
-        if (!$this->isAjax())
-            $this->redirect('Pages:default');
+        $this->forward('Pages:default');
     }
 
     public function renderUpdatePage($id)
@@ -264,35 +295,7 @@ class PagesPresenter extends \AdminModule\BasePresenter
         $this->reloadContent();
     }
 
-    public function generateSitemap()
-    {
-        $sitemapXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n";
-
-        $repository = $this->em->getRepository('WebCMS\Entity\Page');
-        $pages = $repository->findAll();
-
-        foreach ($pages as $page) {
-            if ($page->getParent() !== null) {
-            $sitemapXml .= "<url>\n\t<loc>" . $this->getSitemapLink($page) . "</loc>\n</url>\n";
-            }
-        }
-
-        $sitemapXml .= '</urlset>';
-
-        file_put_contents('./sitemap.xml', $sitemapXml);
-    }
-
-    private function getSitemapLink($page)
-    {
-        $url = $this->context->httpRequest->url->baseUrl;
-        $url .=!$page->getLanguage()->getDefaultFrontend() ? $page->getLanguage()->getAbbr() . '/' : '';
-        $url .= $page->getPath();
-
-        return $url;
-    }
-
     // Sorting
-
     public function renderSorting($id)
     {
         $this->reloadContent();
@@ -341,7 +344,7 @@ class PagesPresenter extends \AdminModule\BasePresenter
         }
 
         if (!$this->isAjax()) {
-            $this->redirect('Pages:default');
+            $this->forward('Pages:default');
         }
     }
 
@@ -359,7 +362,7 @@ class PagesPresenter extends \AdminModule\BasePresenter
         }
 
         if (!$this->isAjax()) {
-            $this->redirect('Pages:default');
+            $this->forward('Pages:default');
         }
     }
 }

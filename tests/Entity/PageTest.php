@@ -33,20 +33,30 @@ class PageTest extends \WebCMS\Tests\EntityTestCase
         $this->assertEquals('path/to/page', $main->getPath());
         $this->assertEquals(true, $main->getDefault());
         $this->assertEquals('', $main->getClass());
+        $this->assertEquals('slug', $main->getSlug());
+        $this->assertEquals(1, $main->getLeft());
+        $this->assertEquals(4, $main->getRight());
+        $this->assertInstanceOf('DateTime', $main->getCreated());
+        $this->assertInstanceOf('DateTime', $main->getUpdated());
 
         $page = $this->em->getRepository('WebCMS\Entity\Page')->findOneByTitle('Home');
 
-        $this->assertInstanceOf('WebCMS\Entity\Page', $page->getParent());
+        $this->assertEquals('Main', $page->getParent()->getTitle());
         $this->assertInstanceOf('WebCMS\Entity\Box', $page->getBoxes()->first());
         $this->assertEquals('box1', $page->getBoxes()->first()->getBox());
+        $this->assertEquals('box1', $page->getBox('box1')->getBox());
+        $this->assertNull($page->getBox('box2'));
+        $this->assertEquals('Home', $page->__toString());
 
-        $selectTree = $this->em->getRepository('WebCMS\Entity\Page')->getTreeForSelect();
+        $selectTree = $this->em->getRepository('WebCMS\Entity\Page')->getTreeForSelect(array(array('by' => 'id', 'ord' => 'asc')), array('id > 0'));
 
         $this->assertEquals(array(1 => 'Main', 2 => '-Home'), $selectTree);
 
         $this->em->remove($page->getBoxes()->first());
         $this->em->remove($main);
         $this->em->remove($page);
+
+        $main->toArray();
 
         $this->em->flush();
 
@@ -72,6 +82,7 @@ class PageTest extends \WebCMS\Tests\EntityTestCase
         $this->pageMain->setPath('path/to/page');
         $this->pageMain->setDefault(true);
         $this->pageMain->setClass('');
+        $this->pageMain->setSlug('slug');
 
         $this->em->persist($this->pageMain);
 

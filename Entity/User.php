@@ -82,6 +82,7 @@ class User extends Entity
 
     /**
      * @param string
+     * @param string $email
      * @return User
      */
     public function setEmail($email)
@@ -92,7 +93,7 @@ class User extends Entity
     }
 
     /**
-     * @return string
+     * @return Role
      */
     public function getRole()
     {
@@ -101,6 +102,7 @@ class User extends Entity
 
     /**
      * @param string
+     * @param Role $role
      * @return User
      */
     public function setRole($role)
@@ -115,11 +117,17 @@ class User extends Entity
         return $this->name;
     }
 
+    /**
+     * @param string $name
+     */
     public function setName($name)
     {
         $this->name = $name;
     }
 
+    /**
+     * @param string $username
+     */
     public function setUsername($username)
     {
         $this->username = $username;

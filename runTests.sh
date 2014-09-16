@@ -1,5 +1,21 @@
 #!/bin/bash
 
-phpunit --no-globals-backup --bootstrap tests/bootstrap.php tests/AdminModule
-phpunit --no-globals-backup --bootstrap tests/bootstrap.php tests/Entity
-phpunit --no-globals-backup --bootstrap tests/bootstrap.php tests/libs
+mkdir tests/temp
+mkdir tests/log
+mkdir upload
+mkdir thumbnails
+
+if [ "$1" = "coverage" ]; then
+    phpunit --coverage-clover=coverage.clover tests
+    wget https://scrutinizer-ci.com/ocular.phar
+    php ocular.phar code-coverage:upload --format=php-clover coverage.clover
+    exit 0
+fi
+
+if [ "$1" = "html" ]; then
+    phpunit --coverage-html ./html tests
+    exit
+fi
+
+phpunit tests
+

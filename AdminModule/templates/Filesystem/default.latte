@@ -19,106 +19,34 @@
 	</script>
 {else}
 	{block content}
-
+	<div class="page-heading">
 	<h1>{_'Filesystem'}</h1>
-
-	<script>
-		$(function(){
-			$(".jq_newDir").click(function(e){
-				e.preventDefault();
-				
-				bootbox.prompt({_'Enter name of the new directory:'}, function(text){
-					
-					if(text) 
-						$.nette.ajax({ url : {plink makeDirectory!}, data : { name : text } })
-				});
-			});
-			var path;
-			$(".dir").on('click', function(){
-				filesystem.setPath($(this).data('path'));
-			});
-		});
-	</script>
-
+	</div>
+	<div class="well">
 	<div id="uploader" class="k-content">
 		<a class="btn btn-primary jq_newDir" n:href="makeDirectory!">{_'Create new directory'}</a>
 		
 		{if $template->isSuperAdmin($user)}
 			<a class="btn btn-primary ajax longRun" n:href="regenerateThumbnails!">{_'Regenerate thumbnails'}</a>
 		{/if}
-		
-		<input type="file" name="files" id="upload" />
-
-		<script id="fileTemplate" type="text/x-kendo-template">
-			<span class='k-progress'></span>
-			<div class='file-wrapper'>
-				<span class='file-icon #=addExtensionClass(files[0].extension)#'></span>
-				<h4 class='file-heading file-name-heading'>{_'Name'}: #=name#</h4>
-				<h4 class='file-heading file-size-heading'>{_'Size'}: #=size# {_'bytes'}</h4>
-				<button type='button' class='k-upload-action'></button>
+		<br />
+		<div id="uploadStatus" style="display: none;">
+			<span id="totalSize"></span>
+			<span id="uploaded"></span>
+			<div class="progress">
+			  <div class="progress-bar" id="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 1%;">
+			    <span class="sr-only">1% Complete</span>
+			  </div>
 			</div>
-		</script>
-
-		<script>
-			
-			var directory = '';
-			
-			function onComplete(){
-				
-				$.nette.ajax({ url : {plink default}, data : { path : filesystem.getPath() } })
-			}
-			
-			$(document).ready(function () {
-				$("#upload").kendoUpload({
-					multiple: true,
-					async: {
-						saveUrl: {plink uploadFile!},
-						removeUrl: {plink removeFile!},
-						autoUpload: false
-					},
-					template: kendo.template($('#fileTemplate').html()),
-					localization : {
-						'cancel' : {_'Cancel'},
-						'dropFilesHere' : {_'Drop files Here'},
-						'remove' : {_'Remove'},
-						'retry' : {_'Retry'},
-						'select' : {_'Select files...'},
-						'statusFailed' : {_'Upload failed.'},
-						'statusUploaded' : {_'Upload has been successful.'},
-						'statusUploading' : {_'Files are beeing uploaded.'},
-						'uploadSelectedFiles' : {_'Upload files'}
-					},
-					complete: onComplete,
-				});
-			});
-
-			function addExtensionClass(extension) {
-				switch (extension) {
-					case '.jpg':
-					case '.img':
-					case '.png':
-					case '.gif':
-						return "img-file";
-					case '.odt':
-					case '.doc':
-					case '.docx':
-						return "doc-file";
-					case '.xls':
-					case '.xlsx':
-						return "xls-file";
-					case '.pdf':
-						return "pdf-file";
-					case '.zip':
-					case '.rar':
-						return "zip-file";
-					default:
-						return "default-file";
-				}
-			}
-		</script>
-		
+		</div>
+		<br />
+		<form id="filesystemForm">
+			<input type="file" name="file[]" id="upload" multiple />
+			<br />
+			<input type="submit" class="btn btn-primary" value="{_'Upload files'}" />
+		</form>
 	</div>
-		
+	<br />
 	<a class="btn btn-primary ajax" n:href="default path => $backLink">{_'Back'}</a>
 
 	<table class="table table-bordered table-hover">
@@ -165,6 +93,8 @@
 			</tr>
 		{/foreach}
 	</table>
+
+	</div>
 
 
 	{/block}

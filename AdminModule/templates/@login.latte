@@ -12,75 +12,39 @@
 <!DOCTYPE html>
 <html>
 <head>
+
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
 	<meta name="description" content="Nette Framework web application skeleton">
 	<meta name="robots" content="{$robots}" n:ifset="$robots">
 
-	<title>WebCMS 2 - administrace</title>
-	
-	<link rel="stylesheet" media="screen" href="{$basePath}/admin-client/bootstrap/dist/css/bootstrap.css" type="text/css">
-	<link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/client-admin/css/screen.css" type="text/css">
-	<link rel="stylesheet" media="print" href="{$basePath}/client-admin/css/print.css" type="text/css">
-	<link rel="shortcut icon" href="{$basePath}/favicon.ico" type="image/x-icon">
-	
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
-	<script type="text/javascript" src="{$basePath}/client-admin/js/netteForms.js"></script>
-	{block head}{/block}
-	<style>
-	body {
-  padding-top: 40px;
-  padding-bottom: 40px;
-  background-color: #eee;
-}
+	<title>WEBCOOK.CMS 2 - administrace</title>
 
-.form-signin {
-  max-width: 330px;
-  padding: 15px;
-  margin: 0 auto;
-}
-.form-signin .form-signin-heading,
-.form-signin .checkbox {
-  margin-bottom: 10px;
-}
-.form-signin .checkbox {
-  font-weight: normal;
-}
-.form-signin .form-control {
-  position: relative;
-  font-size: 16px;
-  height: auto;
-  padding: 10px;
-  -webkit-box-sizing: border-box;
-     -moz-box-sizing: border-box;
-          box-sizing: border-box;
-}
-.form-signin .form-control:focus {
-  z-index: 2;
-}
-.form-signin input[type="text"] {
-  margin-bottom: -1px;
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-}
-.form-signin input[type="password"] {
-  margin-bottom: 10px;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-}
-	</style>
+	<link rel="stylesheet" media="screen" href="{$basePath}/admin-client/bootstrap/dist/css/bootstrap.css" type="text/css">
+	<link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/admin-client/webcms2/css/screen.css" type="text/css">
+	<link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/admin-client/webcms2/css/bdina.css" type="text/css">
+	<link rel="stylesheet" media="print" href="{$basePath}/admin-client/webcms2/css/print.css" type="text/css">
+	<link rel="shortcut icon" href="{$basePath}/favicon.ico" type="image/x-icon">
+
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+	<script type="text/javascript" src="{$basePath}/admin-client/js/netteForms.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,700&amp;subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+	{block head}{/block}
+
 </head>
 
-<body>
+<body class="login-page">
 	<script> document.body.className+=' js' </script>
-	
-	<a n:href=":Frontend:Homepage:">Webové stránky</a>
-	
+
+	<a n:href=":Frontend:Homepage:" class="jump-to-web"><span class="glyphicon glyphicon-chevron-left"></span>Zpět na webové stránky</a>
+
 	{snippet flashMessages}
 		<div n:foreach="$flashes as $flash" class="flash {$flash->type}">{$flash->message}</div>
 	{/snippet}
-	
+
 	{include #content}
-		
+	<div class="helpline">
+		<span>HELPLINE</span> +420 773 985 819   /   <a href="mailto:info@webcook.cz">info@webcook.cz</a>
+	</div>
 </body>
 </html>

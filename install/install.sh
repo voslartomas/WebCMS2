@@ -76,7 +76,7 @@ while [ "$task" != "q" ]; do
 		php www/index.php --ansi orm:schema-tool:create
 
 		# generate proxies
-		rm -rf ./app/proxies
+		rm -rf ./app/proxies/*
 		php www/index.php --ansi orm:generate-proxies
 
 		# run initial SQL script
@@ -109,7 +109,8 @@ while [ "$task" != "q" ]; do
 		php www/index.php --ansi orm:schema-tool:update --force
 
 		# generate proxies
-		rm -rf ./app/proxies
+		rm -rf ./app/proxies/*
+
 		php www/index.php --ansi orm:generate-proxies
 
 		# run initial SQL script

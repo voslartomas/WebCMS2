@@ -10,15 +10,18 @@ abstract class BasicTestCase extends \PHPUnit_Framework_TestCase
 
     protected $em;
 
-    public function setUp()
+    public function __construct()
     {
-        parent::setUp();
-
         global $container;
 
         $this->container = $container;
 
         $this->em = $container->getService('doctrine.entityManager');
+    }
+
+    public function setUp()
+    {
+        parent::setUp();
     }
 
     public function tearDown()

@@ -1,19 +1,19 @@
 {block content}
-
+<div class="page-heading">
 <h1>{_'Roles'}</h1>
 
 {include 'tabs.latte' active => 'roles'}
-
+</div>
 <br />
 
+<div class="buttonWrap">
 <a class="btn btn-primary ajax" n:href="Users:updateRole">{_'Add role'}</a>
+</div>
 
 <br /><br />
 
-<div class="tab-content">
-	<div class="tab-pane active">
-		{control rolesGrid}
-	</div>
+<div class="well">
+	{control rolesGrid}
 </div>
 
 {/block}

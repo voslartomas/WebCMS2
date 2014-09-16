@@ -19,11 +19,6 @@ class Page extends Seo
     private $title;
 
     /**
-     * @orm\Column(type="text", nullable=true)
-     */
-    private $description;
-
-    /**
      * @gedmo\Slug(fields={"title"})
      * @orm\Column(length=64, unique=true)
      */
@@ -154,16 +149,6 @@ class Page extends Seo
         return $this->title;
     }
 
-    public function setDescription($description)
-    {
-        $this->description = $description;
-    }
-
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
     public function setParent($parent)
     {
         $this->parent = $parent;
@@ -274,6 +259,9 @@ class Page extends Seo
         return $this->path;
     }
 
+    /**
+     * @param string $path
+     */
     public function setPath($path)
     {
         $this->path = $path;
@@ -299,6 +287,9 @@ class Page extends Seo
         return $this->boxes;
     }
 
+    /**
+     * @param Box[] $boxes
+     */
     public function setBoxes($boxes)
     {
         $this->boxes = $boxes;
@@ -315,6 +306,9 @@ class Page extends Seo
         return NULL;
     }
 
+    /**
+     * @param string $slug
+     */
     public function setSlug($slug)
     {
         $this->slug = $slug;
@@ -325,6 +319,9 @@ class Page extends Seo
         return $this->redirect;
     }
 
+    /**
+     * @param boolean $redirect
+     */
     public function setRedirect($redirect)
     {
         $this->redirect = $redirect;

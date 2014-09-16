@@ -1,8 +1,16 @@
 <?php
 
-// Load Nette Framework
 if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
-    require __DIR__ . '/../vendor/autoload.php';
+    $path =__DIR__ . '/../vendor/autoload.php';
+} else if (file_exists(__DIR__ . '/../../../../vendor/autoload.php')) {
+    $path =__DIR__ . '/../../../../vendor/autoload.php';
+} else {
+    $path = null;
+}
+
+// Load Nette Framework
+if ($path) {
+    require $path;
 
     \Nette\Diagnostics\Debugger::enable(true);
     \Nette\Diagnostics\Debugger::$strictMode = false;

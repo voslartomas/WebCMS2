@@ -1,19 +1,21 @@
 {block content}
 
+<div class="page-heading">
 <h1>{_'Pages'}</h1>
 
 {include 'tabs.latte' active => 'pages'}
+</div>
 
 <br />
 
+<div class="buttonWrap">
 <a class="btn btn-primary ajax" n:href="Pages:updatePage">{_'Add page'}</a>
+</div>
 
 <br /><br />
 
-<div class="tab-content">
-	<div class="tab-pane active">
-		{control pagesGrid}
-	</div>
+<div class="well">
+	{control pagesGrid}
 </div>
 
 {/block}

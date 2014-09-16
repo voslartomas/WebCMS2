@@ -58,13 +58,16 @@ class UpdatePresenter extends \AdminModule\BasePresenter
 
         $this->handleCheckUpdates();
 
-        if (!$this->isAjax())
-            $this->redirect('Update:');
-        else {
+        if (!$this->isAjax()) {
+            $this->forward('Update:');
+        } else {
             $this->invalidateControl('footer');
         }
     }
 
+    /**
+     * @param string $file
+     */
     private function getMessageFromFile($file)
     {
         if (file_exists($file)) {
@@ -131,8 +134,7 @@ class UpdatePresenter extends \AdminModule\BasePresenter
             $this->flashMessage('Module is already registered.', 'danger');
         }
 
-        if (!$this->isAjax())
-            $this->redirect('default');
+        $this->forward('default');
     }
 
     private function copyTemplates($name)
@@ -142,8 +144,8 @@ class UpdatePresenter extends \AdminModule\BasePresenter
         exec('cp -r ../libs/webcms2/' . $name . '/Frontend/templatesDefault/* ../app/templates/' . $name);
         }
 
-        public function actionUnregister($name)
-        {
+    public function actionUnregister($name)
+    {
         $module = $this->createObject($name);
         $module = $this->em->getRepository('WebCMS\Entity\Module')->findOneBy(array(
             'name' => $module->getName()
@@ -153,8 +155,7 @@ class UpdatePresenter extends \AdminModule\BasePresenter
         $this->em->flush();
 
         $this->flashMessage('Module has been unregistered from system.', 'success');
-        if (!$this->isAjax())
-            $this->redirect('default');
+        $this->forward('default');
     }
 
     private function isRegistered($name)
@@ -244,7 +245,7 @@ class UpdatePresenter extends \AdminModule\BasePresenter
         exec("cd ../;composer dumpautoload");
         exec("./libs/webcms2/webcms2/install/install.sh 3");
 
-        $this->redirect('default');
+        $this->forward('default');
     }
 
     public function actionAddModule()
@@ -284,7 +285,7 @@ class UpdatePresenter extends \AdminModule\BasePresenter
         exec("cd ../;composer update > $installLog 2> $installErrorLog");
         exec("../libs/webcms2/webcms2/install/install.sh 3; >");
 
-        $this->redirect('default');
+        $this->forward('default');
     }
 
     private function getModulesToInstall()
@@ -342,7 +343,7 @@ class UpdatePresenter extends \AdminModule\BasePresenter
         exec("cd ../libs/webcms2/webcms2/install;./module.sh create $name $nameBig '$author' '$email' '$description' > ../../../../log/install.log 2> ../../../../log/install-error.log");
 
         $this->flashMessage('Module has been created.', 'success');
-        $this->redirect('default');
+        $this->forward('default');
     }
 
     // render log tab
@@ -356,6 +357,9 @@ class UpdatePresenter extends \AdminModule\BasePresenter
         $this->template->errorLog = $this->getLog('../log/error.log');
     }
 
+    /**
+     * @param string $path
+     */
     private function getLog($path)
     {
         if (file_exists($path)) {

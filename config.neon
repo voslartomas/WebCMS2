@@ -13,7 +13,6 @@ common:
 		console: true
 		entityDirs: { %appDir%/../libs/webcms2 }
 		
-		
 	services:
 		database: @doctrine.entityManager
 		

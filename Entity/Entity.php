@@ -40,15 +40,15 @@ abstract class Entity extends \Nette\Object
             $props = array_merge($props, $temp);
         }
 
-        if (strpos($this->getReflection()->getName(), '__CG__') !== FALSE)
+        if (strpos($this->getReflection()->getName(), '__CG__') !== FALSE) {
             $props = $this->getReflection()->getParentClass()->getProperties();
+        }
 
         $array = array();
         foreach ($props as $prop) {
             $getter = 'get' . ucfirst($prop->getName());
 
             if (method_exists($this, $getter)) {
-
                 $empty = $this->$getter();
                 $empty = is_null($empty) || empty($empty);
 
@@ -61,13 +61,15 @@ abstract class Entity extends \Nette\Object
                         $array[$prop->getName()] = $this->$getter()->getId();
                     } elseif ($this->$getter() instanceof \DateTime) {
                         $array[$prop->getName()] = $this->$getter()->format('d.m.Y');
-                    } elseif ($this->$getter() instanceof \Doctrine\ORM\PersistentCollection) {
-                        $iterable = $this->$getter();
-                        foreach ($iterable as $item) {
-                            $array[$prop->getName()][] = $item->getId();
-                         }
+                    } elseif ($this->$getter() instanceof \Doctrine\Common\Collections\Collection) {
+                        $tmp = array(); 
+                        foreach($this->$getter() as $item) {
+                            $tmp[] = $item->getId();
+                        }
+
+                        $array[$prop->getName()] = $tmp;
                     }
-                } 
+                }
             }
         }
 

@@ -1,9 +1,8 @@
 {block content}
-
-<h1>{_'Basic settings'}</h1>
-
-{include 'tabs.latte' active => 'settings'}
-
+<div class="page-heading">
+	<h1>{_'Basic settings'}</h1>
+	{include 'tabs.latte' active => 'settings'}
+</div>
 <div class="well">
 	{control basicSettingsForm}
 </div>

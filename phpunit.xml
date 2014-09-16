@@ -1,0 +1,17 @@
+<phpunit
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/4.1/phpunit.xsd"
+         backupGlobals="false"
+         backupStaticAttributes="false"
+         bootstrap="tests/bootstrap.php">
+
+<filter>
+  <whitelist processUncoveredFilesFromWhitelist="true">
+    <directory suffix=".php">./AdminModule</directory>
+    <directory suffix=".php">./FrontendModule</directory>
+    <directory suffix=".php">./Entity</directory>
+    <directory suffix=".php">./libs</directory>
+  </whitelist>
+</filter>
+
+</phpunit>

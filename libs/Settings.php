@@ -32,6 +32,7 @@ class Settings
      * Gets settings by key and section.
      * @param  String    $key
      * @param  String    $section
+     * @param string $type
      * @return String
      * @throws Exception
      */

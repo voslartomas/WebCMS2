@@ -20,6 +20,7 @@ class SettingTest extends \WebCMS\Tests\EntityTestCase
         $this->assertEquals(array('a' => 'b'), $settings[0]->getOptions());
         $this->assertEquals('type', $settings[0]->getType());
         $this->assertEquals('value', $settings[0]->getValue());
+        $this->assertEquals('value', $settings[0]->getValue(false));
 
         $this->em->remove($settings[0]->getLanguage());
         $this->em->remove($settings[0]);

@@ -56,6 +56,9 @@ class Setting extends Entity
         }
     }
 
+    /**
+     * @param string $value
+     */
     public function setValue($value)
     {
         $this->value = $value;
@@ -66,6 +69,9 @@ class Setting extends Entity
         return $this->language;
     }
 
+    /**
+     * @param Language $language
+     */
     public function setLanguage($language)
     {
         $this->language = $language;
@@ -76,6 +82,9 @@ class Setting extends Entity
         return $this->type;
     }
 
+    /**
+     * @param string $type
+     */
     public function setType($type)
     {
         $this->type = $type;
@@ -86,6 +95,9 @@ class Setting extends Entity
         return $this->key;
     }
 
+    /**
+     * @param string $key
+     */
     public function setKey($key)
     {
         $this->key = $key;
@@ -96,6 +108,9 @@ class Setting extends Entity
         return $this->section;
     }
 
+    /**
+     * @param string $section
+     */
     public function setSection($section)
     {
         $this->section = $section;

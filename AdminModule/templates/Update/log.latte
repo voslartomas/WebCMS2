@@ -1,11 +1,12 @@
 {block content}
-
+<div class="page-heading">
 <h1>{_'System log'}</h1>
 
 {include 'tabs.latte' active => 'log'}
-
+</div>
 <br />
 
+<div class="well">
 <!-- Nav tabs -->
 <ul class="nav nav-pills" id="log">
   <li class="active"><a href="#error" data-toggle="tab">{_'Error'}</a></li>
@@ -25,5 +26,5 @@
 	  {!$installErrorLog}
   </div>
 </div>
-
+</div>
 {/block}

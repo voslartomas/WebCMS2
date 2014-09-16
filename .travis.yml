@@ -9,13 +9,9 @@ before_script:
   # Update Composer
   - composer self-update
   
-  - mkdir tests/temp
-  - mkdir tests/log
-  - mkdir upload
-  - mkdir thumbnails
-  
   # Install
   - composer install
   
 script:
-  - ./runTests.sh
+  - ./runTests.sh coverage
+  - phpunit tests

@@ -23,13 +23,18 @@ class HomepagePresenter extends \FrontendModule\BasePresenter
             'language' => $this->language
         ));
 
-        $root = $this->settings->get('Root domain', \WebCMS\Settings::SECTION_BASIC);
-        $abbr = $page->getLanguage()->getDefaultFrontend() ? '' : $page->getLanguage()->getAbbr() . '/';
+        if (is_object($page)) {
 
-        if ($root->getValue()) {
-            $this->forward(':Frontend:' . $page->getModuleName() . ':' . $page->getPresenter() . ':default', array('id' => $page->getId(), 'path' => $page->getPath(), 'abbr' => $abbr));
-        } else {
-            $this->redirect(':Frontend:' . $page->getModuleName() . ':' . $page->getPresenter() . ':default', array('id' => $page->getId(), 'path' => $page->getPath(), 'abbr' => $abbr));
+            $root = $this->settings->get('Root domain', \WebCMS\Settings::SECTION_BASIC);
+            $abbr = $page->getLanguage()->getDefaultFrontend() ? '' : $page->getLanguage()->getAbbr() . '/';
+
+            if ($root->getValue()) {
+                $this->forward(':Frontend:' . $page->getModuleName() . ':' . $page->getPresenter() . ':default', array('id' => $page->getId(), 'path' => $page->getPath(), 'abbr' => $abbr));
+            } else {
+                $this->redirect(':Frontend:' . $page->getModuleName() . ':' . $page->getPresenter() . ':default', array('id' => $page->getId(), 'path' => $page->getPath(), 'abbr' => $abbr));
+            }
         }
+
+        $this->forward(':Admin:Login:');
     }
 }

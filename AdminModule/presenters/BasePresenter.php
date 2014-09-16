@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Webcms2 admin module package.
+ */
+
 namespace AdminModule;
 
 use Nette;
@@ -10,11 +14,14 @@ use Monolog\Handler\StreamHandler;
 
 /**
  * Base class for all application presenters.
- * TODO refactoring
+ * 
+ * @property-read string $name
+ * @property-read string $action
+ * 
  * @author     Tomáš Voslař <tomas.voslar at webcook.cz>
  * @package    WebCMS2
  */
-abstract class BasePresenter extends Nette\Application\UI\Presenter
+class BasePresenter extends \WebCMS2\Common\BasePresenter
 {
     /** @var Doctrine\ORM\EntityManager */
     protected $em;
@@ -41,10 +48,11 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
     public $priceFormatter;
 
     /* Method is executed before render. */
-
     protected function beforeRender()
     {
         $this->setLayout("layout");
+
+        $this->setBasePathModule();
 
         if ($this->isAjax()) {
             $this->invalidateControl('flashMessages');
@@ -63,10 +71,13 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
             $this->flashMessage('Please fill in correct info email. Settings -> Basic settings.', 'warning');
         }
 
+        
+        if (!$this->isAjax()) {
+            $this->template->structures = $this->getStructures(); // TODO add function for AJAX and normal request it is not necessary to load everything
+        }
+        
         $this->template->registerHelperLoader('\WebCMS\Helpers\SystemHelper::loader');
         $this->template->actualPage = $this->actualPage;
-        if (!$this->isAjax())
-            $this->template->structures = $this->getStructures(); // TODO add function for AJAX and normal request it is not necessary to load everything
         $this->template->user = $this->getUser();
         $this->template->setTranslator($this->translator);
         $this->template->language = $this->state->language;
@@ -76,21 +87,17 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         $this->template->languages = $this->em->getRepository('WebCMS\Entity\Language')->findAll();
     }
 
-    /* Startup method. */
-    protected function startup()
+    /**
+     * 
+     */
+    private function processLanguage() 
     {
-        parent::startup();
-
-        if (!$this->getUser()->isLoggedIn() && $this->presenter->getName() !== "Admin:Login") {
-            $this->redirect(':Admin:Login:');
-        }
-
         $this->state = $this->getSession('admin');
 
         // changing language
         if ($this->getParameter('language_id_change')) {
             $this->state->language = $this->em->find('WebCMS\Entity\Language', $this->getParameter('language_id_change'));
-            $this->redirect(':Admin:Homepage:default');
+            $this->forward(':Admin:Homepage:default');
         }
 
         if (!isset($this->state->language)) {
@@ -103,7 +110,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         // check whether is language still in db
         if (!$language) {
             unset($this->state->language);
-            $this->redirect('Homepage:default');
+            $this->forward('Homepage:default');
         }
 
         // reload entity from db
@@ -119,6 +126,18 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         $translation = new \WebCMS\Translation\Translation($this->em, $default, 1);
         $this->translation = $translation->getTranslations();
         $this->translator = new \WebCMS\Translation\Translator($this->translation);
+    }
+
+    /* Startup method. */
+    protected function startup()
+    {
+        parent::startup();
+
+        if (!$this->getUser()->isLoggedIn() && $this->presenter->getName() !== "Admin:Login") {
+            $this->forward(':Admin:Login:');
+        }
+
+        $this->processLanguage();
 
         // system settings
         $this->settings = new \WebCMS\Settings($this->em, $this->state->language);
@@ -134,12 +153,17 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         $this->priceFormatter = new \WebCMS\Helpers\PriceFormatter($this->state->language->getLocale());
 
         $id = $this->getParam('idPage');
-        if ($id)
+        if ($id) {
             $this->actualPage = $this->em->find('WebCMS\Entity\Page', $id);
+        }
 
         $this->checkPermission();
 
-        // logger
+        $this->logAction();
+    }
+
+    private function logAction() 
+    {
         // Create the logger
         $logger = new Logger('History');
         // Now add some handlers
@@ -162,17 +186,9 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         }
     }
 
-    private function getSettings()
+    protected function getLanguageId()
     {
-        $query = $this->em->createQuery('SELECT s FROM WebCMS\Entity\Setting s WHERE s.language >= ' . $this->state->language->getId() . ' OR s.language IS NULL');
-        $tmp = $query->getResult();
-
-        $settings = array();
-        foreach ($tmp as $s) {
-            $settings[$s->getSection()][$s->getKey()] = $s;
-        }
-
-        return $settings;
+        return $this->state->language->getId();
     }
 
     protected function createSettingsForm($settings)
@@ -184,22 +200,35 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         }
 
         foreach ($settings as $s) {
-            $ident = $s->getId();
-
-            if ($s->getType() === 'text' || $s->getType() === null)
-            $form->addText($ident, $s->getKey())->setDefaultValue($s->getValue())->setAttribute('class', 'form-control');
-            elseif ($s->getType() === 'textarea')
-            $form->addTextArea($ident, $s->getKey())->setDefaultValue($s->getValue())->setAttribute('class', 'editor');
-            elseif ($s->getType() === 'radio')
-            $form->addRadioList($ident, $s->getKey(), $s->getOptions())->setDefaultValue($s->getValue());
-            elseif ($s->getType() === 'select')
-            $form->addSelect($ident, $s->getKey(), $s->getOptions())->setDefaultValue($s->getValue());
-            elseif ($s->getType() === 'checkbox')
-            $form->addCheckbox($ident, $s->getKey())->setDefaultValue($s->getValue());
+            $form = $this->createFormElement($form, $s);
         }
 
         $form->addSubmit('submit', 'Save settings');
         $form->onSuccess[] = callback($this, 'settingsFormSubmitted');
+
+        return $form;
+    }
+
+    private function createFormElement($form, $setting)
+    {
+        $ident = $setting->getId();
+        switch ($setting->getType()) {
+            case 'textarea':
+                $form->addTextArea($ident, $setting->getKey())->setDefaultValue($setting->getValue())->setAttribute('class', 'editor');    
+                break;
+            case 'radio':
+                $form->addRadioList($ident, $setting->getKey(), $setting->getOptions())->setDefaultValue($setting->getValue());    
+                break;
+            case 'select':
+                $form->addSelect($ident, $setting->getKey(), $setting->getOptions())->setDefaultValue($setting->getValue());
+                break;
+            case 'checkbox':
+                $form->addCheckbox($ident, $setting->getKey())->setDefaultValue($setting->getValue());
+                break;
+            default:
+                $form->addText($ident, $setting->getKey())->setDefaultValue($setting->getValue())->setAttribute('class', 'form-control');
+                break;
+        }
 
         return $form;
     }
@@ -216,7 +245,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         $this->em->flush();
 
         $this->flashMessage('Settings has been saved.', 'success');
-        $this->redirect('this');
+        $this->forward('this');
     }
 
     /* Invalidate ajax content. */
@@ -242,6 +271,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
      * @param  Nette\Application\UI\Presenter $presenter
      * @param  String                         $name
      * @param  String                         $entity
+     * @param string[] $where
      * @return \Grido\Grid
      */
     public function createGrid(Nette\Application\UI\Presenter $presenter, $name, $entity, $order = NULL, $where = NULL)
@@ -278,13 +308,13 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 
     /**
      * Creates form and rewrite renderer for bootstrap.
-     * @return type
+     * @return UI\Form
      */
     public function createForm()
     {
         $form = new Nette\Application\UI\Form();
 
-        $form->getElementPrototype(); //->addAttributes(array('class' => 'ajax'));
+        $form->getElementPrototype()->addAttributes(array('class' => 'ajax'));
         $form->setTranslator($this->translator);
         $form->setRenderer(new BootstrapRenderer);
 
@@ -294,7 +324,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
     /**
      * Injects entity manager.
      * @param  \Doctrine\ORM\EntityManager  $em
-     * @return \Backend\BasePresenter
+     * @return BasePresenter
      * @throws \Nette\InvalidStateException
      */
     public function injectEntityManager(\Doctrine\ORM\EntityManager $em)
@@ -308,10 +338,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         return $this;
     }
 
-    /**
-     * TODO refactoring
-     */
-    private function checkPermission()
+    private function initAcl()
     {
         // checking permission of user
         $acl = new Nette\Security\Permission;
@@ -324,80 +351,115 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
             $acl->addRole($r->getName());
         }
 
-        // resources definition
-        $res = \WebCMS\Helpers\SystemHelper::getResources();
+        // load resources
+        $resources = $this->initPagesResources();
+
+        // add all resources to acl
+        $acl->addResource('admin:Homepage');
+        $acl->addResource('admin:Login');
+        foreach ($resources as $key => $r) {
+            $acl->addResource($key);
+        }
+
+        return $acl;
+    }
+
+    private function initPagesResources()
+    {
+        $resources = \WebCMS\Helpers\SystemHelper::getResources();
 
         // pages resources
         $pages = $this->em->getRepository('WebCMS\Entity\Page')->findAll();
 
         foreach ($pages as $page) {
             if ($page->getParent() != NULL) {
+                $module = $this->createObject($page->getModuleName());
 
-            $module = $this->createObject($page->getModuleName());
-
-            foreach ($module->getPresenters() as $presenter) {
-                $key = 'admin:' . $page->getModuleName() . '' . $presenter['name'] . $page->getId();
-                $res[$key] = $page->getTitle();
-            }
+                foreach ($module->getPresenters() as $presenter) {
+                    $key = 'admin:' . $page->getModuleName() . '' . $presenter['name'] . $page->getId();
+                    $resources[$key] = $page->getTitle();
+                }
             }
         }
 
-        $acl->addResource('admin:Homepage');
-        $acl->addResource('admin:Login');
-        foreach ($res as $key => $r) {
-            $acl->addResource($key);
-        }
+        return $resources;
+    }
 
-        // resources
-        $identity = $this->getUser()->getIdentity();
-        if (is_object($identity))
+    /**
+     * @param Nette\Security\IIdentity|null $identity
+     */
+    private function initPermissions($identity)
+    {
+        if (is_object($identity)) {
             $permissions = $identity->data['permissions'];
-        else
+        } else {
             $permissions = array();
+        }
 
+        return $permissions;
+    }
+
+    private function getPageResource()
+    {
+        if (substr_count(lcfirst($this->name), ':') == 2) {
+            $resource = \WebCMS\Helpers\SystemHelper::strlReplace(':', '', lcfirst($this->name) . $this->getParameter('idPage'));
+        } else {
+            $resource = lcfirst($this->name);
+        }
+
+        return $resource;
+    }
+
+    /**
+     * @param Nette\Security\Permission $acl
+     */
+    private function checkRights($acl, $roles)
+    {
+        $resource = $this->getPageResource();
+
+        $hasRigths = false;
+        foreach ($roles as $role) {
+            $check = $acl->isAllowed($role, $resource, $this->action);
+
+            if ($check) {
+                $hasRigths = true;
+            }
+        }
+
+        return $hasRigths;
+    }
+
+    /**
+     * Checks user permission.
+     * 
+     * @return void
+     */
+    private function checkPermission()
+    {
+        // creates system acl
+        $acl = $this->initAcl();
+
+        $identity = $this->getUser()->getIdentity();
+        $permissions = $this->initPermissions($identity);
         foreach ($permissions as $key => $p) {
-            if ($p && $acl->hasResource($key))
-            $acl->allow($identity->roles[0], $key, Nette\Security\Permission::ALL);
+            if ($p && $acl->hasResource($key)) {
+                $acl->allow($identity->roles[0], $key, Nette\Security\Permission::ALL);
+            }
         }
 
         // homepage and login page can access everyone
         $acl->allow(Nette\Security\Permission::ALL, 'admin:Homepage', Nette\Security\Permission::ALL);
         $acl->allow(Nette\Security\Permission::ALL, 'admin:Login', Nette\Security\Permission::ALL);
 
-        // superadmin can do everything
+        // superadmin has access to everywhere
         $acl->allow('superadmin', Nette\Security\Permission::ALL, Nette\Security\Permission::ALL);
 
         $roles = $this->getUser()->getRoles();
 
-        $hasRigths = false;
-        $check = false;
-
-        if (substr_count(lcfirst($this->name), ':') == 2)
-            $resource = \WebCMS\Helpers\SystemHelper::strlReplace(':', '', lcfirst($this->name) . $this->getParam('idPage'));
-        else
-            $resource = lcfirst($this->name);
-
-        foreach ($roles as $role) {
-            $check = $acl->isAllowed($role, $resource, $this->action);
-
-            if ($check)
-            $hasRigths = true;
-        }
-
-        if (!$hasRigths) {
+        if (!$this->checkRights($acl, $roles)) {
             $this->presenter->flashMessage($this->translation['You do not have a permission to do this operation!'], 'danger');
             $this->redirect(":Admin:Homepage:");
         }
-    }
-
-    protected function createObject($name)
-    {
-        $expl = explode('-', $name);
-
-        $objectName = ucfirst($expl[0]);
-        $objectName = "\\WebCMS\\$objectName" . "Module\\" . $objectName;
-
-        return new $objectName;
     }
 
     private function getStructures()
@@ -462,7 +524,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         $this->em->flush();
 
         $this->flashMessage('Seo settings has been saved.', 'success');
-        $this->redirect('this');
+        $this->forward('this');
     }
 
     /* BOXES SETTINGS */
@@ -571,8 +633,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         $this->em->flush();
 
         $this->flashMessage('Boxes settings has been saved.', 'success');
-        if (!$this->isAjax())
-            $this->redirect('this');
+        $this->forward('this');
     }
 
     public function handleAddToFavourite($link, $title)
@@ -658,4 +719,10 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 
         return $array;
      }
+
+    public function setBasePathModule()
+    {
+        $this->template->basePathModule = __DIR__ . '/../../';
+    }
+
 }

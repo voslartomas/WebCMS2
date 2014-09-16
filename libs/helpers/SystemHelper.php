@@ -13,7 +13,7 @@ class SystemHelper
     /**
      * Helper loader.
      * @param  type $helper
-     * @return type
+     * @return \PHPUnit_Framework_Constraint_Callback|null
      */
     public static function loader($helper)
     {
@@ -144,12 +144,20 @@ class SystemHelper
             'admin:Settings' => 'admin:Settings',
             'admin:Users' => 'admin:Users',
             'admin:Languages' => 'admin:Languages',
+            'admin:Translations' => 'admin:Translations',
+            'admin:Cloning' => 'admin:Cloning',
+            'admin:Translator' => 'admin:Translator',
             'admin:Pages' => 'admin:Pages',
             'admin:Filesystem' => 'admin:Filesystem',
             'admin:Update' => 'admin:Update'
         );
     }
 
+    /**
+     * @param string $search
+     * @param string $replace
+     * @param string $subject
+     */
     public static function strlReplace($search, $replace, $subject)
     {
         $pos = strrpos($subject, $search);
@@ -259,6 +267,10 @@ class SystemHelper
     }
 
     // Perform a 32bit left shift
+
+    /**
+     * @param integer $steps
+     */
     public static function leftShift32($number, $steps)
     {
         // convert to binary (string)

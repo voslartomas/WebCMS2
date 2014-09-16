@@ -12,7 +12,7 @@ use Nette\Application\UI;
  * @author     Tomáš Voslař <tomas.voslar at webcook.cz>
  * @package    WebCMS2
  */
-abstract class BasePresenter extends Nette\Application\UI\Presenter
+class BasePresenter extends \WebCMS2\Common\BasePresenter
 {
     /** @var Doctrine\ORM\EntityManager */
     protected $em;
@@ -152,8 +152,6 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         $this->translation = $translation->getTranslations();
         $this->translator = new \WebCMS\Translation\Translator($this->translation);
 
-        $translation->hashTranslations();
-
         // system settings
         $this->settings = new \WebCMS\Settings($this->em, $this->language);
         $this->settings->setSettings($this->getSettings());
@@ -179,6 +177,11 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 
         if (is_object($this->actualPage)) {
             $this->setDefaultSeo();
+        }
+
+        // generate sitemap if doesn't exist yet
+        if (!file_exists('sitemap.xml')) {
+            $this->generateSitemap();
         }
 
         if ($this->isAjax()) {
@@ -232,17 +235,9 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         return $template;
     }
 
-    private function getSettings()
+    protected function getLanguageId()
     {
-        $query = $this->em->createQuery('SELECT s FROM WebCMS\Entity\Setting s WHERE s.language >= ' . $this->language->getId() . ' OR s.language IS NULL');
-        $tmp = $query->getResult();
-
-        $settings = array();
-        foreach ($tmp as $s) {
-            $settings[$s->getSection()][$s->getKey()] = $s;
-        }
-
-        return $settings;
+        return $this->language->getId();
     }
 
     public function createForm($do = '', $action = 'default', $context = null)
@@ -323,23 +318,6 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
     }
 
     /**
-     * Injects entity manager.
-     * @param  \Doctrine\ORM\EntityManager  $em
-     * @return \Backend\BasePresenter
-     * @throws \Nette\InvalidStateException
-     */
-    public function injectEntityManager(\Doctrine\ORM\EntityManager $em)
-    {
-        if ($this->em) {
-            throw new \Nette\InvalidStateException('Entity manager has been already set.');
-        }
-
-        $this->em = $em;
-
-        return $this;
-    }
-
-    /**
      * Set up boxes (call box function and save it into array) and give them to the tempalte.
      */
     private function setUpBoxes()
@@ -401,6 +379,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
      * @param  type       $direct
      * @param  type       $rootClass
      * @param  type       $dropDown
+     * @param BasePresenter $context
      * @return type
      */
     protected function getStructure($context, $node = NULL, $repo, $direct = TRUE, $rootClass = 'nav navbar-nav', $dropDown = FALSE, $system = TRUE, $fromPage = NULL, $sideClass = 'nav navbar', $moduleNameAbstract = null, $rootId = '')
@@ -515,7 +494,6 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 
     /**
      *
-     * @param Array $item
      */
     public function addToBreadcrumbs($id, $moduleName, $presenter, $title, $path)
     {
@@ -531,16 +509,6 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         ));
     }
 
-    protected function createObject($name)
-    {
-        $expl = explode('-', $name);
-
-        $objectName = ucfirst($expl[0]);
-        $objectName = "\\WebCMS\\$objectName" . "Module\\" . $objectName;
-
-        return new $objectName;
-    }
-
     /* @deprecated */
 
     public function flashMessageTranslated($message, $type = 'info')
@@ -552,6 +520,53 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
     {
         parent::flashMessage($this->translation[$text], $type);
     }
+    
+    /**
+    * Formats view template file names.
+    * @return string[]
+    */
+    public function formatTemplateFiles()
+    {
+        $name = $this->getName();
+        $presenter = substr($name, strrpos(':' . $name, ':'));
+        $dir = dirname($this->getReflection()->getFileName());
+        $dir = is_dir("$dir/templates") ? $dir : dirname($dir);
+        $appPath = APP_DIR . "/templates/" . lcfirst($presenter) . "-module/$presenter/$this->view.latte";
+        
+        return array(
+            $appPath,
+            "$dir/templates/$presenter/$this->view.latte",
+            "$dir/templates/$presenter.$this->view.latte",
+            "$dir/templates/$presenter/$this->view.phtml",
+            "$dir/templates/$presenter.$this->view.phtml",
+        );
+    }
+    
+     /**
+      * Formats layout template file names.
+      * @return array
+      */
+     public function formatLayoutTemplateFiles()
+     {
+         $name = $this->getName();
+         $presenter = substr($name, strrpos(':' . $name, ':'));
+         $layout = $this->layout ? $this->layout : 'layout';
+         $dir = dirname($this->getReflection()->getFileName());
+         $dir = is_dir("$dir/templates") ? $dir : dirname($dir);
+         $list = array(
+             APP_DIR . "/templates/@$layout.latte",
+             "$dir/templates/$presenter/@$layout.latte",
+             "$dir/templates/$presenter.@$layout.latte",
+             "$dir/templates/$presenter/@$layout.phtml",
+             "$dir/templates/$presenter.@$layout.phtml",
+         );
+         do {
+             $list[] = "$dir/templates/@$layout.latte";
+             $list[] = "$dir/templates/@$layout.phtml";
+             $dir = dirname($dir);
+         } while ($dir && ($name = substr($name, 0, strrpos($name, ':'))));
+         return $list;
+     }
 
     /**
     * Formats view template file names.

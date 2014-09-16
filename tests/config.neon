@@ -19,7 +19,6 @@ common:
 		console: false
 		entityDirs: { ./Entity }
 		
-		
 	services:
 		database: @doctrine.entityManager
 		
