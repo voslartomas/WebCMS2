@@ -521,27 +521,6 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
         parent::flashMessage($this->translation[$text], $type);
     }
     
-    /**
-    * Formats view template file names.
-    * @return string[]
-    */
-    public function formatTemplateFiles()
-    {
-        $name = $this->getName();
-        $presenter = substr($name, strrpos(':' . $name, ':'));
-        $dir = dirname($this->getReflection()->getFileName());
-        $dir = is_dir("$dir/templates") ? $dir : dirname($dir);
-        $appPath = APP_DIR . "/templates/" . lcfirst($presenter) . "-module/$presenter/$this->view.latte";
-        
-        return array(
-            $appPath,
-            "$dir/templates/$presenter/$this->view.latte",
-            "$dir/templates/$presenter.$this->view.latte",
-            "$dir/templates/$presenter/$this->view.phtml",
-            "$dir/templates/$presenter.$this->view.phtml",
-        );
-    }
-    
      /**
       * Formats layout template file names.
       * @return array
@@ -593,30 +572,4 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
         );
     }
     
-     /**
-      * Formats layout template file names.
-      * @return array
-      */
-     public function formatLayoutTemplateFiles()
-     {
-         $name = $this->getName();
-         $presenter = substr($name, strrpos(':' . $name, ':'));
-         $layout = $this->layout ? $this->layout : 'layout';
-         $dir = dirname($this->getReflection()->getFileName());
-         $dir = is_dir("$dir/templates") ? $dir : dirname($dir);
-         $list = array(
-             APP_DIR . "/templates/@$layout.latte",
-             "$dir/templates/$presenter/@$layout.latte",
-             "$dir/templates/$presenter.@$layout.latte",
-             "$dir/templates/$presenter/@$layout.phtml",
-             "$dir/templates/$presenter.@$layout.phtml",
-         );
-         do {
-             $list[] = "$dir/templates/@$layout.latte";
-             $list[] = "$dir/templates/@$layout.phtml";
-             $dir = dirname($dir);
-         } while ($dir && ($name = substr($name, 0, strrpos($name, ':'))));
-         return $list;
-     }
-
 }
