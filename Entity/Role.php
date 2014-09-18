@@ -40,6 +40,11 @@ class Role extends Entity
         }
     }
 
+    public function setPermissions($permissions)
+    {
+        $this->permissions = $permissions;
+    }
+
     public function getName()
     {
         return $this->name;
