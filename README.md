@@ -20,13 +20,8 @@ Look into composer.json for all used libraries.
 INSTALLATION
 ------------
 
-Download [https://github.com/nette/sandbox](Nette sandbox), default vendor directory is 'libs'.
+Download [https://github.com/ufik/webcms2-sandbox](WebCMS2 sandbox), default vendor directory is 'libs'.
 
-Add this line into your composer.json file.
-
-```
-"webcms2\webcms2" : "0.*"
-```
 
 This command will download all required packages, create DB schema, make all necessary directories and change mode for required files.
 
@@ -58,6 +53,8 @@ common:
 			box3: true
 
 		cacheNamespace: 'projectNamespace'
+		
+		productionServers: [production-server1, production-server2]
 
 production < common:
 	parameters:
