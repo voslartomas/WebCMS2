@@ -17,7 +17,7 @@
     ],
     "require": {
         "php": ">=5.4.0",
-		"o5/grido": "0.*",
+		"o5/grido": "1.*",
 		"webcook/doctrine": "1.*@dev",
 		"nella/console": "@dev",
 		"nella/gedmo": "@dev",
