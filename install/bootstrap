@@ -10,12 +10,22 @@ use Nette\Application\Routers\Route;
 // Load Nette Framework
 require LIBS_DIR . '/autoload.php';
 
+$config = file_get_contents(__DIR__ . '/config/config.neon');
+$neon = new Nette\Utils\Neon;
+$c = $neon->decode($config);
+
+if (array_key_exists('productionServers', $c['common']['parameters'])) {
+	$productionServers = $c['common']['parameters']['productionServers'];	
+} else {
+	$productionServers[] = 'vm7050'; // compatibility with old config files
+}
+
 // Configure application
 $configurator = new Nette\Config\Configurator;
 
 // detects environment via virtual server name
 if(PHP_SAPI === 'cli'){
-	if(php_uname('n') === 'vm7050' || php_uname('n') === 'web1'){
+	if(in_array(php_uname('n'), $productionServers)){
 		$environment = 'production';
 	}else{
 		$environment = 'development';
