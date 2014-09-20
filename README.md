@@ -20,7 +20,7 @@ Look into composer.json for all used libraries.
 INSTALLATION
 ------------
 
-Download [https://github.com/ufik/webcms2-sandbox](WebCMS2 sandbox), default vendor directory is 'libs'.
+Download https://github.com/ufik/webcms2-sandbox, default vendor directory is 'libs'.
 
 
 This command will download all required packages, create DB schema, make all necessary directories and change mode for required files.
