@@ -240,7 +240,7 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
         return $this->language->getId();
     }
 
-    public function createForm($do = '', $action = 'default', $context = null)
+    public function createForm($do = '', $action = 'default', $context = null, $parameters = array())
     {
         $form = new UI\Form();
 
@@ -259,7 +259,8 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
         $form->getElementPrototype()->action = $c->link($action, array(
             'path' => $page->getPath(),
             'abbr' => $abbr,
-            'do' => $do
+            'do' => $do,
+            'parameters' => $parameters
         ));
 
         $form->setTranslator($translator);
