@@ -2,7 +2,7 @@
 
 /**
  * My Application bootstrap file.
- * Rev. 2
+ * Rev. 3
  */
 use Nette\Application\Routers\Route;
 
@@ -66,7 +66,12 @@ $container->router[] =  new Route('', array(
 	'action' => 'default'
 ));
 
-$securedAdmin = $c['common']['parameters']['securedAdmin'] ? Route::SECURED : '';
+if (array_key_exists('securedAdmin', $c['common']['parameters'])) {
+    $securedAdmin = $c['common']['parameters']['securedAdmin'] ? Route::SECURED : '';
+} else {
+    $securedAdmin = '';	
+}
+
 
 $container->router[] =  new Route('login', array(
 	'module' => 'Admin',
