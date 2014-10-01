@@ -27,7 +27,8 @@
 		"ddtraceweb/monolog-parser": "@dev",
 		"webcook/translator" : "0.*@dev",
 		"phpunit/phpunit": "4.*@dev",
-		"mockery/mockery": "0.*"
+		"mockery/mockery": "0.*",
+		"facebook/php-sdk-v4": "@dev"
     },
     "autoload": {
         "classmap": ["Common", "AdminModule/presenters/", "FrontendModule/presenters/", "libs", "AdminModule/model", "Entity", "tests"]
