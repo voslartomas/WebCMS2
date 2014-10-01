@@ -2,10 +2,13 @@
 
 /**
  * My Application bootstrap file.
- * Rev. 3
+ * Rev. 4
  */
 use Nette\Application\Routers\Route;
 
+if (!empty($_GET['redirectTo'])) {
+    $_SERVER['REQUEST_URI'] = $_GET['redirectTo'];
+}
 
 // Load Nette Framework
 require LIBS_DIR . '/autoload.php';
