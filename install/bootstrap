@@ -2,7 +2,7 @@
 
 /**
  * My Application bootstrap file.
- * Rev. 4
+ * Rev. 5
  */
 use Nette\Application\Routers\Route;
 
@@ -16,6 +16,20 @@ require LIBS_DIR . '/autoload.php';
 $config = file_get_contents(__DIR__ . '/config/config.neon');
 $neon = new Nette\Utils\Neon;
 $c = $neon->decode($config);
+
+if (array_key_exists('facebookAppId', $c['common']['parameters']) && array_key_exists('facebookAppSecret', $c['common']['parameters'])) {
+    Facebook\FacebookSession::setDefaultApplication($c['common']['parameters']['facebookAppId'], $c['common']['parameters']['facebookAppSecret']);
+    $session = new Facebook\FacebookCanvasLoginHelper();
+
+    $sr = $session->getSignedRequest();
+    if ($sr) {
+        $payload = $sr->getPayload();
+    }
+
+    if (array_key_exists('app_data', $payload)) {
+        $_SERVER['REQUEST_URI'] = $payload['app_data'];
+    }
+}
 
 if (array_key_exists('productionServers', $c['common']['parameters'])) {
 	$productionServers = $c['common']['parameters']['productionServers'];	
