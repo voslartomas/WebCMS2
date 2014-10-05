@@ -21,7 +21,7 @@
 		"webcook/doctrine": "1.*@dev",
 		"nella/console": "@dev",
 		"nella/gedmo": "@dev",
-		"webcook/bootstrap-form-renderer": "~0.9.5",
+		"webcook/bootstrap-form-renderer": "~2.0.0",
 		"monolog/monolog" : "1.6.0",
 		"knplabs/packagist-api": "1.*@dev",
 		"ddtraceweb/monolog-parser": "@dev",
