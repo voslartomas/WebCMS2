@@ -26,7 +26,7 @@ if (array_key_exists('facebookAppId', $c['common']['parameters']) && array_key_e
         $payload = $sr->getPayload();
     }
 
-    if (array_key_exists('app_data', $payload)) {
+    if (is_array($payload) && array_key_exists('app_data', $payload)) {
         $_SERVER['REQUEST_URI'] = $payload['app_data'];
     }
 }
