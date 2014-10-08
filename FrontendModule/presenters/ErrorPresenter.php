@@ -6,8 +6,8 @@ use Nette\Application as NA;
 /**
  * Error presenter.
  *
- * @author     John Doe
- * @package    MyApplication
+ * @author     Tomas Voslar
+ * @package    WebCMS2
  */
 class ErrorPresenter extends \FrontendModule\BasePresenter
 {
@@ -17,19 +17,20 @@ class ErrorPresenter extends \FrontendModule\BasePresenter
      */
     public function renderDefault($exception)
     {
+
         if ($this->isAjax()) { // AJAX request? Just note this error in payload.
             $this->payload->error = TRUE;
             $this->terminate();
         } elseif ($exception instanceof NA\BadRequestException) {
             $code = $exception->getCode();
             // load template 403.latte or 404.latte or ... 4xx.latte
-            $this->setView(in_array($code, array(403, 404, 405, 410, 500)) ? $code : '4xx');
+            $code = in_array($code, array(403, 404, 405, 410, 500)) ? $code : '4xx';
 
             $errorPage = new \WebCMS\Entity\Page;
-            $errorPage->setTitle('404');
+            $errorPage->setTitle($code);
 
             $this->actualPage = $errorPage;
-
+            $this->template->setFile(APP_DIR . "/templates/Error/$code.latte");
             $this->template->actualPage = $errorPage;
             $this->template->errorCode = $code;
             $this->template->seoTitle = '404';
