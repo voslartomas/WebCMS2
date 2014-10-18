@@ -124,6 +124,11 @@ class Page extends Seo
      */
     private $redirect;
 
+    /**
+     * @orm\Column(type="text", nullable=true)
+     */
+    private $layout;
+
     public function __construct()
     {
         $this->children = new ArrayCollection();
@@ -327,4 +332,28 @@ class Page extends Seo
         $this->redirect = $redirect;
     }
 
+
+    /**
+     * Gets the value of layout.
+     *
+     * @return mixed
+     */
+    public function getLayout()
+    {
+        return $this->layout;
+    }
+
+    /**
+     * Sets the value of layout.
+     *
+     * @param mixed $layout the layout
+     *
+     * @return self
+     */
+    public function setLayout($layout)
+    {
+        $this->layout = $layout;
+
+        return $this;
+    }
 }

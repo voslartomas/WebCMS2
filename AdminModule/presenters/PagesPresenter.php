@@ -3,6 +3,7 @@
 namespace AdminModule;
 
 use Nette\Application\UI;
+use Nette\Utils\Finder;
 
 /**
  * Admin presenter.
@@ -53,12 +54,18 @@ class PagesPresenter extends \AdminModule\BasePresenter
             }
         }
 
+        $layouts = array();
+        foreach (Finder::findFiles('@*.latte')->in(APP_DIR . '/templates') as $key => $file) {
+            $layouts[str_replace(array('@', '.latte'), '', $file->getFileName())] = $file->getFileName();
+        }
+
         $form = $this->createForm();
         $form->addText('title', 'Name')->setAttribute('class', 'form-control')->setRequired();
         $form->addText('redirect', 'Redirect')->setAttribute('class', 'form-control');
         $form->addText('class', 'Menu item class')->setAttribute('class', 'form-control');
         $form->addSelect('module', 'Module')->setTranslator(NULL)->setItems($modulesToSelect)->setAttribute('class', 'form-control')->setRequired();
         $form->addSelect('parent', 'Parent')->setTranslator(NULL)->setItems($hierarchy)->setAttribute('class', 'form-control');
+        $form->addSelect('layout', 'Page layout')->setTranslator(NULL)->setItems($layouts)->setAttribute('class', 'form-control');
         $form->addCheckbox('default', 'Default');
         $form->addCheckbox('visible', 'Show');
 
@@ -147,6 +154,7 @@ class PagesPresenter extends \AdminModule\BasePresenter
         $this->page->setPresenter($presenter);
         $this->page->setPath('tmp value');
         $this->page->setClass($values->class);
+        $this->page->setLayout($values->layout);
     }
 
     /**

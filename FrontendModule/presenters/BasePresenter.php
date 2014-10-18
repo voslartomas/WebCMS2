@@ -45,14 +45,16 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
     private $breadcrumbs = array();
 
     /* Method is executed before render. */
-
     protected function beforeRender()
     {
         if (is_object($this->actualPage)) {
-            if ($this->actualPage->getDefault())
+            if ($this->actualPage->getLayout()) {
+                $this->setLayout($this->actualPage->getLayout());
+            } else if ($this->actualPage->getDefault()) {
                 $this->setLayout("layoutDefault");
-            else
+            } else {
                 $this->setLayout("layout");
+            }
         }
 
         if ($this->isAjax()) {
