@@ -7,8 +7,8 @@ class SystemHelper
     const WEBCMS_PATH = '../libs/webcms2/webcms2/';
     const VERSION_FILE = '../libs/webcms2/webcms2/AdminModule/version';
 
-    private static $baseUrl;
-    private static $infoEmail;
+    public static $baseUrl;
+    public static $infoEmail;
 
     /**
      * Helper loader.
