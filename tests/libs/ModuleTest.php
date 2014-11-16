@@ -14,19 +14,19 @@ class ModuleTest extends \WebCMS\Tests\BasicTestCase
                     array(
                         'name' => 'Module',
                         'frontend' => TRUE,
-                        'parameters' => FALSE
+                        'parameters' => FALSE,
                         ),
                     array(
                         'name' => 'Settings',
-                        'frontend' => FALSE
-                        )
+                        'frontend' => FALSE,
+                        ),
                     ));
 
         $moduleMock->addBox('name', 'Module', 'function', 'ModuleName');
 
         $moduleMock->getPresenterSettings('Module - the bad one');
         $presenter = $moduleMock->getPresenterSettings('Module');
-        
+
         $this->assertEquals('Test module', $moduleMock->getName());
         $this->assertEquals('Name Surname', $moduleMock->getAuthor());
         $this->assertCount(2, $moduleMock->getPresenters());
@@ -34,12 +34,12 @@ class ModuleTest extends \WebCMS\Tests\BasicTestCase
                         array(
                             'name' => 'Module',
                             'frontend' => TRUE,
-                            'parameters' => FALSE
+                            'parameters' => FALSE,
                             ),
                         array(
                             'name' => 'Settings',
-                            'frontend' => FALSE
-                            )
+                            'frontend' => FALSE,
+                            ),
                     ), $moduleMock->getPresenters());
         $this->assertEquals('Module', $presenter['name']);
         $this->assertTrue($presenter['frontend']);
@@ -49,7 +49,7 @@ class ModuleTest extends \WebCMS\Tests\BasicTestCase
             'name' => 'name',
             'presenter' => 'Module',
             'module' => 'ModuleName',
-            'function' => 'function'
+            'function' => 'function',
         )), $moduleMock->getBoxes());
         $this->assertFalse($moduleMock->isSearchable());
         $this->assertFalse($moduleMock->isTranslatable());

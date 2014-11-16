@@ -14,10 +14,10 @@ use Monolog\Handler\StreamHandler;
 
 /**
  * Base class for all application presenters.
- * 
+ *
  * @property-read string $name
  * @property-read string $action
- * 
+ *
  * @author     Tomáš Voslař <tomas.voslar at webcook.cz>
  * @package    WebCMS2
  */
@@ -60,9 +60,9 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
 
         // boxes settings, only if page is module
         if ($this->getParam('id')) {
-            $this->template->boxesSettings = TRUE;
+            $this->template->boxesSettings = true;
         } else {
-            $this->template->boxesSettings = FALSE;
+            $this->template->boxesSettings = false;
         }
 
         // check filled info email
@@ -71,11 +71,10 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
             $this->flashMessage('Please fill in correct info email. Settings -> Basic settings.', 'warning');
         }
 
-        
         if (!$this->isAjax()) {
             $this->template->structures = $this->getStructures(); // TODO add function for AJAX and normal request it is not necessary to load everything
         }
-        
+
         $this->template->registerHelperLoader('\WebCMS\Helpers\SystemHelper::loader');
         $this->template->actualPage = $this->actualPage;
         $this->template->user = $this->getUser();
@@ -88,9 +87,9 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
     }
 
     /**
-     * 
+     *
      */
-    private function processLanguage() 
+    private function processLanguage()
     {
         $this->state = $this->getSession('admin');
 
@@ -102,7 +101,7 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
 
         if (!isset($this->state->language)) {
             $this->state->language = $this->em->getRepository('WebCMS\Entity\Language')->findOneBy(array(
-            'defaultBackend' => 1
+            'defaultBackend' => 1,
             ));
         }
 
@@ -120,7 +119,7 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
 
         // translations
         $default = $this->em->getRepository('WebCMS\Entity\Language')->findOneBy(array(
-            'defaultBackend' => 1
+            'defaultBackend' => 1,
         ));
 
         $translation = new \WebCMS\Translation\Translation($this->em, $default, 1);
@@ -146,7 +145,7 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
         // system helper sets variables
         \WebCMS\Helpers\SystemHelper::setVariables(array(
             'baseUrl' => $this->presenter->getHttpRequest()->url->baseUrl,
-            'infoEmail' => $this->settings->get('Info email', 'basic')->getValue()
+            'infoEmail' => $this->settings->get('Info email', 'basic')->getValue(),
         ));
 
         // price formatting
@@ -162,21 +161,21 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
         $this->logAction();
     }
 
-    private function logAction() 
+    private function logAction()
     {
         // Create the logger
         $logger = new Logger('History');
         // Now add some handlers
         $parameters = $this->getContext()->getParameters();
 
-        $logger->pushHandler(new StreamHandler($parameters['tempDir'] . '/../log/webcms.log', Logger::DEBUG));
+        $logger->pushHandler(new StreamHandler($parameters['tempDir'].'/../log/webcms.log', Logger::DEBUG));
 
         $data = array(
             'user' => $this->getUser()->getIdentity() ? $this->getUser()->getIdentity()->getData()['username'] : 'unknown',
             'action' => $this->getAction(),
             'presenter' => $this->getName(),
             'title' => is_object($this->actualPage) ? $this->actualPage->getTitle() : 'System',
-            'url' => $this->getHttpRequest()->url->absoluteUrl
+            'url' => $this->getHttpRequest()->url->absoluteUrl,
         );
 
         if ($this->getName() === 'Admin:Homepage' || $this->getName() === 'Admin:Login') {
@@ -214,10 +213,10 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
         $ident = $setting->getId();
         switch ($setting->getType()) {
             case 'textarea':
-                $form->addTextArea($ident, $setting->getKey())->setDefaultValue($setting->getValue())->setAttribute('class', 'editor');    
+                $form->addTextArea($ident, $setting->getKey())->setDefaultValue($setting->getValue())->setAttribute('class', 'editor');
                 break;
             case 'radio':
-                $form->addRadioList($ident, $setting->getKey(), $setting->getOptions())->setDefaultValue($setting->getValue());    
+                $form->addRadioList($ident, $setting->getKey(), $setting->getOptions())->setDefaultValue($setting->getValue());
                 break;
             case 'select':
                 $form->addSelect($ident, $setting->getKey(), $setting->getOptions())->setDefaultValue($setting->getValue());
@@ -271,10 +270,10 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
      * @param  Nette\Application\UI\Presenter $presenter
      * @param  String                         $name
      * @param  String                         $entity
-     * @param string[] $where
+     * @param  string[]                       $where
      * @return \Grido\Grid
      */
-    public function createGrid(Nette\Application\UI\Presenter $presenter, $name, $entity, $order = NULL, $where = NULL)
+    public function createGrid(Nette\Application\UI\Presenter $presenter, $name, $entity, $order = null, $where = null)
     {
         $grid = new \Grido\Grid($presenter, $name);
 
@@ -282,13 +281,13 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
 
         if ($order) {
             foreach ($order as $o) {
-            $qb->addOrderBy('l.' . $o['by'], $o['dir']);
+                $qb->addOrderBy('l.'.$o['by'], $o['dir']);
             }
         }
 
         if ($where) {
             foreach ($where as $w) {
-            $qb->andWhere('l.' . $w);
+                $qb->andWhere('l.'.$w);
             }
         }
 
@@ -316,7 +315,7 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
 
         $form->getElementPrototype()->addAttributes(array('class' => 'ajax'));
         $form->setTranslator($this->translator);
-        $form->setRenderer(new BootstrapRenderer);
+        $form->setRenderer(new BootstrapRenderer());
 
         return $form;
     }
@@ -341,7 +340,7 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
     private function initAcl()
     {
         // checking permission of user
-        $acl = new Nette\Security\Permission;
+        $acl = new Nette\Security\Permission();
 
         // roles
         $roles = $this->em->getRepository("WebCMS\Entity\Role")->findAll();
@@ -376,7 +375,7 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
                 $module = $this->createObject($page->getModuleName());
 
                 foreach ($module->getPresenters() as $presenter) {
-                    $key = 'admin:' . $page->getModuleName() . '' . $presenter['name'] . $page->getId();
+                    $key = 'admin:'.$page->getModuleName().''.$presenter['name'].$page->getId();
                     $resources[$key] = $page->getTitle();
                 }
             }
@@ -402,7 +401,7 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
     private function getPageResource()
     {
         if (substr_count(lcfirst($this->name), ':') == 2) {
-            $resource = \WebCMS\Helpers\SystemHelper::strlReplace(':', '', lcfirst($this->name) . $this->getParameter('idPage'));
+            $resource = \WebCMS\Helpers\SystemHelper::strlReplace(':', '', lcfirst($this->name).$this->getParameter('idPage'));
         } else {
             $resource = lcfirst($this->name);
         }
@@ -431,7 +430,7 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
 
     /**
      * Checks user permission.
-     * 
+     *
      * @return void
      */
     private function checkPermission()
@@ -468,7 +467,7 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
 
         $qb->addOrderBy('l.root', 'ASC');
         $qb->andWhere('l.parent IS NULL');
-        $qb->andWhere('l.language = ' . $this->state->language->getId());
+        $qb->andWhere('l.language = '.$this->state->language->getId());
 
         return $qb->select('l')->from("WebCMS\Entity\Page", 'l')->getQuery()->getResult();
     }
@@ -504,7 +503,7 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
         $values = $form->getValues();
 
         if (empty($values->slug)) {
-            $this->actualPage->setSlug(NULL);
+            $this->actualPage->setSlug(null);
         } else {
             $this->actualPage->setSlug($values->slug);
         }
@@ -515,8 +514,9 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
         $path = $this->em->getRepository('WebCMS\Entity\Page')->getPath($this->actualPage);
         $final = array();
         foreach ($path as $p) {
-            if ($p->getParent() != NULL)
-            $final[] = $p->getSlug();
+            if ($p->getParent() != NULL) {
+                $final[] = $p->getSlug();
+            }
         }
 
         $this->actualPage->setPath(implode('/', $final));
@@ -557,42 +557,43 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
         $boxes = $parameters['boxes'];
 
         $pages = $this->em->getRepository('WebCMS\Entity\Page')->findBy(array(
-            'language' => $this->state->language
+            'language' => $this->state->language,
         ));
 
         $boxesAssoc = array();
         foreach ($pages as $page) {
             if ($page->getParent() != NULL) {
-            $module = $this->createObject($page->getModuleName());
+                $module = $this->createObject($page->getModuleName());
 
-            foreach ($module->getBoxes() as $box) {
-                $boxesAssoc[$page->getId() . '-' . $box['module'] . '-' . $box['presenter'] . '-' . $box['function']] = $page->getTitle() . ' - ' . $this->translation[$box['name']];
-            }
+                foreach ($module->getBoxes() as $box) {
+                    $boxesAssoc[$page->getId().'-'.$box['module'].'-'.$box['presenter'].'-'.$box['function']] = $page->getTitle().' - '.$this->translation[$box['name']];
+                }
             }
         }
 
         $boxesAssoc = array(
-            0 => $this->translation['Box is not linked.']
+            0 => $this->translation['Box is not linked.'],
             ) + $boxesAssoc;
 
         if (!empty($boxes)) {
             foreach ($boxes as $name => $active) {
-            $form->addSelect($name, $name, $boxesAssoc)
-                ->setTranslator(NULL)
+                $form->addSelect($name, $name, $boxesAssoc)
+                ->setTranslator(null)
                 ->setAttribute('class', 'form-control');
             }
         }
 
         // set defaults
         $boxes = $this->em->getRepository('WebCMS\Entity\Box')->findBy(array(
-            'pageTo' => $this->actualPage
+            'pageTo' => $this->actualPage,
         ));
 
         $defaults = array();
         if (!empty($boxes)) {
             foreach ($boxes as $box) {
-            if (is_object($box->getPageFrom()))
-                $defaults[$box->getBox()] = $box->getPageFrom()->getId() . '-' . $box->getModuleName() . '-' . $box->getPresenter() . '-' . $box->getFunction();
+                if (is_object($box->getPageFrom())) {
+                    $defaults[$box->getBox()] = $box->getPageFrom()->getId().'-'.$box->getModuleName().'-'.$box->getPresenter().'-'.$box->getFunction();
+                }
             }
         }
 
@@ -608,25 +609,25 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
         $values = $form->getValues();
 
         // delete old asscociations
-        $q = $this->em->createQuery('delete from WebCMS\Entity\Box m where m.pageTo = ' . $this->actualPage->getId());
+        $q = $this->em->createQuery('delete from WebCMS\Entity\Box m where m.pageTo = '.$this->actualPage->getId());
         $numDeleted = $q->execute();
 
         // persist new associations
         foreach ($values as $key => $value) {
             if ($value) {
-            $params = explode('-', $value);
+                $params = explode('-', $value);
 
-            $pageFrom = $this->em->find('WebCMS\Entity\Page', $params[0]);
+                $pageFrom = $this->em->find('WebCMS\Entity\Page', $params[0]);
 
-            $box = new \WebCMS\Entity\Box();
-            $box->setPageFrom($pageFrom);
-            $box->setPageTo($this->actualPage);
-            $box->setModuleName($params[1]);
-            $box->setPresenter($params[2]);
-            $box->setFunction($params[3]);
-            $box->setBox($key);
+                $box = new \WebCMS\Entity\Box();
+                $box->setPageFrom($pageFrom);
+                $box->setPageTo($this->actualPage);
+                $box->setModuleName($params[1]);
+                $box->setPresenter($params[2]);
+                $box->setFunction($params[3]);
+                $box->setBox($key);
 
-            $this->em->persist($box);
+                $this->em->persist($box);
             }
         }
 
@@ -650,10 +651,10 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
         $this->em->flush();
 
         $this->flashMessage('Link has been added to favourites.', 'success');
-        }
+    }
 
-        public function handleGetTranslations()
-        {
+    public function handleGetTranslations()
+    {
         $payload = array();
         foreach ($_GET['keys'] as $key => $value) {
             $payload[$key] = $this->translator->translate($key);
@@ -684,13 +685,13 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
      public function formatLayoutTemplateFiles()
      {
          $name = $this->getName();
-         $presenter = substr($name, strrpos(':' . $name, ':'));
+         $presenter = substr($name, strrpos(':'.$name, ':'));
          $layout = $this->layout ? $this->layout : 'layout';
          $dir = dirname($this->getReflection()->getFileName());
          $dir = is_dir("$dir/templates") ? $dir : dirname($dir);
-         
+
          $list = array(
-             APP_DIR . "/../libs/webcms2/webcms2/AdminModule/templates/@$layout.latte",
+             APP_DIR."/../libs/webcms2/webcms2/AdminModule/templates/@$layout.latte",
          );
 
          do {
@@ -698,31 +699,31 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
              $list[] = "$dir/templates/@$layout.phtml";
              $dir = dirname($dir);
          } while ($dir && ($name = substr($name, 0, strrpos($name, ':'))));
+
          return $list;
      }
 
      /**
       * Transfer collection into array.
-      * 
+      *
       * @param  [type] $collection [description]
       * @param  string $title      [description]
-      * 
+      *
       * @return array              [description]
       */
      public function collectionToArray($collection, $title = 'title')
      {
-        $array = array();
-        foreach ($collection as $item) {
-            $getter = 'get' . ucfirst($title);
-            $array[$item->getId()] = $item->$getter();
-        }
+         $array = array();
+         foreach ($collection as $item) {
+             $getter = 'get'.ucfirst($title);
+             $array[$item->getId()] = $item->$getter();
+         }
 
-        return $array;
+         return $array;
      }
 
     public function setBasePathModule()
     {
-        $this->template->basePathModule = __DIR__ . '/../../';
+        $this->template->basePathModule = __DIR__.'/../../';
     }
-
 }

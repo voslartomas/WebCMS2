@@ -22,11 +22,10 @@ use Nette;
  */
 class Form extends Nette\Forms\Form implements ISignalReceiver
 {
-
     /**
      * Application form constructor.
      */
-    public function __construct(Nette\ComponentModel\IContainer $parent = NULL, $name = NULL)
+    public function __construct(Nette\ComponentModel\IContainer $parent = null, $name = null)
     {
         parent::__construct();
         $this->monitor('Nette\Application\UI\Presenter');
@@ -40,11 +39,10 @@ class Form extends Nette\Forms\Form implements ISignalReceiver
      * @param  bool   throw exception if presenter doesn't exist?
      * @return Nette\ComponentModel\IComponent
      */
-    public function getPresenter($need = TRUE)
+    public function getPresenter($need = true)
     {
         return $this->lookup('Nette\Application\UI\Presenter', $need);
     }
-
 
     /**
      * This method will be called when the component (or component's parent)
@@ -58,13 +56,13 @@ class Form extends Nette\Forms\Form implements ISignalReceiver
             $name = $this->lookupPath('Nette\Application\UI\Presenter');
 
             if (!isset($this->getElementPrototype()->id)) {
-                $this->getElementPrototype()->id = 'frm-' . $name;
+                $this->getElementPrototype()->id = 'frm-'.$name;
             }
 
             if (!$this->getAction()) {
                 $this->setAction(new Link(
                     $presenter,
-                    $name . self::NAME_SEPARATOR . 'submit!',
+                    $name.self::NAME_SEPARATOR.'submit!',
                     array()
                 ));
             }
@@ -86,7 +84,7 @@ class Form extends Nette\Forms\Form implements ISignalReceiver
      */
     public function isAnchored()
     {
-        return (bool) $this->getPresenter(FALSE);
+        return (bool) $this->getPresenter(false);
     }
 
     /**
@@ -131,5 +129,4 @@ class Form extends Nette\Forms\Form implements ISignalReceiver
             throw new BadSignalException("Missing handler for signal '$signal' in $class.");
         }
     }
-
 }

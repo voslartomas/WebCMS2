@@ -50,7 +50,7 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
         if (is_object($this->actualPage)) {
             if ($this->actualPage->getLayout()) {
                 $this->setLayout($this->actualPage->getLayout());
-            } else if ($this->actualPage->getDefault()) {
+            } elseif ($this->actualPage->getDefault()) {
                 $this->setLayout("layoutDefault");
             } else {
                 $this->setLayout("layout");
@@ -77,12 +77,15 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
         // set default seo settings
         if (is_object($this->actualPage)) {
             $this->template->breadcrumb = $this->getBreadcrumbs();
-            $this->template->sidebar = $this->getStructure($this, $top, $this->em->getRepository('WebCMS\Entity\Page'), FALSE, $this->settings->get('Sidebar class', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue(), FALSE, FALSE, NULL, $this->settings->get('Sidebar class', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue());
+            $this->template->sidebar = $this->getStructure($this, $top, $this->em->getRepository('WebCMS\Entity\Page'), false, $this->settings->get('Sidebar class', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue(), false, false, null, $this->settings->get('Sidebar class', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue());
         }
 
         $this->template->abbr = $this->abbr;
         $this->template->settings = $this->settings;
         // !params load from settings
+        $this->template->structuresRaw = $this->em->getRepository('WebCMS\Entity\Page')->findBy(array(
+            'language' => $this->language
+        ));
         $this->template->structures = $this->getStructures(!$this->settings->get('Navbar dropdown', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue(), $this->settings->get('Navbar class', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue(), $this->settings->get('Navbar dropdown', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue(), $this->settings->get('Navbar id', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue());
         $this->template->setTranslator($this->translator);
         $this->template->actualPage = $this->actualPage;
@@ -116,9 +119,9 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
         }
 
         if ($this->settings->get('Seo title before', \WebCMS\Settings::SECTION_BASIC, 'checkbox')->getValue()) {
-            $this->template->seoTitle = $this->settings->get('Seo title', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue() . $this->template->seoTitle;
+            $this->template->seoTitle = $this->settings->get('Seo title', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue().$this->template->seoTitle;
         } else {
-            $this->template->seoTitle = $this->template->seoTitle . $this->settings->get('Seo title', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue();
+            $this->template->seoTitle = $this->template->seoTitle.$this->settings->get('Seo title', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue();
         }
     }
 
@@ -134,14 +137,15 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
         }
 
         // set language
-        if (is_numeric($this->getParam('language')))
+        if (is_numeric($this->getParam('language'))) {
             $this->language = $this->em->find('WebCMS\Entity\Language', $this->getParam('language'));
-        else
+        } else {
             $this->language = $this->em->getRepository('WebCMS\Entity\Language')->findOneBy(array(
-                'defaultFrontend' => TRUE
+                'defaultFrontend' => TRUE,
             ));
+        }
 
-        $this->abbr = $this->language->getDefaultFrontend() ? '' : $this->language->getAbbr() . '/';
+        $this->abbr = $this->language->getDefaultFrontend() ? '' : $this->language->getAbbr().'/';
 
         // load languages
         $this->languages = $this->em->getRepository('WebCMS\Entity\Language')->findAll();
@@ -161,7 +165,7 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
         // system helper sets variables
         \WebCMS\Helpers\SystemHelper::setVariables(array(
             'baseUrl' => $this->presenter->getHttpRequest()->url->baseUrl,
-            'infoEmail' => $this->settings->get('Info email', 'basic')->getValue()
+            'infoEmail' => $this->settings->get('Info email', 'basic')->getValue(),
         ));
 
         $id = $this->getParam('id');
@@ -169,7 +173,7 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
             $this->actualPage = $this->em->find('WebCMS\Entity\Page', $id);
 
             if ($this->actualPage->getRedirect() != NULL) {
-                $this->redirectUrl($this->presenter->getHttpRequest()->url->baseUrl . $this->actualPage->getRedirect());
+                $this->redirectUrl($this->presenter->getHttpRequest()->url->baseUrl.$this->actualPage->getRedirect());
             }
         }
 
@@ -192,7 +196,7 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
             $this->payload->title = $this->template->seoTitle;
             $this->payload->url = $this->link('this', array(
                 'path' => $this->actualPage->getPath(),
-                'abbr' => $this->abbr
+                'abbr' => $this->abbr,
             ));
             $this->payload->nameSeo = $this->actualPage->getSlug();
             $this->payload->name = $this->actualPage->getTitle();
@@ -209,7 +213,7 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
 
         foreach ($pages as $page) {
             if ($page->getParent() !== null) {
-            $sitemapXml .= "<url>\n\t<loc>" . $this->getSitemapLink($page) . "</loc>\n</url>\n";
+                $sitemapXml .= "<url>\n\t<loc>".$this->getSitemapLink($page)."</loc>\n</url>\n";
             }
         }
 
@@ -221,13 +225,13 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
     private function getSitemapLink($page)
     {
         $url = $this->context->httpRequest->url->baseUrl;
-        $url .=!$page->getLanguage()->getDefaultFrontend() ? $page->getLanguage()->getAbbr() . '/' : '';
+        $url .= !$page->getLanguage()->getDefaultFrontend() ? $page->getLanguage()->getAbbr().'/' : '';
         $url .= $page->getPath();
 
         return $url;
     }
 
-    public function createTemplate($class = NULL)
+    public function createTemplate($class = null)
     {
         $template = parent::createTemplate($class);
 
@@ -262,11 +266,11 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
             'path' => $page->getPath(),
             'abbr' => $abbr,
             'do' => $do,
-            'parameters' => $parameters
+            'parameters' => $parameters,
         ));
 
         $form->setTranslator($translator);
-        $form->setRenderer(new BootstrapRenderer);
+        $form->setRenderer(new BootstrapRenderer());
 
         return $form;
     }
@@ -279,7 +283,7 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
             'id' => $this->actualPage->getId(),
             'path' => $this->actualPage->getPath(),
             'abbr' => $this->abbr,
-            'do' => 'languagesForm-submit'
+            'do' => 'languagesForm-submit',
         ));
 
         $items = array();
@@ -305,15 +309,14 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
     {
         $home = $this->em->getRepository('WebCMS\Entity\Page')->findOneBy(array(
             'language' => $idLanguage,
-            'default' => TRUE
+            'default' => TRUE,
         ));
 
         if (is_object($home)) {
-
-            $abbr = $home->getLanguage()->getDefaultFrontend() ? '' : $home->getLanguage()->getAbbr() . '/';
+            $abbr = $home->getLanguage()->getDefaultFrontend() ? '' : $home->getLanguage()->getAbbr().'/';
 
             $this->redirectUrl(
-                    $this->getHttpRequest()->url->baseUrl .  $abbr . $home->getPath()
+                    $this->getHttpRequest()->url->baseUrl.$abbr.$home->getPath()
             );
         } else {
             $this->flashMessage('No default page for selected language.', 'error');
@@ -331,17 +334,17 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
         $finalBoxes = array();
         if (is_array($boxes)) {
             foreach ($boxes as $key => $box) {
-                $finalBoxes[$key] = NULL;
+                $finalBoxes[$key] = null;
             }
         }
 
         $assocBoxes = $this->em->getRepository('WebCMS\Entity\Box')->findBy(array(
-            'pageTo' => $this->actualPage
+            'pageTo' => $this->actualPage,
         ));
 
         foreach ($assocBoxes as $box) {
-            $presenter = 'FrontendModule\\' . $box->getModuleName() . 'Module\\' . $box->getPresenter() . 'Presenter';
-            $object = new $presenter;
+            $presenter = 'FrontendModule\\'.$box->getModuleName().'Module\\'.$box->getPresenter().'Presenter';
+            $object = new $presenter();
 
             if (method_exists($object, $box->getFunction())) {
                 $function = $box->getFunction();
@@ -357,18 +360,18 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
      * Load all system structures.
      * @return type
      */
-    private function getStructures($direct = TRUE, $rootClass = 'nav navbar-nav', $dropDown = FALSE, $rootId = '')
+    private function getStructures($direct = true, $rootClass = 'nav navbar-nav', $dropDown = false, $rootId = '')
     {
         $repo = $this->em->getRepository('WebCMS\Entity\Page');
 
         $structs = $repo->findBy(array(
             'language' => $this->language,
-            'parent' => NULL
+            'parent' => NULL,
         ));
 
         $structures = array();
         foreach ($structs as $s) {
-            $structures[$s->getTitle()] = $this->getStructure($this, $s, $repo, $direct, $rootClass, $dropDown, TRUE, NULL, '', null, $rootId);
+            $structures[$s->getTitle()] = $this->getStructure($this, $s, $repo, $direct, $rootClass, $dropDown, true, null, '', null, $rootId);
         }
 
         return $structures;
@@ -377,39 +380,40 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
     /**
      * TODO refactor, maybe it will be better in template
      * Get structure by node. In node is set to null whole tree is returned.
-     * @param  type       $node
-     * @param  Repository $repo
-     * @param  type       $direct
-     * @param  type       $rootClass
-     * @param  type       $dropDown
-     * @param BasePresenter $context
+     * @param  type          $node
+     * @param  Repository    $repo
+     * @param  type          $direct
+     * @param  type          $rootClass
+     * @param  type          $dropDown
+     * @param  BasePresenter $context
      * @return type
      */
-    protected function getStructure($context, $node = NULL, $repo, $direct = TRUE, $rootClass = 'nav navbar-nav', $dropDown = FALSE, $system = TRUE, $fromPage = NULL, $sideClass = 'nav navbar', $moduleNameAbstract = null, $rootId = '')
+    protected function getStructure($context, $node = null, $repo, $direct = true, $rootClass = 'nav navbar-nav', $dropDown = false, $system = true, $fromPage = null, $sideClass = 'nav navbar', $moduleNameAbstract = null, $rootId = '')
     {
         return $repo->childrenHierarchy($node, $direct, array(
                     'decorate' => true,
                     'html' => true,
                     'rootOpen' => function ($nodes) use ($rootClass, $dropDown, $sideClass, $rootId) {
 
-                $drop = $nodes[0]['level'] == 2 ? TRUE : FALSE;
+                $drop = $nodes[0]['level'] == 2 ? true : false;
                 $class = $nodes[0]['level'] < 2 ? $rootClass : $sideClass;
 
-                if ($drop && $dropDown)
+                if ($drop && $dropDown) {
                     $class .= ' dropdown-menu submenu';
+                }
 
         $htmlId = '';
         if (!empty($rootId)) {
-            $htmlId = ' id = "' . $rootId . '"';
+            $htmlId = ' id = "'.$rootId.'"';
         }
 
-                return '<ul class="' . $class . '"' . $htmlId . '>';
+                return '<ul class="'.$class.'"'.$htmlId.'>';
             },
                     'rootClose' => '</ul>',
                     'childOpen' => function ($node) use ($dropDown, $context) {
-                $hasChildrens = count($node['__children']) > 0 ? TRUE : FALSE;
+                $hasChildrens = count($node['__children']) > 0 ? true : false;
                 $param = $context->getRequest()->getParameters();
-                $active = $context->getParam('id') == $node['id'] ? TRUE : FALSE;
+                $active = $context->getParam('id') == $node['id'] ? true : false;
                 $class = '';
 
         if (!array_key_exists('fullPath', $param)) {
@@ -418,7 +422,7 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
 
                 if (array_key_exists('redirect', $node)) {
                     if ($param['fullPath'] == $node['redirect']) {
-                        $active = TRUE;
+                        $active = true;
                     }
                 }
 
@@ -426,28 +430,31 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
                     $class .= ' active';
                 }
 
-                if ($hasChildrens && $dropDown)
+                if ($hasChildrens && $dropDown) {
                     $class .= ' dropdown';
+                }
 
-                if ($active)
+                if ($active) {
                     $class .= ' active';
+                }
 
-                if (!$node['visible'])
+                if (!$node['visible']) {
                     $class .= ' hidden';
+                }
 
-                return '<li class="' . $class . '">';
+                return '<li class="'.$class.'">';
             },
                     'childClose' => '</li>',
                     'nodeDecorator' => function ($node) use ($dropDown, $system, $context, $fromPage, $moduleNameAbstract) {
-                $hasChildrens = count($node['__children']) > 0 ? TRUE : FALSE;
+                $hasChildrens = count($node['__children']) > 0 ? true : false;
                 $params = '';
                 $class = '';
 
                 $moduleName = array_key_exists('moduleName', $node) ? $node['moduleName'] : $moduleNameAbstract;
                 $presenter = array_key_exists('presenter', $node) ? $node['presenter'] : 'Categories';
-                $path = $moduleName === $moduleNameAbstract && !$system ? (is_object($fromPage) ? $fromPage->getPath() . '/' : '') . $node['path'] : $node['path'];
+                $path = $moduleName === $moduleNameAbstract && !$system ? (is_object($fromPage) ? $fromPage->getPath().'/' : '').$node['path'] : $node['path'];
 
-                $link = $context->link(':Frontend:' . $moduleName . ':' . $presenter . ':default', array('id' => $node['id'], 'path' => $path, 'abbr' => $context->abbr));
+                $link = $context->link(':Frontend:'.$moduleName.':'.$presenter.':default', array('id' => $node['id'], 'path' => $path, 'abbr' => $context->abbr));
 
                 $span = '';
                 if ($hasChildrens && $node['level'] == 1 && $dropDown) {
@@ -457,11 +464,12 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
                     $span = '<span class="caret"></span>';
                 }
 
-                if (!empty($node['class']))
-                    $class .= ' ' . $node['class'];
+                if (!empty($node['class'])) {
+                    $class .= ' '.$node['class'];
+                }
 
-                return '<a ' . $params . ' data-seo="' . $path . '" class="' . $class . '" href="' . $link . '"><span>' . $node['title'] . $span . '</span></a>';
-            }
+                return '<a '.$params.' data-seo="'.$path.'" class="'.$class.'" href="'.$link.'"><span>'.$node['title'].$span.'</span></a>';
+            },
         ));
     }
 
@@ -470,13 +478,14 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
         // bredcrumb
         $default = $this->em->getRepository('WebCMS\Entity\Page')->findOneBy(array(
             'default' => TRUE,
-            'language' => $this->language
+            'language' => $this->language,
         ));
 
-        if ($this->actualPage->getDefault())
+        if ($this->actualPage->getDefault()) {
             $default = array();
-        else
+        } else {
             $default = array($default);
+        }
 
         // system breadcrumbs
         $system = $default + $this->em->getRepository('WebCMS\Entity\Page')->getPath($this->actualPage);
@@ -507,7 +516,7 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
     {
         $this->redirect('this', array(
             'id' => $this->actualPage->getId(),
-            'path' => $this->actualPage->getPath() . $path,
+            'path' => $this->actualPage->getPath().$path,
             'abbr' => $this->abbr,
         ));
     }
@@ -523,7 +532,7 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
     {
         parent::flashMessage($this->translation[$text], $type);
     }
-    
+
      /**
       * Formats layout template file names.
       * @return array
@@ -531,12 +540,12 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
      public function formatLayoutTemplateFiles()
      {
          $name = $this->getName();
-         $presenter = substr($name, strrpos(':' . $name, ':'));
+         $presenter = substr($name, strrpos(':'.$name, ':'));
          $layout = $this->layout ? $this->layout : 'layout';
          $dir = dirname($this->getReflection()->getFileName());
          $dir = is_dir("$dir/templates") ? $dir : dirname($dir);
          $list = array(
-             APP_DIR . "/templates/@$layout.latte",
+             APP_DIR."/templates/@$layout.latte",
              "$dir/templates/$presenter/@$layout.latte",
              "$dir/templates/$presenter.@$layout.latte",
              "$dir/templates/$presenter/@$layout.phtml",
@@ -547,6 +556,7 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
              $list[] = "$dir/templates/@$layout.phtml";
              $dir = dirname($dir);
          } while ($dir && ($name = substr($name, 0, strrpos($name, ':'))));
+
          return $list;
      }
 
@@ -563,9 +573,9 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
         $presenter = $path[2];
         $dir = dirname($this->getReflection()->getFileName());
         $dir = is_dir("$dir/templates") ? $dir : dirname($dir);
-        
-        $appPath = APP_DIR . "/templates/" . lcfirst($module) . "-module/$presenter/$this->view.latte";
-        
+
+        $appPath = APP_DIR."/templates/".lcfirst($module)."-module/$presenter/$this->view.latte";
+
         return array(
             $appPath,
             "$dir/templates/$presenter/$this->view.latte",
@@ -574,5 +584,4 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
             "$dir/templates/$presenter.$this->view.phtml",
         );
     }
-    
 }

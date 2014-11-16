@@ -4,7 +4,7 @@ class TranslatorTest extends \WebCMS\Tests\PresenterTestCase
 {
     public function testTranslator()
     {
-        $translation = new \WebCMS\Translation\Translation($this->em, $this->language, TRUE);
+        $translation = new \WebCMS\Translation\Translation($this->em, $this->language, true);
 
         $translations = new \WebCMS\Translation\TranslationArray($translation);
         $translations['test'] = 'Translated text.';
@@ -15,7 +15,7 @@ class TranslatorTest extends \WebCMS\Tests\PresenterTestCase
         $translation2 = $translator->translate('test');
         $translationWithParameters = $translator->translate('%s has %d apples.', array(
                 'Tom',
-                4
+                4,
             ));
 
         $this->assertEquals('key', $translation);

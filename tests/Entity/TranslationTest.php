@@ -13,7 +13,7 @@ class TranslationTest extends \WebCMS\Tests\EntityTestCase
 
         $translations = $this->em->getRepository('WebCMS\Entity\Translation')->findAll();
 
-        $hash = sha1($translations[0]->getKey() . $translations[0]->getLanguage()->getAbbr() . $translations[0]->getBackend());
+        $hash = sha1($translations[0]->getKey().$translations[0]->getLanguage()->getAbbr().$translations[0]->getBackend());
 
         $this->assertCount(1, $translations);
         $this->assertTrue($translations[0]->getBackend());
@@ -35,7 +35,7 @@ class TranslationTest extends \WebCMS\Tests\EntityTestCase
 
     private function initTranslation()
     {
-        $language = new WebCMS\Entity\Language;
+        $language = new WebCMS\Entity\Language();
         $language->setAbbr('en');
         $language->setDefaultBackend(true);
         $language->setDefaultFrontend(true);
@@ -44,7 +44,7 @@ class TranslationTest extends \WebCMS\Tests\EntityTestCase
 
         $this->em->persist($language);
 
-        $this->translation = new WebCMS\Entity\Translation;
+        $this->translation = new WebCMS\Entity\Translation();
         $this->translation->setBackend(true);
         $this->translation->setKey('key');
         $this->translation->setLanguage($language);

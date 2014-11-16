@@ -47,11 +47,11 @@ class Setting extends Entity
      */
     private $language;
 
-    public function getValue($raw = TRUE, $fromPush = array(), $toPush = array())
+    public function getValue($raw = true, $fromPush = array(), $toPush = array())
     {
-        if ($raw)
+        if ($raw) {
             return $this->value;
-        else {
+        } else {
             return \WebCMS\Helpers\SystemHelper::replaceStatic($this->value, $fromPush, $toPush);
         }
     }
@@ -125,5 +125,4 @@ class Setting extends Entity
     {
         $this->options = serialize($options);
     }
-
 }

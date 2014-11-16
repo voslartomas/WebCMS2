@@ -2,9 +2,9 @@
 
 namespace WebCMS\Tests;
 
-abstract class PresenterTestCase extends EntityTestCase
+abstract class PresenterTest extends EntityTestCase
 {
-    protected $presenter = NULL;
+    protected $presenter = null;
 
     protected $presenterName;
 
@@ -19,21 +19,21 @@ abstract class PresenterTestCase extends EntityTestCase
         parent::setUp();
 
         // init system minimal
-        $this->language = new \WebCMS\Entity\Language;
+        $this->language = new \WebCMS\Entity\Language();
         $this->language->setName('English');
         $this->language->setAbbr('en');
         $this->language->setDefaultBackend(true);
         $this->language->setDefaultFrontend(true);
         $this->language->setLocale('en_US.utf8');
 
-        $this->role = new \WebCMS\Entity\Role;
+        $this->role = new \WebCMS\Entity\Role();
         $this->role->setName('superadmin');
-        $this->role->setAutomaticEnable(FALSE);
+        $this->role->setAutomaticEnable(false);
 
         $this->em->persist($this->role);
         $this->em->flush();
 
-        $this->user = new \WebCMS\Entity\User;
+        $this->user = new \WebCMS\Entity\User();
         $this->user->setUsername('test');
         $this->user->setPassword($this->container->authenticator->calculateHash('test'));
         $this->user->setEmail('test@test.com');
@@ -67,7 +67,7 @@ abstract class PresenterTestCase extends EntityTestCase
                 ->getByType('Nette\Application\IPresenterFactory')
                 ->createPresenter($name);
 
-        $this->presenter->autoCanonicalize = FALSE;
+        $this->presenter->autoCanonicalize = false;
     }
 
     public function getResponse($response)
@@ -77,9 +77,9 @@ abstract class PresenterTestCase extends EntityTestCase
         $template->setTranslator($this->presenter->translator);
         $template->settings = $this->presenter->settings;
 
-        $template->save(__DIR__ . '/temp/cache/presenter.test');
+        $template->save(__DIR__.'/temp/cache/presenter.test');
 
-        return file_get_contents(__DIR__ . '/temp/cache/presenter.test');
+        return file_get_contents(__DIR__.'/temp/cache/presenter.test');
     }
 
     public function makeRequest($action = 'default', $method = 'GET', $params = array(), $post = array(), $do = '', $files = array())
@@ -88,13 +88,13 @@ abstract class PresenterTestCase extends EntityTestCase
         $params['do'] = $do;
 
         $request = new \Nette\Application\Request($this->presenterName, $method, $params, $post, $files);
-            
+
         return $this->presenter->run($request);
     }
 
-    protected function createPage($module) 
+    protected function createPage($module)
     {
-        $this->pageMain = new \WebCMS\Entity\Page;
+        $this->pageMain = new \WebCMS\Entity\Page();
         $this->pageMain->setParent(null);
         $this->pageMain->setLanguage($this->language);
         $this->pageMain->setModule(null);
@@ -112,7 +112,7 @@ abstract class PresenterTestCase extends EntityTestCase
 
         $this->em->persist($this->pageMain);
 
-        $this->page = new \WebCMS\Entity\Page;
+        $this->page = new \WebCMS\Entity\Page();
         $this->page->setParent($this->pageMain);
         $this->page->setLanguage($this->language);
         $this->page->setModule(null);

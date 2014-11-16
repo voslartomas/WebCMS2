@@ -53,17 +53,18 @@ abstract class Module implements IModule
      * @param string $presenter
      * @param string $function
      */
-    public function addBox($name, $presenter, $function, $moduleName = NULL)
+    public function addBox($name, $presenter, $function, $moduleName = null)
     {
-        if (!$moduleName)
+        if (!$moduleName) {
             $moduleName = $presenter;
+        }
 
         $this->boxes[] = array(
             'key' => \Nette\Utils\Strings::webalize($name),
             'name' => $name,
             'presenter' => $presenter,
             'module' => $moduleName,
-            'function' => $function
+            'function' => $function,
         );
     }
 
@@ -77,8 +78,9 @@ abstract class Module implements IModule
         $presenters = $this->getPresenters();
 
         foreach ($presenters as $p) {
-            if ($p['name'] === $presenter)
-            return $p;
+            if ($p['name'] === $presenter) {
+                return $p;
+            }
         }
 
         return false;
@@ -119,5 +121,4 @@ abstract class Module implements IModule
     {
         return $this->searchable;
     }
-
 }

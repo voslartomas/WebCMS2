@@ -19,20 +19,20 @@ class HomepagePresenter extends \AdminModule\BasePresenter
 
         $parameters = $this->getContext()->getParameters();
 
-        $logFile = $parameters['tempDir'] . '/../log/webcms.log';
+        $logFile = $parameters['tempDir'].'/../log/webcms.log';
         $reader = new LogReader($logFile, 2);
 
         $logs = array();
         foreach ($reader as $log) {
             if (!empty($log) && $log['level'] === 'INFO') {
-            $logs[] = $log;
+                $logs[] = $log;
             }
         }
 
         // favourite links
         $user = $this->em->getRepository('WebCMS\Entity\User')->find($this->getUser()->getId());
         $favourites = $this->em->getRepository('WebCMS\Entity\Favourites')->findBy(array(
-            'user' => $user
+            'user' => $user,
         ));
 
         $this->template->logReader = array_reverse($logs);
@@ -43,5 +43,4 @@ class HomepagePresenter extends \AdminModule\BasePresenter
     {
         parent::startup();
     }
-
 }

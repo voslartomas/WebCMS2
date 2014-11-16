@@ -60,12 +60,12 @@ class FilesystemPresenterTest extends \WebCMS\Tests\PresenterTestCase
             'tmp_name' => '/tmp/empty.jpg',
             'type' => 'text/plain',
             'size' => 0,
-            'error' => 0
+            'error' => 0,
         )));
-        
+
         $response = $this->makeRequest('default', 'POST', array('path' => 'test-directory'), array(), 'uploadFile',
             array(
-                    'file' => $file
+                    'file' => $file,
                 )
             );
 
@@ -77,7 +77,7 @@ class FilesystemPresenterTest extends \WebCMS\Tests\PresenterTestCase
 
     private function createSystemThumbnail()
     {
-        $thumbnail = new \WebCMS\Entity\Thumbnail;
+        $thumbnail = new \WebCMS\Entity\Thumbnail();
         $thumbnail->setKey('system');
         $thumbnail->setX('20');
         $thumbnail->setY('20');
@@ -94,11 +94,11 @@ class FilesystemPresenterTest extends \WebCMS\Tests\PresenterTestCase
     {
         $response = $this->makeRequest('default', 'GET', array(
             'action' => 'default',
-            'name' => 'test directory'
+            'name' => 'test directory',
         ), array(), 'makeDirectory');
 
         $this->assertInstanceOf('Nette\Application\Responses\TextResponse', $response);
-        $this->assertEquals(TRUE, file_exists('upload/test-directory/'));
+        $this->assertEquals(true, file_exists('upload/test-directory/'));
     }
 
     public function testRemove()
@@ -119,7 +119,7 @@ class FilesystemPresenterTest extends \WebCMS\Tests\PresenterTestCase
 
         $response = $this->makeRequest('default', 'GET', array(
             'action' => 'default',
-            'pathToRemove' => '/empty.jpg'
+            'pathToRemove' => '/empty.jpg',
         ), array(), 'deleteFile');
 
         $this->assertInstanceOf('Nette\Application\Responses\ForwardResponse', $response);
@@ -133,7 +133,7 @@ class FilesystemPresenterTest extends \WebCMS\Tests\PresenterTestCase
 
         $response = $this->makeRequest('downloadFile', 'GET', array(
             'action' => 'downloadFile',
-            'path' => 'test.txt'
+            'path' => 'test.txt',
         ));
 
         $this->assertInstanceOf('Nette\Application\Responses\FileResponse', $response);

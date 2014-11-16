@@ -60,7 +60,7 @@ class Translation extends \ArrayObject
 
         foreach ($translations as $k => $value) {
             if ($k == $key) {
-            return $value;
+                return $value;
             }
         }
 
@@ -74,7 +74,7 @@ class Translation extends \ArrayObject
     {
         return $em->getRepository('WebCMS\Entity\Translation')->findBy(array(
             'language' => $language,
-            'backend' => $backend
+            'backend' => $backend,
         ));
     }
 }

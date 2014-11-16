@@ -98,5 +98,4 @@ class Permission extends Entity
     {
         $this->page = $page;
     }
-
 }

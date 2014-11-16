@@ -34,7 +34,7 @@ class LanguageTest extends \WebCMS\Tests\EntityTestCase
 
     private function initLanguage()
     {
-        $this->language = new \WebCMS\Entity\Language;
+        $this->language = new \WebCMS\Entity\Language();
         $this->language->setAbbr('cs');
         $this->language->setDefaultBackend(true);
         $this->language->setDefaultFrontend(true);

@@ -74,7 +74,7 @@ class LanguagesPresenter extends BasePresenter
         $this->em->flush();
 
         if ($values->import) {
-            $file = \WebCMS\Helpers\SystemHelper::WEBCMS_PATH . 'AdminModule/static/translations/' . $values->import;
+            $file = \WebCMS\Helpers\SystemHelper::WEBCMS_PATH.'AdminModule/static/translations/'.$values->import;
 
             $content = file_get_contents($file);
             $this->importLanguage($content, $this->lang);
@@ -105,9 +105,9 @@ class LanguagesPresenter extends BasePresenter
 
         $this->flashMessage('Language has been added.', 'success');
 
-        if (!$this->isAjax())
+        if (!$this->isAjax()) {
             $this->redirect('Languages:default');
-        else {
+        } else {
             $this->invalidateControl();
             $this->forward('Languages:default');
         }
@@ -121,11 +121,11 @@ class LanguagesPresenter extends BasePresenter
         $grid->addColumnText('abbr', 'Abbreviation')->setSortable();
         $grid->addColumnText('defaultFrontend', 'Default fe')->setReplacement(array(
             '1' => 'Yes',
-            NULL => 'No'
+            NULL => 'No',
         ));
         $grid->addColumnText('defaultBackend', 'Default be')->setReplacement(array(
             '1' => 'Yes',
-            NULL => 'No'
+            NULL => 'No',
         ));
 
         $grid->addActionHref("exportLanguage", 'Export')->getElementPrototype()->addAttributes(array('class' => array('btn', 'btn-primary')));
@@ -146,26 +146,26 @@ class LanguagesPresenter extends BasePresenter
         $export = array(
             'name' => $language->getName(),
             'abbr' => $language->getAbbr(),
-            'translations' => array()
+            'translations' => array(),
         );
 
         foreach ($language->getTranslations() as $translation) {
             if ($translation->getBackend()) {
-            $export['translations'][] = array(
+                $export['translations'][] = array(
                 'key' => $translation->getKey(),
                 'translation' => $translation->getTranslation(),
-                'backend' => $translation->getBackend()
+                'backend' => $translation->getBackend(),
             );
             }
         }
 
         $export = json_encode($export);
-        $filename = $language->getAbbr() . '.json';
+        $filename = $language->getAbbr().'.json';
 
         $response = $this->getHttpResponse();
         $response->setHeader('Content-Description', 'File Transfer');
         $response->setContentType('text/plain', 'UTF-8');
-        $response->setHeader('Content-Disposition', 'attachment; filename=' . $filename);
+        $response->setHeader('Content-Disposition', 'attachment; filename='.$filename);
         $response->setHeader('Content-Transfer-Encoding', 'binary');
         $response->setHeader('Expires', 0);
         $response->setHeader('Cache-Control', 'must-revalidate, post-check=0, pre-check=0');
@@ -184,11 +184,12 @@ class LanguagesPresenter extends BasePresenter
      */
     public function importLanguage($fileData, $language)
     {
-        $data = json_decode($fileData, TRUE);
+        $data = json_decode($fileData, true);
 
         $name = $language->getName();
-        if (empty($name))
+        if (empty($name)) {
             $language->setName($data['name']);
+        }
 
         $translations = array();
         foreach ($data['translations'] as $translation) {
@@ -202,12 +203,12 @@ class LanguagesPresenter extends BasePresenter
             $exists = $this->translationExists($t);
             if (!$exists) {
                 if (!array_key_exists($t->getHash(), $translations)) {
-                $this->em->persist($t);
-                $translations[$t->getHash()] = $t;
+                    $this->em->persist($t);
+                    $translations[$t->getHash()] = $t;
                 }
             } else {
-            $exists->setHash();
-            $exists->setTranslation($translation['translation']);
+                $exists->setHash();
+                $exists->setTranslation($translation['translation']);
             }
         }
 
@@ -216,7 +217,7 @@ class LanguagesPresenter extends BasePresenter
 
         // reload actual translations
         $default = $this->em->getRepository('WebCMS\Entity\Language')->findOneBy(array(
-            'defaultBackend' => 1
+            'defaultBackend' => 1,
         ));
 
         $translation = new \WebCMS\Translation\Translation($this->em, $default, 1);
@@ -231,7 +232,7 @@ class LanguagesPresenter extends BasePresenter
     private function translationExists($translation)
     {
         $exists = $this->em->getRepository('WebCMS\Entity\Translation')->findOneBy(array(
-            'hash' => $translation->getHash()
+            'hash' => $translation->getHash(),
         ));
 
         if (is_object($exists)) {

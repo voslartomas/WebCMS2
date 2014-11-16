@@ -34,7 +34,7 @@ class SettingTest extends \WebCMS\Tests\EntityTestCase
 
     private function initSetting()
     {
-        $language = new WebCMS\Entity\Language;
+        $language = new WebCMS\Entity\Language();
         $language->setAbbr('en');
         $language->setDefaultBackend(true);
         $language->setDefaultFrontend(true);
@@ -43,7 +43,7 @@ class SettingTest extends \WebCMS\Tests\EntityTestCase
 
         $this->em->persist($language);
 
-        $this->setting = new WebCMS\Entity\Setting;
+        $this->setting = new WebCMS\Entity\Setting();
         $this->setting->setKey('key');
         $this->setting->setOptions(array('a' => 'b'));
         $this->setting->setSection('section');

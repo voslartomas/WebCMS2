@@ -57,5 +57,4 @@ class Module extends Entity
     {
         $this->presenters = serialize($presenters);
     }
-
 }

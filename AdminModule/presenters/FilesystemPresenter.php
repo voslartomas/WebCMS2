@@ -20,7 +20,7 @@ class FilesystemPresenter extends \AdminModule\BasePresenter
 
     protected function beforeRender()
     {
-    parent::beforeRender();
+        parent::beforeRender();
     }
 
     protected function startup()
@@ -35,7 +35,7 @@ class FilesystemPresenter extends \AdminModule\BasePresenter
     public function actionDefault($path)
     {
         if (!empty($path)) {
-            $this->path = self::DESTINATION_BASE . $path . '/';
+            $this->path = self::DESTINATION_BASE.$path.'/';
         } else {
             $this->path = self::DESTINATION_BASE;
         }
@@ -50,39 +50,40 @@ class FilesystemPresenter extends \AdminModule\BasePresenter
                 ->in(realpath($this->path));
         $directories = $finder->findDirectories('*')->in(realpath($this->path));
 
-        if (empty($dialog))
+        if (empty($dialog)) {
             $this->reloadContent();
-        else
+        } else {
             $this->reloadModalContent();
+        }
 
-        $this->path = str_replace(self::DESTINATION_BASE, '', $path) . '/';
+        $this->path = str_replace(self::DESTINATION_BASE, '', $path).'/';
 
         $this->template->fsPath = $this->path;
         $this->template->backLink = $this->createBackLink($this->path);
         $this->template->files = $files;
         $this->template->directories = $directories;
         $this->template->multiple = $multiple;
-        }
+    }
 
         /**
          * @param string $path
          */
         private function createBackLink($path)
         {
-        $exploded = explode('/', $path);
+            $exploded = explode('/', $path);
 
-        array_pop($exploded);
-        array_pop($exploded);
+            array_pop($exploded);
+            array_pop($exploded);
 
-        return implode("/", $exploded);
-    }
+            return implode("/", $exploded);
+        }
 
     public function handleMakeDirectory($name)
     {
-        @mkdir($this->path . \Nette\Utils\Strings::webalize($name));
+        @mkdir($this->path.\Nette\Utils\Strings::webalize($name));
 
         $this->flashMessage('Directory has been created.', 'success');
-        }
+    }
 
     public function handleUploadFile($path)
     {
@@ -92,7 +93,7 @@ class FilesystemPresenter extends \AdminModule\BasePresenter
         foreach ($files as $file) {
             $this->uploadSingleFile($file);
         }
-        
+
         $this->reloadContent();
         $this->flashMessage($this->translation['File has been uploaded']);
         $this->sendPayload();
@@ -100,7 +101,7 @@ class FilesystemPresenter extends \AdminModule\BasePresenter
 
     private function uploadSingleFile($file)
     {
-        $filePath = $this->path . '' . $file->getSanitizedName();
+        $filePath = $this->path.''.$file->getSanitizedName();
         $file->move($filePath);
 
         $f = new \SplFileInfo($filePath);
@@ -112,30 +113,27 @@ class FilesystemPresenter extends \AdminModule\BasePresenter
 
     public function handleDeleteFile($pathToRemove)
     {
-        $pathToRemove = self::DESTINATION_BASE . $pathToRemove;
+        $pathToRemove = self::DESTINATION_BASE.$pathToRemove;
         if (is_file($pathToRemove)) {
-
             // delete all thumbnails if this file is image
             try {
+                if (getimagesize($pathToRemove)) {
+                    $image = \Nette\Image::fromFile($pathToRemove);
 
-            if (getimagesize($pathToRemove)) {
-
-                $image = \Nette\Image::fromFile($pathToRemove);
-
-                $thumbs = $this->em->getRepository('WebCMS\Entity\Thumbnail')->findAll();
-                foreach ($thumbs as $t) {
-                $file = pathinfo($pathToRemove);
-                $filename = $file['filename'] . '.' . $file['extension'];
+                    $thumbs = $this->em->getRepository('WebCMS\Entity\Thumbnail')->findAll();
+                    foreach ($thumbs as $t) {
+                        $file = pathinfo($pathToRemove);
+                        $filename = $file['filename'].'.'.$file['extension'];
 
                 // $this->path contains symlinked path, that is not the right way @see handleRegenerateThumbnails() function for the fix
                 $toRemove = str_replace('upload', 'thumbnails', $pathToRemove);
-                $toRemove = str_replace($filename, $t->getKey() . $filename, $toRemove);
+                        $toRemove = str_replace($filename, $t->getKey().$filename, $toRemove);
 
-                unlink($toRemove);
+                        unlink($toRemove);
+                    }
                 }
-            }
             } catch (UnknownImageFileException $exc) {
-            // image is not file, so there is nothing to do
+                // image is not file, so there is nothing to do
             }
 
             unlink($pathToRemove);
@@ -154,22 +152,23 @@ class FilesystemPresenter extends \AdminModule\BasePresenter
     public function actionDownloadFile($path)
     {
         $file = pathinfo($path);
-        $filename = $file['filename'] . '.' . $file['extension'];
+        $filename = $file['filename'].'.'.$file['extension'];
 
         $finfo = finfo_open(FILEINFO_MIME_TYPE); // return mime type ala mimetype extension
 
-        $path = self::DESTINATION_BASE . $path;
+        $path = self::DESTINATION_BASE.$path;
         $mimeType = finfo_file($finfo, $path);
 
         $this->sendResponse(new \Nette\Application\Responses\FileResponse($path, $filename, $mimeType));
-        }
+    }
 
-        public function actionFilesDialog($path)
-        {
-        if (!empty($path))
-            $this->path = $path . '/';
-        else
-            $this->path = realpath(self::DESTINATION_BASE) . '/';
+    public function actionFilesDialog($path)
+    {
+        if (!empty($path)) {
+            $this->path = $path.'/';
+        } else {
+            $this->path = realpath(self::DESTINATION_BASE).'/';
+        }
     }
 
     public function renderFilesDialog()
@@ -177,7 +176,7 @@ class FilesystemPresenter extends \AdminModule\BasePresenter
         $finder = new \Nette\Utils\Finder();
 
         $template = $this->createTemplate();
-        $template->setFile($this->template->basePathModule . 'AdminModule/templates/Filesystem/filesDialog.latte');
+        $template->setFile($this->template->basePathModule.'AdminModule/templates/Filesystem/filesDialog.latte');
 
         $template->files = $finder->findFiles('*')->in($this->path);
         $template->directories = $finder->findDirectories('*')->in($this->path);
@@ -200,7 +199,7 @@ class FilesystemPresenter extends \AdminModule\BasePresenter
 
         foreach (Finder::findFiles('*.jpg', '*.jpeg', '*.png', '*.gif')->from('upload') as $key => $file) {
             if (file_exists($key) && @getimagesize($key)) {
-            $this->thumbnailCreator->createThumbnails($file->getBasename(), str_replace($file->getBasename(), '', $key));
+                $this->thumbnailCreator->createThumbnails($file->getBasename(), str_replace($file->getBasename(), '', $key));
             }
         }
 
@@ -215,5 +214,4 @@ class FilesystemPresenter extends \AdminModule\BasePresenter
         $this->flashMessage('Thumbnails has been regenerated by recent settings.', 'success');
         $this->forward('default');
     }
-
 }

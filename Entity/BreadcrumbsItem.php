@@ -87,5 +87,4 @@ class BreadcrumbsItem
     {
         $this->path = $path;
     }
-
 }

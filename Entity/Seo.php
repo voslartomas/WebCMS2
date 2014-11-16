@@ -72,5 +72,4 @@ abstract class Seo extends Entity
     {
         $this->metaKeywords = $metaKeywords;
     }
-
 }

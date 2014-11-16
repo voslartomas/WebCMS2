@@ -9,5 +9,5 @@ class PriceFormatterTest extends \WebCMS\Tests\EntityTestCase
         $price = \WebCMS\Helpers\PriceFormatter::format(1000);
 
         $this->assertEquals('$1,000.00', $price);
-    }       
+    }
 }

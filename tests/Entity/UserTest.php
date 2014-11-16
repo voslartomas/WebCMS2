@@ -31,13 +31,13 @@ class UserTest extends \WebCMS\Tests\EntityTestCase
 
     private function initUser()
     {
-        $role = new \WebCMS\Entity\Role;
+        $role = new \WebCMS\Entity\Role();
         $role->setAutomaticEnable(true);
         $role->setName('Role');
 
         $this->em->persist($role);
 
-        $this->user = new WebCMS\Entity\User;
+        $this->user = new WebCMS\Entity\User();
         $this->user->setEmail('email@domain.at');
         $this->user->setName('Name');
         $this->user->setPassword('password');

@@ -8,29 +8,29 @@ namespace WebCMS\Helpers;
  */
 class RssItem
 {
-	/**
-	 * [$title description]
-	 * @var [type]
-	 */
-	private $title;
+    /**
+     * [$title description]
+     * @var [type]
+     */
+    private $title;
 
-	/**
-	 * [$link description]
-	 * @var [type]
-	 */
-	private $link;
+    /**
+     * [$link description]
+     * @var [type]
+     */
+    private $link;
 
-	/**
-	 * [$description description]
-	 * @var [type]
-	 */
-	private $description;
+    /**
+     * [$description description]
+     * @var [type]
+     */
+    private $description;
 
-	/**
-	 * [$publishDate description]
-	 * @var [type]
-	 */
-	private $publishDate;
+    /**
+     * [$publishDate description]
+     * @var [type]
+     */
+    private $publishDate;
 
     /**
      * Gets the [$title description].

@@ -12,7 +12,7 @@ namespace AdminModule;
  */
 class TranslationsPresenter extends BasePresenter
 {
-	public function renderDefault()
+    public function renderDefault()
     {
         $this->reloadContent();
     }
@@ -26,29 +26,29 @@ class TranslationsPresenter extends BasePresenter
         $backend = array(
             '' => $this->translation['Pick filter'],
             0 => $this->translation['No'],
-            1 => $this->translation['Yes']
+            1 => $this->translation['Yes'],
         );
 
         $grid->addColumnText('id', 'ID')->setSortable()->setFilterNumber();
         $grid->addColumnText('key', 'Key')->setSortable()->setFilterText();
         $grid->addColumnText('translation', 'Value')->setSortable()->setCustomRender(function ($item) {
-            return '<div class="translation" contentEditable>' . $item->getTranslation() . '</div>';
+            return '<div class="translation" contentEditable>'.$item->getTranslation().'</div>';
         });
         $grid->addColumnText('backend', 'Backend')->setReplacement(array(
             '1' => 'Yes',
-            NULL => 'No'
+            NULL => 'No',
         ))->setFilterSelect($backend);
 
         $grid->addColumnText('translated', 'Translated')->setReplacement(array(
             '1' => 'Yes',
-            NULL => 'No'
+            NULL => 'No',
         ))->setFilterSelect($backend);
 
         $grid->addColumnText('language', 'Language')->setCustomRender(function ($item) {
             return $item->getLanguage()->getName();
         })->setSortable();
 
-        $grid->addFilterSelect('language', 'Language')->getControl()->setTranslator(NULL)->setItems($langs);
+        $grid->addFilterSelect('language', 'Language')->getControl()->setTranslator(null)->setItems($langs);
 
         $grid->addActionHref("deleteTranslation", 'Delete')->getElementPrototype()->addAttributes(array('class' => array('btn', 'btn-danger'), 'data-confirm' => 'Are you sure you want to delete the item?'));
 
@@ -72,7 +72,7 @@ class TranslationsPresenter extends BasePresenter
 
     public function handleUpdateTranslation($idTranslation, $value)
     {
-        $value = strip_tags($value, '<strong><b><i><u>');    
+        $value = strip_tags($value, '<strong><b><i><u>');
 
         $translation = $this->em->find('WebCMS\Entity\Translation', trim($idTranslation));
         $translation->setTranslation(trim($value));

@@ -2,10 +2,10 @@
 
 namespace WebCMS\Tests;
 
-abstract class EntityTestCase extends BasicTestCase
+abstract class EntityTest extends BasicTestCase
 {
     protected $exceptions = array(
-        'BreadcrumbsItem.php'
+        'BreadcrumbsItem.php',
     );
 
     protected $tool;
@@ -21,7 +21,7 @@ abstract class EntityTestCase extends BasicTestCase
     {
         parent::setUp();
 
-        $this->tool->createSchema($this->getClassesMetadata(__DIR__ . '/../Entity', 'WebCMS\\Entity'));
+        $this->tool->createSchema($this->getClassesMetadata(__DIR__.'/../Entity', 'WebCMS\\Entity'));
     }
 
     public function tearDown()
@@ -46,7 +46,7 @@ abstract class EntityTestCase extends BasicTestCase
             while (false !== ($file = readdir($handle))) {
                 if (strstr($file, '.php') && $this->isEntity($file)) {
                     list($class) = explode('.', $file);
-                    $metadata[] = $this->em->getClassMetadata($namespace . '\\' . $class);
+                    $metadata[] = $this->em->getClassMetadata($namespace.'\\'.$class);
                 }
             }
         }

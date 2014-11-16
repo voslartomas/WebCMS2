@@ -45,29 +45,27 @@ class ThumbnailCreator
             $pictureConfig = $this->thumbnails;
 
             foreach ($pictureConfig as $conf) {
+                $tmpImage = clone $image;
 
-            $tmpImage = clone $image;
+                if ($conf->getX() && $conf->getY()) {
+                    $tmpImage->resize($conf->getX(), $conf->getY(), $conf->getResize());
 
-            if ($conf->getX() && $conf->getY()) {
-
-                $tmpImage->resize($conf->getX(), $conf->getY(), $conf->getResize());
-
-                if ($conf->getCrop()) {
-                $tmpImage->crop('50%', '50%', $conf->getX(), $conf->getY());
+                    if ($conf->getCrop()) {
+                        $tmpImage->crop('50%', '50%', $conf->getX(), $conf->getY());
+                    }
+                } else {
+                    $tmpImage->resize($conf->getX(), $conf->getY(), $conf->getResize());
                 }
-            } else {
-                $tmpImage->resize($conf->getX(), $conf->getY(), $conf->getResize());
-            }
 
             // watermark
             if ($this->settings->get('Apply watermark', \WebCMS\Settings::SECTION_IMAGE)->getValue() !== 0 && $conf->getWatermark()) {
                 $tmpImage = $this->applyWatermark($tmpImage);
             }
 
-            $key = $conf->getKey();
-            if (!empty($key)) {
-                $tmpImage->save($thumbnails . $conf->getKey() . $filename, 90);
-            }
+                $key = $conf->getKey();
+                if (!empty($key)) {
+                    $tmpImage->save($thumbnails.$conf->getKey().$filename, 90);
+                }
             }
         }
     }
@@ -82,7 +80,6 @@ class ThumbnailCreator
         $section = \WebCMS\Settings::SECTION_IMAGE;
 
         if ($this->settings->get('Apply watermark', $section)->getValue() == 1) {
-
             $watermark = $this->settings->get('Watermark picture path', $section)->getValue();
 
             if (empty($watermark)) {
@@ -93,7 +90,7 @@ class ThumbnailCreator
             $watermark = \Nette\Image::fromFile($watermark);
 
             if ($watermark->getWidth() > 0) {
-            /* Watermark positioning */
+                /* Watermark positioning */
             if ($this->settings->get('Watermark position', $section)->getValue() == 0) {
                 $left = 0;
                 $top = 0;
@@ -111,17 +108,16 @@ class ThumbnailCreator
                 $top = $image->getHeight() - $watermark->getHeight();
             }
 
-            $image->place($watermark, $left, $top);
+                $image->place($watermark, $left, $top);
             } else {
                 throw new \Nette\FileNotFoundException('Watermark file not found.');
             }
         } elseif ($this->settings->get('Apply watermark', $section)->getValue() == 2) {
-
             // inicializace a predani promennych
             $text = $this->settings->get('Watermark text', $section)->getValue();
             $font = $this->settings->get('Watermark text font', $section)->getValue();
             $color = $this->settings->get('Watermark text color', $section)->getValue();
-            $font = "../libs/webcms2/webcms2/AdminModule/static/fonts/" . $font;
+            $font = "../libs/webcms2/webcms2/AdminModule/static/fonts/".$font;
             $size = $this->settings->get('Watermark text size', $section)->getValue();
 
             $dimensions = imagettfbbox($size, 0, $font, $text);
@@ -147,12 +143,11 @@ class ThumbnailCreator
                 $top = $image->getHeight() - 1;
             }
 
-            $color = $image->colorallocate(hexdec('0x' . $color{0} . $color{1}), hexdec('0x' . $color{2} . $color{3}), hexdec('0x' . $color{4} . $color{5}));
+            $color = $image->colorallocate(hexdec('0x'.$color{0}.$color{1}), hexdec('0x'.$color{2}.$color{3}), hexdec('0x'.$color{4}.$color{5}));
 
             $image->ttftext($size, 0, $left, $top, $color, $font, $text);
         }
 
         return $image;
     }
-
 }

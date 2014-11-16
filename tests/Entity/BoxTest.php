@@ -34,7 +34,7 @@ class BoxTest extends \WebCMS\Tests\EntityTestCase
 
     private function setPage($text = 'test')
     {
-        $page = new \WebCMS\Entity\Page;
+        $page = new \WebCMS\Entity\Page();
         $page->setTitle($text);
         $page->setPresenter($text);
         $page->setPath($text);
@@ -53,7 +53,7 @@ class BoxTest extends \WebCMS\Tests\EntityTestCase
         $this->em->persist($pageFrom);
         $this->em->persist($pageTo);
 
-        $this->box = new WebCMS\Entity\Box;
+        $this->box = new WebCMS\Entity\Box();
         $this->box->setBox('box1');
         $this->box->setFunction('function');
         $this->box->setPresenter('presenter');

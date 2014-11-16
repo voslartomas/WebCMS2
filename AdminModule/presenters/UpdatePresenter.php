@@ -27,9 +27,9 @@ class UpdatePresenter extends \AdminModule\BasePresenter
 
         foreach ($packages as &$package) {
             if ($package['module']) {
-            $module = $this->createObject($package['package']);
+                $module = $this->createObject($package['package']);
 
-            $package['registered'] = $this->isRegistered($module->getName());
+                $package['registered'] = $this->isRegistered($module->getName());
             }
         }
 
@@ -45,13 +45,13 @@ class UpdatePresenter extends \AdminModule\BasePresenter
 
         exec("cd ../;git pull;composer update -n > $installLog 2> $installErrorLog");
 
-        $successMessage = $this->getMessageFromFile('.' . $installLog);
+        $successMessage = $this->getMessageFromFile('.'.$installLog);
 
         if (strpos($successMessage, 'System has been updated.') !== FALSE) {
             $this->flashMessage('System has been udpated.', 'success');
         }
 
-        $errorMessage = $this->getMessageFromFile('.' . $installErrorLog);
+        $errorMessage = $this->getMessageFromFile('.'.$installErrorLog);
         if (!empty($errorMessage)) {
             $this->flashMessage('Error while updating system. Please contact administrator.', 'danger');
         }
@@ -99,7 +99,7 @@ class UpdatePresenter extends \AdminModule\BasePresenter
         $password = $par['database']['password'];
         $database = $par['database']['dbname'];
 
-        exec("mysqldump -u $user -p$password $database > ./upload/backups/db-backup-" . time() . ".sql");
+        exec("mysqldump -u $user -p$password $database > ./upload/backups/db-backup-".time().".sql");
 
         $this->flashMessage('Backup has been create. You can download this backup in filesystem - backup directory.', 'success');
     }
@@ -110,27 +110,25 @@ class UpdatePresenter extends \AdminModule\BasePresenter
         $module = $this->createObject($name);
 
         if (!$this->isRegistered($name)) {
-
             $exists = $this->em->getRepository('WebCMS\Entity\Module')->findOneBy(array(
-            'name' => $module->getName()
+            'name' => $module->getName(),
             ));
 
             if (is_object($exists)) {
-            $exists->setActive(TRUE);
+                $exists->setActive(true);
             } else {
-            $mod = new \WebCMS\Entity\Module;
-            $mod->setName($module->getName());
-            $mod->setPresenters($module->getPresenters());
-            $mod->setActive(TRUE);
+                $mod = new \WebCMS\Entity\Module();
+                $mod->setName($module->getName());
+                $mod->setPresenters($module->getPresenters());
+                $mod->setActive(true);
 
-            $this->em->persist($mod);
+                $this->em->persist($mod);
             }
 
             $this->em->flush();
             $this->copyTemplates($name);
             $this->flashMessage('Module has been registered.', 'success');
         } else {
-
             $this->flashMessage('Module is already registered.', 'danger');
         }
 
@@ -139,19 +137,20 @@ class UpdatePresenter extends \AdminModule\BasePresenter
 
     private function copyTemplates($name)
     {
-        if (!file_exists('../app/templates/' . $name))
-            mkdir('../app/templates/' . $name);
-        exec('cp -r ../libs/webcms2/' . $name . '/Frontend/templatesDefault/* ../app/templates/' . $name);
+        if (!file_exists('../app/templates/'.$name)) {
+            mkdir('../app/templates/'.$name);
         }
+        exec('cp -r ../libs/webcms2/'.$name.'/Frontend/templatesDefault/* ../app/templates/'.$name);
+    }
 
     public function actionUnregister($name)
     {
         $module = $this->createObject($name);
         $module = $this->em->getRepository('WebCMS\Entity\Module')->findOneBy(array(
-            'name' => $module->getName()
+            'name' => $module->getName(),
         ));
 
-        $module->setActive(FALSE);
+        $module->setActive(false);
         $this->em->flush();
 
         $this->flashMessage('Module has been unregistered from system.', 'success');
@@ -161,7 +160,7 @@ class UpdatePresenter extends \AdminModule\BasePresenter
     private function isRegistered($name)
     {
         $exists = $this->em->getRepository('WebCMS\Entity\Module')->findOneBy(array(
-            'name' => $name
+            'name' => $name,
         ));
 
         if (is_object($exists) && $exists->getActive()) {
@@ -180,31 +179,29 @@ class UpdatePresenter extends \AdminModule\BasePresenter
         $needUpdateCount = 0;
         foreach ($packages as &$package) {
             if ($package['vendor'] === 'webcms2') {
+                $apiResult = $client->get($package['vendor'].'/'.$package['package']);
+                $versions = $apiResult->getVersions();
 
-            $apiResult = $client->get($package['vendor'] . '/' . $package['package']);
-            $versions = $apiResult->getVersions();
-
-            $devVersion = $versions[$package['version']];
-            if (count($versions) > 1) {
-
-                $newestVersion = next($versions);
-                $newestVersion = $newestVersion->getVersion();
-                while (strpos($newestVersion, 'dev') !== false) {
-                $newestVersion = next($versions);
-                $newestVersion = $newestVersion->getVersion();
+                $devVersion = $versions[$package['version']];
+                if (count($versions) > 1) {
+                    $newestVersion = next($versions);
+                    $newestVersion = $newestVersion->getVersion();
+                    while (strpos($newestVersion, 'dev') !== false) {
+                        $newestVersion = next($versions);
+                        $newestVersion = $newestVersion->getVersion();
+                    }
+                } else {
+                    $newestVersion = null;
                 }
-            } else {
-                $newestVersion = null;
-            }
 
             // development or production version?
             if (strpos($package['version'], 'dev') !== false) {
                 if ($package['versionHash'] !== mb_substr($devVersion->getSource()->getReference(), 0, 7)) {
-                $needUpdateCount++;
+                    $needUpdateCount++;
                 }
             } else {
                 if ($package['version'] !== $newestVersion) {
-                $needUpdateCount++;
+                    $needUpdateCount++;
                 }
             }
             }
@@ -298,7 +295,7 @@ class UpdatePresenter extends \AdminModule\BasePresenter
         $notInstalled = array();
         foreach ($apiResult as $package) {
             if (!array_key_exists($package->getName(), $packages)) {
-            $notInstalled[$package->getName()] = $package->getName();
+                $notInstalled[$package->getName()] = $package->getName();
             }
         }
 

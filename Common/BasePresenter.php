@@ -4,44 +4,44 @@
  * Webcms admin module package.
  */
 
-namespace WebCMS2\Common;
+namespace webcms2\Common;
 
 /**
- * 
+ *
  */
 abstract class BasePresenter extends \Nette\Application\UI\Presenter
 {
     /**
-     * 
+     *
      * @var [type]
      */
-	protected $em;
-	
-    /**
-     * 
-     * 
-     * @return [type] [description]
-     */
-	protected abstract function getLanguageId();
+    protected $em;
 
     /**
-     * 
-     * 
+     *
+     *
      * @return [type] [description]
      */
-	protected function startUp()
-	{
-		parent::startUp();
-	}
+    abstract protected function getLanguageId();
 
     /**
-     * 
-     * 
+     *
+     *
      * @return [type] [description]
      */
-	protected function getSettings()
+    protected function startUp()
     {
-        $query = $this->em->createQuery('SELECT s FROM WebCMS\Entity\Setting s WHERE s.language >= ' . $this->getLanguageId() . ' OR s.language IS NULL');
+        parent::startUp();
+    }
+
+    /**
+     *
+     *
+     * @return [type] [description]
+     */
+    protected function getSettings()
+    {
+        $query = $this->em->createQuery('SELECT s FROM WebCMS\Entity\Setting s WHERE s.language >= '.$this->getLanguageId().' OR s.language IS NULL');
         $tmp = $query->getResult();
 
         $settings = array();
@@ -50,13 +50,13 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
         }
 
         return $settings;
-    }	
+    }
 
     /**
      * Injects entity manager.
-     * 
-     * @param  \Doctrine\ORM\EntityManager  $em
-     * 
+     *
+     * @param \Doctrine\ORM\EntityManager $em
+     *
      * @return BasePresenter
      * @throws \Nette\InvalidStateException
      */
@@ -73,7 +73,7 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 
     /**
      * Generate sitemap.xml file in www (public) directory.
-     * 
+     *
      * @return XML sitemap
      */
     public function generateSitemap()
@@ -85,7 +85,7 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 
         foreach ($pages as $page) {
             if ($page->getParent() !== null && $page->getVisible()) {
-                $sitemapXml .= "<url>\n\t<loc>" . $this->getSitemapLink($page) . "</loc>\n</url>\n";
+                $sitemapXml .= "<url>\n\t<loc>".$this->getSitemapLink($page)."</loc>\n</url>\n";
             }
         }
 
@@ -96,22 +96,22 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 
     /**
      * Get single sitemap link url address.
-     * 
+     *
      * @param  \WebCMS2\Entity\Page $page Page entity object.
      * @return string               Url address of the link.
      */
     private function getSitemapLink($page)
     {
         $url = $this->context->httpRequest->url->baseUrl;
-        $url .= !$page->getLanguage()->getDefaultFrontend() ? $page->getLanguage()->getAbbr() . '/' : '';
+        $url .= !$page->getLanguage()->getDefaultFrontend() ? $page->getLanguage()->getAbbr().'/' : '';
         $url .= $page->getPath();
 
         return $url;
     }
 
     /**
-     * 
-     * 
+     *
+     *
      * @return [type] [description]
      */
     protected function getAllLanguages()
@@ -127,18 +127,18 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
     }
 
     /**
-     * 
-     * 
+     *
+     *
      * @param  [type] $name [description]
-     * @return [type]       [description]
+     * @return [type] [description]
      */
     protected function createObject($name)
     {
         $expl = explode('-', $name);
 
         $objectName = ucfirst($expl[0]);
-        $objectName = "\\WebCMS\\$objectName" . "Module\\" . $objectName;
+        $objectName = "\\WebCMS\\$objectName"."Module\\".$objectName;
 
-        return new $objectName;
+        return new $objectName();
     }
 }

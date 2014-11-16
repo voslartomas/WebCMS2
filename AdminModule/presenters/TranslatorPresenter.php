@@ -14,13 +14,13 @@ use Nette\Application\UI;
  */
 class TranslatorPresenter extends BasePresenter
 {
-	/* @var \Webcook\Translator\ServiceFactory */
+    /* @var \Webcook\Translator\ServiceFactory */
     private $serviceFactory;
 
     /* @var \Webcook\Translator\ITranslator */
     private $translatorService;
-    
-	public function renderDefault()
+
+    public function renderDefault()
     {
         $this->reloadContent();
     }
@@ -46,15 +46,15 @@ class TranslatorPresenter extends BasePresenter
 
         $this->serviceFactory->setSettings(array(
             \Webcook\Translator\ServiceFactory::YANDEX => array(
-            'key' => $this->settings->get('Yandex API key', \WebCMS\Settings::SECTION_BASIC)->getValue()
+            'key' => $this->settings->get('Yandex API key', \WebCMS\Settings::SECTION_BASIC)->getValue(),
             ),
             \Webcook\Translator\ServiceFactory::GOOGLE => array(
-            'key' => $this->settings->get('Google API key', \WebCMS\Settings::SECTION_BASIC)->getValue()
+            'key' => $this->settings->get('Google API key', \WebCMS\Settings::SECTION_BASIC)->getValue(),
             ),
             \Webcook\Translator\ServiceFactory::BING => array(
             'clientId' => $this->settings->get('Bing client id', \WebCMS\Settings::SECTION_BASIC)->getValue(),
-            'clientSecret' => $this->settings->get('Bing client secret', \WebCMS\Settings::SECTION_BASIC)->getValue()
-            )
+            'clientSecret' => $this->settings->get('Bing client secret', \WebCMS\Settings::SECTION_BASIC)->getValue(),
+            ),
         ));
 
         return $this->serviceFactory->build($serviceId);
@@ -66,10 +66,10 @@ class TranslatorPresenter extends BasePresenter
 
         $cache = new \Nette\Caching\Cache($this->getContext()->getService('cacheStorage'), 'htmlFront');
 
-        if (!$languages = $cache->load('tl' . $serviceId)) {
+        if (!$languages = $cache->load('tl'.$serviceId)) {
             $languages = $this->translatorService->getLanguages();
 
-            $cache->save('tl' . $serviceId, $languages);
+            $cache->save('tl'.$serviceId, $languages);
         }
 
         return $languages;
@@ -82,11 +82,10 @@ class TranslatorPresenter extends BasePresenter
         $packages = \WebCMS\Helpers\SystemHelper::getPackages();
 
         if ($this->translatorService instanceof \Webcook\Translator\ITranslator) {
-
             $langs = $this->getLanguages();
             $langst = array();
             foreach ($langs as $yl) {
-            $langst[$yl->getAbbreviation()] = $yl->getName();
+                $langst[$yl->getAbbreviation()] = $yl->getName();
             }
 
             $form->addGroup('System');
@@ -99,16 +98,15 @@ class TranslatorPresenter extends BasePresenter
             $form->addGroup('Settings');
 
             foreach ($packages as $key => $package) {
+                if ($package['vendor'] === 'webcms2' && $package['package'] !== 'webcms2') {
+                    $object = $this->createObject($package['package']);
 
-            if ($package['vendor'] === 'webcms2' && $package['package'] !== 'webcms2') {
-                $object = $this->createObject($package['package']);
-
-                if ($object->isTranslatable()) {
-                $form->addCheckbox(str_replace('-', '_', $package['package']), $package['package']);
-                } else {
-                $form->addCheckbox(str_replace('-', '_', $package['package']), $package['package'] . ' not translatable.')->setDisabled(true);
+                    if ($object->isTranslatable()) {
+                        $form->addCheckbox(str_replace('-', '_', $package['package']), $package['package']);
+                    } else {
+                        $form->addCheckbox(str_replace('-', '_', $package['package']), $package['package'].' not translatable.')->setDisabled(true);
+                    }
                 }
-            }
             }
 
             $form->addSubmit('translate', 'Translate');
@@ -132,7 +130,7 @@ class TranslatorPresenter extends BasePresenter
         unset($values->systemLanguage);
 
         $pages = $this->em->getRepository('WebCMS\Entity\Page')->findBy(array(
-            'language' => $language
+            'language' => $language,
             ), array('lft' => 'asc'));
 
         foreach ($pages as $page) {
@@ -145,8 +143,9 @@ class TranslatorPresenter extends BasePresenter
             $path = $this->em->getRepository('WebCMS\Entity\Page')->getPath($page);
             $final = array();
             foreach ($path as $p) {
-            if ($p->getParent() != NULL)
-                $final[] = $p->getSlug();
+                if ($p->getParent() != NULL) {
+                    $final[] = $p->getSlug();
+                }
             }
 
             $page->setPath(implode('/', $final));
@@ -155,16 +154,16 @@ class TranslatorPresenter extends BasePresenter
         // translate all data
         foreach ($values as $key => $value) {
             if ($value) {
-            $module = $this->createObject(str_replace('_', '-', $key));
-            if ($module->isTranslatable()) {
-                $module->translateData($this->em, $language, $from, $to, $this->translatorService);
-            }
+                $module = $this->createObject(str_replace('_', '-', $key));
+                if ($module->isTranslatable()) {
+                    $module->translateData($this->em, $language, $from, $to, $this->translatorService);
+                }
             }
         }
 
         // translate all static texts
         $translations = $this->em->getRepository('WebCMS\Entity\Translation')->findBy(array(
-            'language' => $language
+            'language' => $language,
         ));
 
         foreach ($translations as $translation) {

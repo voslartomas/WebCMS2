@@ -84,7 +84,7 @@ class Thumbnail extends Entity
 
     public function getX()
     {
-        return $this->x == 0 ? NULL : $this->x;
+        return $this->x == 0 ? null : $this->x;
     }
 
     public function setX($x)
@@ -94,7 +94,7 @@ class Thumbnail extends Entity
 
     public function getY()
     {
-        return $this->y == 0 ? NULL : $this->y;
+        return $this->y == 0 ? null : $this->y;
     }
 
     public function setY($y)
@@ -121,5 +121,4 @@ class Thumbnail extends Entity
     {
         $this->system = $system;
     }
-
 }

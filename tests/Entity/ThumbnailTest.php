@@ -23,7 +23,7 @@ class ThumbnailTest extends \WebCMS\Tests\EntityTestCase
 
     private function initThumbnail()
     {
-        $this->thumbnail = new \WebCMS\Entity\Thumbnail;
+        $this->thumbnail = new \WebCMS\Entity\Thumbnail();
         $this->thumbnail->setCrop(true);
         $this->thumbnail->setKey('key');
         $this->thumbnail->setResize(2);

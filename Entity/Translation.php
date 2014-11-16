@@ -56,7 +56,7 @@ class Translation extends Entity
 
     public function setHash()
     {
-        $this->hash = sha1($this->getKey() . $this->getLanguage()->getAbbr() . $this->getBackend());
+        $this->hash = sha1($this->getKey().$this->getLanguage()->getAbbr().$this->getBackend());
     }
 
     public function getKey()
@@ -104,5 +104,4 @@ class Translation extends Entity
     {
         return md5($this->key) !== md5($this->translation);
     }
-
 }

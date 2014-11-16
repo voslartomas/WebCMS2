@@ -47,7 +47,7 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
         return new NS\Identity($user->id, $user->getRole()->getName(), array(
             'username' => $user->username,
             'email' => $user->email,
-            'permissions' => $permissions
+            'permissions' => $permissions,
         ));
     }
 
@@ -58,7 +58,6 @@ class Authenticator extends Nette\Object implements NS\IAuthenticator
      */
     public function calculateHash($password)
     {
-        return md5($password . str_repeat($this->salt, 10));
+        return md5($password.str_repeat($this->salt, 10));
     }
-
 }

@@ -49,14 +49,14 @@ class SettingsPresenter extends \AdminModule\BasePresenter
         $settings = array();
 
         // global settings for all languages
-        $this->settings->setLanguage(NULL);
+        $this->settings->setLanguage(null);
 
         $settings[] = $this->settings->get('Watermark picture path', \WebCMS\Settings::SECTION_IMAGE, 'text');
 
         $settings[] = $this->settings->get('Apply watermark', \WebCMS\Settings::SECTION_IMAGE, 'radio', array(
             0 => 'Do not apply watermark',
             1 => 'Use picture as watermark',
-            2 => 'Use text as watermark'
+            2 => 'Use text as watermark',
         ));
 
         $settings[] = $this->settings->get('Watermark text', \WebCMS\Settings::SECTION_IMAGE, 'text');
@@ -65,7 +65,7 @@ class SettingsPresenter extends \AdminModule\BasePresenter
             'Courier New.ttf' => 'Courier new',
             'Comic Sans MS.ttf' => 'Comic sans',
             'Arial.ttf' => 'Arial',
-            'Times New Roman.ttf' => 'Times new roman'
+            'Times New Roman.ttf' => 'Times new roman',
         ));
 
         $settings[] = $this->settings->get('Watermark text color', \WebCMS\Settings::SECTION_IMAGE, 'text');
@@ -75,7 +75,7 @@ class SettingsPresenter extends \AdminModule\BasePresenter
             1 => 'Top right',
             2 => 'Center',
             3 => 'Bottom left',
-            4 => 'Bottom right'
+            4 => 'Bottom right',
         ));
 
         // set back language for further settings in app
@@ -90,10 +90,10 @@ class SettingsPresenter extends \AdminModule\BasePresenter
 
         $this->template->watermarkPath = $this->settings->get('Watermark picture path', \WebCMS\Settings::SECTION_IMAGE)->getValue();
         $this->template->panel = $panel;
-        }
+    }
 
-        public function actionAddThumbnail($id)
-        {
+    public function actionAddThumbnail($id)
+    {
         if ($id) {
             $this->thumbnail = $this->em->find("WebCMS\Entity\Thumbnail", $id);
         } else {
@@ -129,23 +129,23 @@ class SettingsPresenter extends \AdminModule\BasePresenter
             \Nette\Image::FILL => 'Fill',
             \Nette\Image::FIT => 'Fit',
             \Nette\Image::SHRINK_ONLY => 'Shrink',
-            \Nette\Image::STRETCH => 'Stretch'
+            \Nette\Image::STRETCH => 'Stretch',
         ));
 
         $form->addText('x', 'Width')
             ->setRequired('You must fill in widh')
-            ->addConditionOn($form['resize'], \Nette\Forms\Form::EQUAL,\Nette\Image::EXACT)
-            ->addRule(\Nette\Forms\Form::PATTERN, 'Width must be greater than 0','^[1-9][0-9]*$');
+            ->addConditionOn($form['resize'], \Nette\Forms\Form::EQUAL, \Nette\Image::EXACT)
+            ->addRule(\Nette\Forms\Form::PATTERN, 'Width must be greater than 0', '^[1-9][0-9]*$');
 
         $form->addText('y', 'Height')
             ->setRequired('You must fill in height')
-            ->addConditionOn($form['resize'], \Nette\Forms\Form::EQUAL,\Nette\Image::EXACT)
-            ->addRule(\Nette\Forms\Form::PATTERN, 'Height must be greater than 0','^[1-9][0-9]*$');
+            ->addConditionOn($form['resize'], \Nette\Forms\Form::EQUAL, \Nette\Image::EXACT)
+            ->addRule(\Nette\Forms\Form::PATTERN, 'Height must be greater than 0', '^[1-9][0-9]*$');
 
         $form->addCheckbox('crop', 'Crop?');
         $form->addCheckbox('watermark', 'Watermark?');
 
-        if (\WebCMS\Helpers\SystemHelper::isSuperAdmin($this->user)){
+        if (\WebCMS\Helpers\SystemHelper::isSuperAdmin($this->user)) {
             $form->addCheckbox('system', 'System?');
         } else {
             $form->addHidden('system', 'System?');
@@ -164,7 +164,7 @@ class SettingsPresenter extends \AdminModule\BasePresenter
         $values = $form->getValues();
 
         if (!$this->thumbnail->getId()) {
-            $thumb = new \WebCMS\Entity\Thumbnail;
+            $thumb = new \WebCMS\Entity\Thumbnail();
         } else {
             $thumb = $this->thumbnail;
         }
@@ -202,12 +202,12 @@ class SettingsPresenter extends \AdminModule\BasePresenter
 
         $grid->addColumnText('watermark', 'Watermark')->setReplacement(array(
             1 => 'Yes',
-            NULL => 'No'
+            NULL => 'No',
         ));
 
         $grid->addColumnText('system', 'System')->setReplacement(array(
             1 => 'Yes',
-            NULL => 'No'
+            NULL => 'No',
         ));
 
         $grid->addActionHref("addThumbnail", 'Edit')->getElementPrototype()->addAttributes(array('class' => array('btn', 'btn-primary', 'ajax'), 'data-toggle' => 'modal', 'data-target' => '#myModal', 'data-remote' => 'false'));
@@ -243,22 +243,22 @@ class SettingsPresenter extends \AdminModule\BasePresenter
 
         // fetch all pages
         $pages = $this->em->getRepository('WebCMS\Entity\Page')->findBy(array(
-            'language' => $this->state->language
+            'language' => $this->state->language,
         ));
 
         $boxesAssoc = array();
         foreach ($pages as $page) {
             if ($page->getParent() != NULL) {
-            $module = $this->createObject($page->getModuleName());
+                $module = $this->createObject($page->getModuleName());
 
-            foreach ($module->getBoxes() as $box) {
-                $boxesAssoc[$page->getId() . '-' . $box['module'] . '-' . $box['presenter'] . '-' . $box['function']] = $page->getTitle() . ' - ' . $this->translation[$box['name']];
-            }
+                foreach ($module->getBoxes() as $box) {
+                    $boxesAssoc[$page->getId().'-'.$box['module'].'-'.$box['presenter'].'-'.$box['function']] = $page->getTitle().' - '.$this->translation[$box['name']];
+                }
             }
         }
 
         $boxesAssoc = array(
-            0 => $this->translation['Box is not linked.']
+            0 => $this->translation['Box is not linked.'],
             ) + $boxesAssoc;
 
         $this->template->boxes = $parameters['boxes'];
@@ -277,7 +277,7 @@ class SettingsPresenter extends \AdminModule\BasePresenter
 
         $exists = $this->em->getRepository('WebCMS\Entity\Box')->findOneBy(array(
             'pageTo' => $pageTo,
-            'box' => $box
+            'box' => $box,
         ));
 
         if (is_object($exists)) {
@@ -289,7 +289,6 @@ class SettingsPresenter extends \AdminModule\BasePresenter
         $parsed = explode('-', $value);
 
         if (count($parsed) > 3) {
-
             $pageFrom = $this->em->getRepository('WebCMS\Entity\Page')->find($parsed[0]);
             $moduleName = $parsed[1];
             $presenter = $parsed[2];
@@ -303,13 +302,13 @@ class SettingsPresenter extends \AdminModule\BasePresenter
             $boxAssign->setPageTo($pageTo);
 
             if (!$boxAssign->getId()) {
-            $this->em->persist($boxAssign);
+                $this->em->persist($boxAssign);
             }
 
             $this->em->persist($boxAssign);
         } else {
             if (is_object($exists)) {
-            $this->em->remove($exists);
+                $this->em->remove($exists);
             }
         }
 
@@ -326,14 +325,14 @@ class SettingsPresenter extends \AdminModule\BasePresenter
 
         // fetch all pages
         $pages = $this->em->getRepository('WebCMS\Entity\Page')->findBy(array(
-            'language' => $this->state->language
+            'language' => $this->state->language,
         ));
 
         $this->template->pages = $pages;
-        }
+    }
 
-        public function createComponentSeoBasicForm()
-        {
+    public function createComponentSeoBasicForm()
+    {
         $settings = array();
 
         $settings[] = $this->settings->get('Seo keywords', \WebCMS\Settings::SECTION_BASIC, 'text');
@@ -360,8 +359,9 @@ class SettingsPresenter extends \AdminModule\BasePresenter
             $path = $this->em->getRepository('WebCMS\Entity\Page')->getPath($page);
             $final = array();
             foreach ($path as $p) {
-            if ($p->getParent() != NULL)
-                $final[] = $p->getSlug();
+                if ($p->getParent() != NULL) {
+                    $final[] = $p->getSlug();
+                }
             }
 
             $page->setPath(implode('/', $final));
@@ -381,15 +381,13 @@ class SettingsPresenter extends \AdminModule\BasePresenter
         $settings = array();
 
         if (array_key_exists('settings', $parameters)) {
-
             $projectSettings = $parameters['settings'];
 
             foreach ($projectSettings as $key => $value) {
-            $settings[] = $this->settings->get($key, \WebCMS\Settings::SECTION_BASIC, 'checkbox');
+                $settings[] = $this->settings->get($key, \WebCMS\Settings::SECTION_BASIC, 'checkbox');
             }
         } else {
             $this->flashMessage('There are no settings in config file.', 'info');
-
         }
 
         return $this->createSettingsForm($settings);

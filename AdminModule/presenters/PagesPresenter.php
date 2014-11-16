@@ -35,9 +35,9 @@ class PagesPresenter extends \AdminModule\BasePresenter
         $repository = $this->em->getRepository('WebCMS\Entity\Page');
         $hierarchy = $repository->getTreeForSelect(array(
             array('by' => 'root', 'dir' => 'ASC'),
-            array('by' => 'lft', 'dir' => 'ASC')
+            array('by' => 'lft', 'dir' => 'ASC'),
             ), array(
-            'language = ' . $this->state->language->getId()
+            'language = '.$this->state->language->getId(),
         ));
 
         $hierarchy = array(0 => $this->translation['Pick parent']) + $hierarchy;
@@ -49,13 +49,14 @@ class PagesPresenter extends \AdminModule\BasePresenter
             $objectModule = $this->createObject($module->getName());
 
             foreach ($objectModule->getPresenters() as $presenter) {
-            if ($presenter['frontend'])
-                $modulesToSelect[$module->getId() . '-' . $presenter['name']] = $module->getName() . ' ' . $presenter['name'];
+                if ($presenter['frontend']) {
+                    $modulesToSelect[$module->getId().'-'.$presenter['name']] = $module->getName().' '.$presenter['name'];
+                }
             }
         }
 
         $layouts = array();
-        foreach (Finder::findFiles('@*.latte')->in(APP_DIR . '/templates') as $key => $file) {
+        foreach (Finder::findFiles('@*.latte')->in(APP_DIR.'/templates') as $key => $file) {
             $layouts[str_replace(array('@', '.latte'), '', $file->getFileName())] = $file->getFileName();
         }
 
@@ -63,9 +64,9 @@ class PagesPresenter extends \AdminModule\BasePresenter
         $form->addText('title', 'Name')->setAttribute('class', 'form-control')->setRequired();
         $form->addText('redirect', 'Redirect')->setAttribute('class', 'form-control');
         $form->addText('class', 'Menu item class')->setAttribute('class', 'form-control');
-        $form->addSelect('module', 'Module')->setTranslator(NULL)->setItems($modulesToSelect)->setAttribute('class', 'form-control')->setRequired();
-        $form->addSelect('parent', 'Parent')->setTranslator(NULL)->setItems($hierarchy)->setAttribute('class', 'form-control');
-        $form->addSelect('layout', 'Page layout')->setTranslator(NULL)->setItems($layouts)->setAttribute('class', 'form-control');
+        $form->addSelect('module', 'Module')->setTranslator(null)->setItems($modulesToSelect)->setAttribute('class', 'form-control')->setRequired();
+        $form->addSelect('parent', 'Parent')->setTranslator(null)->setItems($hierarchy)->setAttribute('class', 'form-control');
+        $form->addSelect('layout', 'Page layout')->setTranslator(null)->setItems($layouts)->setAttribute('class', 'form-control');
         $form->addCheckbox('default', 'Default');
         $form->addCheckbox('visible', 'Show');
 
@@ -75,8 +76,9 @@ class PagesPresenter extends \AdminModule\BasePresenter
 
         if ($this->page) {
             $form->setDefaults($this->page->toArray());
-            if (is_object($this->page->getModule()))
-            $form['module']->setDefaultValue($this->page->getModule()->getId() . '-' . $this->page->getPresenter());
+            if (is_object($this->page->getModule())) {
+                $form['module']->setDefaultValue($this->page->getModule()->getId().'-'.$this->page->getPresenter());
+            }
         }
 
         return $form;
@@ -92,11 +94,11 @@ class PagesPresenter extends \AdminModule\BasePresenter
             // copy boxes
             $tmpBoxes = $parent->getBoxes();
         } else {
-            $parent = NULL;
+            $parent = null;
         }
 
         $this->setPageValues($values, $parent);
-        
+
         if (!$this->page->getId()) {
             $this->em->persist($this->page);
 
@@ -117,8 +119,8 @@ class PagesPresenter extends \AdminModule\BasePresenter
     }
 
     /**
-     * 
-     * 
+     *
+     *
      * @param [type] $values [description]
      */
     private function setPageValues($values, $parent)
@@ -128,7 +130,7 @@ class PagesPresenter extends \AdminModule\BasePresenter
             $module = $this->em->find("WebCMS\Entity\Module", $parse[0]);
             $presenter = $parse[1];
         } else {
-            $module = NULL;
+            $module = null;
             $presenter = '';
         }
 
@@ -137,7 +139,7 @@ class PagesPresenter extends \AdminModule\BasePresenter
         if (!empty($values->redirect)) {
             $this->page->setRedirect($values->redirect);
         } else {
-            $this->page->setRedirect(NULL);
+            $this->page->setRedirect(null);
         }
 
         if ($module) {
@@ -158,15 +160,15 @@ class PagesPresenter extends \AdminModule\BasePresenter
     }
 
     /**
-     * 
-     * 
+     *
+     *
      * @param  [type] $boxes [description]
-     * @return [type]        [description]
+     * @return [type] [description]
      */
     private function createBoxesFromParent($boxes)
     {
         foreach ($boxes as $box) {
-            $tmp = new Box();
+            $tmp = new \WebCMS\Entity\Box();
             $tmp->setBox($box->getBox());
             $tmp->setFunction($box->getFunction());
             $tmp->setModuleName($box->getModuleName());
@@ -179,8 +181,8 @@ class PagesPresenter extends \AdminModule\BasePresenter
     }
 
     /**
-     * 
-     * 
+     *
+     *
      * @return [type] [description]
      */
     private function generatePath()
@@ -188,30 +190,31 @@ class PagesPresenter extends \AdminModule\BasePresenter
         $path = $this->em->getRepository('WebCMS\Entity\Page')->getPath($this->page);
         $final = array();
         foreach ($path as $p) {
-            if ($p->getParent() != NULL)
-            $final[] = $p->getSlug();
+            if ($p->getParent() != NULL) {
+                $final[] = $p->getSlug();
+            }
         }
 
         $this->page->setPath(implode('/', $final));
     }
 
     /**
-     * 
-     * 
+     *
+     *
      * @return [type] [description]
      */
     private function copyPermissions()
     {
         $roles = $this->em->getRepository('WebCMS\Entity\Role')->findBy(array(
-            'automaticEnable' => true
+            'automaticEnable' => true,
         ));
 
         foreach ($roles as $r) {
             $module = $this->createObject($this->page->getModuleName());
             foreach ($module->getPresenters() as $presenter) {
-                $permission = new \WebCMS\Entity\Permission;
+                $permission = new \WebCMS\Entity\Permission();
 
-                $resource = 'admin:' . $this->page->getModuleName() . $presenter['name'] . $this->page->getId();
+                $resource = 'admin:'.$this->page->getModuleName().$presenter['name'].$this->page->getId();
                 $permission->setResource($resource);
                 $permission->setPage($this->page);
                 $permission->setRead(true);
@@ -225,7 +228,7 @@ class PagesPresenter extends \AdminModule\BasePresenter
     {
         $parents = $this->em->getRepository('WebCMS\Entity\Page')->findBy(array(
             'parent' => NULL,
-            'language' => $this->state->language->getId()
+            'language' => $this->state->language->getId(),
         ));
 
         $prnts = array('' => $this->translation['Pick structure']);
@@ -236,32 +239,32 @@ class PagesPresenter extends \AdminModule\BasePresenter
 
         $grid = $this->createGrid($this, $name, 'Page', array(
             array('by' => 'root', 'dir' => 'ASC'),
-            array('by' => 'lft', 'dir' => 'ASC')
+            array('by' => 'lft', 'dir' => 'ASC'),
             ), array(
-            'language = ' . $this->state->language->getId()
+            'language = '.$this->state->language->getId(),
             )
         );
 
         $grid->addColumnText('title', 'Name')->setCustomRender(function ($item) {
-            return str_repeat("-", $item->getLevel()) . $item->getTitle();
+            return str_repeat("-", $item->getLevel()).$item->getTitle();
         });
 
         $grid->addColumnText('root', 'Structure')->setCustomRender(function ($item) {
             return $item->getParent() ? $item->getParent() : '-';
         });
 
-        $grid->addFilterSelect('root', 'Structure')->getControl()->setTranslator(NULL)->setItems($prnts);
+        $grid->addFilterSelect('root', 'Structure')->getControl()->setTranslator(null)->setItems($prnts);
 
         $grid->addColumnText('moduleName', 'Module');
 
         $grid->addColumnText('visible', 'Visible')->setReplacement(array(
             '1' => 'Yes',
-            NULL => 'No'
+            NULL => 'No',
         ));
 
         $grid->addColumnText('default', 'Default')->setReplacement(array(
             '1' => 'Yes',
-            NULL => 'No'
+            NULL => 'No',
         ));
 
         //$grid->addActionHref("moveUp", "Move up");
@@ -274,10 +277,11 @@ class PagesPresenter extends \AdminModule\BasePresenter
 
     public function actionUpdatePage($id)
     {
-        if ($id)
+        if ($id) {
             $this->page = $this->em->find("WebCMS\Entity\Page", $id);
-        else
+        } else {
             $this->page = new \WebCMS\Entity\Page();
+        }
     }
 
     public function actionDeletePage($id)
@@ -310,7 +314,7 @@ class PagesPresenter extends \AdminModule\BasePresenter
 
         $roots = $this->repository->findBy(array(
             'parent' => NULL,
-            'language' => $this->state->language->getId()
+            'language' => $this->state->language->getId(),
         ));
 
         $tree = array();

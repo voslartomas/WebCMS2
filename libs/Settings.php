@@ -32,7 +32,7 @@ class Settings
      * Gets settings by key and section.
      * @param  String    $key
      * @param  String    $section
-     * @param string $type
+     * @param  string    $type
      * @return String
      * @throws Exception
      */
@@ -41,11 +41,9 @@ class Settings
         // system settings
         if (array_key_exists($section, $this->settings)) {
             if (array_key_exists($key, $this->settings[$section])) {
-
                 $settings = $this->settings[$section][$key];
 
                 if ($settings->getType() === null && $type !== null) {
-
                     $settings->setType($type);
                     $this->em->flush();
                 }
@@ -79,7 +77,7 @@ class Settings
      */
     private function save($key, $section, $type = null, $options = array(), $language = true)
     {
-        $setting = new \WebCMS\Entity\Setting;
+        $setting = new \WebCMS\Entity\Setting();
         $setting->setKey($key);
         $setting->setSection($section);
         $setting->setType($type);

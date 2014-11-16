@@ -1,9 +1,9 @@
 <?php
 
-if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
-    $path =__DIR__ . '/../vendor/autoload.php';
-} else if (file_exists(__DIR__ . '/../../../../vendor/autoload.php')) {
-    $path =__DIR__ . '/../../../../vendor/autoload.php';
+if (file_exists(__DIR__.'/../vendor/autoload.php')) {
+    $path = __DIR__.'/../vendor/autoload.php';
+} elseif (file_exists(__DIR__.'/../../../../vendor/autoload.php')) {
+    $path = __DIR__.'/../../../../vendor/autoload.php';
 } else {
     $path = null;
 }
@@ -16,16 +16,16 @@ if ($path) {
     \Nette\Diagnostics\Debugger::$strictMode = false;
 
     // Configure application
-    $configurator = new Nette\Config\Configurator;
+    $configurator = new Nette\Config\Configurator();
 
     \Nella\Console\Config\Extension::register($configurator);
     \Nella\Doctrine\Config\Extension::register($configurator);
     \Nella\Doctrine\Config\GedmoExtension::register($configurator);
 
-    $configurator->addConfig(__DIR__ . '/config.neon');
+    $configurator->addConfig(__DIR__.'/config.neon');
 
-    $configurator->enableDebugger(__DIR__ . '/log');
-    $configurator->setTempDirectory(__DIR__ . '/temp');
+    $configurator->enableDebugger(__DIR__.'/log');
+    $configurator->setTempDirectory(__DIR__.'/temp');
 
     $container = $configurator->createContainer();
 
@@ -33,19 +33,19 @@ if ($path) {
     $container->router[] =  new \Nette\Application\Routers\Route('', array(
             'module' => 'Frontend',
             'presenter' => 'Homepage',
-            'action' => 'default'
+            'action' => 'default',
     ));
 
     $container->router[] =  new \Nette\Application\Routers\Route('login', array(
             'module' => 'Admin',
             'presenter' => 'Login',
-            'action' => 'default'
+            'action' => 'default',
     ));
 
     $container->router[] =  new \Nette\Application\Routers\Route('admin/<presenter>/<action>[/<id>]', array(
             'module' => 'Admin',
             'presenter' => 'Homepage',
-            'action' => 'default'
+            'action' => 'default',
     ));
 
     Nette\Environment::getSession()->start();

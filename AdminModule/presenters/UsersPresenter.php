@@ -51,7 +51,7 @@ class UsersPresenter extends \AdminModule\BasePresenter
 
         $form = $this->createForm();
         $form->addText('username', 'Username')->setAttribute('class', 'form-control');
-        $form->addSelect('role', 'Role')->setTranslator(NULL)->setItems($roles)->setAttribute('class', 'form-control');
+        $form->addSelect('role', 'Role')->setTranslator(null)->setItems($roles)->setAttribute('class', 'form-control');
         $form->addText('name', 'Name')->setAttribute('class', 'form-control');
         $form->addText('email', 'Email')->setAttribute('class', 'form-control');
         $form->addPassword('password', 'Password')->setAttribute('class', 'form-control');
@@ -60,16 +60,17 @@ class UsersPresenter extends \AdminModule\BasePresenter
 
         $form->onSuccess[] = callback($this, 'userEntityFormSubmitted');
 
-        if ($this->userEntity)
+        if ($this->userEntity) {
             $form->setDefaults($this->userEntity->toArray());
+        }
 
         return $form;
     }
 
     protected function createComponentGrid($name)
     {
-        $grid = $this->createGrid($this, $name, "User", NULL, array(
-            'id <> 1'
+        $grid = $this->createGrid($this, $name, "User", null, array(
+            'id <> 1',
         ));
 
         $grid->addColumnText('username', 'Name')->setSortable();
@@ -119,16 +120,16 @@ class UsersPresenter extends \AdminModule\BasePresenter
 
         if (array_key_exists('sendInfoEmail', $values) && $values->sendInfoEmail) {
             // send mail with new password
-            $email = new Mail\Message;
+            $email = new Mail\Message();
             $email->setFrom($this->settings->get('Info email', \WebCMS\Settings::SECTION_BASIC)->getValue());
             $email->addTo($this->userEntity->getEmail());
-            $email->setSubject($this->settings->get('User new password subject', \WebCMS\Settings::SECTION_EMAIL)->getValue(FALSE));
-            $email->setHtmlBody($this->settings->get('User new password', \WebCMS\Settings::SECTION_EMAIL)->getValue(FALSE, array(
+            $email->setSubject($this->settings->get('User new password subject', \WebCMS\Settings::SECTION_EMAIL)->getValue(false));
+            $email->setHtmlBody($this->settings->get('User new password', \WebCMS\Settings::SECTION_EMAIL)->getValue(false, array(
                 '[PASSWORD]',
-                '[LOGIN]'
+                '[LOGIN]',
                 ), array(
                 $values->password,
-                $values->username
+                $values->username,
             )));
 
             $email->send();
@@ -160,10 +161,11 @@ class UsersPresenter extends \AdminModule\BasePresenter
 
     public function actionUpdateRole($id)
     {
-        if ($id)
+        if ($id) {
             $this->role = $this->em->find("WebCMS\Entity\Role", $id);
-        else
+        } else {
             $this->role = new \WebCMS\Entity\Role();
+        }
     }
 
     public function actionDeleteRole($id)
@@ -191,17 +193,14 @@ class UsersPresenter extends \AdminModule\BasePresenter
         $pages = $this->em->getRepository('WebCMS\Entity\Page')->findAll();
 
         foreach ($pages as $page) {
-
             if ($page->getParent() != NULL) {
-
                 $module = $this->createObject($page->getModuleName());
 
                 foreach ($module->getPresenters() as $presenter) {
+                    $suffix = $presenter['name'] == $page->getModuleName() ? '' : ' '.$presenter['name'];
 
-                    $suffix = $presenter['name'] == $page->getModuleName() ? '' : ' ' . $presenter['name'];
-
-                    $key = 'admin:' . $page->getModuleName() . ':' . $presenter['name'] . $page->getId();
-                    $resources[$key] = $page->getTitle() . $suffix . ' (' . $page->getLanguage()->getName() . ')';
+                    $key = 'admin:'.$page->getModuleName().':'.$presenter['name'].$page->getId();
+                    $resources[$key] = $page->getTitle().$suffix.' ('.$page->getLanguage()->getName().')';
                 }
             }
         }
@@ -212,11 +211,11 @@ class UsersPresenter extends \AdminModule\BasePresenter
 
         $c = 0;
         foreach ($resources as $key => $r) {
-
-            if (strpos('$r', ':') !== FALSE)
-            $form->addCheckbox('res' . str_replace(':', '', $key), $r)->setAttribute('class', 'check');
-            else
-            $form->addCheckbox('res' . str_replace(':', '', $key), $r)->setTranslator(NULL)->setAttribute('class', 'check');
+            if (strpos('$r', ':') !== FALSE) {
+                $form->addCheckbox('res'.str_replace(':', '', $key), $r)->setAttribute('class', 'check');
+            } else {
+                $form->addCheckbox('res'.str_replace(':', '', $key), $r)->setTranslator(null)->setAttribute('class', 'check');
+            }
 
             $c++;
         }
@@ -226,7 +225,7 @@ class UsersPresenter extends \AdminModule\BasePresenter
         if (!empty($new)) {
             $defaultsPermissions = array();
             foreach ($this->role->getPermissions() as $key => $per) {
-            $defaultsPermissions['res' . str_replace(':', '', $per->getResource())] = $per->getRead();
+                $defaultsPermissions['res'.str_replace(':', '', $per->getResource())] = $per->getRead();
             }
 
             $form->setDefaults($this->role->toArray() + $defaultsPermissions);
@@ -240,8 +239,8 @@ class UsersPresenter extends \AdminModule\BasePresenter
 
     protected function createComponentRolesGrid($name)
     {
-        $grid = $this->createGrid($this, $name, "Role", NULL, array(
-            'id <> 1'
+        $grid = $this->createGrid($this, $name, "Role", null, array(
+            'id <> 1',
         ));
 
         $grid->addColumnText('name', 'Name')->setSortable();
@@ -280,17 +279,17 @@ class UsersPresenter extends \AdminModule\BasePresenter
         $perArray = array();
         foreach ($values as $key => $val) {
             if (strpos($key, 'res') !== FALSE) {
-            $permission = new \WebCMS\Entity\Permission();
+                $permission = new \WebCMS\Entity\Permission();
 
-            $pageId = filter_var($key, FILTER_SANITIZE_NUMBER_INT);
-            $page = $this->em->getRepository('WebCMS\Entity\Page')->find($pageId);
+                $pageId = filter_var($key, FILTER_SANITIZE_NUMBER_INT);
+                $page = $this->em->getRepository('WebCMS\Entity\Page')->find($pageId);
 
-            $resource = 'admin:' . str_replace('resadmin', '', $key);
-            $permission->setResource($resource);
-            $permission->setPage($page);
-            $permission->setRead($val);
+                $resource = 'admin:'.str_replace('resadmin', '', $key);
+                $permission->setResource($resource);
+                $permission->setPage($page);
+                $permission->setRead($val);
 
-            $perArray[] = $permission;
+                $perArray[] = $permission;
             }
         }
 
@@ -300,5 +299,4 @@ class UsersPresenter extends \AdminModule\BasePresenter
 
         $this->forward('Users:roles');
     }
-
 }

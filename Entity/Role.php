@@ -75,5 +75,4 @@ class Role extends Entity
     {
         $this->automaticEnable = $automaticEnable;
     }
-
 }

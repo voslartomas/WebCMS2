@@ -32,7 +32,7 @@ abstract class Entity extends \Nette\Object
      * Converts object into array.
      * @return Array
      */
-    public function toArray($notEmptyValues = FALSE)
+    public function toArray($notEmptyValues = false)
     {
         $props = $this->getReflection()->getProperties();
         if ($this->getReflection()->getParentClass()) {
@@ -46,7 +46,7 @@ abstract class Entity extends \Nette\Object
 
         $array = array();
         foreach ($props as $prop) {
-            $getter = 'get' . ucfirst($prop->getName());
+            $getter = 'get'.ucfirst($prop->getName());
 
             if (method_exists($this, $getter)) {
                 $empty = $this->$getter();
@@ -62,8 +62,8 @@ abstract class Entity extends \Nette\Object
                     } elseif ($this->$getter() instanceof \DateTime) {
                         $array[$prop->getName()] = $this->$getter()->format('d.m.Y');
                     } elseif ($this->$getter() instanceof \Doctrine\Common\Collections\Collection) {
-                        $tmp = array(); 
-                        foreach($this->$getter() as $item) {
+                        $tmp = array();
+                        foreach ($this->$getter() as $item) {
                             $tmp[] = $item->getId();
                         }
 
@@ -75,5 +75,4 @@ abstract class Entity extends \Nette\Object
 
         return $array;
     }
-
 }

@@ -56,5 +56,4 @@ class Favourites extends Entity
     {
         $this->title = $title;
     }
-
 }

@@ -21,7 +21,7 @@ class LanguagesPresenterTest extends \WebCMS\Tests\PresenterTestCase
     public function testUpdateLanguage()
     {
         $response = $this->makeRequest('updateLanguage', 'GET', array(
-            'id' => $this->language->getId()
+            'id' => $this->language->getId(),
         ));
 
         $this->assertInstanceOf('Nette\Application\Responses\TextResponse', $response);

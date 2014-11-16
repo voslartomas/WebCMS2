@@ -51,9 +51,9 @@ class LoginPresenter extends BasePresenter
         try {
             $values = $form->getValues();
             if ($values->remember) {
-            $this->getUser()->setExpiration('+ 14 days', FALSE);
+                $this->getUser()->setExpiration('+ 14 days', false);
             } else {
-            $this->getUser()->setExpiration('+ 20 minutes', TRUE);
+                $this->getUser()->setExpiration('+ 20 minutes', true);
             }
             $this->getUser()->login($values->username, $values->password);
             $this->forward('Homepage:');
@@ -69,5 +69,4 @@ class LoginPresenter extends BasePresenter
         $this->flashMessage($this->translation['You have been signed out.']);
         $this->forward('Login:');
     }
-
 }

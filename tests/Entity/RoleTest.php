@@ -30,7 +30,7 @@ class RoleTest extends \WebCMS\Tests\EntityTestCase
 
     private function initRole()
     {
-        $permission = new WebCMS\Entity\Permission;
+        $permission = new WebCMS\Entity\Permission();
         $permission->setRead(true);
         $permission->setRemove(true);
         $permission->setWrite(true);
@@ -38,7 +38,7 @@ class RoleTest extends \WebCMS\Tests\EntityTestCase
 
         $this->em->persist($permission);
 
-        $this->role = new WebCMS\Entity\Role;
+        $this->role = new WebCMS\Entity\Role();
         $this->role->setAutomaticEnable(true);
         $this->role->setName('Role');
         $this->role->addPermission($permission);

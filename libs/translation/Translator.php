@@ -15,7 +15,7 @@ class Translator implements ITranslator
      */
     public function __construct($translations)
     {
-       $this->translations = $translations;
+        $this->translations = $translations;
     }
 
     /**
@@ -25,11 +25,10 @@ class Translator implements ITranslator
      */
     public function translate($message, $parameters = array())
     {
-       if (count($parameters) === 0) {
+        if (count($parameters) === 0) {
             return $this->translations[$message];
-       } else {
+        } else {
             return vsprintf($this->translations[$message], $parameters);
-       }
+        }
     }
-
 }

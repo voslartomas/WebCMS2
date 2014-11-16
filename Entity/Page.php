@@ -332,7 +332,6 @@ class Page extends Seo
         $this->redirect = $redirect;
     }
 
-
     /**
      * Gets the value of layout.
      *

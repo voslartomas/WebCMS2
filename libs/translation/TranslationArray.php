@@ -49,5 +49,4 @@ class TranslationArray extends \ArrayObject
     {
         unset($this->data[$name]);
     }
-
 }

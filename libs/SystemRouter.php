@@ -26,10 +26,11 @@ class SystemRouter extends \Nette\Application\Routers\Route
     {
         $path = $httpRequest->getUrl()->getPath();
 
-        if ($httpRequest->getUrl()->getScriptPath() !== '/')
+        if ($httpRequest->getUrl()->getScriptPath() !== '/') {
             $query = str_replace($httpRequest->getUrl()->getScriptPath(), '', $path);
-        else
+        } else {
             $query = substr($path, 1, strlen($path));
+        }
 
         $path = explode('/', $query);
 
@@ -37,76 +38,77 @@ class SystemRouter extends \Nette\Application\Routers\Route
         $pages = array();
         $reversePath = array_reverse($path);
         // look for matching parameter
-        foreach ($reversePath as $lastParam) { 
+        foreach ($reversePath as $lastParam) {
             // checks whether page exists
             $pageRepo = $this->em->getRepository('WebCMS\Entity\Page');
             $tmp = $pageRepo->findBy(array(
-            'slug' => $lastParam
+            'slug' => $lastParam,
             ));
-	    if (!empty($tmp)) {
-		$pages = array_merge($pages, $tmp);	
-	    }
+            if (!empty($tmp)) {
+                $pages = array_merge($pages, $tmp);
+            }
         }
 
         // takes the right one
-        $page = NULL;
+        $page = null;
         foreach ($pages as $p) {
             $page = $p;
 
             // abbreviation of language
-            $abbr = $page->getLanguage()->getDefaultFrontend() ? '' : $page->getLanguage()->getAbbr() . '/';
+            $abbr = $page->getLanguage()->getDefaultFrontend() ? '' : $page->getLanguage()->getAbbr().'/';
 
             $paths = $pageRepo->getPath($p);
 
             // check path
             $finalPath = '';
             foreach ($paths as $pat) {
-            if ($pat->getParent() != NULL)
-                $finalPath .= $pat->getSlug() . '/';
+                if ($pat->getParent() != NULL) {
+                    $finalPath .= $pat->getSlug().'/';
+                }
             }
 
-            $finalPath = $abbr . $finalPath;
+            $finalPath = $abbr.$finalPath;
 
             $moduleObject = $this->createObject($page->getModule()->getName());
             $presenterSettings = $moduleObject->getPresenterSettings($page->getPresenter());
 
-$pathI = implode('/', $path);
-$parameters = strstr($pathI, $finalPath);
-$parameters = explode('/', str_replace($finalPath, '',$parameters));
+            $pathI = implode('/', $path);
+            $parameters = strstr($pathI, $finalPath);
+            $parameters = explode('/', str_replace($finalPath, '', $parameters));
 
-$pathWithoutParameters = str_replace(implode('/', $parameters), '', $pathI);
-$finalPath = substr($finalPath, 0, -1);
+            $pathWithoutParameters = str_replace(implode('/', $parameters), '', $pathI);
+            $finalPath = substr($finalPath, 0, -1);
 
-$parameters = array_filter($parameters, function($var){
- if (!empty($var)) { 
-return $var;
-}
+            $parameters = array_filter($parameters, function ($var) {
+ if (!empty($var)) {
+     return $var;
+ }
 });
 
-            if (($pathWithoutParameters == $finalPath || $finalPath . '/' == $pathWithoutParameters) && (count($parameters) === 0 || $presenterSettings['parameters'])) {
-            $this->page = $page;
+            if (($pathWithoutParameters == $finalPath || $finalPath.'/' == $pathWithoutParameters) && (count($parameters) === 0 || $presenterSettings['parameters'])) {
+                $this->page = $page;
 
-            $path = $page->getPath();
+                $path = $page->getPath();
 
-if(count($parameters) > 0) {
-$fullPath = $path . '/' . implode('/', $parameters);
-} else {
-$fullPath = $path;
-}
+                if (count($parameters) > 0) {
+                    $fullPath = $path.'/'.implode('/', $parameters);
+                } else {
+                    $fullPath = $path;
+                }
 
-            $params = array(
+                $params = array(
                 'id' => $page->getId(),
                 'language' => $this->page->getLanguage()->getId(),
                 'path' => $path,
-                'fullPath' => $fullPath . '/',
+                'fullPath' => $fullPath.'/',
                 'parameters' => $parameters,
                 'root' => $page->getRoot(),
                 'lft' => $page->getLeft(),
-                'abbr' => $abbr) + $httpRequest->getQuery();
+                'abbr' => $abbr, ) + $httpRequest->getQuery();
 
-            $presenter = 'Frontend:' . $page->getModule()->getName() . ':' . $page->getPresenter();
+                $presenter = 'Frontend:'.$page->getModule()->getName().':'.$page->getPresenter();
 
-            return new \Nette\Application\Request(
+                return new \Nette\Application\Request(
                 $presenter, $httpRequest->getMethod(), $params, $httpRequest->getPost(), $httpRequest->getFiles(), array(\Nette\Application\Request::SECURED => $httpRequest->isSecured())
             );
             }
@@ -121,52 +123,56 @@ $fullPath = $path;
 
         $sign = '?';
 
-        if (array_key_exists('abbr', $params))
+        if (array_key_exists('abbr', $params)) {
             $abbr = $params['abbr'];
-        else
+        } else {
             $abbr = '';
+        }
 
-        if (array_key_exists('path', $params))
+        if (array_key_exists('path', $params)) {
             $path = $params['path'];
-        else
+        } else {
             $path = '';
+        }
 
         if (array_key_exists('do', $params)) {
-            $do = $sign . 'do=' . $params['do'];
+            $do = $sign.'do='.$params['do'];
             $sign = '&';
-        } else
+        } else {
             $do = '';
-            
-    	//TODO refactor
+        }
+
+        //TODO refactor
         if (array_key_exists('utm_source', $params)) {
-            $utm = $sign . 'utm_source=' . $params['utm_source'];
+            $utm = $sign.'utm_source='.$params['utm_source'];
             $sign = '&';
-            if(array_key_exists('utm_medium', $params)){
-                $utm .= $sign . 'utm_medium=' . $params['utm_medium'];
+            if (array_key_exists('utm_medium', $params)) {
+                $utm .= $sign.'utm_medium='.$params['utm_medium'];
             }
-            if(array_key_exists('utm_campaign', $params)){
-                $utm .= $sign . 'utm_campaign=' . $params['utm_campaign'];
+            if (array_key_exists('utm_campaign', $params)) {
+                $utm .= $sign.'utm_campaign='.$params['utm_campaign'];
             }
-            if(array_key_exists('utm_term', $params)){
-                $utm .= $sign . 'utm_term=' . $params['utm_term'];
+            if (array_key_exists('utm_term', $params)) {
+                $utm .= $sign.'utm_term='.$params['utm_term'];
             }
-            if(array_key_exists('utm_content', $params)){
-                $utm .= $sign . 'utm_content=' . $params['utm_content'];
+            if (array_key_exists('utm_content', $params)) {
+                $utm .= $sign.'utm_content='.$params['utm_content'];
             }
-            
+
             $sign = '?';
-        } else
+        } else {
             $utm = '';
+        }
 
         if (array_key_exists('action', $params)) {
-
-            $action = $params['action'] != 'default' ? $action = $sign . 'action=' . $params['action'] : '';
-        } else
+            $action = $params['action'] != 'default' ? $action = $sign.'action='.$params['action'] : '';
+        } else {
             $action = '';
+        }
 
         if (array_key_exists('parameters', $params)) {
             if (count($params['parameters']) > 0) {
-            $path .= '/' . implode('/', $params['parameters']);
+                $path .= '/'.implode('/', $params['parameters']);
             }
         }
         // TODO refactor
@@ -186,18 +192,18 @@ $fullPath = $path;
         unset($params['language']);
         unset($params['fullPath']);
 
-        $path = $refUrl->getScheme() . '://' . $refUrl->getHost() . $refUrl->getPath() . $abbr . $path . $do . $utm . $action;
+        $path = $refUrl->getScheme().'://'.$refUrl->getHost().$refUrl->getPath().$abbr.$path.$do.$utm.$action;
 
         $query = '';
         $index = 0;
         foreach ($params as $key => $value) {
             $e = strpos($path, '?') === FALSE ? '?' : '&';
-            $query .= $e . $key . '=' . $value;
+            $query .= $e.$key.'='.$value;
 
             $index++;
         }
 
-        return $path . $query;
+        return $path.$query;
     }
 
     private function createObject($name)
@@ -205,9 +211,8 @@ $fullPath = $path;
         $expl = explode('-', $name);
 
         $objectName = ucfirst($expl[0]);
-        $objectName = "\\WebCMS\\$objectName" . "Module\\" . $objectName;
+        $objectName = "\\WebCMS\\$objectName"."Module\\".$objectName;
 
-        return new $objectName;
+        return new $objectName();
     }
-
 }

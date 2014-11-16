@@ -17,17 +17,17 @@ class ModuleTest extends \WebCMS\Tests\EntityTestCase
         $this->assertEquals(true, $modules[0]->getActive());
         $this->assertEquals('Test', $modules[0]->getName());
         $this->assertEquals(array(
-            array('name' => 'PresenterTest')
+            array('name' => 'PresenterTest'),
         ), $modules[0]->getPresenters());
-        }
+    }
 
-        private function initModule()
-        {
-        $this->module = new \WebCMS\Entity\Module;
+    private function initModule()
+    {
+        $this->module = new \WebCMS\Entity\Module();
         $this->module->setActive(true);
         $this->module->setName('Test');
         $this->module->setPresenters(array(
-            array('name' => 'PresenterTest')
+            array('name' => 'PresenterTest'),
         ));
     }
 }

@@ -412,21 +412,21 @@ class Locales
 
         foreach ($locales as $c => $l) {
             if (strlen($l)) {
-            $parts = explode('.', $l);
-            $lc = $parts[0];
+                $parts = explode('.', $l);
+                $lc = $parts[0];
 
-            if (strpos($lc, '_') !== FALSE) {
-                list($lcode, $ccode) = explode('_', $lc);
+                if (strpos($lc, '_') !== FALSE) {
+                    list($lcode, $ccode) = explode('_', $lc);
 
-                $lcode = strtolower($lcode);
+                    $lcode = strtolower($lcode);
 
-                $language = self::$languageCodes[$lcode];
-                $country = self::$countryCodes[$ccode];
+                    $language = self::$languageCodes[$lcode];
+                    $country = self::$countryCodes[$ccode];
 
-                if (strlen($language) && strlen($country)) {
-                    $locale_data[$l] = "$language - $country - " . (count($parts) >1 ? $parts[1] : '');
+                    if (strlen($language) && strlen($country)) {
+                        $locale_data[$l] = "$language - $country - ".(count($parts) >1 ? $parts[1] : '');
+                    }
                 }
-            }
             }
         }
 

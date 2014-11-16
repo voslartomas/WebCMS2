@@ -36,7 +36,7 @@ class PermissionTest extends \WebCMS\Tests\EntityTestCase
 
         $this->em->persist($page);
 
-        $this->permission = new WebCMS\Entity\Permission;
+        $this->permission = new WebCMS\Entity\Permission();
         $this->permission->setPage($page);
         $this->permission->setRead(true);
         $this->permission->setRemove(true);
@@ -46,7 +46,7 @@ class PermissionTest extends \WebCMS\Tests\EntityTestCase
 
     private function setPage($text = 'test')
     {
-        $page = new \WebCMS\Entity\Page;
+        $page = new \WebCMS\Entity\Page();
         $page->setTitle($text);
         $page->setPresenter($text);
         $page->setPath($text);

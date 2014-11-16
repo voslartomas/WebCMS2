@@ -123,5 +123,4 @@ class Language extends Entity
     {
         $this->locale = $locale;
     }
-
 }

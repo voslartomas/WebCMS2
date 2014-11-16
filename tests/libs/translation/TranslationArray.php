@@ -8,7 +8,7 @@ class TranslationArrayTest extends \WebCMS\Tests\PresenterTestCase
     {
         parent::setUp();
 
-        $translation = new \WebCMS\Translation\Translation($this->em, $this->language, TRUE);
+        $translation = new \WebCMS\Translation\Translation($this->em, $this->language, true);
 
         $this->translationArray = new WebCMS\Translation\TranslationArray($translation);
     }
@@ -17,7 +17,7 @@ class TranslationArrayTest extends \WebCMS\Tests\PresenterTestCase
     {
         $data = array(
             'key' => 'Translated',
-            'key2' => 'Translated second'
+            'key2' => 'Translated second',
         );
 
         $this->translationArray->setData($data);

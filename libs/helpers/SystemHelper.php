@@ -12,7 +12,7 @@ class SystemHelper
 
     /**
      * Helper loader.
-     * @param  type $helper
+     * @param  type                                        $helper
      * @return \PHPUnit_Framework_Constraint_Callback|null
      */
     public static function loader($helper)
@@ -50,18 +50,18 @@ class SystemHelper
                 $vendorPackage = explode('/', $parsed[0]);
 
                 $vendor = $vendorPackage[0];
-                
+
                 if (count($vendorPackage) > 1) {
-                    $package = $vendorPackage[1];    
+                    $package = $vendorPackage[1];
                 }
-                
+
                 $version = $parsed[1];
                 $versionHash = (strpos($parsed[1], 'dev') !== false ? $parsed[2] : '');
 
                 $description = implode(' ', str_replace(array(
                     $parsed[0],
                     $version,
-                    $versionHash
+                    $versionHash,
                     ), '', $parsed));
 
                 $packages[$parsed[0]] = array(
@@ -69,14 +69,14 @@ class SystemHelper
                     'package' => $package,
                     'versionHash' => $versionHash,
                     'version' => $version,
-                    'system' => $vendor == 'webcms2' ? FALSE : TRUE,
+                    'system' => $vendor == 'webcms2' ? false : true,
                     'description' => $description,
-                    'module' => $vendor == 'webcms2' && $package != 'webcms2' ? TRUE : FALSE,
+                    'module' => $vendor == 'webcms2' && $package != 'webcms2' ? true : false,
                 );
             }
 
             if (!feof($handle)) {
-            // error
+                // error
             }
             fclose($handle);
         }
@@ -115,7 +115,7 @@ class SystemHelper
 
         if (is_object($identity)) {
             if (array_key_exists($permission, $identity->data['permissions'])) {
-            return $identity->data['permissions'][$permission];
+                return $identity->data['permissions'][$permission];
             }
         }
 
@@ -149,7 +149,7 @@ class SystemHelper
             'admin:Translator' => 'admin:Translator',
             'admin:Pages' => 'admin:Pages',
             'admin:Filesystem' => 'admin:Filesystem',
-            'admin:Update' => 'admin:Update'
+            'admin:Update' => 'admin:Update',
         );
     }
 
@@ -179,17 +179,18 @@ class SystemHelper
         if (is_dir($dir)) {
             $objects = scandir($dir);
             foreach ($objects as $object) {
-            if ($object != "." && $object != "..") {
-                if (filetype($dir . "/" . $object) == "dir")
-                self::rrmdir($dir . "/" . $object);
-                else
-                unlink($dir . "/" . $object);
-            }
+                if ($object != "." && $object != "..") {
+                    if (filetype($dir."/".$object) == "dir") {
+                        self::rrmdir($dir."/".$object);
+                    } else {
+                        unlink($dir."/".$object);
+                    }
+                }
             }
             reset($objects);
 
             if (!$inside) {
-            rmdir($dir);
+                rmdir($dir);
             }
         }
     }
@@ -221,7 +222,7 @@ class SystemHelper
 
         $info = pathinfo($path);
 
-        $path = str_replace($info['filename'], $thumbnailKey . $info['filename'], $path);
+        $path = str_replace($info['filename'], $thumbnailKey.$info['filename'], $path);
         $path = str_replace('\\', '/', $path);
 
         return $path;
@@ -241,12 +242,12 @@ class SystemHelper
     {
         $from = array(
             "[BASE_URL]",
-            "[INFO_EMAIL]"
+            "[INFO_EMAIL]",
         );
 
         $to = array(
             self::$baseUrl,
-            self::$infoEmail
+            self::$infoEmail,
         );
 
         $from = array_merge($from, $fromPush);
@@ -278,7 +279,7 @@ class SystemHelper
         // left-pad with 0's if necessary
         $binary = str_pad($binary, 32, "0", STR_PAD_LEFT);
         // left shift manually
-        $binary = $binary . str_repeat("0", $steps);
+        $binary = $binary.str_repeat("0", $steps);
         // get the last 32 bits
         $binary = substr($binary, strlen($binary) - 32);
         // if it's a positive number return it
@@ -291,7 +292,7 @@ class SystemHelper
     {
         $size = 0;
         foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($directory)) as $file) {
-            $size+=$file->getSize();
+            $size += $file->getSize();
         }
 
         return $size;
@@ -301,16 +302,15 @@ class SystemHelper
     {
         $files = array();
 
-        $handle = opendir(self::WEBCMS_PATH . 'AdminModule/static/translations');
+        $handle = opendir(self::WEBCMS_PATH.'AdminModule/static/translations');
         if ($handle) {
             while (false !== ($entry = readdir($handle))) {
-            if ($entry != '.' && $entry != '..') {
-                $files[$entry] = $entry;
-            }
+                if ($entry != '.' && $entry != '..') {
+                    $files[$entry] = $entry;
+                }
             }
         }
 
         return $files;
     }
-
 }

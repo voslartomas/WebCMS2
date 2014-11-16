@@ -37,7 +37,7 @@ class LoginPresenterTest extends \WebCMS\Tests\PresenterTestCase
             'username' => 'test',
             'password' => 'test',
             'remember' => '1',
-            'send' => 'Log in'
+            'send' => 'Log in',
         ), 'signInForm-submit');
 
         $this->assertInstanceOf('Nette\Application\Responses\ForwardResponse', $response);
@@ -54,7 +54,7 @@ class LoginPresenterTest extends \WebCMS\Tests\PresenterTestCase
             'username' => 'test',
             'password' => 'badpassword',
             'remember' => '1',
-            'send' => 'Log in'
+            'send' => 'Log in',
         ));
 
         $this->assertInstanceOf('Nette\Application\Responses\TextResponse', $response);

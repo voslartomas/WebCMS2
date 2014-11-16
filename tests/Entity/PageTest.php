@@ -67,7 +67,7 @@ class PageTest extends \WebCMS\Tests\EntityTestCase
 
     private function initPages()
     {
-        $this->pageMain = new \WebCMS\Entity\Page;
+        $this->pageMain = new \WebCMS\Entity\Page();
         $this->pageMain->setParent(null);
         $this->pageMain->setLanguage($this->language);
         $this->pageMain->setModule($this->module);
@@ -86,7 +86,7 @@ class PageTest extends \WebCMS\Tests\EntityTestCase
 
         $this->em->persist($this->pageMain);
 
-        $this->page = new \WebCMS\Entity\Page;
+        $this->page = new \WebCMS\Entity\Page();
         $this->page->setParent($this->pageMain);
         $this->page->setLanguage($this->language);
         $this->page->setModule($this->module);
@@ -112,7 +112,7 @@ class PageTest extends \WebCMS\Tests\EntityTestCase
 
     private function initModule()
     {
-        $this->module = new WebCMS\Entity\Module;
+        $this->module = new WebCMS\Entity\Module();
         $this->module->setActive(true);
         $this->module->setName('Module');
         $this->module->setPresenters(array());
@@ -122,7 +122,7 @@ class PageTest extends \WebCMS\Tests\EntityTestCase
 
     private function initLanguage()
     {
-        $this->language = new \WebCMS\Entity\Language;
+        $this->language = new \WebCMS\Entity\Language();
         $this->language->setAbbr('cs');
         $this->language->setDefaultBackend(true);
         $this->language->setDefaultFrontend(true);
@@ -134,7 +134,7 @@ class PageTest extends \WebCMS\Tests\EntityTestCase
 
     private function initBoxes()
     {
-        $box = new WebCMS\Entity\Box;
+        $box = new WebCMS\Entity\Box();
         $box->setBox('box1');
         $box->setFunction('function');
         $box->setModuleName('Module');

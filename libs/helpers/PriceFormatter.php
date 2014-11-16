@@ -35,5 +35,4 @@ class PriceFormatter
             return $price;
         }
     }
-
 }
