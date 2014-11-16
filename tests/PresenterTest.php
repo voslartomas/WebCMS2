@@ -2,7 +2,7 @@
 
 namespace WebCMS\Tests;
 
-abstract class PresenterTest extends EntityTestCase
+abstract class PresenterTestCase extends EntityTestCase
 {
     protected $presenter = null;
 

@@ -2,7 +2,7 @@
 
 namespace WebCMS\Tests;
 
-abstract class EntityTest extends BasicTestCase
+abstract class EntityTestCase extends BasicTestCase
 {
     protected $exceptions = array(
         'BreadcrumbsItem.php',
