@@ -3,8 +3,7 @@
 /**
  * Webcms admin module package.
  */
-
-namespace webcms2\Common;
+namespace WebCMS2\Common;
 
 /**
  *
