@@ -16,7 +16,7 @@
 {foreach $files as $path => $file}
 	<div class="file ">
                     <span>
-                            <img src="{$basePath}{$path|thumbnail:'system'}" style="width: 80px;" />
+                            <img class="thumbImg" src="{$basePath}{$path|thumbnail:'system'}" style="width: 80px;" />
                     </span>
 		<span>
 			{if $multiple}
@@ -35,3 +35,27 @@
 {/foreach}
 	
 <a href="#" class="btn btn-primary jq_filesAdd" data-dismiss="modal">{_'Add selected files'}</a>
+
+	<script>
+
+		$(function() {
+			var $images = $('.thumbImg');
+
+			$.each($images, function(index, val) {
+				if (!imageExists($(this).attr('src'))) {
+					var notfound = $(this).attr('src').substring( 0, $(this).attr('src').indexOf( "thumbnail" ) );
+					notfound = notfound+'admin-client/webcms2/images/nothing-here-150x150.png';
+
+					$(this).attr('src', notfound);
+				}
+			});
+		});
+
+		function imageExists(url) {
+			var img = new Image();
+		    img.src = url;
+		    return img.height != 0;
+		}
+
+
+	</script>
