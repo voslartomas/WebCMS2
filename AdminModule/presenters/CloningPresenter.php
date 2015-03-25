@@ -58,7 +58,8 @@ class CloningPresenter extends BasePresenter
 
         $languageFrom = $this->em->getRepository('WebCMS\Entity\Language')->find($values->languageFrom);
         $languageTo = $this->em->getRepository('WebCMS\Entity\Language')->find($values->languageTo);
-
+        $removeData = $values->removeData;
+        
         $values = $this->normalizeValues($values);
 
         // remove data first
@@ -134,7 +135,6 @@ class CloningPresenter extends BasePresenter
      */
     private function normalizeValues($values)
     {
-        $removeData = $values->removeData;
         unset($values->languageFrom);
         unset($values->languageTo);
         unset($values->removeData);
