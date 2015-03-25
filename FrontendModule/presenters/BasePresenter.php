@@ -349,7 +349,9 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
             if (method_exists($object, $box->getFunction())) {
                 $function = $box->getFunction();
                 $pageFrom = $box->getPageFrom();
-                $finalBoxes[$box->getBox()] = call_user_func(array($object, $function), $this, $pageFrom);
+                if ($pageFrom) {
+			$finalBoxes[$box->getBox()] = call_user_func(array($object, $function), $this, $pageFrom);
+		}
             }
         }
 

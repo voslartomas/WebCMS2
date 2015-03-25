@@ -93,6 +93,7 @@ class TranslationsPresenter extends BasePresenter
 
         foreach ($translations as $t) {
             $t->setTranslation($t->getTranslation());
+	    $t->setHash();
         }
 
         $this->em->flush();
