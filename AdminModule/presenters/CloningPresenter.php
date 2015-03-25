@@ -212,6 +212,7 @@ class CloningPresenter extends BasePresenter
         $new->setClass($page->getClass());
         $new->setModule($page->getModule());
         $new->setModuleName($page->getModuleName());
+        $new->setLayout($page->getLayout());
 
         return $new;
     }
