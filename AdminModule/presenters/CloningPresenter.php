@@ -164,7 +164,7 @@ class CloningPresenter extends BasePresenter
      *
      * @return [type] [description]
      */
-    private function cloneData()
+    private function cloneData($values, $languageFrom, $languageTo, $transformTable)
     {
         foreach ($values as $key => $value) {
             if ($value) {
