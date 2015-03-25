@@ -64,7 +64,7 @@ class CloningPresenter extends BasePresenter
 
         // remove data first
         if ($removeData) {
-            $this->removeData();
+            $this->removeData($languageTo);
         }
 
         // clone page structure
@@ -181,7 +181,7 @@ class CloningPresenter extends BasePresenter
      *
      * @return [type] [description]
      */
-    private function removeData()
+    private function removeData($languageTo)
     {
         $pages = $this->em->getRepository('WebCMS\Entity\Page')->findBy(array(
             'language' => $languageTo,
