@@ -92,7 +92,7 @@ class CloningPresenter extends BasePresenter
         }
 
         foreach ($pages as $page) {
-            $this->pageCreateBoxes($page);
+            $this->pageCreateBoxes($page, $transformTable);
         }
 
         // clone all data
@@ -147,14 +147,14 @@ class CloningPresenter extends BasePresenter
      *
      * @return [type] [description]
      */
-    private function pageCreateBoxes($page)
+    private function pageCreateBoxes($page, $transformTable)
     {
         $boxes = $this->em->getRepository('WebCMS\Entity\Box')->findBy(array(
             'pageTo' => $page,
         ));
 
         foreach ($boxes as $box) {
-            $newBox = $this->createNewBox($box);
+            $newBox = $this->createNewBox($box, $transformTable);
             $this->em->persist($newBox);
         }
     }
@@ -222,7 +222,7 @@ class CloningPresenter extends BasePresenter
      * @param  [type] $box [description]
      * @return [type] [description]
      */
-    private function createNewBox($box)
+    private function createNewBox($box, $transformTable)
     {
         $newBox = new \WebCMS\Entity\Box();
         $newBox->setBox($box->getBox());
