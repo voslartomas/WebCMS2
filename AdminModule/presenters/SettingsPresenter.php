@@ -261,9 +261,26 @@ class SettingsPresenter extends \AdminModule\BasePresenter
             0 => $this->translation['Box is not linked.'],
             ) + $boxesAssoc;
 
+        $boxesAssocError = array();
+        foreach ($parameters['boxes'] as $name => $status) {
+            
+            $criteria = new \Doctrine\Common\Collections\Criteria();
+            $criteria->where($criteria->expr()->eq('box', $name));
+            $criteria->andWhere($criteria->expr()->isNull('pageTo'));
+
+            $enabled = $this->em->getRepository('WebCMS\Entity\Box')->matching($criteria);
+
+            if ($enabled->isEmpty()) {
+                $boxesAssocError[$name] = false;
+            } else {
+                $boxesAssocError[$name] = true;
+            }
+        }
+
         $this->template->boxes = $parameters['boxes'];
         $this->template->pages = $pages;
         $this->template->boxesAssoc = $boxesAssoc;
+        $this->template->boxesAssocError = $boxesAssocError;
     }
 
     public function handleUpdateBox($name, $value)
@@ -314,6 +331,60 @@ class SettingsPresenter extends \AdminModule\BasePresenter
 
         $this->em->flush();
 
+        $this->flashMessage('Box settings changed.', 'success');
+    }
+
+    public function handleUpdateErrorBox($name, $value)
+    {
+        $this->reloadContent();
+
+        $parsed = explode('-', $name);
+
+        //$pageTo = $this->em->getRepository('WebCMS\Entity\Page')->find($parsed[0]);
+        $box = $parsed[1];
+
+        $criteria = new \Doctrine\Common\Collections\Criteria();
+        $criteria->where($criteria->expr()->isNull('pageTo'));
+        $criteria->andWhere($criteria->expr()->eq('box', $box));
+
+        $exists = $this->em->getRepository('WebCMS\Entity\Box')->matching($criteria);        
+
+        if (!$exists->isEmpty()) {
+            $boxInfo = $exists->toArray();
+            //$boxAssign = $this->em->getRepository('WebCMS\Entity\Box')->find($boxInfo[0]);
+            $boxAssign = $boxInfo[0];
+            
+        } else {
+            $boxAssign = new \WebCMS\Entity\Box();
+        }
+
+        $parsed = explode('-', $value);
+
+        if (count($parsed) > 3) {
+            $pageFrom = $this->em->getRepository('WebCMS\Entity\Page')->find($parsed[0]);
+            $moduleName = $parsed[1];
+            $presenter = $parsed[2];
+            $function = $parsed[3];
+
+            $boxAssign->setBox($box);
+            $boxAssign->setFunction($function);
+            $boxAssign->setModuleName($moduleName);
+            $boxAssign->setPresenter($presenter);
+            $boxAssign->setPageFrom($pageFrom);
+
+            if (!$boxAssign->getId()) {
+                $this->em->persist($boxAssign);
+            }
+
+            $this->em->persist($boxAssign);
+        } else {
+            if (!$exists->isEmpty()) {
+                $this->em->remove($boxInfo[0]);
+            }
+        }
+
+        $this->em->flush();
+        
         $this->flashMessage('Box settings changed.', 'success');
     }
 
