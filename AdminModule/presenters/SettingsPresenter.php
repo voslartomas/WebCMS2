@@ -351,8 +351,8 @@ class SettingsPresenter extends \AdminModule\BasePresenter
         if (!$exists->isEmpty()) {
             $boxInfo = $exists->toArray();
             $boxAssign = $boxInfo[0];
-            
         } else {
+            $boxInfo = NULL;
             $boxAssign = new \WebCMS\Entity\Box();
         }
 

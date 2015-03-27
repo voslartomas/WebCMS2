@@ -21,10 +21,10 @@
 		{/if}
 	</tr>
 	<tr>
-		<td>{_'Error page'}</td>
-		{if !empty($boxes)}
-			{foreach $boxesAssocError as $name => $status}
-				<td>
+        <td>{_'Error page'}</td>
+        {if !empty($boxes)}
+            {foreach $boxesAssocError as $name => $status}
+                <td>
                     <input class="jq_error_box_clear from-control {if $status !== true}hidden{/if}" type="checkbox" name="{$name}" value="1" {if $status === true}checked{/if}/>
                     <select name="error-{$name}" class="jq_error_box form-control {if $status === true}hidden{/if}">
                         {foreach $boxesAssoc as $key => $ba}
@@ -32,8 +32,8 @@
                         {/foreach}
                     </select>
                 </td>
-			{/foreach}
-		{/if}		
+            {/foreach}
+        {/if}		
 	</tr>
 	{foreach $pages as $page}
 		{if $page->getParent() != NULL}
