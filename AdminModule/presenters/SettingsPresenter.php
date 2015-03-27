@@ -340,7 +340,6 @@ class SettingsPresenter extends \AdminModule\BasePresenter
 
         $parsed = explode('-', $name);
 
-        //$pageTo = $this->em->getRepository('WebCMS\Entity\Page')->find($parsed[0]);
         $box = $parsed[1];
 
         $criteria = new \Doctrine\Common\Collections\Criteria();
@@ -351,7 +350,6 @@ class SettingsPresenter extends \AdminModule\BasePresenter
 
         if (!$exists->isEmpty()) {
             $boxInfo = $exists->toArray();
-            //$boxAssign = $this->em->getRepository('WebCMS\Entity\Box')->find($boxInfo[0]);
             $boxAssign = $boxInfo[0];
             
         } else {
