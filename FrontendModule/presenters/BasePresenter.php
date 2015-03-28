@@ -324,7 +324,7 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
     }
 
     /**
-     * Set up boxes (call box function and save it into array) and give them to the tempalte.
+     * Set up boxes (call box function and save it into array) and give them to the template.
      */
     private function setUpBoxes()
     {
@@ -339,7 +339,7 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
         }
 
         $assocBoxes = $this->em->getRepository('WebCMS\Entity\Box')->findBy(array(
-            'pageTo' => $this->actualPage,
+            'pageTo' => $this->actualPage
         ));
 
         foreach ($assocBoxes as $box) {
@@ -350,8 +350,8 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
                 $function = $box->getFunction();
                 $pageFrom = $box->getPageFrom();
                 if ($pageFrom) {
-			$finalBoxes[$box->getBox()] = call_user_func(array($object, $function), $this, $pageFrom);
-		}
+                    $finalBoxes[$box->getBox()] = call_user_func(array($object, $function), $this, $pageFrom);
+                }
             }
         }
 

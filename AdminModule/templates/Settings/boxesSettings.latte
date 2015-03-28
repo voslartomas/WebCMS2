@@ -20,6 +20,21 @@
 			{/foreach}
 		{/if}
 	</tr>
+	<tr>
+        <td>{_'Error page'}</td>
+        {if !empty($boxes)}
+            {foreach $boxesAssocError as $name => $status}
+                <td>
+                    <input class="jq_error_box_clear from-control {if $status !== true}hidden{/if}" type="checkbox" name="{$name}" value="1" {if $status === true}checked{/if}/>
+                    <select name="error-{$name}" class="jq_error_box form-control {if $status === true}hidden{/if}">
+                        {foreach $boxesAssoc as $key => $ba}
+                            <option value="{$key}">{$ba}</option>
+                        {/foreach}
+                    </select>
+                </td>
+            {/foreach}
+        {/if}		
+	</tr>
 	{foreach $pages as $page}
 		{if $page->getParent() != NULL}
 			<tr>
@@ -58,12 +73,32 @@
             });
         });
 
-	$(document).on('change', '.jq_box', function(){
-		var name = $(this).attr('name');
-		var value = $(this).val();
+    $(document).on('change', '.jq_box', function(){
+        var name = $(this).attr('name');
+        var value = $(this).val();
 
-		$.nette.ajax({ url : {link updateBox!}, data : { name : name, value : value} });
+        $.nette.ajax({ url : {link updateBox!}, data : { name : name, value : value} });
+    });
+
+    $(document).on('change', '.jq_error_box', function(){
+        var name = $(this).attr('name');
+        var value = $(this).val();
+
+        $.nette.ajax({ url : {link updateErrorBox!}, data : { name : name, value : value} });
+    });
+
+	$(document).on('change', '.jq_error_box_clear', function(){
+		var name = 'error-'+$(this).attr('name');
+        
+        if ($(this).is(':checked')) {
+            var value = 1;
+        } else {
+            var value = 0;
+        }
+
+        $.nette.ajax({ url : {link updateErrorBox!}, data : { name : name, value : value} });
 	});
+
 </script>
 
 </div><!-- /.well -->
