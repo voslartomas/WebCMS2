@@ -1,5 +1,7 @@
 CHANGE LOG
 --
+v0.7.0
+ - Boxes for error page.
 
 v0.5.3
 - Fixed system router
