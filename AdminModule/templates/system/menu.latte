@@ -4,14 +4,19 @@
 	<ul class="nav">
 	{foreach $childrens as $item}
 		<li>
-			{if is_object($item->getModule())}
-				<a class="ajax" n:href=":Admin:{$item->getModule()->getName()}:{$item->getPresenter()}:default idPage => $item->getId()">
-					{$item->getTitle()}
-				</a>
-			{else}
-				<span title="{_'No module selected!'}">{$item->getTitle()}</span>
+
+			{var $permissionToCheck = 'admin:'.$item->getModule()->getName().$item->getPresenter().$item->getId()}	
+			{if $template->checkPermissions($user, $permissionToCheck)}
+				
+				{if is_object($item->getModule())}
+					<a class="ajax" n:href=":Admin:{$item->getModule()->getName()}:{$item->getPresenter()}:default idPage => $item->getId()">
+						{$item->getTitle()}
+					</a>
+				{else}
+					<span title="{_'No module selected!'}">{$item->getTitle()}</span>
+				{/if}
+				{include 'menu.latte' item => $item}
 			{/if}
-			{include 'menu.latte' item => $item}
 		</li>
 	{/foreach}
 	</ul>
