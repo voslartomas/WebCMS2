@@ -3,21 +3,21 @@
 {if count($item->getChildren()) > 0}
 	<ul class="nav">
 	{foreach $childrens as $item}
-		<li>
-
-			{var $permissionToCheck = 'admin:'.$item->getModule()->getName().$item->getPresenter().$item->getId()}	
-			{if $template->checkPermissions($user, $permissionToCheck)}
+		{var $permissionToCheck = 'admin:'.$item->getModule()->getName().$item->getPresenter().$item->getId()}	
+		{if $template->checkPermissions($user, $permissionToCheck)}
+			<li>
+					
+					{if is_object($item->getModule())}
+						<a class="ajax" n:href=":Admin:{$item->getModule()->getName()}:{$item->getPresenter()}:default idPage => $item->getId()">
+							{$item->getTitle()}
+						</a>
+					{else}
+						<span title="{_'No module selected!'}">{$item->getTitle()}</span>
+					{/if}
+					{include 'menu.latte' item => $item}
 				
-				{if is_object($item->getModule())}
-					<a class="ajax" n:href=":Admin:{$item->getModule()->getName()}:{$item->getPresenter()}:default idPage => $item->getId()">
-						{$item->getTitle()}
-					</a>
-				{else}
-					<span title="{_'No module selected!'}">{$item->getTitle()}</span>
-				{/if}
-				{include 'menu.latte' item => $item}
-			{/if}
-		</li>
+			</li>
+		{/if}
 	{/foreach}
 	</ul>
 {/if}
