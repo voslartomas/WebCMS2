@@ -106,11 +106,17 @@ class PagesPresenter extends \AdminModule\BasePresenter
 
             $this->em->flush();
             $this->copyPermissions();
-        }
+        } else {
+            $children = $this->page->getChildren();
+
+            foreach ($children as $child) {
+                  $this->generatePath($child);
+            }
+	}
 
         // persist and generate path
         $this->em->flush();
-        $this->generatePath();
+        $this->generatePath($this->page);
         $this->em->flush();
         $this->generateSitemap();
 
@@ -185,9 +191,9 @@ class PagesPresenter extends \AdminModule\BasePresenter
      *
      * @return [type] [description]
      */
-    private function generatePath()
+    private function generatePath($page)
     {
-        $path = $this->em->getRepository('WebCMS\Entity\Page')->getPath($this->page);
+        $path = $this->em->getRepository('WebCMS\Entity\Page')->getPath($page);
         $final = array();
         foreach ($path as $p) {
             if ($p->getParent() != NULL) {
@@ -195,7 +201,7 @@ class PagesPresenter extends \AdminModule\BasePresenter
             }
         }
 
-        $this->page->setPath(implode('/', $final));
+        $page->setPath(implode('/', $final));
     }
 
     /**
