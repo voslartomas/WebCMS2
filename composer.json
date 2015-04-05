@@ -18,7 +18,7 @@
     "require": {
         "php": ">=5.4.0",
 		"o5/grido": "1.*",
-		"kdyby/doctrine": "~2.3@dev",
+		"kdyby/doctrine": "~2.0@dev",
 		"kdyby/console": "~2.3@dev",
 		"webcook/gedmo": "~1.0@dev",
 		"webcook/bootstrap-form-renderer": "~2.0.0",
