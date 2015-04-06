@@ -215,6 +215,9 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
             case 'textarea':
                 $form->addTextArea($ident, $setting->getKey())->setDefaultValue($setting->getValue())->setAttribute('class', 'editor');
                 break;
+            case 'textarea-plain':
+                $form->addTextArea($ident, $setting->getKey())->setDefaultValue($setting->getValue());
+                break;
             case 'radio':
                 $form->addRadioList($ident, $setting->getKey(), $setting->getOptions())->setDefaultValue($setting->getValue());
                 break;
@@ -223,6 +226,9 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
                 break;
             case 'checkbox':
                 $form->addCheckbox($ident, $setting->getKey())->setDefaultValue($setting->getValue());
+                break;
+            case 'checkbox-toggle':
+                $form->addCheckbox($ident, $setting->getKey())->setDefaultValue($setting->getValue())->setAttribute('data-toggle', 'toggle');
                 break;
             default:
                 $form->addText($ident, $setting->getKey())->setDefaultValue($setting->getValue())->setAttribute('class', 'form-control');
