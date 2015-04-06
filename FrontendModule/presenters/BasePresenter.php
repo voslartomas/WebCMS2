@@ -74,6 +74,10 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
         // set up boxes
         $this->setUpBoxes();
 
+        // load user defined scripts & styles
+        $this->setPageScripts();
+        $this->setPageStyles();
+
         // set default seo settings
         if (is_object($this->actualPage)) {
             $this->template->breadcrumb = $this->getBreadcrumbs();
@@ -123,6 +127,30 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
         } else {
             $this->template->seoTitle = $this->template->seoTitle.$this->settings->get('Seo title', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue();
         }
+    }
+
+    private function setPageScripts()
+    {
+        $globalHead = $this->settings->get('Enable scripts head', \WebCMS\Settings::SECTION_BASIC, 'checkbox-toggle')->getValue();
+        $globalBodyStart = $this->settings->get('Enable scripts body start', \WebCMS\Settings::SECTION_BASIC, 'checkbox-toggle')->getValue();
+        $globalBodyEnd = $this->settings->get('Enable scripts body end', \WebCMS\Settings::SECTION_BASIC, 'checkbox-toggle')->getValue();
+
+        if ($globalHead) {
+            $this->template->pageScriptsHead = $this->settings->get('Scripts head', \WebCMS\Settings::SECTION_BASIC, 'textarea-plain')->getValue();
+        }
+
+        if ($globalBodyStart) {
+            $this->template->pageScriptsBodyStart = $this->settings->get('Scripts body start', \WebCMS\Settings::SECTION_BASIC, 'textarea-plain')->getValue();
+        }
+
+        if ($globalBodyEnd) {
+            $this->template->pageScriptsBodyEnd = $this->settings->get('Scripts body end', \WebCMS\Settings::SECTION_BASIC, 'textarea-plain')->getValue();
+        }
+    }
+
+    private function setPageStyles()
+    {
+
     }
 
     /* Startup method. */
