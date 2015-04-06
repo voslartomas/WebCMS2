@@ -482,6 +482,40 @@ class SettingsPresenter extends \AdminModule\BasePresenter
         return $this->createSettingsForm($settings);
     }
 
+    /* SCRIPTS SETTINGS */
+
+    public function renderStylesSettings()
+    {
+        $this->reloadContent();
+
+        $globalStylesVars = array('pageStylesHead');
+        $hooks = array();
+
+        foreach (Finder::findFiles('@*.latte')->in(APP_DIR . '/templates') as $key => $file) {
+            $filename = $file->getFileName();
+
+            foreach ($globalStylesVars as $key => $var) {
+                if (\WebCMS\Helpers\SystemHelper::checkFileContainsStr(APP_DIR . '/templates/' . $filename, $var)) {
+                    $hooks[$filename][$var] = true;
+                } else {
+                    $hooks[$filename][$var] = false;
+                }
+            }
+        }
+
+        $this->template->stylesHooks = $hooks;
+    }
+
+    public function createComponentStylesGlobalForm()
+    {
+        $settings = array();
+
+        $settings[] = $this->settings->get('Styles head', \WebCMS\Settings::SECTION_BASIC, 'textarea-plain');
+        $settings[] = $this->settings->get('Enable styles head', \WebCMS\Settings::SECTION_BASIC, 'checkbox-toggle');
+
+        return $this->createSettingsForm($settings);
+    }
+
     /* PROJECT SPECIFIC SETTINGS */
 
     public function createComponentProjectSettingsForm()

@@ -136,21 +136,39 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
         $globalBodyEnd = $this->settings->get('Enable scripts body end', \WebCMS\Settings::SECTION_BASIC, 'checkbox-toggle')->getValue();
 
         if ($globalHead) {
-            $this->template->pageScriptsHead = $this->settings->get('Scripts head', \WebCMS\Settings::SECTION_BASIC, 'textarea-plain')->getValue();
+            $pageScriptsHead = $this->settings->get('Scripts head', \WebCMS\Settings::SECTION_BASIC, 'textarea-plain')->getValue();
+        } else {
+            $pageScriptsHead = '';
         }
 
         if ($globalBodyStart) {
-            $this->template->pageScriptsBodyStart = $this->settings->get('Scripts body start', \WebCMS\Settings::SECTION_BASIC, 'textarea-plain')->getValue();
+            $pageScriptsBodyStart = $this->settings->get('Scripts body start', \WebCMS\Settings::SECTION_BASIC, 'textarea-plain')->getValue();
+        } else {
+            $pageScriptsBodyStart = '';
         }
 
         if ($globalBodyEnd) {
-            $this->template->pageScriptsBodyEnd = $this->settings->get('Scripts body end', \WebCMS\Settings::SECTION_BASIC, 'textarea-plain')->getValue();
+            $pageScriptsBodyEnd = $this->settings->get('Scripts body end', \WebCMS\Settings::SECTION_BASIC, 'textarea-plain')->getValue();
+        } else {
+            $pageScriptsBodyEnd = '';
         }
+
+        $this->template->pageScriptsHead = $this->createTemplate('Nette\Templating\Template')->setSource($pageScriptsHead);
+        $this->template->pageScriptsBodyStart = $this->createTemplate('Nette\Templating\Template')->setSource($pageScriptsBodyStart);
+        $this->template->pageScriptsBodyEnd = $this->createTemplate('Nette\Templating\Template')->setSource($pageScriptsBodyEnd);
     }
 
     private function setPageStyles()
     {
+        $globalStylesHead = $this->settings->get('Enable styles head', \WebCMS\Settings::SECTION_BASIC, 'checkbox-toggle')->getValue();
 
+        if ($globalStylesHead) {
+            $pageStylesHead = $this->settings->get('Styles head', \WebCMS\Settings::SECTION_BASIC, 'textarea-plain')->getValue();
+        } else {
+            $pageStylesHead = '';
+        }
+
+        $this->template->pageStylesHead = $this->createTemplate('Nette\Templating\Template')->setSource($pageStylesHead);
     }
 
     /* Startup method. */
