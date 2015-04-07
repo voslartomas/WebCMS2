@@ -482,7 +482,7 @@ class SettingsPresenter extends \AdminModule\BasePresenter
         return $this->createSettingsForm($settings);
     }
 
-    /* SCRIPTS SETTINGS */
+    /* STYLES SETTINGS */
 
     public function renderStylesSettings()
     {
