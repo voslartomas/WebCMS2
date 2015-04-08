@@ -1,7 +1,14 @@
 CHANGE LOG
 --
-v0.7.0
+v0.7
  - Boxes for error page.
+ - Bugfixed multilanguage support in Common/BasePresenter
+ - Fixed multilanguage settings bug, typo
+ - Added style hook and settings, script rewrite
+ - Added global script hooks and settings
+ - Added new form elements - textarea-plain, checkbox-toggle
+
+v0.6
 
 v0.5.3
 - Fixed system router
