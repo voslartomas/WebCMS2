@@ -99,6 +99,25 @@ class SystemHelper
     }
 
     /**
+     * Check if given file contains given string
+     * @param  String $filename
+     * @param  String $needle
+     * @return Boolean
+     */
+    public static function checkFileContainsStr($filename, $needle)
+    {
+        if (file_exists($filename)) {
+            $content = file_get_contents($filename);
+
+            if (strstr($content, $needle)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      *
      * @param type $user
      * @param type $permission

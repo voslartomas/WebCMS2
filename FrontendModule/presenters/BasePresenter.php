@@ -74,6 +74,10 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
         // set up boxes
         $this->setUpBoxes();
 
+        // load user defined scripts & styles
+        $this->setPageScripts();
+        $this->setPageStyles();
+
         // set default seo settings
         if (is_object($this->actualPage)) {
             $this->template->breadcrumb = $this->getBreadcrumbs();
@@ -123,6 +127,48 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
         } else {
             $this->template->seoTitle = $this->template->seoTitle.$this->settings->get('Seo title', \WebCMS\Settings::SECTION_BASIC, 'text')->getValue();
         }
+    }
+
+    private function setPageScripts()
+    {
+        $globalHead = $this->settings->get('Enable scripts head', \WebCMS\Settings::SECTION_BASIC, 'checkbox-toggle')->getValue();
+        $globalBodyStart = $this->settings->get('Enable scripts body start', \WebCMS\Settings::SECTION_BASIC, 'checkbox-toggle')->getValue();
+        $globalBodyEnd = $this->settings->get('Enable scripts body end', \WebCMS\Settings::SECTION_BASIC, 'checkbox-toggle')->getValue();
+
+        if ($globalHead) {
+            $pageScriptsHead = $this->settings->get('Scripts head', \WebCMS\Settings::SECTION_BASIC, 'textarea-plain')->getValue();
+        } else {
+            $pageScriptsHead = '';
+        }
+
+        if ($globalBodyStart) {
+            $pageScriptsBodyStart = $this->settings->get('Scripts body start', \WebCMS\Settings::SECTION_BASIC, 'textarea-plain')->getValue();
+        } else {
+            $pageScriptsBodyStart = '';
+        }
+
+        if ($globalBodyEnd) {
+            $pageScriptsBodyEnd = $this->settings->get('Scripts body end', \WebCMS\Settings::SECTION_BASIC, 'textarea-plain')->getValue();
+        } else {
+            $pageScriptsBodyEnd = '';
+        }
+
+        $this->template->pageScriptsHead = $this->createTemplate('Nette\Templating\Template')->setSource($pageScriptsHead);
+        $this->template->pageScriptsBodyStart = $this->createTemplate('Nette\Templating\Template')->setSource($pageScriptsBodyStart);
+        $this->template->pageScriptsBodyEnd = $this->createTemplate('Nette\Templating\Template')->setSource($pageScriptsBodyEnd);
+    }
+
+    private function setPageStyles()
+    {
+        $globalStylesHead = $this->settings->get('Enable styles head', \WebCMS\Settings::SECTION_BASIC, 'checkbox-toggle')->getValue();
+
+        if ($globalStylesHead) {
+            $pageStylesHead = $this->settings->get('Styles head', \WebCMS\Settings::SECTION_BASIC, 'textarea-plain')->getValue();
+        } else {
+            $pageStylesHead = '';
+        }
+
+        $this->template->pageStylesHead = $this->createTemplate('Nette\Templating\Template')->setSource($pageStylesHead);
     }
 
     /* Startup method. */

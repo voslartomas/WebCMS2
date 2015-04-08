@@ -2,6 +2,8 @@
 
 namespace AdminModule;
 
+use Nette\Utils\Finder;
+
 /**
  * Settings presenter.
  * @author Tomáš Voslař <tomas.voslar at webcook.cz>
@@ -440,6 +442,78 @@ class SettingsPresenter extends \AdminModule\BasePresenter
 
         $this->flashMessage('Seo has been updated.', 'success');
         $this->invalidateControl('flashMessages');
+    }
+
+    /* SCRIPTS SETTINGS */
+
+    public function renderScriptsSettings()
+    {
+        $this->reloadContent();
+
+        $globalScriptsVars = array('pageScriptsHead', 'pageScriptsBodyStart', 'pageScriptsBodyEnd');
+        $hooks = array();
+
+        foreach (Finder::findFiles('@*.latte')->in(APP_DIR . '/templates') as $key => $file) {
+            $filename = $file->getFileName();
+
+            foreach ($globalScriptsVars as $key => $var) {
+                if (\WebCMS\Helpers\SystemHelper::checkFileContainsStr(APP_DIR . '/templates/' . $filename, $var)) {
+                    $hooks[$filename][$var] = true;
+                } else {
+                    $hooks[$filename][$var] = false;
+                }
+            }
+        }
+
+        $this->template->scriptsHooks = $hooks;
+    }
+
+    public function createComponentScriptsGlobalForm()
+    {
+        $settings = array();
+
+        $settings[] = $this->settings->get('Scripts head', \WebCMS\Settings::SECTION_BASIC, 'textarea-plain');
+        $settings[] = $this->settings->get('Enable scripts head', \WebCMS\Settings::SECTION_BASIC, 'checkbox-toggle');
+        $settings[] = $this->settings->get('Scripts body start', \WebCMS\Settings::SECTION_BASIC, 'textarea-plain');
+        $settings[] = $this->settings->get('Enable scripts body start', \WebCMS\Settings::SECTION_BASIC, 'checkbox-toggle');
+        $settings[] = $this->settings->get('Scripts body end', \WebCMS\Settings::SECTION_BASIC, 'textarea-plain');
+        $settings[] = $this->settings->get('Enable scripts body end', \WebCMS\Settings::SECTION_BASIC, 'checkbox-toggle');
+
+        return $this->createSettingsForm($settings);
+    }
+
+    /* STYLES SETTINGS */
+
+    public function renderStylesSettings()
+    {
+        $this->reloadContent();
+
+        $globalStylesVars = array('pageStylesHead');
+        $hooks = array();
+
+        foreach (Finder::findFiles('@*.latte')->in(APP_DIR . '/templates') as $key => $file) {
+            $filename = $file->getFileName();
+
+            foreach ($globalStylesVars as $key => $var) {
+                if (\WebCMS\Helpers\SystemHelper::checkFileContainsStr(APP_DIR . '/templates/' . $filename, $var)) {
+                    $hooks[$filename][$var] = true;
+                } else {
+                    $hooks[$filename][$var] = false;
+                }
+            }
+        }
+
+        $this->template->stylesHooks = $hooks;
+    }
+
+    public function createComponentStylesGlobalForm()
+    {
+        $settings = array();
+
+        $settings[] = $this->settings->get('Styles head', \WebCMS\Settings::SECTION_BASIC, 'textarea-plain');
+        $settings[] = $this->settings->get('Enable styles head', \WebCMS\Settings::SECTION_BASIC, 'checkbox-toggle');
+
+        return $this->createSettingsForm($settings);
     }
 
     /* PROJECT SPECIFIC SETTINGS */

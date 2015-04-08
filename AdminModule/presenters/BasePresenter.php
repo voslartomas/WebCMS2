@@ -210,22 +210,35 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
 
     private function createFormElement($form, $setting)
     {
-        $ident = $setting->getId();
+        if (!is_null($setting->getLanguage())) {
+            $ident = $this->em->getRepository('WebCMS\Entity\Setting')->findOneBy(array(
+                'key' => $setting->getKey(),
+                'language' => $this->state->language->getId()
+            ));
+        } else {
+            $ident = $setting;
+        }
         switch ($setting->getType()) {
             case 'textarea':
-                $form->addTextArea($ident, $setting->getKey())->setDefaultValue($setting->getValue())->setAttribute('class', 'editor');
+                $form->addTextArea($ident->getId(), $setting->getKey())->setDefaultValue($ident->getValue())->setAttribute('class', 'editor');
+                break;
+            case 'textarea-plain':
+                $form->addTextArea($ident->getId(), $setting->getKey())->setDefaultValue($ident->getValue());
                 break;
             case 'radio':
-                $form->addRadioList($ident, $setting->getKey(), $setting->getOptions())->setDefaultValue($setting->getValue());
+                $form->addRadioList($ident->getId(), $setting->getKey(), $setting->getOptions())->setDefaultValue($ident->getValue());
                 break;
             case 'select':
-                $form->addSelect($ident, $setting->getKey(), $setting->getOptions())->setDefaultValue($setting->getValue());
+                $form->addSelect($ident->getId(), $setting->getKey(), $setting->getOptions())->setDefaultValue($ident->getValue());
                 break;
             case 'checkbox':
-                $form->addCheckbox($ident, $setting->getKey())->setDefaultValue($setting->getValue());
+                $form->addCheckbox($ident->getId(), $setting->getKey())->setDefaultValue($ident->getValue());
+                break;
+            case 'checkbox-toggle':
+                $form->addCheckbox($ident->getId(), $setting->getKey())->setDefaultValue($ident->getValue())->setAttribute('data-toggle', 'toggle');
                 break;
             default:
-                $form->addText($ident, $setting->getKey())->setDefaultValue($setting->getValue())->setAttribute('class', 'form-control');
+                $form->addText($ident->getId(), $setting->getKey())->setDefaultValue($ident->getValue())->setAttribute('class', 'form-control');
                 break;
         }
 
@@ -236,13 +249,13 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
     {
         $values = $form->getValues();
 
-        foreach ($values as $key => $v) {
-            $setting = $this->em->find('WebCMS\Entity\Setting', $key);
+        foreach ($values as $id => $v) {
+            $setting = $this->em->find('WebCMS\Entity\Setting', $id);
             $setting->setValue($v);
         }
 
         $this->em->flush();
-
+       
         $this->flashMessage('Settings has been saved.', 'success');
         $this->forward('this');
     }
