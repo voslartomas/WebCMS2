@@ -47,13 +47,19 @@ abstract class PresenterTestCase extends EntityTestCase
         // login
         $user = new \Nette\Security\User($this->container->getService('nette.userStorage'), $this->container);
         $user->login('test', 'test');
+
+        // set APP_DIR to tests/app directory
+        define("APP_DIR", __DIR__ . '/app');
+
+        // create app dir and templates dir
+        system('mkdir ' . APP_DIR . '; mkdir ' . APP_DIR . '/templates');
     }
 
     public function tearDown()
     {
         parent::tearDown();
 
-        system('rm -rf tests/temp/cache/* tests/temp/btfj.dat upload/* thumbnails/*');
+        system('rm -rf tests/temp/cache/* tests/temp/btfj.dat upload/* thumbnails/* tests/app');
     }
 
     /**

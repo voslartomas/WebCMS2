@@ -54,6 +54,24 @@ class SettingsPresenterTest extends \WebCMS\Tests\PresenterTestCase
         $this->getResponse($response);
     }
 
+    public function testScriptsSettings()
+    {
+        $response = $this->makeRequest('scriptsSettings');
+
+        $this->assertInstanceOf('Nette\Application\Responses\TextResponse', $response);
+
+        $this->getResponse($response);
+    }
+
+    public function testStylesSettings()
+    {
+        $response = $this->makeRequest('stylesSettings');
+
+        $this->assertInstanceOf('Nette\Application\Responses\TextResponse', $response);
+
+        $this->getResponse($response);
+    }
+
     public function testSeoSettings()
     {
         $response = $this->makeRequest('seoSettings');
