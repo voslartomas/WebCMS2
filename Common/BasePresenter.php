@@ -40,7 +40,7 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
      */
     protected function getSettings()
     {
-        $query = $this->em->createQuery('SELECT s FROM WebCMS\Entity\Setting s WHERE s.language >= '.$this->getLanguageId().' OR s.language IS NULL');
+        $query = $this->em->createQuery('SELECT s FROM WebCMS\Entity\Setting s WHERE s.language = '.$this->getLanguageId().' OR s.language IS NULL');
         $tmp = $query->getResult();
 
         $settings = array();
