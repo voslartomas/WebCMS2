@@ -16,5 +16,7 @@ if [ "$1" = "html" ]; then
     exit
 fi
 
-phpunit tests
+if [ "$1" = "" ]; then
+    phpunit tests
+fi
 
