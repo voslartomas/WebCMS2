@@ -17,18 +17,19 @@
     ],
     "require": {
         "php": ">=5.4.0",
-		"o5/grido": "1.*",
-		"webcook/doctrine": "1.*@dev",
-		"nella/console": "v0.8.0",
-		"nella/gedmo": "v0.8.0",
-		"webcook/bootstrap-form-renderer": "~2.0.0",
-		"monolog/monolog" : "1.6.0",
-		"knplabs/packagist-api": "1.*@dev",
-		"ddtraceweb/monolog-parser": "@dev",
-		"webcook/translator" : "0.*@dev",
-		"phpunit/phpunit": "4.5.*@dev",
-		"mockery/mockery": "0.*",
-		"facebook/php-sdk-v4": "@dev"
+        "o5/grido": "1.*",
+        "webcook/doctrine": "1.*@dev",
+        "nella/console": "v0.8.0",
+        "nella/gedmo": "v0.8.0",
+        "webcook/bootstrap-form-renderer": "~2.0.0",
+        "monolog/monolog" : "1.6.0",
+        "knplabs/packagist-api": "1.*@dev",
+        "ddtraceweb/monolog-parser": "@dev",
+        "webcook/translator" : "0.*@dev",
+        "phpunit/phpunit": "4.5.*@dev",
+        "mockery/mockery": "0.*",
+        "facebook/php-sdk-v4": "@dev",
+        "mobiledetect/mobiledetectlib": "~2.8.0"
     },
     "autoload": {
         "classmap": ["Common", "AdminModule/presenters/", "FrontendModule/presenters/", "libs", "AdminModule/model", "Entity", "tests"]

@@ -32,6 +32,9 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
     /* @var \WebCMS\Settings */
     public $settings;
 
+    /* $var \WebCMS\MobileDetect */
+    public $mobileDetect;
+
     /* @var Page */
     public $actualPage;
 
@@ -136,7 +139,13 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
         $globalBodyEnd = $this->settings->get('Enable scripts body end', \WebCMS\Settings::SECTION_BASIC, 'checkbox-toggle')->getValue();
 
         if ($globalHead) {
-            $pageScriptsHead = $this->settings->get('Scripts head', \WebCMS\Settings::SECTION_BASIC, 'textarea-plain')->getValue();
+            $rawScript = $this->settings->get('Scripts head', \WebCMS\Settings::SECTION_BASIC, 'textarea-plain')->getValue();
+
+            $vars = array();
+            $vars['%device%'] = $this->mobileDetect->getDeviceType();
+            $vars['%response%'] = $this->getHttpResponse()->getCode();
+            
+            $pageScriptsHead = \WebCMS\Helpers\SystemHelper::strFindAndReplaceAll($vars, $rawScript);
         } else {
             $pageScriptsHead = '';
         }
@@ -207,6 +216,9 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
         // system settings
         $this->settings = new \WebCMS\Settings($this->em, $this->language);
         $this->settings->setSettings($this->getSettings());
+
+        // mobile device detection
+        $this->mobileDetect = new \WebCMS\MobileDetect;
 
         // system helper sets variables
         \WebCMS\Helpers\SystemHelper::setVariables(array(

@@ -1,12 +1,12 @@
 {block content}
 <div class="page-heading">
-	<h1>{_'Styles settings'}</h1>
-	{include 'tabs.latte' active => 'styles'}
+    <h1>{_'Styles settings'}</h1>
+    {include 'tabs.latte' active => 'styles'}
 </div>
 <div class="well">
 
 <div class="alert alert-info">
-	{_'Layout hooks presence overview. Only hooks installed in all of your layout files should be activated unless you know exactly what you are doing.'}
+    {_'Layout hooks presence overview. Only hooks installed in all of your layout files should be activated unless you know exactly what you are doing.'}
 </div>
 
 <table class="table table-bordered table-hover">
@@ -14,7 +14,7 @@
         <tr>
             <th>{_'Layout filename'}</th>
             {foreach $stylesHooks as $layout => $hooks}
-            	{first}<th n:foreach="$hooks as $name => $status">{$name}</th>{/first}
+                {first}<th n:foreach="$hooks as $name => $status">{$name}</th>{/first}
             {/foreach}
         </tr>
     </thead>
@@ -22,49 +22,60 @@
         <tr n:foreach="$stylesHooks as $layoutName => $hooks">
             <td>{$layoutName}</td>
             {foreach $hooks as $name => $status}
-            	{if $status === TRUE}
-	        		<td class="success" data-hook="{$name}" data-status="1">
-            		{_"INSTALLED"}
-            	{else}
-            		<td class="danger" data-hook="{$name}" data-status="0">
-            		{_"MISSING"}
-            	{/if}
+                {if $status === TRUE}
+                    <td class="success" data-hook="{$name}" data-status="1">
+                    {_"INSTALLED"}
+                {else}
+                    <td class="danger" data-hook="{$name}" data-status="0">
+                    {_"MISSING"}
+                {/if}
             </td>
             {/foreach}
         </tr>
     </tbody>
 </table>
 
-<div id="jq_hooks_info" class="hidden" n:syntax="off">
-	<strong>Please, ensure that all of your layout files are containing following declarations:</strong>
-	<ul>
-		<li>{include $pageStylesHead} - should be placed right after the scripts inside of the &lt;head&gt;&lt;/head&gt;</li>
-	</ul>
+<div id="jq_hooks_info" class="hidden">
+    <strong>{_'Please, ensure that all of your layout files are containing following declarations:'}</strong>
+    <ul>
+        <li>{_'{include $pageStylesHead} - should be placed right after the scripts inside of the <head></head>'}</li>
+    </ul>
 </div>
 
 <br />
 
 <div class="alert alert-info">
-	{_'Following value is global setting for styles inserted inside <head></head>.'}
+    {_'Following value is global setting for styles inserted inside <head></head>.'}
 </div>
+
+<div>
+    <br />
+    <p>{_'Please note, that all your input will be compiled as a part of LATTE template. Don\'t forget to escape all unwanted curly brackets macros in your input.'}</p>
+    <ul>
+        <li>{_'{ - can be escaped by {l}'}</li>
+        <li>{_'} - can be escaped by {r}'}</li>
+        <li>{_'You can disable LATTE syntax for whole html block like this <script n:syntax="off"></script>'}</li>
+    </ul>
+</div>
+
 
 {control stylesGlobalForm}
 
 <br />
 
 <div class="alert alert-info">
-	{_'You can override global settings or add more custom styles in the Styles settings tab of any specific page.'}
+    {_'You can override global settings or add more custom styles in the Styles settings tab of any specific page.'}
 </div>
 
 </div><!-- /.well -->
 <script>
-	$(document).ready( function(){
-		$("input[data-toggle='toggle']").bootstrapToggle(); //TODO: move this into Webcms.main.js
+    $(document).ready( function(){
+        $("input[data-toggle='toggle']").bootstrapToggle(); //TODO: move this into Webcms.main.js
 
-		if ($("td[data-status=0]").attr('data-hook')) {
-			$('#jq_hooks_info').removeClass('hidden');
-		}
-	});
+        if ($("td[data-status=0]").attr('data-hook')) {
+            $('#jq_hooks_info').removeClass('hidden');
+        }
+    });
 </script>
 
 {/block}

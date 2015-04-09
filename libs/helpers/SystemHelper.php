@@ -189,6 +189,24 @@ class SystemHelper
     }
 
     /**
+     * Replace all needles found in str with rewrites
+     * @param Array[needle, rewrite]
+     * @param string $str
+     * @return string $str
+     */
+    public static function strFindAndReplaceAll($vars = array(), $str)
+    {
+        if (array_count_values($vars) > 0){
+            foreach ($vars as $key => $val) {
+                for ($i = substr_count($str, $key); $i > 0; $i--) {
+                    $str = \WebCMS\Helpers\SystemHelper::strlReplace($key, $val, $str);
+                }
+            }
+        }
+        return $str;
+    }
+
+    /**
      * Recursively removes given directory.
      * @param string  $dir
      * @param boolean $inside if inside is true removes only content of the directory
