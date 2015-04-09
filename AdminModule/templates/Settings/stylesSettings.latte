@@ -35,10 +35,10 @@
     </tbody>
 </table>
 
-<div id="jq_hooks_info" class="hidden" n:syntax="off">
-	<strong>Please, ensure that all of your layout files are containing following declarations:</strong>
+<div id="jq_hooks_info" class="hidden">
+	<strong>{_'Please, ensure that all of your layout files are containing following declarations:'}</strong>
 	<ul>
-		<li>{include $pageStylesHead} - should be placed right after the scripts inside of the &lt;head&gt;&lt;/head&gt;</li>
+		<li>{_'{include $pageStylesHead} - should be placed right after the scripts inside of the <head></head>'}</li>
 	</ul>
 </div>
 
@@ -47,6 +47,17 @@
 <div class="alert alert-info">
 	{_'Following value is global setting for styles inserted inside <head></head>.'}
 </div>
+
+<div>
+    <br />
+    <p>{_'Please note, that all your input will be compiled as a part of LATTE template. Don\'t forget to escape all unwanted curly brackets macros in your input.'}</p>
+    <ul>
+        <li>{_'{ - can be escaped by {l}'}</li>
+        <li>{_'} - can be escaped by {r}'}</li>
+        <li>{_'You can disable LATTE syntax for whole html block like this <script n:syntax="off"></script>'}</li>
+    </ul>
+</div>
+
 
 {control stylesGlobalForm}
 

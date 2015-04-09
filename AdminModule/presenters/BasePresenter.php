@@ -218,6 +218,7 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
         } else {
             $ident = $setting;
         }
+
         switch ($setting->getType()) {
             case 'textarea':
                 $form->addTextArea($ident->getId(), $setting->getKey())->setDefaultValue($ident->getValue())->setAttribute('class', 'editor');

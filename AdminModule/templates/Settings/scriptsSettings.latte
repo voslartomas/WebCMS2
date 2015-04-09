@@ -35,12 +35,12 @@
     </tbody>
 </table>
 
-<div id="jq_hooks_info" class="hidden" n:syntax="off">
-	<strong>Please, ensure that all of your layout files are containing following declarations:</strong>
+<div id="jq_hooks_info" class="hidden">
+	<strong>{_'Please, ensure that all of your layout files are containing following declarations:'}</strong>
 	<ul>
-		<li>{include $pageScriptsHead} - should be placed right after the opening &lt;head&gt; tag</li>
-		<li>{include $pageScriptsBodyStart} - should be placed right after the opening &lt;body&gt; tag</li>
-		<li>{include $pageScriptsBodyEnd} - should be placed right in front of the closing &lt;/body&gt; tag</li>
+		<li>{_'{include $pageScriptsHead} - should be placed right after the opening <head> tag'}</li>
+		<li>{_'{include $pageScriptsBodyStart} - should be placed right after the opening <body> tag'}</li>
+		<li>{_'{include $pageScriptsBodyEnd} - should be placed right in front of the closing </body> tag'}</li>
 	</ul>
 </div>
 
@@ -48,6 +48,16 @@
 
 <div class="alert alert-info">
 	{_'Following values are global settings for scripts inserted inside <head></head>, directly after <body> and directly in front of </body> tags.'}
+</div>
+
+<div>
+    <br />
+    <p>{_'Please note, that all your input will be compiled as a part of LATTE template. Don\'t forget to escape all unwanted curly brackets macros in your input.'}</p>
+    <ul>
+        <li>{_'{ - can be escaped by {l}'}</li>
+        <li>{_'} - can be escaped by {r}'}</li>
+        <li>{_'You can disable LATTE syntax for whole html block like this <script n:syntax="off"></script>'}</li>
+    </ul>
 </div>
 
 {control scriptsGlobalForm}
