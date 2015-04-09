@@ -32,6 +32,9 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
     /* @var \WebCMS\Settings */
     public $settings;
 
+    /* $var \WebCMS\MobileDetect */
+    public $mobileDetect;
+
     /* @var Page */
     public $actualPage;
 
@@ -138,11 +141,9 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
         if ($globalHead) {
             $rawScript = $this->settings->get('Scripts head', \WebCMS\Settings::SECTION_BASIC, 'textarea-plain')->getValue();
 
-            $responseCode = $this->getHttpResponse()->getCode();
-
             $vars = array();
-            $vars['%device%'] = 'desktop';
-            $vars['%response%'] = $responseCode;
+            $vars['%device%'] = $this->mobileDetect->getDeviceType();
+            $vars['%response%'] = $this->getHttpResponse()->getCode();
             
             $pageScriptsHead = \WebCMS\Helpers\SystemHelper::strFindAndReplaceAll($vars, $rawScript);
         } else {
@@ -215,6 +216,9 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
         // system settings
         $this->settings = new \WebCMS\Settings($this->em, $this->language);
         $this->settings->setSettings($this->getSettings());
+
+        // mobile device detection
+        $this->mobileDetect = new \WebCMS\MobileDetect;
 
         // system helper sets variables
         \WebCMS\Helpers\SystemHelper::setVariables(array(
