@@ -1,12 +1,12 @@
 {block content}
 <div class="page-heading">
-	<h1>{_'Scripts settings'}</h1>
-	{include 'tabs.latte' active => 'scripts'}
+    <h1>{_'Scripts settings'}</h1>
+    {include 'tabs.latte' active => 'scripts'}
 </div>
 <div class="well">
 
 <div class="alert alert-info">
-	{_'Layout hooks presence overview. Only hooks installed in all of your layout files should be activated unless you know exactly what you are doing.'}
+    {_'Layout hooks presence overview. Only hooks installed in all of your layout files should be activated unless you know exactly what you are doing.'}
 </div>
 
 <table class="table table-bordered table-hover">
@@ -14,7 +14,7 @@
         <tr>
             <th>{_'Layout filename'}</th>
             {foreach $scriptsHooks as $layout => $hooks}
-            	{first}<th n:foreach="$hooks as $name => $status">{$name}</th>{/first}
+                {first}<th n:foreach="$hooks as $name => $status">{$name}</th>{/first}
             {/foreach}
         </tr>
     </thead>
@@ -22,13 +22,13 @@
         <tr n:foreach="$scriptsHooks as $layoutName => $hooks">
             <td>{$layoutName}</td>
             {foreach $hooks as $name => $status}
-            	{if $status === TRUE}
-	        		<td class="success" data-hook="{$name}" data-status="1">
-            		{_"INSTALLED"}
-            	{else}
-            		<td class="danger" data-hook="{$name}" data-status="0">
-            		{_"MISSING"}
-            	{/if}
+                {if $status === TRUE}
+                    <td class="success" data-hook="{$name}" data-status="1">
+                    {_"INSTALLED"}
+                {else}
+                    <td class="danger" data-hook="{$name}" data-status="0">
+                    {_"MISSING"}
+                {/if}
             </td>
             {/foreach}
         </tr>
@@ -36,18 +36,18 @@
 </table>
 
 <div id="jq_hooks_info" class="hidden">
-	<strong>{_'Please, ensure that all of your layout files are containing following declarations:'}</strong>
-	<ul>
-		<li>{_'{include $pageScriptsHead} - should be placed right after the opening <head> tag'}</li>
-		<li>{_'{include $pageScriptsBodyStart} - should be placed right after the opening <body> tag'}</li>
-		<li>{_'{include $pageScriptsBodyEnd} - should be placed right in front of the closing </body> tag'}</li>
-	</ul>
+    <strong>{_'Please, ensure that all of your layout files are containing following declarations:'}</strong>
+    <ul>
+        <li>{_'{include $pageScriptsHead} - should be placed right after the opening <head> tag'}</li>
+        <li>{_'{include $pageScriptsBodyStart} - should be placed right after the opening <body> tag'}</li>
+        <li>{_'{include $pageScriptsBodyEnd} - should be placed right in front of the closing </body> tag'}</li>
+    </ul>
 </div>
 
 <br />
 
 <div class="alert alert-info">
-	{_'Following values are global settings for scripts inserted inside <head></head>, directly after <body> and directly in front of </body> tags.'}
+    {_'Following values are global settings for scripts inserted inside <head></head>, directly after <body> and directly in front of </body> tags.'}
 </div>
 
 <div class="row control-group">
@@ -74,18 +74,18 @@
 <br />
 
 <div class="alert alert-info">
-	{_'You can override global settings or add more custom scripts in the Scripts settings tab of any specific page.'}
+    {_'You can override global settings or add more custom scripts in the Scripts settings tab of any specific page.'}
 </div>
 
 </div><!-- /.well -->
 <script>
-	$(document).ready( function(){
-		$("input[data-toggle='toggle']").bootstrapToggle(); //TODO: move this into Webcms.main.js
+    $(document).ready( function(){
+        $("input[data-toggle='toggle']").bootstrapToggle(); //TODO: move this into Webcms.main.js
 
-		if ($("td[data-status=0]").attr('data-hook')) {
-			$('#jq_hooks_info').removeClass('hidden');
-		}
-	});
+        if ($("td[data-status=0]").attr('data-hook')) {
+            $('#jq_hooks_info').removeClass('hidden');
+        }
+    });
 </script>
 
 {/block}

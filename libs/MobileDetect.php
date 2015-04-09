@@ -11,46 +11,46 @@ use Mobile_Detect;
  */
 class MobileDetect extends Mobile_Detect
 {
-	public function __construct()
-	{
-		parent::__construct();
-	}
+    public function __construct()
+    {
+        parent::__construct();
+    }
 
-	/**
-	 * Return type of the detected device
-	 *
-	 * @return string
-	 */
-	public function getDeviceType()
-	{
-		if ($this->isPhone()) {
-			$device = 'mobile';
-		} elseif ($this->isTablet()) {
-			$device = 'tablet';
-		} else {
-			$device = 'desktop';
-		}
+    /**
+     * Return type of the detected device
+     *
+     * @return string
+     */
+    public function getDeviceType()
+    {
+        if ($this->isPhone()) {
+            $device = 'mobile';
+        } elseif ($this->isTablet()) {
+            $device = 'tablet';
+        } else {
+            $device = 'desktop';
+        }
 
-		return $device;
-	}
+        return $device;
+    }
 
-	/**
-	 * Check if the device is mobile phone
-	 *
-	 * @return bool
-	 */
-	public function isPhone()
-	{
-		return $this->isMobile() && !$this->isTablet();
-	}
+    /**
+     * Check if the device is mobile phone
+     *
+     * @return bool
+     */
+    public function isPhone()
+    {
+        return $this->isMobile() && !$this->isTablet();
+    }
 
-	/**
-	 * Check if the device is not mobile phone
-	 *
-	 * @return bool
-	 */
-	public function isNotPhone()
-	{
-		return (($this->isMobile() && $this->isTablet()) || !$this->isMobile());
-	}
+    /**
+     * Check if the device is not mobile phone
+     *
+     * @return bool
+     */
+    public function isNotPhone()
+    {
+        return (($this->isMobile() && $this->isTablet()) || !$this->isMobile());
+    }
 }
