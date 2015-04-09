@@ -136,7 +136,15 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
         $globalBodyEnd = $this->settings->get('Enable scripts body end', \WebCMS\Settings::SECTION_BASIC, 'checkbox-toggle')->getValue();
 
         if ($globalHead) {
-            $pageScriptsHead = $this->settings->get('Scripts head', \WebCMS\Settings::SECTION_BASIC, 'textarea-plain')->getValue();
+            $rawScript = $this->settings->get('Scripts head', \WebCMS\Settings::SECTION_BASIC, 'textarea-plain')->getValue();
+
+            $responseCode = $this->getHttpResponse()->getCode();
+
+            $vars = array();
+            $vars['%device%'] = 'desktop';
+            $vars['%response%'] = $responseCode;
+            
+            $pageScriptsHead = \WebCMS\Helpers\SystemHelper::strFindAndReplaceAll($vars, $rawScript);
         } else {
             $pageScriptsHead = '';
         }

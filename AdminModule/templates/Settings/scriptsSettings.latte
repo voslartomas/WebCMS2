@@ -50,14 +50,23 @@
 	{_'Following values are global settings for scripts inserted inside <head></head>, directly after <body> and directly in front of </body> tags.'}
 </div>
 
-<div>
+<div class="row control-group">
     <br />
     <p>{_'Please note, that all your input will be compiled as a part of LATTE template. Don\'t forget to escape all unwanted curly brackets macros in your input.'}</p>
-    <ul>
-        <li>{_'{ - can be escaped by {l}'}</li>
-        <li>{_'} - can be escaped by {r}'}</li>
-        <li>{_'You can disable LATTE syntax for whole html block like this <script n:syntax="off"></script>'}</li>
-    </ul>
+    <div class="row control-group">  
+        <ul>
+            <li>{_'{ - can be escaped by {l}'}</li>
+            <li>{_'} - can be escaped by {r}'}</li>
+            <li>{_'You can disable LATTE syntax for whole html block like this <script n:syntax="off"></script>'}</li>
+        </ul>
+    </div>
+    <p>{_'Additionaly variables in the head script shown below will be rewritten as follows:'}</p>
+    <div class="row control-group">
+        <ul>
+            <li><strong>%device%</strong> - {_'desktop / mobile / tablet detected depending on the viewport settings (default fallback is desktop)'}</li>
+            <li><strong>%response%</strong> - {_'the server response code (200 / 404 / 403 etc.)'}</li>
+        </ul>
+    </div>
 </div>
 
 {control scriptsGlobalForm}
