@@ -1,39 +1,54 @@
 {block content}
 
 <div class="page-heading">
-<h1>{_'Homepage title'}</h1>
+    <h1>{_'Homepage title'}</h1>
+</div>
 
 
-<h2>{_'Log of events'}</h2>
+{if $showExceptions == true}
+    <div class="page-heading">
+        <h2>{_'Exception logs'}</h2>
+        <div class="pull-right">
+            <a class="ajax btn btn-danger" href="{$basePath}/admin/homepage/delete-all-exception-logs/">{_'Delete all exception logs'}</a>
+        </div>
+    </div>
+
+    <div class="well">
+        {control exceptionLogsGrid}
+    </div>
+{/if}
+
+<div class="page-heading">
+    <h2>{_'Log of events'}</h2>
 </div>
 
 <div class="well" style="height: 300px;overflow: auto;">
-	<table class="table">
-		<tr>
-			<th>{_'Time'}</th>
-			<th>{_'User'}</th>
-			<th>{_'Action'}</th>
-			<th>{_'Url'}</th>
-		</tr>
-		{foreach $logReader as $log}
-			{if !empty($log)}
-				<tr>
-					<td>{$log['date']->format('d.m.y H:i:s')}</td>
-					<td>{$log['context']['user']}</td>
-					<td>{$log['context']['presenter']} - {$log['context']['action']} - {$log['context']['title']}</td>
-					<td>{$log['context']['url']}</td>
-				</tr>
-			{/if}
-		{/foreach}
-	</table>
+    <table class="table">
+        <tr>
+            <th>{_'Time'}</th>
+            <th>{_'User'}</th>
+            <th>{_'Action'}</th>
+            <th>{_'Url'}</th>
+        </tr>
+        {foreach $logReader as $log}
+            {if !empty($log)}
+                <tr>
+                    <td>{$log['date']->format('d.m.y H:i:s')}</td>
+                    <td>{$log['context']['user']}</td>
+                    <td>{$log['context']['presenter']} - {$log['context']['action']} - {$log['context']['title']}</td>
+                    <td>{$log['context']['url']}</td>
+                </tr>
+            {/if}
+        {/foreach}
+    </table>
 </div>
 
 <div class="page-heading">
-<h2>{_'Favourite links'}</h2>
+    <h2>{_'Favourite links'}</h2>
 </div>
 
 {foreach $links as $l}
-	<a class="ajax btn btn-primary favourite" data-id="{$l->getId()}" href="{$l->getLink()}">{$l->getTitle()}</a>
+    <a class="ajax btn btn-primary favourite" data-id="{$l->getId()}" href="{$l->getLink()}">{$l->getTitle()}</a>
 {/foreach}
 
 {/block}

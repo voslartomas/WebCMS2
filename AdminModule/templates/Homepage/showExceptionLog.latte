@@ -1,0 +1,14 @@
+{block modalContent}
+    <div id="exceptionHtml" class="hidden">
+        
+    </div>
+    <iframe id="exceptionIframe" src="about:blank">
+    </iframe>
+
+<script type="text/javascript">
+    var doc = document.getElementById('exceptionIframe').contentWindow.document;
+    doc.open();
+    doc.write('{!$content}');
+    doc.close();
+</script>
+{/block}
