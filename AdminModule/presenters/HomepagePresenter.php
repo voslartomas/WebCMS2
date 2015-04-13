@@ -50,6 +50,8 @@ class HomepagePresenter extends \AdminModule\BasePresenter
         if (count($exceptions) > 0) {
             $this->exceptions = $exceptions;
             $this->template->showExceptions = true;
+        } else {
+            $this->template->showExceptions = false;
         }
 
         // favourite links
