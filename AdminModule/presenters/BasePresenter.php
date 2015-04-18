@@ -213,6 +213,7 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
         if (!is_null($setting->getLanguage())) {
             $ident = $this->em->getRepository('WebCMS\Entity\Setting')->findOneBy(array(
                 'key' => $setting->getKey(),
+                'section' => $setting->getSection(),
                 'language' => $this->state->language->getId()
             ));
         } else {
