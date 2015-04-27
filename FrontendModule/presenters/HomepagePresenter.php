@@ -26,11 +26,27 @@ class HomepagePresenter extends \FrontendModule\BasePresenter
         if (is_object($page)) {
             $root = $this->settings->get('Root domain', \WebCMS\Settings::SECTION_BASIC);
             $abbr = $page->getLanguage()->getDefaultFrontend() ? '' : $page->getLanguage()->getAbbr().'/';
+            $params = array('id' => $page->getId(), 'path' => $page->getPath(), 'abbr' => $abbr);
+
+            // Hotfix UTM params for homepage redirect
+            // TODO - refactor / move into appropriate place
+            if ($this->getParam('utm_source')) {
+
+                $utm = array(
+                    'utm_source' => $this->getParam('utm_source'),
+                    'utm_medium' => $this->getParam('utm_medium'),
+                    'utm_term' => $this->getParam('utm_term'),
+                    'utm_content' => $this->getParam('utm_content'),
+                    'utm_campaign' => $this->getParam('utm_campaign')
+                );
+
+                $params = array_merge($params, array_filter($utm));
+            }
 
             if ($root->getValue()) {
-                $this->forward(':Frontend:'.$page->getModuleName().':'.$page->getPresenter().':default', array('id' => $page->getId(), 'path' => $page->getPath(), 'abbr' => $abbr));
+                $this->forward(':Frontend:'.$page->getModuleName().':'.$page->getPresenter().':default', $params);
             } else {
-                $this->redirect(':Frontend:'.$page->getModuleName().':'.$page->getPresenter().':default', array('id' => $page->getId(), 'path' => $page->getPath(), 'abbr' => $abbr));
+                $this->redirect(':Frontend:'.$page->getModuleName().':'.$page->getPresenter().':default', $params);
             }
         }
 
