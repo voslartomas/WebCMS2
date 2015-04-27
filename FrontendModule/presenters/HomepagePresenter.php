@@ -28,7 +28,7 @@ class HomepagePresenter extends \FrontendModule\BasePresenter
             $abbr = $page->getLanguage()->getDefaultFrontend() ? '' : $page->getLanguage()->getAbbr().'/';
             $params = array('id' => $page->getId(), 'path' => $page->getPath(), 'abbr' => $abbr);
 
-            // Hotfix UTM params for homepage redirect
+            // Hotfix UTM params and gclid for homepage redirect
             // TODO - refactor / move into appropriate place
             if ($this->getParam('utm_source')) {
 
@@ -41,6 +41,10 @@ class HomepagePresenter extends \FrontendModule\BasePresenter
                 );
 
                 $params = array_merge($params, array_filter($utm));
+            }
+
+            if ($this->getParam('gclid')) {
+                $params = array_merge($params, array('gclid' => $this->getParam('gclid')));
             }
 
             if ($root->getValue()) {
