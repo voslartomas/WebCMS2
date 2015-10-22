@@ -13,7 +13,6 @@ fi
 
 if [ "$1" = "html" ]; then
     phpunit --coverage-html ./html tests
-    exit
 fi
 
 if [ "$1" = "" ]; then
