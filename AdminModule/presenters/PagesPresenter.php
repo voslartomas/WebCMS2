@@ -69,6 +69,7 @@ class PagesPresenter extends \AdminModule\BasePresenter
         $form->addSelect('layout', 'Page layout')->setTranslator(null)->setItems($layouts)->setAttribute('class', 'form-control');
         $form->addCheckbox('default', 'Default');
         $form->addCheckbox('visible', 'Show');
+        $form->addCheckbox('secured', 'Secured');
 
         $form->addSubmit('save', 'Save')->setAttribute('class', 'btn btn-success');
 
@@ -156,6 +157,7 @@ class PagesPresenter extends \AdminModule\BasePresenter
 
         $this->page->setVisible($values->visible);
         $this->page->setDefault($values->default);
+        $this->page->setSecured($values->secured);
         $this->page->setParent($parent);
         $this->page->setLanguage($this->state->language);
         $this->page->setModule($module);
@@ -269,6 +271,11 @@ class PagesPresenter extends \AdminModule\BasePresenter
         ));
 
         $grid->addColumnText('default', 'Default')->setReplacement(array(
+            '1' => 'Yes',
+            NULL => 'No',
+        ));
+
+        $grid->addColumnText('secured', 'Secured')->setReplacement(array(
             '1' => 'Yes',
             NULL => 'No',
         ));

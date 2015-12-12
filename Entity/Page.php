@@ -110,6 +110,11 @@ class Page extends Seo
     private $default;
 
     /**
+     * @orm\Column(type="boolean")
+     */
+    public $secured;
+
+    /**
      * @orm\Column
      */
     private $class;
@@ -227,6 +232,16 @@ class Page extends Seo
     public function setDefault($default)
     {
         $this->default = $default;
+    }
+
+    public function getSecured()
+    {
+        return $this->secured;
+    }
+
+    public function setSecured($secured)
+    {
+        $this->secured = $secured;
     }
 
     public function getModule()
