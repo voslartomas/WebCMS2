@@ -102,6 +102,12 @@ $container->router[] =  new Route('admin/<presenter>/<action>[/<id>]', array(
 	'action' => 'default'
 ),$securedAdmin);
 
+$container->router[] =  new Route('loginfe', array(
+	'module' => 'Frontend',
+	'presenter' => 'Login',
+	'action' => 'default'
+),$securedAdmin);
+
 $entityManager = $container->getService('doctrine.entityManager');
 $container->router[] = new WebCMS\SystemRouter($entityManager);
 
