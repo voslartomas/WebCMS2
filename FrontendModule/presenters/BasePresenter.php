@@ -50,6 +50,14 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
     /* Method is executed before render. */
     protected function beforeRender()
     {
+
+        // secured page
+        if (is_object($this->actualPage)) {
+            if (!$this->getUser()->isLoggedIn() && $this->actualPage->getSecured()) {
+                $this->redirect(':Frontend:Login:');
+            }
+        }
+
         if (is_object($this->actualPage)) {
             if ($this->actualPage->getLayout()) {
                 $this->setLayout($this->actualPage->getLayout());
@@ -502,6 +510,10 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
                     $class .= ' hidden';
                 }
 
+                if ($node['secured']) {
+                    $class .= ' secured';
+                }
+
                 return '<li class="'.$class.'">';
             },
                     'childClose' => '</li>',
@@ -629,8 +641,15 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
         $name = $this->getName();
 
         $path = explode(':', $name);
-        $module = $path[1];
-        $presenter = $path[2];
+     
+        if (isset($path[2])) {
+            $module = $path[1];
+            $presenter = $path[2];
+        } else {
+            $module = $path[0];
+            $presenter = $path[1];
+        }
+        
         $dir = dirname($this->getReflection()->getFileName());
         $dir = is_dir("$dir/templates") ? $dir : dirname($dir);
 
