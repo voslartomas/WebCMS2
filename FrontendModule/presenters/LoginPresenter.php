@@ -40,11 +40,11 @@ class LoginPresenter extends \FrontendModule\BasePresenter
 
         $form->addText('username', 'Přihlašovací jméno')
             ->setRequired('Please provide a username.')
-            ->setAttribute('placeholder', $this->translation['Username']);
+            ->setAttribute('placeholder', 'Přihlašovací jméno');
 
         $form->addPassword('password', 'Heslo')
             ->setRequired('Please provide a password.')
-            ->setAttribute('placeholder', $this->translation['Password']);
+            ->setAttribute('placeholder', 'Heslo');
 
         $form->addCheckbox('remember', 'Permanent login?');
 
@@ -72,11 +72,21 @@ class LoginPresenter extends \FrontendModule\BasePresenter
             }
             $this->getUser()->login($values->username, $values->password);
             $this->flashMessage('Přihlášení bylo úspěšné', 'success');
-            $this->forward('Homepage:');
+
+            //TODO bude upraveno - ted nestiham :)
+            //$this->forward('Homepage:');
+            $this->redirectUrl('http://test.webcook.cz/guaranteed-investment/www/pro-investory-1');
         } catch (NS\AuthenticationException $e) {
             $this->flashMessage($this->translation[$e->getMessage()], 'danger');
             $form->addError($e->getMessage());
         }
+    }
+
+    public function actionOut()
+    {
+        $this->getUser()->logout();
+        $this->flashMessage('Odhlášení bylo úspěšné', 'success');
+        $this->forward('Homepage:');
     }
 
 }

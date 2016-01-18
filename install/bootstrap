@@ -102,7 +102,7 @@ $container->router[] =  new Route('admin/<presenter>/<action>[/<id>]', array(
 	'action' => 'default'
 ),$securedAdmin);
 
-$container->router[] =  new Route('loginfe', array(
+$container->router[] =  new Route('loginfe/<presenter>/<action>', array(
 	'module' => 'Frontend',
 	'presenter' => 'Login',
 	'action' => 'default'
