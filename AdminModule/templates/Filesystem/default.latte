@@ -7,7 +7,7 @@
 		$(".jq_filesAdd").on('click', function(){
 			var funcNum = {$_GET['CKEditorFuncNum']};
 
-    		$('.jq_selected:checked').each(function() {
+			$('.jq_selected:checked').each(function() {
 				var data = $(this).data();
 				var path = data.path.substr(1, data.path.length);
 
@@ -19,6 +19,29 @@
 	</script>
 {else}
 	{block content}
+	<script>
+		// prevent form submit if no files were selected for upload
+		$('#filesystemForm>input:file').change(function(){
+			if($(this).val().length != 0) {
+				$('#filesystemForm>input:submit').prop('disabled', false);
+			} else {
+				$('#filesystemForm>input:submit').prop('disabled', true);
+			}
+		});
+		// prevent form submit if file size is bigger than max allowed upload file size of the server
+		$('#filesystemForm>input:submit').on('click', function(){
+			var files = $('#filesystemForm>input:file').get(0).files;
+			var maxUploadFileSize = $('#maxUploadFileSize').val();
+			for (i = 0; i < files.length; i++)
+			{
+				if (files[i].size > maxUploadFileSize) {
+					alert(files[i].name + ' = ' + files[i].size + 'B (max. ' + maxUploadFileSize + 'B)');
+					return false;
+				}
+			}
+		});
+	</script>
+
 	<div class="page-heading">
 	<h1>{_'Filesystem'}</h1>
 	</div>
@@ -34,16 +57,17 @@
 			<span id="totalSize"></span>
 			<span id="uploaded"></span>
 			<div class="progress">
-			  <div class="progress-bar" id="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 1%;">
-			    <span class="sr-only">1% Complete</span>
-			  </div>
+				<div class="progress-bar" id="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 1%;">
+					<span class="sr-only">1% Complete</span>
+				</div>
 			</div>
 		</div>
 		<br />
 		<form id="filesystemForm">
+			<input type="hidden" id="maxUploadFileSize" value="{$maxUploadFileSize}">
 			<input type="file" name="file[]" id="upload" multiple />
 			<br />
-			<input type="submit" class="btn btn-primary" value="{_'Upload files'}" />
+			<input type="submit" class="btn btn-primary" value="{_'Upload files'}" disabled/>
 		</form>
 	</div>
 	<br />
