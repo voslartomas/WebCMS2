@@ -112,7 +112,7 @@ class Page extends Seo
     /**
      * @orm\Column(type="boolean")
      */
-    public $secured;
+    public $secured = false;
 
     /**
      * @orm\Column
