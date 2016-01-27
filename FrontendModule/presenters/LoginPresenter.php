@@ -75,7 +75,7 @@ class LoginPresenter extends \FrontendModule\BasePresenter
 
             //TODO bude upraveno - ted nestiham :)
             //$this->forward('Homepage:');
-            $this->redirectUrl('http://test.webcook.cz/guaranteed-investment/www/pro-investory-1');
+            $this->redirectUrl('https://www.zajistenainvestice.cz/pro-investory-1');
         } catch (NS\AuthenticationException $e) {
             $this->flashMessage($this->translation[$e->getMessage()], 'danger');
             $form->addError($e->getMessage());
