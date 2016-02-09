@@ -18,30 +18,34 @@
     </div>
 {/if}
 
-<div class="page-heading">
-    <h2>{_'Log of events'}</h2>
-</div>
+{if $showLogger}
 
-<div class="well" style="height: 300px;overflow: auto;">
-    <table class="table">
-        <tr>
-            <th>{_'Time'}</th>
-            <th>{_'User'}</th>
-            <th>{_'Action'}</th>
-            <th>{_'Url'}</th>
-        </tr>
-        {foreach $logReader as $log}
-            {if !empty($log)}
-                <tr>
-                    <td>{$log['date']->format('d.m.y H:i:s')}</td>
-                    <td>{$log['context']['user']}</td>
-                    <td>{$log['context']['presenter']} - {$log['context']['action']} - {$log['context']['title']}</td>
-                    <td>{$log['context']['url']}</td>
-                </tr>
-            {/if}
-        {/foreach}
-    </table>
-</div>
+    <div class="page-heading">
+        <h2>{_'Log of events'}</h2>
+    </div>
+
+
+    <div class="well" style="height: 300px;overflow: auto;">
+        <table class="table">
+            <tr>
+                <th>{_'Time'}</th>
+                <th>{_'User'}</th>
+                <th>{_'Action'}</th>
+                <th>{_'Url'}</th>
+            </tr>
+            {foreach $logReader as $log}
+                {if !empty($log)}
+                    <tr>
+                        <td>{$log['date']->format('d.m.y H:i:s')}</td>
+                        <td>{$log['context']['user']}</td>
+                        <td>{$log['context']['presenter']} - {$log['context']['action']} - {$log['context']['title']}</td>
+                        <td>{$log['context']['url']}</td>
+                    </tr>
+                {/if}
+            {/foreach}
+        </table>
+    </div>
+{/if}
 
 <div class="page-heading">
     <h2>{_'Favourite links'}</h2>

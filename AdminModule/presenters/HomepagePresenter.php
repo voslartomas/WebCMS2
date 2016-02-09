@@ -45,7 +45,11 @@ class HomepagePresenter extends \AdminModule\BasePresenter
                 $date = $parsed[1] . '-' . $parsed[2] . '-' . $parsed[3] . ' ' . $parsed[4] . ':' . $parsed[5] . ':' . $parsed[6];
                 $exceptions[] = array('id' => substr($parsed[7], 0, -5), 'date' => $date, 'filename' => $filename);
             }
-        }        
+
+            $this->template->showLogger = true;
+        } else {
+            $this->template->showLogger = false;
+        }   
 
         if (count($exceptions) > 0) {
             $this->exceptions = $exceptions;
