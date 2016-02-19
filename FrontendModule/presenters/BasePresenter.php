@@ -230,8 +230,12 @@ class BasePresenter extends \WebCMS2\Common\BasePresenter
         if ($id) {
             $this->actualPage = $this->em->find('WebCMS\Entity\Page', $id);
 
-            if ($this->actualPage->getRedirect() != NULL) {
-                $this->redirectUrl($this->presenter->getHttpRequest()->url->baseUrl.$this->actualPage->getRedirect());
+            if ($redirectUrl = $this->actualPage->getRedirect() != NULL) {
+                if (strpos($redirectUrl, 'http') === false) {
+                    $this->redirectUrl($this->presenter->getHttpRequest()->url->baseUrl . $this->actualPage->getRedirect());   
+                } else {
+                    $this->redirectUrl($this->actualPage->getRedirect());
+                }
             }
         }
 
